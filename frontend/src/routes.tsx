@@ -29,7 +29,6 @@ const orMaster = (...roles: Role[]): Role[] => [...roles, Role.MASTER]
 // Secretaria Module
 const AgendaPage = React.lazy(() => import('./modules/secretaria/pages/AgendaPage'))
 const PacientesPage = React.lazy(() => import('./modules/secretaria/pages/PacientesPage'))
-const TriagePage = React.lazy(() => import('./modules/secretaria/pages/TriagePage'))
 const SubirResultadosPage = React.lazy(() => import('./modules/secretaria/pages/SubirResultadosPage'))
 
 // Doctor Module
@@ -94,13 +93,6 @@ const routes: Route[] = [
     name: 'Pacientes',
     element: PacientesPage,
     roles: orMaster(Role.SECRETARIA, Role.ADMIN, Role.DOCTOR),
-  },
-  {
-    path: '/secretaria/triage',
-    requires: ['triage.create'],
-    name: 'Triage',
-    element: TriagePage,
-    roles: orMaster(Role.SECRETARIA, Role.ADMIN),
   },
   {
     // Documentos deja de ser pantalla (plan 32, punto 6): es la pestaña

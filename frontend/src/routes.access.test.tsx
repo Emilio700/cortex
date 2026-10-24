@@ -33,60 +33,6 @@ describe('rutas por permiso', () => {
     }
   })
 
-  it('un médico con el permiso de triage concedido puede abrir Triage', () => {
-    mockAuth = {
-      user: { role: Role.DOCTOR },
-      permissions: ['doctor.dashboard.read', 'triage.create'],
-      loading: false,
-    }
-    const ruta = matchRoutePath('/secretaria/triage', entradas)!
-
-    render(
-      <MemoryRouter initialEntries={['/secretaria/triage']}>
-        <Routes>
-          <Route
-            path="/secretaria/triage"
-            element={
-              <AccessGuard requires={ruta.requires} allowedRoles={ruta.roles}>
-                <p>pantalla de triage</p>
-              </AccessGuard>
-            }
-          />
-          <Route path="/403" element={<p>sin acceso</p>} />
-        </Routes>
-      </MemoryRouter>,
-    )
-
-    expect(screen.getByText('pantalla de triage')).toBeInTheDocument()
-  })
-
-  it('sin el permiso, el médico sigue sin poder abrir Triage', () => {
-    mockAuth = {
-      user: { role: Role.DOCTOR },
-      permissions: ['doctor.dashboard.read'],
-      loading: false,
-    }
-    const ruta = matchRoutePath('/secretaria/triage', entradas)!
-
-    render(
-      <MemoryRouter initialEntries={['/secretaria/triage']}>
-        <Routes>
-          <Route
-            path="/secretaria/triage"
-            element={
-              <AccessGuard requires={ruta.requires} allowedRoles={ruta.roles}>
-                <p>pantalla de triage</p>
-              </AccessGuard>
-            }
-          />
-          <Route path="/403" element={<p>sin acceso</p>} />
-        </Routes>
-      </MemoryRouter>,
-    )
-
-    expect(screen.getByText('sin acceso')).toBeInTheDocument()
-  })
-
   /**
    * Plan 23: el médico abre "Mis cobros" y su corte por permiso. Cambia a
    * propósito respecto de antes, cuando /finanzas era sólo de admin y

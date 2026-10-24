@@ -169,7 +169,7 @@ describe('qué recorridos ve cada rol', () => {
     expect(vistos).not.toContain('bienvenida-recepcion')
   })
 
-  it('recepción ve agenda, triage, pacientes y cobros, pero no la consulta', () => {
+  it('recepción ve agenda, pacientes y cobros, pero no la consulta', () => {
     const vistos = ids(
       recorridosDisponibles(CATALOGO, { role: Role.SECRETARIA, permissions: PERMISOS.secretaria }),
     )
@@ -179,7 +179,6 @@ describe('qué recorridos ve cada rol', () => {
         'agenda',
         'cita-formulario',
         'signos-formulario',
-        'triage',
         'pacientes',
         'pagos-recepcion',
         'pago-registrar',
@@ -210,15 +209,15 @@ describe('qué recorridos ve cada rol', () => {
   })
 
   it('un permiso concedido abre el recorrido aunque el rol no lo tenga', () => {
-    const triage = CATALOGO.find((r) => r.id === 'triage')!
-    expect(puedeVerRecorrido(triage, { role: Role.DOCTOR, permissions: ['triage.create'] })).toBe(true)
-    expect(puedeVerRecorrido(triage, { role: Role.DOCTOR, permissions: ['patients.read'] })).toBe(false)
+    const signos = CATALOGO.find((r) => r.id === 'signos-formulario')!
+    expect(puedeVerRecorrido(signos, { role: Role.DOCTOR, permissions: ['triage.create'] })).toBe(true)
+    expect(puedeVerRecorrido(signos, { role: Role.DOCTOR, permissions: ['patients.read'] })).toBe(false)
   })
 
   it('una sesión sin permisos cargados decide por rol en vez de quedarse sin nada', () => {
-    const triage = CATALOGO.find((r) => r.id === 'triage')!
-    expect(puedeVerRecorrido(triage, { role: Role.SECRETARIA })).toBe(true)
-    expect(puedeVerRecorrido(triage, { role: Role.DOCTOR })).toBe(false)
+    const signos = CATALOGO.find((r) => r.id === 'signos-formulario')!
+    expect(puedeVerRecorrido(signos, { role: Role.SECRETARIA })).toBe(true)
+    expect(puedeVerRecorrido(signos, { role: Role.DOCTOR })).toBe(false)
   })
 
   it('soloRoles se suma al permiso: el médico con payments.read no ve el cobro de recepción', () => {

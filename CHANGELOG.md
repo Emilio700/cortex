@@ -63,6 +63,12 @@ Todos los cambios notables de Cortex. Formato basado en
   veía en blanco, porque la barrera de `App` vive por dentro de ellos.
 
 ### Quitado
+- La pantalla **Triage** del menú de recepción. Los signos vitales se toman desde la
+  cita, en la Agenda —donde también aparece el paciente que llegó sin confirmar— y
+  el médico los toma al abrir la consulta si nadie lo hizo en sala. Era una segunda
+  puerta al mismo formulario y la única que dejaba fuera a los agendados. El
+  permiso `triage.create` y el formulario siguen igual: en Master aparecen como
+  «Signos vitales (triage)».
 - Lo ginecológico deja de ofrecerse (embarazo y control prenatal, historia
   gineco-obstétrica, FUR, consentimientos y plantillas de ginecología, aviso
   prenatal). Los datos y la cadena de migraciones se conservan.

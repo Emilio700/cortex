@@ -5,7 +5,6 @@ import {
   cilHome,
   cilCalendar,
   cilPeople,
-  cilClipboard,
   cilUser,
   cilMedicalCross,
   cilChart,
@@ -186,14 +185,10 @@ const _nav: NavItem[] = [
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
     roles: orMaster(Role.SECRETARIA, Role.ADMIN, Role.DOCTOR),
   },
-  {
-    component: CNavItem,
-    name: 'Triage',
-    to: '/secretaria/triage',
-    requires: ['triage.create'],
-    icon: <CIcon icon={cilClipboard} customClassName="nav-icon" />,
-    roles: orMaster(Role.SECRETARIA, Role.ADMIN),
-  },
+  // «Triage» sale del menú: los signos vitales se toman desde la cita, en la
+  // Agenda —donde además se ve al paciente que llegó sin confirmar— y el médico
+  // los toma al abrir la consulta si faltan. La pantalla era una segunda puerta
+  // al mismo formulario, y la única que se saltaba a los agendados.
   // «Documentos» sale del menú (plan 32, punto 6): es la pestaña Documentos
   // del expediente de cada paciente.
   {
