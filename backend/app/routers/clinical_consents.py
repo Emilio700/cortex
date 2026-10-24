@@ -48,14 +48,14 @@ TEMPLATE_VERSION = "2026.08.07.1"
 
 
 def _patient_in_scope(db: Session, patient_id: int, user: User) -> Patient:
-    # El consentimiento lo firma la paciente con su doctora titular, así que se
+    # El consentimiento lo firma el paciente con su médico titular, así que se
     # queda en la variante estrecha del alcance clínico.
     return resolver_paciente_de_su_duena(
         db,
         patient_id,
         user,
         detalle_403="Solo puedes gestionar consentimientos de tus pacientes",
-        detalle_404="No se encontró la paciente.",
+        detalle_404="No se encontró el paciente.",
     )
 
 
@@ -84,7 +84,7 @@ def _validate_context(
             .first()
         )
         if not appointment or appointment.patient_id != patient.id:
-            raise HTTPException(status_code=422, detail="La consulta no corresponde a la paciente")
+            raise HTTPException(status_code=422, detail="La consulta no corresponde al paciente")
         exigir_autoria_clinica(appointment.doctor_id, user, detalle="Solo puedes usar tus consultas")
     if data.clinical_episode_id:
         episode = (
@@ -93,7 +93,7 @@ def _validate_context(
             .first()
         )
         if not episode or episode.patient_id != patient.id:
-            raise HTTPException(status_code=422, detail="El episodio no corresponde a la paciente")
+            raise HTTPException(status_code=422, detail="El episodio no corresponde al paciente")
 
 
 def _snapshot_body(template, procedure_name: str | None, diagnosis: str | None) -> str:
@@ -103,15 +103,15 @@ def _snapshot_body(template, procedure_name: str | None, diagnosis: str | None) 
     if diagnosis:
         lines.append(f"Diagnóstico o indicación documentada: {diagnosis}.")
     lines.append(
-        "La paciente declara que recibió información suficiente y puede realizar preguntas antes de firmar."
+        "El paciente declara que recibió información suficiente y puede realizar preguntas antes de firmar."
     )
     return "\n\n".join(lines)
 
 
 def _embarazo_activo(db: Session, patient: Patient) -> Pregnancy | None:
-    """El embarazo en curso de la paciente, si es que está embarazada ahora.
+    """El embarazo en curso del paciente, si es que está embarazada ahora.
 
-    Una paciente no *es* obstétrica: *está* embarazada, y luego deja de estarlo.
+    Un paciente no *es* obstétrica: *está* embarazada, y luego deja de estarlo.
     Por eso se pregunta por el registro de embarazo y no por la bandera
     ``patient_type`` del expediente, que lleva años sin apagarse.
     """
@@ -158,7 +158,7 @@ def _prefilled_field_values(
         # La FUR y la FPP salen del embarazo en curso, no del expediente: el
         # expediente guarda una copia que nadie mantiene (y que en 8 casos ya no
         # coincide con la del embarazo), mientras que el registro de embarazo es
-        # el que la doctora actualiza consulta a consulta. Sin embarazo activo el
+        # el que el médico actualiza consulta a consulta. Sin embarazo activo el
         # consentimiento se emite sin esas fechas, como hasta ahora cuando no
         # había dato.
         "last_menstrual_period": (
@@ -299,7 +299,7 @@ def sign_consent(
     required = set(template.acknowledgements)
     if not required.issubset(set(data.acknowledgements)):
         raise HTTPException(
-            status_code=422, detail="La paciente debe confirmar todos los puntos requeridos"
+            status_code=422, detail="El paciente debe confirmar todos los puntos requeridos"
         )
     signature_content = _decode_signature(data.signature_data_url)
     signature_path = f"uploads/clinical_consents/signatures/{uuid4()}.png"

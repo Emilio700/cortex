@@ -66,7 +66,7 @@ class AppointmentUpdate(BaseModel):
 class CobroAlFinalizar(BaseModel):
     """Qué pasa con el cobro al finalizar la consulta (plan 23).
 
-    - ``cobrado``: la doctora ya cobró; exige ``amount`` y ``method``.
+    - ``cobrado``: el médico ya cobró; exige ``amount`` y ``method``.
     - ``recepcion``: lo cobra recepción (lo de siempre).
     - ``sin_cargo``: no se cobra; exige ``motivo``.
 
@@ -107,12 +107,12 @@ class ReenvioConfirmacionResponse(BaseModel):
     la interfaz no puede decir «se reenvió» si el servidor no lo confirmó
     (regla de oro, plan 22). ``motivo`` explica el «no»:
 
-    - ``sin_email``: la paciente no tiene correo capturado.
+    - ``sin_email``: el paciente no tiene correo capturado.
     - ``fallo_envio``: se intentó y el servidor de correo lo rechazó.
     - ``None``: se envió sin problema.
 
     ``destinatario`` va enmascarado (``a***@dominio``) para no exponer el correo
-    completo de la paciente; es ``None`` cuando no hay correo a quién enviar.
+    completo del paciente; es ``None`` cuando no hay correo a quién enviar.
     """
 
     enviado: bool
@@ -144,7 +144,7 @@ class PatientInAppointment(BaseModel):
     last_name: str
     phone: Optional[str] = None
     # Para la edad en la agenda (plan 28). Las citas ya llegan acotadas a lo
-    # que la sesión puede ver, y quien ve la cita ya puede ver a la paciente.
+    # que la sesión puede ver, y quien ve la cita ya puede ver al paciente.
     # El frontend oculta el relleno legacy 1900-01-01 (``formatEdad``).
     date_of_birth: Optional[date] = None
 
@@ -196,7 +196,7 @@ class AppointmentResponse(BaseModel):
     estado_antes_de_consulta: Optional[str] = None
     # Recepción SÍ recibe ``notes`` a propósito (plan 32, punto 7, decisión
     # 2026-10-09): la «Nota del doctor» que se anexa al cerrar es un mensaje de
-    # la doctora PARA secretaría (descuentos, indicaciones de cobro). Ocultarla
+    # el médico PARA secretaría (descuentos, indicaciones de cobro). Ocultarla
     # rompería ese canal; no es una fuga.
     notes: Optional[str] = None
     motivo_extra: Optional[str] = None
@@ -233,7 +233,7 @@ class AppointmentResponse(BaseModel):
     doctor: Optional[DoctorInAppointment] = None
     has_triage: bool = False
 
-    # Edad gestacional al día de la cita, si la paciente tiene un embarazo
+    # Edad gestacional al día de la cita, si el paciente tiene un embarazo
     # activo y la sesión puede leerlo (plan 28, D-4). Nulas si no aplica:
     # nunca 0 por falta de dato.
     semanas_gestacion: Optional[int] = None

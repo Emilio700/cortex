@@ -148,7 +148,7 @@ def e(db_session):
     jhoany = usuario(db_session, tenant, "Jhoany Asistente", Role.SECRETARIA)
     laura = usuario(db_session, tenant, "Laura Recepción", Role.SECRETARIA)
     admin = usuario(db_session, tenant, "Admin Sucursal", Role.ADMIN)
-    ajena = usuario(db_session, otra, "Doctora Ajena", Role.DOCTOR)
+    ajena = usuario(db_session, otra, "Médico Ajena", Role.DOCTOR)
 
     servicio = Service(tenant_id=tenant.id, name="Consulta", price=Decimal("800.00"))
     db_session.add(servicio)

@@ -30,7 +30,7 @@ class DoctorProfile(Base):
     council_cert = Column(String(100), nullable=True)      # Consejo/CONACEM
     # ── Configuracion de la receta (ver app/utils/receta_config.py) ──
     # Nombre tal como debe imprimirse. Independiente de users.full_name:
-    # la Dra. Yara Montserrat Gutierrez Romero firma "Dra. Yara Gutierrez".
+    # el Dr. Yara Montserrat Gutierrez Romero firma "Dra. Yara Gutierrez".
     prescription_display_name = Column(String(150), nullable=True)
     # Interruptores de que se imprime y que no. JSON y no una columna por
     # casilla: son preferencias de presentacion, nunca se consultan ni se
@@ -56,7 +56,7 @@ class DoctorProfile(Base):
     # Días sin resultado para que un estudio cuente como atrasado, por
     # prioridad (plan 32, punto 3). NULL = los de fábrica: 7, 15 y 30.
     plazos_atrasado = Column(JSON, nullable=True)
-    # Contacto que la doctora quiere imprimir (plan 26, ronda 3), aparte del
+    # Contacto que el médico quiere imprimir (plan 26, ronda 3), aparte del
     # correo con que entra y del teléfono del consultorio. Salen en la receta
     # y la orden sólo si ella los enciende.
     contact_email = Column(String(255), nullable=True)

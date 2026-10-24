@@ -1,11 +1,11 @@
 /**
- * Incidencias críticas abiertas, en el inicio de la doctora (plan 26, D-3 y D-8).
+ * Incidencias críticas abiertas, en el inicio del médico (plan 26, D-3 y D-8).
  *
  * Antes marcar «Resultado crítico» solo pintaba un badge (B-6). Decisión de
  * Emilio: un resultado valorado «Crítico» aparece aquí como incidencia de la
  * doctora autora y se queda hasta que se cierra, de una de dos maneras: se
- * documenta que se le comunicó o entregó a la paciente (con el medio), o la
- * doctora lo revisa dentro de una consulta de la paciente. Revisarlo desde la
+ * documenta que se le comunicó o entregó al paciente (con el medio), o la
+ * doctora lo revisa dentro de una consulta del paciente. Revisarlo desde la
  * bandeja no la cierra (D-8). No se manda ninguna notificación
  * que pueda decir «se avisó» sin haberse avisado: lo que se ve es lo que el
  * servidor tiene abierto (`GET /clinical-tracking/critical-results`).
@@ -44,7 +44,7 @@ const VISIBLES = 5
 
 interface Props {
   /**
-   * Datos que ya trae quien la monta (el inicio de la doctora, plan 28): así
+   * Datos que ya trae quien la monta (el inicio del médico, plan 28): así
    * la franja y el indicador de resultados cuentan lo mismo y se refrescan
    * juntos. Sin esto, la tarjeta pide sus datos por su cuenta, como siempre.
    */
@@ -135,7 +135,7 @@ const IncidenciasCriticas = ({ controlado }: Props = {}) => {
               : `${total} resultados críticos sin cerrar`}
           </h5>
           <div className="w-100 small" style={{ color: 'var(--hf-text-tertiary)' }}>
-            Se cierran al documentar que se le comunicó o entregó a la paciente, o al revisarlos
+            Se cierran al documentar que se le comunicó o entregó al paciente, o al revisarlos
             dentro de una consulta suya.
           </div>
         </div>

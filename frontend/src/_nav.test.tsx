@@ -79,7 +79,7 @@ describe('un solo «Inicio» en el menú (plan 28, Fase 1)', () => {
   const menuDe = (role: Role, permissions: string[], inicio: string) =>
     resolverInicio(filterNavByAccess(navigation, { role, permissions }), inicio)
 
-  it('a la doctora «Inicio» la lleva a su tablero', () => {
+  it('al médico «Inicio» la lleva a su tablero', () => {
     const items = menuDe(Role.DOCTOR, ['doctor.dashboard.read', 'appointments.read'], '/doctor/dashboard')
     expect(items[0]).toMatchObject({ name: 'Inicio', to: '/doctor/dashboard' })
     expect(items.filter((item) => item.to === '/doctor/dashboard')).toHaveLength(1)

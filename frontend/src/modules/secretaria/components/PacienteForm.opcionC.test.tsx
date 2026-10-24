@@ -3,7 +3,7 @@
  *
  * Recepción captura nombre, contacto, fecha de nacimiento, alergias y FUR; los
  * antecedentes, la historia gineco-obstétrica y las notas de referencia de la
- * doctora no aparecen en su formulario ni salen en lo que guarda. La doctora
+ * doctora no aparecen en su formulario ni salen en lo que guarda. El médico
  * sigue viendo el formulario completo.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -57,7 +57,7 @@ describe('PacienteForm · recepción (opción C)', () => {
     expect(screen.queryByLabelText('Antecedentes personales')).toBeNull()
     expect(screen.queryByLabelText('Gestas')).toBeNull()
     expect(screen.queryByLabelText('Notas de referencia')).toBeNull()
-    expect(screen.getByText(/los captura la doctora/)).toBeInTheDocument()
+    expect(screen.getByText(/los captura el médico/)).toBeInTheDocument()
     // No dice «sin antecedentes»: no los ve, no es que no existan.
     expect(screen.queryByText(/sin antecedentes/i)).toBeNull()
   })
@@ -75,7 +75,7 @@ describe('PacienteForm · recepción (opción C)', () => {
   })
 })
 
-describe('PacienteForm · la doctora', () => {
+describe('PacienteForm · el médico', () => {
   it('ve el formulario completo', () => {
     sesion.role = 'doctor'
     sesion.permisos = ['medical_history.read']

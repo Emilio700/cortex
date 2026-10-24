@@ -1,7 +1,7 @@
 """Finalizar la consulta y cobrarla es UNA operación (plan 23).
 
 Si fueran dos llamadas, cualquier falla a la mitad dejaría "se cobró pero no se
-cerró" o "se cerró sin el cobro que la doctora cree haber registrado". Aquí se
+cerró" o "se cerró sin el cobro que el médico cree haber registrado". Aquí se
 prueba que o quedan las dos cosas o ninguna, que el aviso a secretaría dice lo
 que de verdad pasó con el cobro, y que el ingreso queda a nombre de quien
 atendió.
@@ -89,7 +89,7 @@ def _usuario(db, tenant, nombre, role):
 
 @pytest.fixture
 def e(db_session):
-    """Una consulta en curso de la Dra. Cintia, con recepción que espera el aviso."""
+    """Una consulta en curso de el Dr. Cintia, con recepción que espera el aviso."""
     tenant = Tenant(name="Clínica de prueba", is_active=True)
     db_session.add(tenant)
     db_session.commit()
@@ -220,7 +220,7 @@ def test_si_el_cobro_es_invalido_la_cita_no_queda_atendida(client, db_session, e
 
 
 def test_si_la_cita_ya_estaba_cobrada_finalizar_cobrando_da_409_y_no_cierra(client, db_session, e):
-    """Recepción cobró por adelantado y la doctora, sin saberlo, cobra otra vez."""
+    """Recepción cobró por adelantado y el médico, sin saberlo, cobra otra vez."""
     anticipo = client.post(
         f"{PREFIX}/payments",
         json={
@@ -396,7 +396,7 @@ def test_despues_de_atendida_el_ingreso_ya_no_se_mueve(client, db_session, e):
     _finalizar(client, _headers(db_session, e["cintia"]), e["cita"].id, cobro=_cobrado())
     pago = _pagos(db_session, e["cita"].id)[0]
 
-    # Se reabre, se reasigna y la cierra otra doctora.
+    # Se reabre, se reasigna y la cierra otro médico.
     client.patch(
         f"{PREFIX}/appointments/{e['cita'].id}/status",
         json={"status": "en_sala"},

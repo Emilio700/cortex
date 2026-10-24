@@ -57,7 +57,7 @@ def _respuesta(
     respuesta = NotificationResponse.model_validate(aviso)
     respuesta.resolved_by_name = aviso.resolved_by.full_name if aviso.resolved_by else None
     respuesta.ruta = ruta_del_aviso(aviso, permisos)
-    # Se muestran los avisos de todas sus sucursales (una paciente en sala en
+    # Se muestran los avisos de todas sus sucursales (un paciente en sala en
     # la otra clínica también importa), pero el de la que no está activa dice
     # de cuál es y no lleva «Ir»: las pantallas trabajan sobre la sucursal
     # activa y la llevarían a «no se encontró». Master ve todas las sucursales

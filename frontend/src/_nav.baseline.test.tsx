@@ -3,7 +3,7 @@
  *
  * Por qué una lista exacta y no comprobaciones sueltas: la Fase 4 cambia el
  * criterio de filtrado de rol a permiso. Si alguien pierde un ítem por el camino,
- * no se entera al revisar el diff, se entera la doctora a media consulta. Aquí
+ * no se entera al revisar el diff, se entera el médico a media consulta. Aquí
  * la lista completa y en orden hace que cualquier alta o baja falle de inmediato.
  *
  * Actualizar este archivo es legítimo cuando el cambio es deliberado; lo que no
@@ -98,7 +98,7 @@ describe('línea base del menú por rol', () => {
     expect(destinosPorRol(undefined)).toEqual(['/'])
   })
 
-  it('la doctora no ve hoy triage ni pagos', () => {
+  it('el médico no ve hoy triage ni pagos', () => {
     // Es justamente el defecto que motiva el plan 20: aunque se le concedan los
     // permisos desde Master, el menú filtra por rol y no se entera.
     const doctora = destinosPorRol(Role.DOCTOR)

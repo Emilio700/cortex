@@ -1,4 +1,4 @@
-"""Las imágenes de la paciente en una sola lista, sin mover datos (plan 32, punto 6).
+"""Las imágenes del paciente en una sola lista, sin mover datos (plan 32, punto 6).
 
 - La lista combinada no pierde ni repite nada, y va por fecha.
 - Permisos por origen: recepción no ve fotos clínicas; ve los estudios de
@@ -84,7 +84,7 @@ def test_recepcion_no_ve_fotos_clinicas_y_solo_los_estudios_que_recibio(client, 
     e = escenario
     _foto(db_session, e, "clinical_photo", datetime(2026, 9, 1, 10))
     suyo = _estudio(db_session, e, "US que recibió", datetime(2026, 9, 2, 10), e["secretaria"])
-    ajeno = _estudio(db_session, e, "US de la doctora", datetime(2026, 9, 3, 10), e["doctora"])
+    ajeno = _estudio(db_session, e, "US del médico", datetime(2026, 9, 3, 10), e["doctora"])
     orden = _orden(db_session, e["tenant"], e["paciente"], e["doctora"], category="obstetric")
     db_session.add(DiagnosticResult(tenant_id=orden.tenant_id, diagnostic_order_id=orden.id,
                                     recorded_by_user_id=e["doctora"].id, patient_document_id=ajeno.id,

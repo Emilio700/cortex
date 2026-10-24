@@ -43,7 +43,7 @@ import { mostrarNotificacion, textoSinDatosDePaciente } from './notificacionNave
 
 export const INTERVALO_VISIBLE_MS = 15_000
 export const INTERVALO_OCULTO_MS = 60_000
-/** Al entrar sólo se resume lo reciente: una paciente en sala desde hace horas ya no espera a nadie. */
+/** Al entrar sólo se resume lo reciente: un paciente en sala desde hace horas ya no espera a nadie. */
 export const VENTANA_RESUMEN_AL_ENTRAR_MS = 2 * 60 * 60 * 1000
 /** Si otra pestaña dijo «me están viendo» hace menos de esto, se sondea al ritmo de visible. */
 const VIGENCIA_DE_VISIBLE_REMOTO_MS = 25_000
@@ -62,7 +62,7 @@ export interface CriticoAbierto {
 }
 
 /**
- * Resultados críticos de la doctora. `fallo` nunca se lee como «sin
+ * Resultados críticos del médico. `fallo` nunca se lee como «sin
  * críticos»: la franja dice que no se pudo consultar.
  */
 export type CriticosAbiertos =
@@ -94,7 +94,7 @@ interface AvisosContextValue {
   estado: EstadoAvisos | null
   /** Lo que sigue pidiendo algo, del más viejo al más nuevo. */
   abiertos: Notification[]
-  /** Incidencias críticas abiertas de la doctora; `null` si no le aplica o aún no se sabe. */
+  /** Incidencias críticas abiertas del médico; `null` si no le aplica o aún no se sabe. */
   criticos: CriticosAbiertos | null
   /** Número rojo de la campana y del título: accionables y urgentes sin resolver. */
   porAtender: number
@@ -197,7 +197,7 @@ export const AvisosProvider = ({ children }: { children: ReactNode }) => {
   const [preferencias, setPreferencias] = useState<PreferenciasAvisos | null>(null)
   const [centroAbierto, setCentroAbierto] = useState(false)
   const [criticos, setCriticos] = useState<CriticosAbiertos | null>(null)
-  // La franja es de la doctora autora: el endpoint le da a administración los
+  // La franja es del médico autora: el endpoint le da a administración los
   // críticos de toda la sucursal, que no le toca cerrar a ella.
   const consultaCriticos = user?.role === Role.DOCTOR
 
@@ -278,7 +278,7 @@ export const AvisosProvider = ({ children }: { children: ReactNode }) => {
           const llegados = nuevosCriticos.items.filter((c) => !previos.has(c.result_id))
           if (puedeAnunciar) anunciarCriticos(llegados)
           const igual = previos.size === ids.size && [...ids].every((id) => previos.has(id))
-          // El inicio de la doctora (IncidenciasCriticas) y el número del menú
+          // El inicio del médico (IncidenciasCriticas) y el número del menú
           // se refrescan con el mismo evento que usa la bandeja al guardar.
           if (!igual) avisarResultadosActualizados()
         }

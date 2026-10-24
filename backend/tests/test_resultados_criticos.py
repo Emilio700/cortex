@@ -1,9 +1,9 @@
-"""La incidencia crítica de la doctora autora (plan 26, D-3 y D-8).
+"""La incidencia crítica del médico autora (plan 26, D-3 y D-8).
 
 Marcar «crítico» sólo pintaba un badge (B-6). Desde D-3 queda en el dashboard
-de la doctora que pidió el estudio; D-8 fija cuándo se cierra: al comunicarle
-el resultado a la paciente (con su medio) o al revisarlo en una consulta suya.
-Revisarlo desde la bandeja, sin la paciente, NO la cierra. La misma regla vale
+del médico que pidió el estudio; D-8 fija cuándo se cierra: al comunicarle
+el resultado al paciente (con su medio) o al revisarlo en una consulta suya.
+Revisarlo desde la bandeja, sin el paciente, NO la cierra. La misma regla vale
 para /critical-results y para el filtro «críticos» de la bandeja.
 """
 from datetime import datetime
@@ -201,7 +201,7 @@ def test_la_cita_sin_revision_se_ignora(client, db_session, escenario):
 
 
 def test_registrado_en_consulta_como_critico_nace_cerrado(client, db_session, escenario):
-    """La doctora lo ve con la paciente enfrente: no hay nada pendiente."""
+    """El médico lo ve con el paciente enfrente: no hay nada pendiente."""
     cita = _cita(db_session, escenario)
 
     creado = _registrar(client, db_session, escenario, escenario["orden"], valoracion="critico",
@@ -328,7 +328,7 @@ def test_una_fila_vieja_comunicada_sin_nota_se_sigue_leyendo(client, db_session,
 
 
 def test_la_cita_de_hoy_cierra_aunque_la_orden_sea_de_otra_consulta(client, db_session, escenario):
-    """El estudio se pidió en una consulta anterior; se revisa con la paciente en la de hoy."""
+    """El estudio se pidió en una consulta anterior; se revisa con el paciente en la de hoy."""
     anterior = _cita(db_session, escenario, dias=-30, status="atendida")
     escenario["orden"].appointment_id = anterior.id
     db_session.commit()
@@ -346,7 +346,7 @@ def test_si_vuelve_a_ser_critico_la_incidencia_se_reabre(client, db_session, esc
 
     resultado = _registrar(client, db_session, escenario, escenario["orden"], valoracion="critico")
     _revisar(client, db_session, escenario, resultado, review_status="communicated",
-             communication_note="Llamada a la paciente", communication_channel="llamada")
+             communication_note="Llamada al paciente", communication_channel="llamada")
     assert _incidencias(client, db_session, escenario["doctora"])["total"] == 0
 
     # Reenviar «crítico» a uno que ya lo es no reabre nada.
@@ -365,7 +365,7 @@ def test_si_vuelve_a_ser_critico_la_incidencia_se_reabre(client, db_session, esc
 
 
 def test_por_atender_trae_lo_recibido_y_lo_critico_de_cualquier_cita(client, db_session, escenario):
-    """N3: lo que la consulta tiene que revisar con la paciente enfrente."""
+    """N3: lo que la consulta tiene que revisar con el paciente enfrente."""
     t, p, d = escenario["tenant"], escenario["paciente"], escenario["doctora"]
     recibido = _registrar(client, db_session, escenario, escenario["orden"])  # result_received
     orden_critica = _orden(db_session, t, p, d, study_name="USG", priority="routine")

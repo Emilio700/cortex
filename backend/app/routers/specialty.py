@@ -33,7 +33,7 @@ def list_specialties(
 
     No hay un permiso de especialidades: el catálogo se administra con
     ``services.create``/``services.update`` y se lee con ``services.read``,
-    que traen los tres roles (la doctora en su perfil, recepción en el
+    que traen los tres roles (el médico en su perfil, recepción en el
     prerregistro, administración en los servicios). B-03.
     """
     return db.query(Specialty).filter(Specialty.is_active.is_(True)).order_by(Specialty.name).all()

@@ -1,6 +1,6 @@
 /**
  * Un fallo al buscar en el catálogo de medicamentos no se ve como «sin
- * resultados»: la doctora creía que el medicamento no existía (plan 29, T-1).
+ * resultados»: el médico creía que el medicamento no existía (plan 29, T-1).
  */
 import { act, renderHook } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'

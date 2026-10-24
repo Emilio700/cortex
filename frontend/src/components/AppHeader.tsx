@@ -97,7 +97,7 @@ const AppHeader = () => {
       {/* Renglón propio dentro del encabezado: el aviso de la primera vez y
           los mensajes de la ayuda no tapan nada de la pantalla. */}
       <FranjaAyuda />
-      {/* Resultados críticos sin cerrar de la doctora: en cualquier pantalla y
+      {/* Resultados críticos sin cerrar del médico: en cualquier pantalla y
           sólo hasta que la incidencia se cierra (plan 27, Fase 3). */}
       <FranjaCriticos />
     </CHeader>

@@ -1,8 +1,8 @@
-"""La doctora toma los signos vitales cuando nadie lo hizo en la sala de espera.
+"""El médico toma los signos vitales cuando nadie lo hizo en la sala de espera.
 
-Muchas veces no hay asistente que pase a la paciente por triage, y la doctora
+Muchas veces no hay asistente que pase al paciente por triage, y el médico
 empieza la consulta sin presión ni peso. Hasta ahora `triage.create` era sólo
-de recepción: la doctora no tenía cómo capturarlos y la consulta se cerraba con
+de recepción: el médico no tenía cómo capturarlos y la consulta se cerraba con
 el hueco en el expediente.
 
 La puerta se abre con la misma regla que la nota de esa consulta: sólo sobre
@@ -144,7 +144,7 @@ def _triage_de(db, cita_id):
 
 
 def test_la_doctora_registra_los_signos_de_su_paciente(client, db_session, escenario):
-    """El caso real: nadie la pasó por triage y la doctora los toma ella."""
+    """El caso real: nadie la pasó por triage y el médico los toma ella."""
     headers = _auth_headers(db_session, escenario["doctora"])
     respuesta = client.post(
         f"{PREFIX}/triage",
@@ -246,7 +246,7 @@ def test_si_recepcion_ya_los_tomo_la_doctora_no_los_duplica(client, db_session, 
 
 # --- Lecturas (acción B-02 del backlog de auditoría) ------------------------
 #
-# Leer los signos pide lo mismo que leer la nota: la doctora sólo los de sus
+# Leer los signos pide lo mismo que leer la nota: el médico sólo los de sus
 # pacientes. Recepción y administración leen los de toda la sucursal, porque
 # recepción los captura y tiene que poder abrirlos para corregirlos.
 
@@ -276,7 +276,7 @@ def test_otra_doctora_no_lee_los_signos_de_la_cita_de_una_paciente_ajena(client,
 
 
 def test_otra_doctora_no_sabe_si_la_paciente_ajena_ya_paso_por_triage(client, db_session, escenario):
-    """Sin signos, la doctora ajena recibe 403 y no el 204 que delataría que faltan."""
+    """Sin signos, el médico ajena recibe 403 y no el 204 que delataría que faltan."""
     respuesta = client.get(
         f"{PREFIX}/triage/appointment/{escenario['cita'].id}",
         headers=_auth_headers(db_session, escenario["colega"]),

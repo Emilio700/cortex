@@ -20,11 +20,11 @@ vi.mock('react-router-dom', async () => {
   return { ...real, useNavigate: () => navigate }
 })
 // Las pestañas reusan paneles que ya tienen sus propias pruebas.
-vi.mock('../secretaria/components/PatientHistory', () => ({ PatientHistory: () => <div>Citas de la paciente</div> }))
+vi.mock('../secretaria/components/PatientHistory', () => ({ PatientHistory: () => <div>Citas del paciente</div> }))
 vi.mock('../doctor/components/MedicalHistoryViewer', () => ({ default: () => <div>Notas, recetas y certificados</div> }))
 vi.mock('../doctor/components/HistorialEstudios', () => ({ default: () => <div>Historial de estudios</div> }))
 vi.mock('../doctor/components/GraficaValoraciones', () => ({ default: () => null }))
-vi.mock('../doctor/components/PatientDocuments', () => ({ default: () => <div>Documentos de la paciente</div> }))
+vi.mock('../doctor/components/PatientDocuments', () => ({ default: () => <div>Documentos del paciente</div> }))
 vi.mock('./PestanaImagenes', () => ({ default: () => <div>Imágenes clínicas</div> }))
 vi.mock('../doctor/components/ClinicalRecordPanel', () => ({
   default: ({ secciones }: { secciones?: string[] }) => <div>Panel {secciones?.join(',')}</div>,
@@ -32,7 +32,7 @@ vi.mock('../doctor/components/ClinicalRecordPanel', () => ({
 
 import ExpedienteDePaciente from './ExpedienteDePaciente'
 
-const DOCTORA = {
+const MÉDICO = {
   patient_id: 7, nombre: 'Ana López', first_name: 'Ana', last_name: 'López', date_of_birth: '1990-01-01',
   phone: '669 123 4567', allergies: 'Penicilina',
   pestanas: ['resumen', 'consultas', 'estudios', 'documentos', 'imagenes', 'embarazo', 'consentimientos', 'equipo'],
@@ -41,7 +41,7 @@ const DOCTORA = {
   alertas: { criticos: 1, atrasados: 2, por_revisar: 0, pendientes: 3 },
   cita_de_hoy: { id: 55, scheduled_at: '2026-10-10T10:00:00', status: 'confirmada' },
 }
-const RESUMEN = { ultima_consulta: null, proxima_cita: null, episodios_activos: [], resultados_recientes: [], alertas: DOCTORA.alertas }
+const RESUMEN = { ultima_consulta: null, proxima_cita: null, episodios_activos: [], resultados_recientes: [], alertas: MÉDICO.alertas }
 
 const montar = () =>
   render(
@@ -58,9 +58,9 @@ describe('ExpedienteDePaciente', () => {
     permisos.actuales = ['clinical_tracking.read', 'soap_notes.read', 'clinical_consents.read', 'appointments.create']
   })
 
-  it('la doctora ve el encabezado clínico y todas las pestañas', async () => {
+  it('el médico ve el encabezado clínico y todas las pestañas', async () => {
     get.mockImplementation((url: string) =>
-      Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : DOCTORA }),
+      Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MÉDICO }),
     )
     montar()
     expect(await screen.findByText('Alergias: Penicilina')).toBeInTheDocument()
@@ -74,7 +74,7 @@ describe('ExpedienteDePaciente', () => {
 
   it('«Abrir la consulta de hoy» lleva a su cita', async () => {
     const user = userEvent.setup()
-    get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : DOCTORA }))
+    get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MÉDICO }))
     montar()
     await user.click(await screen.findByRole('button', { name: /Abrir la consulta de hoy/ }))
     expect(navigate).toHaveBeenCalledWith('/doctor/consultation/55')
@@ -82,7 +82,7 @@ describe('ExpedienteDePaciente', () => {
 
   it('sin cita hoy ofrece «Agendar», no una consulta sin cita', async () => {
     get.mockImplementation((url: string) =>
-      Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : { ...DOCTORA, cita_de_hoy: null } }),
+      Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : { ...MÉDICO, cita_de_hoy: null } }),
     )
     montar()
     expect(await screen.findByRole('button', { name: /Agendar/ })).toBeInTheDocument()
@@ -91,7 +91,7 @@ describe('ExpedienteDePaciente', () => {
 
   it('cada pestaña se monta solo al abrirla y recuerda cuál quedó abierta', async () => {
     const user = userEvent.setup()
-    get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : DOCTORA }))
+    get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MÉDICO }))
     const { unmount } = montar()
     await screen.findByRole('tab', { name: /Estudios/ })
     expect(screen.queryByText('Historial de estudios')).toBeNull()
@@ -109,7 +109,7 @@ describe('ExpedienteDePaciente', () => {
       if (url.endsWith('/expediente')) {
         return Promise.resolve({
           data: {
-            ...DOCTORA, vista_clinica: false, embarazo: null, alertas: null, cita_de_hoy: null,
+            ...MÉDICO, vista_clinica: false, embarazo: null, alertas: null, cita_de_hoy: null,
             pestanas: ['resumen', 'consultas', 'estudios', 'documentos', 'consentimientos'],
           },
         })
@@ -137,9 +137,9 @@ describe('ExpedienteDePaciente', () => {
   })
 
   it('si no se pudo abrir, lo dice con Reintentar', async () => {
-    get.mockRejectedValueOnce({ response: { status: 404, data: { detail: 'No se encontró la paciente.' } } })
+    get.mockRejectedValueOnce({ response: { status: 404, data: { detail: 'No se encontró el paciente.' } } })
     montar()
-    expect(await screen.findByText('No se encontró la paciente.')).toBeInTheDocument()
+    expect(await screen.findByText('No se encontró el paciente.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Reintentar' })).toBeInTheDocument()
   })
 })

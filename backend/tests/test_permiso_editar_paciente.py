@@ -1,13 +1,13 @@
-"""La doctora puede completar el expediente de sus pacientes.
+"""El médico puede completar el expediente de sus pacientes.
 
-Durante el interrogatorio la doctora levanta datos que muchas veces no se
+Durante el interrogatorio el médico levanta datos que muchas veces no se
 capturaron en recepción: la fecha de nacimiento, un teléfono, las alergias,
 los antecedentes. Sin ``patients.update`` el rol doctor sólo podía leer, así
 que para corregir un dato tenía que salirse de la consulta al perfil de la
 paciente — y salirse de la consulta es, literalmente, perder lo capturado.
 
 El alcance no se amplió al conceder el permiso: leer y escribir pacientes
-pasan por el mismo filtro de relación asistencial, de modo que la doctora
+pasan por el mismo filtro de relación asistencial, de modo que el médico
 sólo puede editar a las que ya podía ver.
 """
 import pytest
@@ -28,7 +28,7 @@ def test_leer_y_editar_pacientes_van_juntos():
 @pytest.mark.parametrize(
     "prohibido",
     [
-        # Dar de alta y dar de baja pacientes es de recepción: la doctora
+        # Dar de alta y dar de baja pacientes es de recepción: el médico
         # completa expedientes, no administra el padrón.
         "patients.create",
         "patients.delete",
@@ -52,7 +52,7 @@ def test_la_doctora_no_reasigna_la_dueña_del_expediente():
     """Reasignar cambia quién puede abrir la historia clínica, no un dato más.
 
     Antes lo impedía un ``if role in (...)`` dentro del router, invisible para la
-    pantalla de permisos. Ahora es un permiso propio que la doctora no trae.
+    pantalla de permisos. Ahora es un permiso propio que el médico no trae.
     """
     assert "patients.reassign_owner" not in ROLE_DEFAULT_PERMISSIONS["doctor"]
 
@@ -75,7 +75,7 @@ def test_la_doctora_agenda_la_proxima_revision():
 def test_el_permiso_de_agendar_no_viaja_solo():
     """El permiso dice que puede crear citas, no para quién.
 
-    Sin el guard de ``create_appointment`` que ata a la doctora a su propia
+    Sin el guard de ``create_appointment`` que ata al médico a su propia
     agenda, concederlo le abriría la agenda de sus cuatro colegas. Esta prueba
     existe para que quitar el guard no pase inadvertido.
     """

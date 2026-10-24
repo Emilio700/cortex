@@ -10,7 +10,7 @@ import type {
 } from '../types'
 import { aErrorDeCobro, detalleDeError } from '../utils/cobro'
 
-/** Quita los filtros vacíos: mandar `doctor_id=` sería pedir "la doctora vacía". */
+/** Quita los filtros vacíos: mandar `doctor_id=` sería pedir "el médico vacía". */
 const sinVacios = <T extends object>(params?: T): Partial<T> | undefined => {
   if (!params) return undefined
   return Object.fromEntries(

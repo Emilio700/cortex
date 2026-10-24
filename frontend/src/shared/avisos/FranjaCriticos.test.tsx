@@ -29,7 +29,7 @@ const montar = (criticos: CriticosAbiertos | null) => {
 describe('FranjaCriticos', () => {
   beforeEach(() => localStorage.clear())
 
-  it('dice cuántos críticos hay sin cerrar y no lleva el nombre de la paciente', () => {
+  it('dice cuántos críticos hay sin cerrar y no lleva el nombre del paciente', () => {
     montar(ok(1, 2))
     const franja = screen.getByTestId('franja-criticos')
     expect(franja).toHaveTextContent('2 resultados críticos sin cerrar')
@@ -73,7 +73,7 @@ describe('FranjaCriticos', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('en el inicio de la doctora no se repite: ahí ya está la tarjeta', () => {
+  it('en el inicio del médico no se repite: ahí ya está la tarjeta', () => {
     valor.actual = { criticos: ok(1), refrescar: vi.fn() }
     const { rerender } = render(
       <MemoryRouter initialEntries={['/doctor/dashboard']}>

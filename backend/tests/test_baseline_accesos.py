@@ -2,7 +2,7 @@
 
 Por qué existe este archivo: las fases siguientes del plan 20 mueven el motor de
 permisos y, sobre todo, el **alcance de datos clínicos**. Un error ahí no rompe una
-pantalla: expone o esconde el expediente de una paciente. Estas pruebas no describen
+pantalla: expone o esconde el expediente de un paciente. Estas pruebas no describen
 el comportamiento *deseado* sino el que hay HOY, para que cualquier cambio posterior
 tenga que declararse explícitamente actualizando este archivo en vez de colarse.
 
@@ -56,7 +56,7 @@ from app.models.user import Role, User
 # (B10). Reasignar la dueña del expediente ya estaba permitido a secretaría y
 # administración, pero mediante un ``if role in (...)`` dentro del router, que la
 # pantalla de Master no podía tocar. El permiso nuevo reproduce exactamente a
-# quién alcanzaba ese gate; la doctora sigue sin poder reasignar.
+# quién alcanzaba ese gate; el médico sigue sin poder reasignar.
 PERMISOS_POR_ROL: dict[str, set[str]] = {
     "admin": {
         "admin.dashboard.read",
@@ -202,7 +202,7 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         # paciente equivocada; nunca borra (test_correccion_documentos.py).
         "documents.correct",
         "documents.read",
-        # Por decisión (plan 32, punto 6): la doctora sube documentos; antes
+        # Por decisión (plan 32, punto 6): el médico sube documentos; antes
         # veía el botón y recibía un 403 (C7).
         "documents.upload",
         "medical_certificates.create",
@@ -215,7 +215,7 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "patient_care_team.read",
         "patients.read",
         "patients.update",
-        # Por decisión, no por deriva: la doctora cobra y ve su propio corte
+        # Por decisión, no por deriva: el médico cobra y ve su propio corte
         # (plan 23). El alcance la acota al ingreso que es suyo
         # (test_cobros_por_doctora.py).
         "payments.cashcut",
@@ -238,7 +238,7 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "soap_notes.create",
         "soap_notes.read",
         "soap_notes.update",
-        # Por decisión, no por deriva: la doctora toma los signos cuando nadie
+        # Por decisión, no por deriva: el médico toma los signos cuando nadie
         # los tomó en la sala de espera (test_triage_desde_consulta.py).
         "triage.create",
         "triage.read",
@@ -316,7 +316,7 @@ def test_los_overrides_por_usuario_se_suman_a_los_del_rol(db, tenant):
     a los que ya tienen permisos materializados.
     """
     doctora = _crear_usuario(db, tenant, Role.DOCTOR)
-    # ``reports.read`` y no ``payments.create``: desde el plan 23 la doctora ya
+    # ``reports.read`` y no ``payments.create``: desde el plan 23 el médico ya
     # cobra por defecto y el override no probaría nada.
     db.add(Permission(role="doctor", action="reports.read", is_granted=True, user_id=doctora.id))
     db.commit()
@@ -456,7 +456,7 @@ def test_el_filtro_de_pacientes_no_acota_a_secretaria_ni_a_admin(db, escenario_c
     """
     for quien in ("secretaria", "admin"):
         query = apply_doctor_patient_access_filter(db.query(Patient), escenario_clinico[quien])
-        assert len(query.all()) == 2, f"{quien} dejó de ver a todas las pacientes"
+        assert len(query.all()) == 2, f"{quien} dejó de ver a todas los pacientes"
 
 
 def test_la_doctora_dueña_entra_al_expediente(db, escenario_clinico):
@@ -483,7 +483,7 @@ def test_una_membresia_de_equipo_tratante_no_le_abre_el_expediente_a_otra_doctor
 
     Esta prueba decía lo contrario hasta el 2026-09-24. Se actualiza porque el
     acceso cambió a propósito —Emilio lo pidió— y no porque estorbara: quien
-    pierde acceso es una doctora sobre la paciente de una colega, y lo hace por
+    pierde acceso es un médico sobre el paciente de una colega, y lo hace por
     la vía del equipo tratante. La membresía sigue existiendo en la base; lo que
     ya no hace es abrir el expediente.
     """
@@ -565,7 +565,7 @@ def test_el_listado_de_una_doctora_tampoco_incluye_a_la_paciente_que_cubria(
 ):
     """El buscador y el expediente tienen que decir lo mismo.
 
-    Si la lista siguiera mostrando a la paciente cubierta, la doctora la
+    Si la lista siguiera mostrando al paciente cubierta, el médico la
     encontraría por nombre y recibiría un 403 al abrirla: enterarse de que
     existe ya es información que no le toca.
     """

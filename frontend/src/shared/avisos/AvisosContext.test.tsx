@@ -217,7 +217,7 @@ describe('AvisosProvider', () => {
     expect(() => render(<Suelta />)).not.toThrow()
   })
 
-  it('un crítico nuevo suena con el tono urgente y refresca el inicio de la doctora', async () => {
+  it('un crítico nuevo suena con el tono urgente y refresca el inicio del médico', async () => {
     const refrescos = vi.fn()
     window.addEventListener('gems:resultados-actualizados', refrescos)
     render(

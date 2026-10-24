@@ -96,7 +96,7 @@ describe('PacientesPage · una sola consulta al abrir (plan 29, lote 6)', () => 
 })
 
 describe('PacientesPage · fichas incompletas (plan 32, punto 5)', () => {
-  it('marca con un punto discreto a la paciente sin fecha de nacimiento', async () => {
+  it('marca con un punto discreto al paciente sin fecha de nacimiento', async () => {
     fetchPatients.mockResolvedValue([
       { id: 1, first_name: 'ANA', last_name: 'EXPRES', date_of_birth: null, tenant_id: 1, is_active: true },
       { id: 2, first_name: 'BETY', last_name: 'COMPLETA', date_of_birth: '1990-01-01', tenant_id: 1, is_active: true },

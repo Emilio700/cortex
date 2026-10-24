@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event'
 import { PacienteForm } from './PacienteForm'
 
 /**
- * Dar de alta ya no pregunta si la paciente es obstétrica o ginecológica.
+ * Dar de alta ya no pregunta si el paciente es obstétrica o ginecológica.
  *
  * Todas son ginecológicas; algunas *están* embarazadas. Ese estado vive en el
  * registro de embarazo, con su propio fechado y su desenlace, y no en una
@@ -39,7 +39,7 @@ beforeEach(() => {
     onClose.mockReset()
 })
 
-describe('PacienteForm · el alta ya no clasifica a la paciente', () => {
+describe('PacienteForm · el alta ya no clasifica al paciente', () => {
     it('no pide el tipo de paciente', () => {
         renderForm()
 
@@ -52,7 +52,7 @@ describe('PacienteForm · el alta ya no clasifica a la paciente', () => {
         renderForm()
 
         expect(screen.queryByLabelText('FPP')).not.toBeInTheDocument()
-        // La FUR que dice la paciente al llamar; el fechado del embarazo sigue
+        // La FUR que dice el paciente al llamar; el fechado del embarazo sigue
         // viviendo en su registro, con su propio método.
         expect(screen.getByLabelText('Última menstruación (FUR, opcional)')).toBeInTheDocument()
     })

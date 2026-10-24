@@ -75,7 +75,7 @@ export const useCertificates = () => {
       )
       return response.data
     } catch (err: any) {
-      const mensaje = mensajeDeError(err, 'No se pudieron cargar los certificados de la paciente.')
+      const mensaje = mensajeDeError(err, 'No se pudieron cargar los certificados del paciente.')
       setError(mensaje)
       // Se relanza: quien pinta el historial tiene que distinguir «no hay»
       // de «no se pudo leer» (plan 29, T-1). El mensaje ya va en español.

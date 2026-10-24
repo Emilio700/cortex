@@ -134,7 +134,7 @@ beforeEach(() => {
 const rejilla = () => screen.getByRole('group', { name: 'Horarios' })
 
 const elegirDoctor = async (user: ReturnType<typeof userEvent.setup>) => {
-    await user.selectOptions(screen.getByLabelText(/Doctor/), '7')
+    await user.selectOptions(screen.getByLabelText(/Médico/), '7')
     await screen.findByRole('group', { name: 'Horarios' })
 }
 
@@ -147,7 +147,7 @@ describe('AppointmentModal · disponibilidad', () => {
     it('no pide horarios ni los inventa mientras no haya doctor', async () => {
         renderModal()
         expect(
-            await screen.findByText(/Elige primero a la doctora para ver sus horarios libres/),
+            await screen.findByText(/Elige primero al médico para ver sus horarios libres/),
         ).toBeInTheDocument()
         expect(getDisponibilidad).not.toHaveBeenCalled()
     })
@@ -265,7 +265,7 @@ describe('AppointmentModal · disponibilidad', () => {
         const user = userEvent.setup()
         getDisponibilidad.mockRejectedValue(new Error('No se pudieron cargar los horarios disponibles.'))
         renderModal()
-        await user.selectOptions(screen.getByLabelText(/Doctor/), '7')
+        await user.selectOptions(screen.getByLabelText(/Médico/), '7')
 
         expect(
             await screen.findByText('No se pudieron cargar los horarios disponibles.'),

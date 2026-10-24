@@ -123,7 +123,7 @@ def _contar_filas(db):
 
 
 def test_dos_recetas_identicas_en_la_misma_cita_se_reportan(db_session, escenario):
-    """El caso real: la doctora guardó, no se imprimió nada, volvió a guardar."""
+    """El caso real: el médico guardó, no se imprimió nada, volvió a guardar."""
     cita = escenario["cita"]()
     primera = escenario["receta"](cita, [PARACETAMOL], folio="REC-1-2026-0148", minutos=72)
     segunda = escenario["receta"](cita, [PARACETAMOL], folio="REC-1-2026-0149", minutos=73)
@@ -142,7 +142,7 @@ def test_dos_recetas_distintas_en_la_misma_cita_no_se_reportan(db_session, escen
     """Un tratamiento adicional en la misma consulta es válido y no se toca.
 
     Es el falso positivo caro: reportarlo puede terminar en que alguien borre
-    una receta que la paciente necesita.
+    una receta que el paciente necesita.
     """
     cita = escenario["cita"]()
     escenario["receta"](cita, [PARACETAMOL], folio="REC-1-2026-0201", minutos=10)
@@ -154,7 +154,7 @@ def test_dos_recetas_distintas_en_la_misma_cita_no_se_reportan(db_session, escen
 
 
 def test_mismos_medicamentos_con_indicaciones_distintas_no_se_reportan(db_session, escenario):
-    """Cambiar las indicaciones cambia lo que la paciente debe hacer."""
+    """Cambiar las indicaciones cambia lo que el paciente debe hacer."""
     cita = escenario["cita"]()
     escenario["receta"](cita, [PARACETAMOL], indicaciones="TOMAR CON ALIMENTOS",
                         folio="REC-1-2026-0301", minutos=10)
@@ -200,7 +200,7 @@ def test_el_orden_de_las_llaves_del_json_no_impide_detectar_el_duplicado(db_sess
 
 
 def test_los_mismos_medicamentos_en_distinto_orden_se_reportan_y_se_avisa(db_session, escenario):
-    """Reordenar la lista no cambia el tratamiento, pero la doctora debe saberlo."""
+    """Reordenar la lista no cambia el tratamiento, pero el médico debe saberlo."""
     cita = escenario["cita"]()
     escenario["receta"](cita, [PARACETAMOL, AMOXICILINA], folio="REC-1-2026-0601", minutos=10)
     escenario["receta"](cita, [AMOXICILINA, PARACETAMOL], folio="REC-1-2026-0602", minutos=11)
@@ -279,7 +279,7 @@ def test_el_reporte_no_escribe_nada_en_la_base(db_session, escenario, capsys):
 
 
 def test_la_salida_menciona_el_folio_y_la_diferencia_de_tiempo(db_session, escenario, capsys):
-    """El folio es lo que la doctora ve impreso; el id de base no le dice nada."""
+    """El folio es lo que el médico ve impreso; el id de base no le dice nada."""
     cita = escenario["cita"]()
     escenario["receta"](cita, [PARACETAMOL], folio="REC-1-2026-0148", minutos=72)
     escenario["receta"](cita, [PARACETAMOL], folio="REC-1-2026-0149", minutos=73)

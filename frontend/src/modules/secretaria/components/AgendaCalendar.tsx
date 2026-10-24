@@ -36,7 +36,7 @@ interface AgendaCalendarProps {
      */
     soloToolbar?: boolean
     /**
-     * Llevar el calendario a un día (lo pide el inicio de la doctora, plan 28).
+     * Llevar el calendario a un día (lo pide el inicio del médico, plan 28).
      * `vista: 'dia'` cambia a la vista de día; `clave` distinto repite el salto
      * aunque sea al mismo día.
      */

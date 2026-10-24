@@ -70,7 +70,7 @@ const recorridoAdmin: Recorrido = {
 const recorridoPacientes: Recorrido = {
   ...recorridoAgenda,
   id: 'pacientes-prueba',
-  titulo: 'Las pacientes',
+  titulo: 'Los pacientes',
   ruta: '/secretaria/pacientes',
 }
 
@@ -85,7 +85,7 @@ const recorridoFormulario: Recorrido = {
   roles: [Role.SECRETARIA],
   contexto: 'cita-modal',
   comoLlegar: 'Pulsa Nueva cita y luego ¿Cómo se llena?.',
-  pasos: [{ elemento: 'cita-paciente', titulo: 'Paciente', texto: 'Busca a la paciente' }],
+  pasos: [{ elemento: 'cita-paciente', titulo: 'Paciente', texto: 'Busca al paciente' }],
 }
 
 const bienvenida: Recorrido = {
@@ -768,7 +768,7 @@ describe('recorrido completo', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Ver recorrido: ¿Cómo se llena?' }))
     // El arranque espera a que el motor esté listo (carga diferida): dar el microturno.
     await esperar(0)
-    expect(popover()?.textContent).toContain('Busca a la paciente')
+    expect(popover()?.textContent).toContain('Busca al paciente')
     fireEvent.click(document.querySelector('.driver-popover-next-btn')!)
     expect(
       screen.getByText(/En el recorrido completo sigue «Agenda» \(2 de 2\)/),

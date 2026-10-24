@@ -101,9 +101,9 @@ class DiagnosticOrderGroup(Base):
 
     Es sólo la agrupación: cada estudio sigue siendo su propia
     ``DiagnosticOrder``, con su estado y sus resultados, porque el laboratorio
-    entrega la biometría hoy y el urocultivo en tres días, y la doctora revisa
+    entrega la biometría hoy y el urocultivo en tres días, y el médico revisa
     cada uno cuando llega. Una orden suelta (sin grupo) sigue siendo válida:
-    así quedan todas las que ya existían y las que la doctora pida de una en una.
+    así quedan todas las que ya existían y las que el médico pida de una en una.
     """
 
     __tablename__ = "diagnostic_order_groups"
@@ -151,7 +151,7 @@ class DiagnosticOrder(Base):
     specimen_or_body_site = Column(String(180), nullable=True)
     destination = Column(String(255), nullable=True)
     status = Column(String(40), nullable=False, default="ordered", index=True)
-    # ``None`` = pedida en GEMS; ``externo`` = estudio que la paciente trajo de
+    # ``None`` = pedida en GEMS; ``externo`` = estudio que el paciente trajo de
     # otro lugar, sin orden de GEMS (plan 32, punto 6). No se imprime.
     origen = Column(String(20), nullable=True)
     # Último cambio manual de estado (O-05). El motivo es obligatorio al
@@ -160,7 +160,7 @@ class DiagnosticOrder(Base):
     status_reason = Column(Text, nullable=True)
     status_changed_at = Column(DateTime, nullable=True)
     status_changed_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    # Entrega del papel a la paciente en el mostrador (O-09). Es contabilidad de
+    # Entrega del papel al paciente en el mostrador (O-09). Es contabilidad de
     # recepción, aparte del ``status`` clínico: una orden puede estar entregada y
     # seguir "solicitada" en el laboratorio. Nulo = todavía por entregar.
     delivered_at = Column(DateTime, nullable=True)
@@ -195,7 +195,7 @@ class DiagnosticResult(Base):
     structured_values = Column(JSON, nullable=True)
     review_status = Column(String(40), nullable=False, default="received", index=True)
     is_critical = Column(Boolean, nullable=False, default=False, index=True)
-    # Valoración de la doctora (plan 26, D-9): excelente, bien, regular, malo o
+    # Valoración del médico (plan 26, D-9): excelente, bien, regular, malo o
     # crítico. Es lo que ahora decide si el resultado es crítico;
     # ``is_critical`` se conserva derivado de ella para las órdenes viejas y
     # para las consultas que ya lo leen.
@@ -206,10 +206,10 @@ class DiagnosticResult(Base):
     communicated_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     communicated_at = Column(DateTime, nullable=True)
     communication_note = Column(Text, nullable=True)
-    # Por dónde se le hizo llegar el resultado a la paciente (plan 26, D-8):
+    # Por dónde se le hizo llegar el resultado al paciente (plan 26, D-8):
     # en_mano, llamada, whatsapp o correo.
     communication_channel = Column(String(20), nullable=True)
-    # La cita en la que la doctora lo revisó con la paciente, si fue en consulta.
+    # La cita en la que el médico lo revisó con el paciente, si fue en consulta.
     reviewed_in_appointment_id = Column(Integer, ForeignKey("appointments.id"), nullable=True)
     # Cierre de la incidencia crítica (D-8): se cierra al comunicarlo a la
     # paciente o al revisarlo en una consulta suya; revisarlo desde la bandeja
@@ -245,13 +245,13 @@ class DiagnosticResult(Base):
 class DiagnosticOrderFollowUp(Base):
     """Por qué un estudio sigue sin resultado (plan 32, punto 3).
 
-    Antes, si la paciente no se lo había hecho o el laboratorio lo tenía en
+    Antes, si el paciente no se lo había hecho o el laboratorio lo tenía en
     proceso, no quedaba escrito en ningún lado. Cada seguimiento guarda quién,
     cuándo y por qué, y la fecha en que hay que volver a revisarlo: hasta esa
     fecha el estudio sale de «Atrasados». Nunca se edita ni se borra; uno
     nuevo se agrega encima, y eso es el rastro.
 
-    Lo registra la doctora o recepción, que suele ser quien llama a la paciente
+    Lo registra el médico o recepción, que suele ser quien llama al paciente
     o al laboratorio. No guarda nada clínico: el motivo es operativo.
     """
 

@@ -25,7 +25,7 @@ const AppContent = () => {
 
     // Abre una pestaña para la ruta actual. «/» no tiene pantalla y una ruta que
     // no existe abría una pestaña en blanco: las dos llevan al inicio del rol
-    // (la doctora, a su tablero con métricas), en vez de dejar «Selecciona una
+    // (el médico, a su tablero con métricas), en vez de dejar «Selecciona una
     // sección del menú» o una pantalla vacía (plan 26, D-6).
     useEffect(() => {
         const path = location.pathname

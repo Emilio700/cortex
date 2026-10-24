@@ -1,5 +1,5 @@
 /**
- * El expediente único de una paciente (plan 32, punto 6).
+ * El expediente único de un paciente (plan 32, punto 6).
  *
  * Una sola pieza para la página del expediente y para la consulta, que lo
  * reutiliza en vez de repetir sus pestañas. Qué pestañas salen lo decide el
@@ -74,7 +74,7 @@ const guardarPestana = (patientId: number, p: PestanaExpediente) => {
 
 const EVENTO = 'gems:expediente-pestana'
 
-/** Pide que el expediente de esa paciente se abra (o cambie) en una pestaña. */
+/** Pide que el expediente de ese paciente se abra (o cambie) en una pestaña. */
 export const pedirPestanaDelExpediente = (patientId: number, pestana: PestanaExpediente) => {
   guardarPestana(patientId, pestana)
   window.dispatchEvent(new CustomEvent(EVENTO, { detail: { patientId, pestana } }))

@@ -5,7 +5,7 @@
  * la pantalla de Master no se veía por ningún lado hasta cerrar sesión: la
  * pantalla decía que sí y el sistema, para esa sesión, seguía diciendo que no.
  *
- * Lo que NO se hace, y por eso está probado: cerrar la sesión. Una doctora a
+ * Lo que NO se hace, y por eso está probado: cerrar la sesión. Un médico a
  * media nota perdería lo capturado porque alguien tocó un permiso.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -41,7 +41,7 @@ const perfil = (version: number, permissions: string[]): User =>
   ({
     id: 7,
     email: 'doctora@gems.com',
-    full_name: 'Doctora',
+    full_name: 'Médico',
     role: Role.DOCTOR,
     tenant_id: 1,
     is_active: true,
@@ -96,7 +96,7 @@ describe('AuthContext · permisos que cambian con la sesión abierta', () => {
   })
 
   it('un cambio de permisos no cierra la sesión de nadie', async () => {
-    // El riesgo que esta prueba vigila es concreto: sacar a una doctora de su
+    // El riesgo que esta prueba vigila es concreto: sacar a un médico de su
     // sesión a media nota costaría lo capturado.
     mockGetCurrentUser.mockResolvedValue(perfil(3, []))
     renderProvider()

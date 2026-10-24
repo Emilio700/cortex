@@ -1,10 +1,10 @@
 /**
  * Alta de órdenes de estudios, suelta o agrupada (O-02).
  *
- * Antes cada estudio era una orden a mano, una por una. Aquí la doctora arma
+ * Antes cada estudio era una orden a mano, una por una. Aquí el médico arma
  * una lista de estudios y los emite juntos: si es uno solo sigue siendo una
  * orden suelta (`POST /orders`, la de siempre); si son varios se crea una
- * orden agrupada (`POST /order-groups`), un solo papel para la paciente aunque
+ * orden agrupada (`POST /order-groups`), un solo papel para el paciente aunque
  * cada estudio conserve su estado y su resultado.
  *
  * Regla de oro (plan 22): sólo se dice «creada» cuando el servidor devuelve el
@@ -105,7 +105,7 @@ const FormularioOrdenEstudios = ({
   }>({})
   const limpiarError = (campo: keyof typeof errores) =>
     setErrores((prev) => (prev[campo] ? { ...prev, [campo]: undefined } : prev))
-  // O-03: plantillas que precargan estudios. Sólo la doctora ve este formulario.
+  // O-03: plantillas que precargan estudios. Sólo el médico ve este formulario.
   const { plantillas, cargarDetalle } = usePlantillasOrden(true)
   const [cargandoPlantilla, setCargandoPlantilla] = useState(false)
   const [avisoPlantilla, setAvisoPlantilla] = useState<string | null>(null)
@@ -156,7 +156,7 @@ const FormularioOrdenEstudios = ({
 
   /**
    * O-03: al elegir una plantilla, copia sus estudios al lote y su indicación
-   * sugerida a la indicación (si está vacía). No crea nada: la doctora revisa,
+   * sugerida a la indicación (si está vacía). No crea nada: el médico revisa,
    * edita y confirma con el botón de siempre.
    */
   const aplicarPlantilla = async (clave: string) => {

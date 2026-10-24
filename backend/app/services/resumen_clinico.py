@@ -1,14 +1,14 @@
-"""Resumen clínico de una paciente (plan 32, punto 8).
+"""Resumen clínico de un paciente (plan 32, punto 8).
 
-Sirve para referir a la paciente con otro médico o entregarlo a una
+Sirve para referir al paciente con otro médico o entregarlo a una
 aseguradora o a ella misma (NOM-004: el expediente se integra y se entrega).
 
 Reglas que vienen del plan y no se negocian aquí:
 
 - **No inventa.** Lo que falta dice «Sin registro»; nunca se rellena ni se
   deduce un dato que nadie capturó.
-- **La doctora elige las secciones** y lo ve antes de emitirlo (vista previa
-  obligatoria). Los datos de la paciente, la firma, la fecha y el folio van
+- **El médico elige las secciones** y lo ve antes de emitirlo (vista previa
+  obligatoria). Los datos del paciente, la firma, la fecha y el folio van
   siempre.
 - **Hora de Mazatlán** en cada fecha y hora impresas.
 
@@ -34,7 +34,7 @@ from app.services.datos_de_cita import edad_gestacional
 
 SIN_REGISTRO = "Sin registro"
 
-# Las secciones que la doctora puede elegir, en el orden en que salen.
+# Las secciones que el médico puede elegir, en el orden en que salen.
 SECCIONES: dict[str, str] = {
     "alergias": "Alergias",
     "antecedentes": "Antecedentes",

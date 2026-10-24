@@ -3,8 +3,8 @@
  * (plan 23, ajustes del 2026-09-28).
  *
  * Sin esta marca, en la agenda y en el historial se vería igual que una
- * consulta agendada a esa hora, y alguien podría concluir que la paciente
- * tenía cita o que la doctora la atendió en ese horario de principio a fin.
+ * consulta agendada a esa hora, y alguien podría concluir que el paciente
+ * tenía cita o que el médico la atendió en ese horario de principio a fin.
  */
 import React from 'react'
 import type { OrigenCita } from '../types'

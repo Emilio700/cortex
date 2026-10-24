@@ -5,13 +5,13 @@
  * No es una notificación que alguien pueda dar por atendida: se deriva de lo
  * que el servidor tiene abierto (`GET /clinical-tracking/critical-results`) y
  * se quita SOLO cuando la incidencia se cierra, al comunicarle o entregarle el
- * resultado a la paciente, o al revisarlo dentro de una consulta suya.
+ * resultado al paciente, o al revisarlo dentro de una consulta suya.
  *
  * - Se puede posponer 15 minutos en este equipo, no descartar. Un crítico
  *   nuevo la vuelve a mostrar aunque esté pospuesta.
  * - Si no se pudo consultar, lo dice: un fallo nunca se lee como «no hay
  *   críticos» (misma regla que `IncidenciasCriticas`).
- * - No lleva el nombre de la paciente: la pantalla de la doctora la puede ver
+ * - No lleva el nombre del paciente: la pantalla del médico la puede ver
  *   quien esté en el consultorio. El detalle está en la bandeja.
  * - Un renglón, también a 360 px; nada de modal ni de robar el foco.
  */
@@ -77,7 +77,7 @@ const FranjaCriticos = () => {
   }, [pospuesta])
 
   if (!criticos || !user) return null
-  // En el inicio de la doctora la tarjeta de incidencias críticas ya lo dice,
+  // En el inicio del médico la tarjeta de incidencias críticas ya lo dice,
   // con más detalle: la franja encima repetía lo mismo (decisión del
   // coordinador, plan 29). En las demás pantallas sigue igual.
   if (pathname === RUTA_DE_INICIO_POR_ROL[Role.DOCTOR]) return null
@@ -118,7 +118,7 @@ const FranjaCriticos = () => {
         <b>{total === 1 ? '1 resultado crítico' : `${total} resultados críticos`} sin cerrar</b>
         <span className="franja-criticos__detalle">
           {' '}
-          · Se quita al comunicárselo a la paciente o al revisarlo en una consulta suya.
+          · Se quita al comunicárselo al paciente o al revisarlo en una consulta suya.
         </span>
       </span>
       <CButton

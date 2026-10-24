@@ -1,5 +1,5 @@
 /**
- * Progreso de las valoraciones de la paciente, por estudio (plan 26, D-9).
+ * Progreso de las valoraciones del paciente, por estudio (plan 26, D-9).
  *
  * Cada resultado puede llevar una valoración (Excelente…Crítico). Aquí se ve
  * cómo fue cambiando en el tiempo: una línea por estudio, con la valoración en

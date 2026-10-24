@@ -42,13 +42,13 @@ ALL_PERMISSIONS: dict[str, str] = {
     "patients.create":    "Crear pacientes",
     "patients.update":    "Editar pacientes",
     "patients.delete":    "Desactivar pacientes",
-    # Reasignar la duena del expediente no es "editar a la paciente": cambia
+    # Reasignar la duena del expediente no es "editar al paciente": cambia
     # quien puede abrir su historia clinica. Por eso es un permiso aparte y no
     # viene incluido en patients.update.
-    "patients.reassign_owner": "Reasignar la paciente a otra doctora",
+    "patients.reassign_owner": "Reasignar el paciente a otro médico",
     # Explicit care-team access. Owner doctor remains the default relation;
     # these permissions control auditable collaboration and temporary access.
-    "patient_care_team.read":   "Ver equipo tratante de la paciente",
+    "patient_care_team.read":   "Ver equipo tratante del paciente",
     "patient_care_team.manage": "Asignar o revocar equipo tratante",
     # Appointments
     "appointments.read":          "Ver citas / agenda",
@@ -96,16 +96,16 @@ ALL_PERMISSIONS: dict[str, str] = {
     "clinical_tracking.print_order": "Imprimir o reimprimir órdenes de estudio",
     # Subir el PDF o la foto del resultado y ligarlo a su orden (O-04). Aparte
     # de clinical_tracking.update porque recepción lo recibe en el mostrador y
-    # lo sube, pero no interpreta ni marca revisado: eso es de la doctora.
+    # lo sube, pero no interpreta ni marca revisado: eso es del médico.
     "clinical_tracking.attach_result": "Adjuntar el resultado (PDF o foto) a una orden de estudio",
-    # Marcar en el mostrador que la orden ya se le entregó a la paciente (O-09).
+    # Marcar en el mostrador que la orden ya se le entregó al paciente (O-09).
     # Aparte de clinical_tracking.update: recepción maneja el papel del día pero
     # no cambia el ciclo clínico ni ve la indicación. La vista "por entregar" y
     # el marcado de entrega se abren con este permiso.
-    "clinical_tracking.deliver_order": "Marcar una orden de estudio como entregada a la paciente",
+    "clinical_tracking.deliver_order": "Marcar una orden de estudio como entregada al paciente",
     # Registrar por qué un estudio sigue sin resultado y cuándo volver a
     # revisarlo (plan 32, punto 3). Recepción también: suele ser quien llama a
-    # la paciente o al laboratorio. No abre nada clínico.
+    # el paciente o al laboratorio. No abre nada clínico.
     "clinical_tracking.follow_up": "Registrar el seguimiento de un estudio atrasado",
     # Consent-gated clinical images
     "clinical_images.read":   "Ver imágenes clínicas",
@@ -129,10 +129,10 @@ ALL_PERMISSIONS: dict[str, str] = {
     "documents.upload":  "Subir documentos",
     "documents.update":  "Editar metadata de documentos",
     "documents.delete":  "Eliminar documentos",
-    # Plan 29, lote 7: anular o mover a otra paciente un documento subido por
+    # Plan 29, lote 7: anular o mover a otro paciente un documento subido por
     # error. Nunca borra el archivo. Quien lo subió puede corregirlo en las
     # primeras 24 h aunque no tenga este permiso.
-    "documents.correct": "Corregir documentos (anular o mover a otra paciente)",
+    "documents.correct": "Corregir documentos (anular o mover a otro paciente)",
     # Notifications
     "notifications.read":   "Ver notificaciones",
     # Patient preregistration
@@ -187,7 +187,7 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         "documents.correct",
         "notifications.read",
         # Del preregistro sólo queda la lectura, como historial: se quitó de
-        # la interfaz (plan 32, punto 5) y la paciente nueva se da de alta al
+        # la interfaz (plan 32, punto 5) y el paciente nuevo se da de alta al
         # agendar. Crear, editar y convertir salen de los roles por omisión;
         # quien los tenga concedidos a mano los conserva, sin pantalla.
         "preregistration.read",
@@ -216,31 +216,31 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         "documents.read", "documents.upload", "documents.update",
         "notifications.read",
         # Del preregistro sólo queda la lectura, como historial: se quitó de
-        # la interfaz (plan 32, punto 5) y la paciente nueva se da de alta al
+        # la interfaz (plan 32, punto 5) y el paciente nuevo se da de alta al
         # agendar. Crear, editar y convertir salen de los roles por omisión;
         # quien los tenga concedidos a mano los conserva, sin pantalla.
         "preregistration.read",
         "triage.read", "triage.create",
         "schedule.read", "schedule.blocks.read", "schedule.blocks",
-        # Reimprime la orden de estudio cuando la paciente perdió el papel; no
+        # Reimprime la orden de estudio cuando el paciente perdió el papel; no
         # le abre el resto del seguimiento clínico (ver el catálogo arriba).
-        # Ojo: el papel es el mismo que entrega la doctora, así que lleva la
+        # Ojo: el papel es el mismo que entrega el médico, así que lleva la
         # indicación clínica impresa cuando ella deja activo «mostrar
         # indicación» (plan 32, revisión del punto 7). En pantalla no la ve.
         "clinical_tracking.print_order",
-        # Sube el resultado que la paciente trae impreso o manda por correo;
+        # Sube el resultado que el paciente trae impreso o manda por correo;
         # sólo ve lo necesario para encontrar la orden (paciente, estudio,
         # fecha y folio); en pantalla nunca la indicación ni la interpretación.
         "clinical_tracking.attach_result",
         # Lleva el papel del día: ve las órdenes emitidas y marca cuáles ya
-        # entregó a la paciente (O-09), sin abrir el seguimiento clínico.
+        # entregó al paciente (O-09), sin abrir el seguimiento clínico.
         "clinical_tracking.deliver_order",
         "clinical_tracking.follow_up",
     ],
 
     "doctor": [
         "dashboard.read", "doctor.dashboard.read",
-        # La doctora levanta datos de la paciente durante el interrogatorio
+        # El médico levanta datos del paciente durante el interrogatorio
         # —fecha de nacimiento, telefono, alergias, antecedentes— y sin esto
         # tenia que salirse de la consulta a editarlos desde el perfil,
         # perdiendo lo capturado. El alcance no se amplia: leer y escribir
@@ -251,7 +251,7 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         "patient_care_team.read", "patient_care_team.manage",
         # Agendar la proxima revision sin salir de la consulta. El permiso dice
         # que puede crear, no para quien: el guard de create_appointment impide
-        # que una doctora meta citas en la agenda de sus colegas.
+        # que un médico meta citas en la agenda de sus colegas.
         "appointments.read", "appointments.create", "doctor.appointments.read",
         "appointments.change_status",
         "doctor_profile.read", "doctor_profile.update",
@@ -270,11 +270,11 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         # Sube documentos (decisión de Emilio, plan 32 punto 6): antes veía el
         # botón y al guardar recibía un 403 (C7).
         "documents.read", "documents.upload",
-        # Corrige el documento que se subió a la paciente equivocada (plan 29).
+        # Corrige el documento que se subió al paciente equivocada (plan 29).
         "documents.correct",
         "notifications.read",
         # Muchas veces no hay asistente que tome los signos en la sala de
-        # espera, y la doctora los toma ella misma al empezar la consulta. Sin
+        # espera, y el médico los toma ella misma al empezar la consulta. Sin
         # esto la consulta se cerraba sin presión ni peso en el expediente. El
         # router la acota a pacientes con las que tiene relación asistencial.
         "triage.read", "triage.create",
@@ -283,7 +283,7 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         "reminders.read", "reminders.update",
         "services.read",
         "medications.search",
-        # Muchas veces la doctora cobra ella misma (plan 23, decisión 3). Lo que
+        # Muchas veces el médico cobra ella misma (plan 23, decisión 3). Lo que
         # ve y lo que suma su corte lo acota ``filtrar_pagos_del_alcance`` al
         # ingreso que es suyo: estos permisos no le abren el dinero de la
         # sucursal, sólo el propio.

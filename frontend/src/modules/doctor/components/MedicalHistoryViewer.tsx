@@ -41,7 +41,7 @@ const MedicalHistoryViewer: React.FC<MedicalHistoryViewerProps> = ({ patientId }
     const [doctorNamesById, setDoctorNamesById] = useState<Record<number, string>>({})
     // Qué partes del historial no se pudieron leer. Antes cada fallo volvía
     // una lista vacía y la pantalla decía «No hay registros médicos previos»
-    // de una paciente que sí los tiene (plan 29, T-1).
+    // de un paciente que sí los tiene (plan 29, T-1).
     const [fallos, setFallos] = useState<string[]>([])
     const [errorNombres, setErrorNombres] = useState(false)
     const [errorMas, setErrorMas] = useState<string | null>(null)
@@ -91,7 +91,7 @@ const MedicalHistoryViewer: React.FC<MedicalHistoryViewerProps> = ({ patientId }
     }
 
     const doctorLabel = (doctorId: number) =>
-        doctorNamesById[doctorId] ?? (errorNombres ? `Doctora n.º ${doctorId} (no se pudo leer su nombre)` : `#${doctorId}`)
+        doctorNamesById[doctorId] ?? (errorNombres ? `Médico n.º ${doctorId} (no se pudo leer su nombre)` : `#${doctorId}`)
 
     const handleDownloadPrescription = async (id: number, createdAt: string) => {
         // El día del consultorio, no el de UTC: una receta de las 18:00 se
@@ -151,7 +151,7 @@ const MedicalHistoryViewer: React.FC<MedicalHistoryViewerProps> = ({ patientId }
             {fallos.length > 0 && (
                 <CAlert color="danger" className="d-flex flex-wrap align-items-center gap-2" role="alert">
                     <span className="flex-grow-1">
-                        No se pudieron cargar {fallos.join(', ').replace(/, ([^,]*)$/, ' ni $1')} de la paciente. Lo que no
+                        No se pudieron cargar {fallos.join(', ').replace(/, ([^,]*)$/, ' ni $1')} del paciente. Lo que no
                         aparece abajo puede existir.
                     </span>
                     <CButton color="danger" variant="outline" size="sm" onClick={() => void loadHistory()}>
@@ -168,10 +168,10 @@ const MedicalHistoryViewer: React.FC<MedicalHistoryViewerProps> = ({ patientId }
             {/* El vacío se dice únicamente de las tres fuentes que este panel
                 leyó. Antes decía «No hay registros médicos previos» y
                 contradecía la cronología de citas que se ve arriba, en la
-                misma pestaña Historial: una paciente con citas aparecía como
+                misma pestaña Historial: un paciente con citas aparecía como
                 sin registros (plan 29). */}
             {fallos.length === 0 && notes.length === 0 && prescriptions.length === 0 && certificates.length === 0 && (
-                <CAlert color="info">Esta paciente no tiene notas, recetas ni certificados registrados.</CAlert>
+                <CAlert color="info">Este paciente no tiene notas, recetas ni certificados registrados.</CAlert>
             )}
 
             <CAccordion activeItemKey={activeKey}>
@@ -231,7 +231,7 @@ const MedicalHistoryViewer: React.FC<MedicalHistoryViewerProps> = ({ patientId }
                                             <div className="d-flex justify-content-between align-items-start mb-2">
                                                 <div>
                                                     <small className="text-secondary">{formatDate(rx.created_at)}</small>
-                                                    {/* El folio es lo que la doctora reconoce; el id
+                                                    {/* El folio es lo que el médico reconoce; el id
                                                         viene de la migración legacy y no le dice nada. */}
                                                     <CBadge color="light" className="ms-2 text-dark">
                                                         {rx.folio_number

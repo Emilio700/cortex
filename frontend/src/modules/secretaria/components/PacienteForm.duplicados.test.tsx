@@ -55,7 +55,7 @@ describe('PacienteForm · aviso de posibles duplicadas', () => {
     await user.type(screen.getByLabelText(/Apellidos/), 'lópez')
     await user.type(screen.getByLabelText(/Celular/), '6691112233')
 
-    expect(await screen.findByText('Puede que esta paciente ya esté registrada')).toBeInTheDocument()
+    expect(await screen.findByText('Puede que este paciente ya esté registrada')).toBeInTheDocument()
     expect(screen.getByText('MARÍA LÓPEZ PÉREZ')).toBeInTheDocument()
     expect(screen.getByText(/mismo teléfono, mismo nombre/)).toBeInTheDocument()
     // Consultó el endpoint de posibles duplicados.
@@ -75,10 +75,10 @@ describe('PacienteForm · aviso de posibles duplicadas', () => {
     await user.type(screen.getByLabelText(/Apellidos/), 'lópez')
     await user.click(await screen.findByRole('button', { name: 'Es otra persona, continuar' }))
 
-    expect(screen.queryByText('Puede que esta paciente ya esté registrada')).toBeNull()
+    expect(screen.queryByText('Puede que este paciente ya esté registrada')).toBeNull()
   })
 
-  it('con onElegirExistente ofrece elegir la paciente existente', async () => {
+  it('con onElegirExistente ofrece elegir el paciente existente', async () => {
     post.mockResolvedValue(conCandidata())
     const onElegir = vi.fn()
     const user = userEvent.setup()
@@ -87,7 +87,7 @@ describe('PacienteForm · aviso de posibles duplicadas', () => {
     )
 
     await user.type(screen.getByLabelText(/Apellidos/), 'lópez')
-    await user.click(await screen.findByRole('button', { name: 'Es esta paciente' }))
+    await user.click(await screen.findByRole('button', { name: 'Es este paciente' }))
 
     expect(onElegir).toHaveBeenCalledWith(expect.objectContaining({ patient_id: 12 }))
   })
@@ -110,7 +110,7 @@ describe('PacienteForm · aviso de posibles duplicadas', () => {
     expect(await screen.findByText(/El teléfono debe tener 10 dígitos/)).toBeInTheDocument()
   })
 
-  it('al editar una paciente no se consulta ni se advierte', async () => {
+  it('al editar un paciente no se consulta ni se advierte', async () => {
     post.mockResolvedValue(conCandidata())
     const paciente = {
       id: 12,
@@ -131,6 +131,6 @@ describe('PacienteForm · aviso de posibles duplicadas', () => {
     // Se da tiempo al debounce; no debe consultar ni mostrar el aviso.
     await new Promise((r) => setTimeout(r, 600))
     expect(post).not.toHaveBeenCalled()
-    expect(screen.queryByText('Puede que esta paciente ya esté registrada')).toBeNull()
+    expect(screen.queryByText('Puede que este paciente ya esté registrada')).toBeNull()
   })
 })

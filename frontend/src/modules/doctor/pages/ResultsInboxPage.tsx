@@ -1,8 +1,8 @@
 /**
- * Bandeja «Órdenes y resultados» de la doctora, por paciente (plan 26, fase 3).
+ * Bandeja «Órdenes y resultados» del médico, por paciente (plan 26, fase 3).
  *
  * Antes era una tarjeta por estudio con hasta nueve botones del mismo peso, y
- * una paciente con tres estudios salía en tres tarjetas, a veces partidas entre
+ * un paciente con tres estudios salía en tres tarjetas, a veces partidas entre
  * páginas (B-1, B-2). Ahora el servidor pagina pacientes
  * (`GET /orders/inbox-by-patient`) y cada paciente es una tarjeta con una fila
  * compacta por estudio. Cada fila tiene una sola acción principal según su
@@ -140,7 +140,7 @@ export default function ResultsInboxPage() {
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
   // Separado del aviso: sin esto un fallo de red dejaba la lista vacía y se
-  // leía «No hay pendientes», y la doctora podía dar por revisado un estudio
+  // leía «No hay pendientes», y el médico podía dar por revisado un estudio
   // que nunca vio.
   const [loadError, setLoadError] = useState<string | null>(null)
   const [aviso, setAviso] = useState<string | null>(null)
@@ -469,11 +469,11 @@ export default function ResultsInboxPage() {
           {imprimibles.length > 0 && (
             <div className="border-top py-2">
               <BotonVistaPreviaOrden
-                etiqueta="Imprimir pendientes de la paciente"
+                etiqueta="Imprimir pendientes del paciente"
                 titulo={`Órdenes de estudio de ${paciente.patient_name}`}
                 nombreArchivo={nombreArchivoPaciente(paciente.patient_id)}
                 obtener={(modo) => {
-                  // Con la doctora conocida, todas sus pendientes de la paciente,
+                  // Con el médico conocida, todas sus pendientes del paciente,
                   // aunque el filtro de la bandeja no las enseñe (M5).
                   const doctorId = paciente.orders.find((o) => o.doctor_id != null)?.doctor_id
                   return doctorId != null

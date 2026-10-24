@@ -83,7 +83,7 @@ class UserDirectoryResponse(BaseModel):
     id: int
     full_name: str
     role: Role
-    # Para que cada selector y cada aviso nombre igual a la doctora.
+    # Para que cada selector y cada aviso nombre igual al médico.
     tratamiento: str | None = None
 
     model_config = ConfigDict(from_attributes=True)

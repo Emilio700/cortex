@@ -62,7 +62,7 @@ export const useAdminUsers = () => {
       const response = await apiClient.get<DoctorasQueApoya>(`/users/${secretariaId}/doctoras-que-apoya`)
       return response.data
     } catch (err: any) {
-      throw new Error(err.response?.data?.detail || 'No se pudieron cargar las doctoras que apoya.')
+      throw new Error(err.response?.data?.detail || 'No se pudieron cargar los médicos que apoya.')
     }
   }
 
@@ -74,7 +74,7 @@ export const useAdminUsers = () => {
       const response = await apiClient.put<DoctorasQueApoya>(`/users/${secretariaId}/doctoras-que-apoya`, datos)
       return response.data
     } catch (err: any) {
-      throw new Error(err.response?.data?.detail || 'No se guardaron las doctoras que apoya.')
+      throw new Error(err.response?.data?.detail || 'No se guardaron los médicos que apoya.')
     }
   }
 

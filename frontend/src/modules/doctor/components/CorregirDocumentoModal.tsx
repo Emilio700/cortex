@@ -1,5 +1,5 @@
 /**
- * Corregir un documento subido a la paciente equivocada (plan 29, lote 7).
+ * Corregir un documento subido al paciente equivocada (plan 29, lote 7).
  *
  * Tres acciones, todas con motivo obligatorio, que el servidor registra en la
  * bitácora: anular (sale de las vistas; el archivo se conserva), mover a la
@@ -44,7 +44,7 @@ interface PacienteDestino {
 
 const TITULOS: Record<Correccion, string> = {
   anular: 'Anular documento',
-  mover: 'Mover a otra paciente',
+  mover: 'Mover a otro paciente',
   revertir: 'Revertir la anulación',
 }
 
@@ -52,8 +52,8 @@ const EXPLICACIONES: Record<Correccion, string> = {
   anular:
     'El documento dejará de verse en el expediente. No se borra: el archivo se conserva y la administración puede revertirlo. Queda registrado quién y por qué.',
   mover:
-    'El documento pasa al expediente de la paciente que elijas. En los dos expedientes queda registrado el cambio y el motivo.',
-  revertir: 'El documento vuelve a verse en el expediente de la paciente. Queda registrado quién y por qué.',
+    'El documento pasa al expediente del paciente que elijas. En los dos expedientes queda registrado el cambio y el motivo.',
+  revertir: 'El documento vuelve a verse en el expediente del paciente. Queda registrado quién y por qué.',
 }
 
 interface Props {
@@ -220,7 +220,7 @@ export const CorregirDocumentoModal: React.FC<Props> = ({ documento, accion, onC
           rows={2}
           value={motivo}
           onChange={(e) => setMotivo(e.target.value)}
-          placeholder="Por ejemplo: se subió al expediente de otra paciente con el mismo nombre"
+          placeholder="Por ejemplo: se subió al expediente de otro paciente con el mismo nombre"
         />
 
         {error && (

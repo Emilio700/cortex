@@ -1,7 +1,7 @@
 """A14: reabrir una consulta que se cerró por error.
 
 Finalizar guarda la nota automáticamente, así que ahora es más fácil cerrar de
-más: un clic de sobra deja la consulta en sólo lectura y la doctora sin forma de
+más: un clic de sobra deja la consulta en sólo lectura y el médico sin forma de
 corregir la nota ni de emitir la receta que faltaba. El backend siempre permitió
 la transición; lo que faltaba era que dejara rastro y que no se pudiera abusar de
 ella.
@@ -76,7 +76,7 @@ def consulta(db_session):
     """Una consulta ya finalizada, con una secretaria a la que avisarle.
 
     La segunda doctora comparte sucursal pero no tiene relación asistencial con
-    la paciente: es la única forma de distinguir "sin acceso" de "no existe".
+    el paciente: es la única forma de distinguir "sin acceso" de "no existe".
     La cita se crea **sin triage** a propósito, porque ése es el caso que la
     regla de `en_sala` dejaría encerrada para siempre.
     """
@@ -168,7 +168,7 @@ def test_la_consulta_atendida_se_reabre_y_vuelve_a_ser_editable(client, db_sessi
 def test_reabrir_no_exige_triage(client, db_session, consulta):
     """La cita de la prueba no tiene signos vitales capturados.
 
-    El triage es requisito para *pasar* a la paciente a sala, no para devolverle
+    El triage es requisito para *pasar* al paciente a sala, no para devolverle
     la consulta a quien ya la atendió: aplicarlo aquí habría dejado encerradas
     justo las citas con un descuido de recepción.
     """
@@ -200,7 +200,7 @@ def test_reabrir_deja_rastro_en_la_bitacora(client, db_session, consulta):
 
 
 def test_al_reabrir_no_se_avisa_que_la_paciente_acaba_de_llegar(client, db_session, consulta):
-    """`en_sala` normalmente significa "llegó la paciente" y le avisa a la
+    """`en_sala` normalmente significa "llegó el paciente" y le avisa a la
     doctora. Reabrir usa el mismo estado, pero nadie llegó — y el aviso le
     caería a quien apretó el botón.
     """

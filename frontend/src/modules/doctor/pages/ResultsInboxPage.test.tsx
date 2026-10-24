@@ -104,7 +104,7 @@ beforeEach(() => {
   window.location.hash = ''
   window.localStorage.clear()
   // Plegadas por omisión: las pruebas de las filas trabajan con Kenia abierta,
-  // como la dejaría la doctora al tocar su renglón.
+  // como la dejaría el médico al tocar su renglón.
   window.localStorage.setItem('gems.bandeja.plegado', JSON.stringify({ 1: true }))
   URL.createObjectURL = vi.fn(() => 'blob:doc')
   URL.revokeObjectURL = vi.fn()
@@ -139,7 +139,7 @@ describe('ResultsInboxPage', () => {
     expect(await screen.findByText('No tienes estudios pendientes.')).toBeInTheDocument()
   })
 
-  it('una paciente con tres estudios es una sola tarjeta, pedida por paciente', async () => {
+  it('un paciente con tres estudios es una sola tarjeta, pedida por paciente', async () => {
     get.mockResolvedValue(bandeja([KENIA]))
     render(<ResultsInboxPage />)
 
@@ -173,7 +173,7 @@ describe('ResultsInboxPage', () => {
     expect(screen.queryByRole('button', { name: 'Aceptar' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Imprimir orden' })).toBeNull()
     expect(
-      screen.getByRole('button', { name: 'Imprimir pendientes de la paciente' }),
+      screen.getByRole('button', { name: 'Imprimir pendientes del paciente' }),
     ).toBeInTheDocument()
   })
 
@@ -238,7 +238,7 @@ describe('ResultsInboxPage', () => {
     expect(
       within(filaDe('HBsAg')).getByRole('button', { name: 'Documentar comunicación' }),
     ).toBeInTheDocument()
-    // No se recargó la bandeja: la paciente sigue donde estaba.
+    // No se recargó la bandeja: el paciente sigue donde estaba.
     expect(
       get.mock.calls.filter(([r]) => r === '/clinical-tracking/orders/inbox-by-patient'),
     ).toHaveLength(1)
@@ -247,7 +247,7 @@ describe('ResultsInboxPage', () => {
   it('si el servidor rechaza, el panel muestra su motivo y la fila no cambia', async () => {
     get.mockResolvedValue(bandeja([KENIA]))
     post.mockRejectedValue({
-      response: { status: 403, data: { detail: 'Esta orden es de otra doctora.' } },
+      response: { status: 403, data: { detail: 'Esta orden es de otro médico.' } },
     })
     const user = userEvent.setup()
     render(<ResultsInboxPage />)
@@ -256,7 +256,7 @@ describe('ResultsInboxPage', () => {
     await user.type(await screen.findByLabelText(/Resumen del resultado/), 'No reactivo')
     await user.click(screen.getByRole('button', { name: 'Guardar como recibido' }))
 
-    expect(await screen.findByText('Esta orden es de otra doctora.')).toBeInTheDocument()
+    expect(await screen.findByText('Esta orden es de otro médico.')).toBeInTheDocument()
     expect(within(filaDe('VDRL / RPR')).getByText('Pendiente de resultado')).toBeInTheDocument()
   })
 
@@ -279,7 +279,7 @@ describe('ResultsInboxPage', () => {
     expect(await screen.findByText('No hay resultados por revisar.')).toBeInTheDocument()
   })
 
-  it('«Imprimir pendientes de la paciente» lleva solo los estudios sin resultado (I3)', async () => {
+  it('«Imprimir pendientes del paciente» lleva solo los estudios sin resultado (I3)', async () => {
     get.mockImplementation(async (ruta: string) => {
       if (ruta === '/doctor-profile/me') {
         return { data: { order_settings: { modo_impresion: 'una_hoja' } } }
@@ -290,7 +290,7 @@ describe('ResultsInboxPage', () => {
     const user = userEvent.setup()
     render(<ResultsInboxPage />)
     await user.click(
-      await screen.findByRole('button', { name: 'Imprimir pendientes de la paciente' }),
+      await screen.findByRole('button', { name: 'Imprimir pendientes del paciente' }),
     )
 
     // HBsAg (resultado recibido) y Hepatitis C (revisada) no se vuelven a mandar.

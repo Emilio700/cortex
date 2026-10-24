@@ -81,7 +81,7 @@ def _respuestas(
     """
     cobros = resumen_de_cobros(db, citas)
     semanas = semanas_por_cita(db, citas, user)
-    # La nota postoperatoria es de la doctora y es clínica: viaja con la nota
+    # La nota postoperatoria es del médico y es clínica: viaja con la nota
     # de consulta, no con la agenda (plan 32, revisión del punto 7). Sin
     # ``user`` (llamadas internas) no se recorta nada.
     ve_clinico = user is None or "soap_notes.read" in get_user_permissions(user, db)
@@ -164,11 +164,11 @@ def _solo_digitos(columna):
 
 
 def _filtrar_por_paciente(query, texto: str):
-    """Busca la paciente por nombre, n.º de expediente o teléfono.
+    """Busca el paciente por nombre, n.º de expediente o teléfono.
 
-    El expediente es el id de la paciente (el mismo que la clave del sistema
+    El expediente es el id del paciente (el mismo que la clave del sistema
     anterior), así que un término numérico también se compara exacto contra él.
-    En los teléfonos se ignoran espacios y guiones de lo escrito: la doctora
+    En los teléfonos se ignoran espacios y guiones de lo escrito: el médico
     teclea «669 123 4567» y en la ficha está «6691234567».
     """
     query = query.join(Patient, Appointment.patient_id == Patient.id)
@@ -219,7 +219,7 @@ def list_my_appointments(
 
     El total de lo que cumple los filtros va en ``X-Total-Count`` (como en
     recetas y certificados) y no en un sobre ``{items, total}``: el inicio y
-    el calendario de la doctora leen esta misma lista y seguirían funcionando
+    el calendario del médico leen esta misma lista y seguirían funcionando
     sin cambiar. Sin el total, Mis Consultas no podía pasar de la consulta 100.
 
     Available filters:
@@ -285,7 +285,7 @@ def resumen_del_dia(
     current_user: Annotated[User, Depends(require_permission("doctor.appointments.read"))],
     fecha: Optional[date] = Query(None, description="Día local (AAAA-MM-DD); por omisión, hoy en el consultorio"),
 ):
-    """Cuántas consultas tiene la doctora ese día, cuántas faltan y cuántas atendió.
+    """Cuántas consultas tiene el médico ese día, cuántas faltan y cuántas atendió.
 
     Para el encabezado de Mis Consultas (plan 32, punto 4). Lo cuenta el
     servidor con el mismo alcance que la lista: contar la página visible
@@ -312,7 +312,7 @@ def resumen_del_dia(
 @router.get("/ocupacion-salas", response_model=list[dict])
 def ocupacion_de_salas(
     db: Annotated[Session, Depends(get_db)],
-    # Que no traiga datos de la paciente no lo vuelve público: dice quién
+    # Que no traiga datos del paciente no lo vuelve público: dice quién
     # atiende a qué hora, y eso es agenda (B-03).
     current_user: Annotated[User, Depends(require_permission("appointments.read"))],
     fecha: Annotated[date, Query(description="Dia a consultar (AAAA-MM-DD)")],
@@ -320,11 +320,11 @@ def ocupacion_de_salas(
     """Que salas estan ocupadas ese dia, en TODA la sucursal.
 
     Existe porque ``GET /appointments`` acota al doctor a sus propias citas, y
-    asi una doctora no veia que un companero ya tenia tomada la sala. Para
+    asi un médico no veia que un companero ya tenia tomada la sala. Para
     repartirse dos salas entre cuatro doctores hace falta ver la ocupacion
     ajena.
 
-    **No devuelve ningun dato de la paciente**: solo sala, hora, duracion y de
+    **No devuelve ningun dato del paciente**: solo sala, hora, duracion y de
     quien es la cita. Lo que se necesita para no pisarse, y nada mas.
     """
     inicio = datetime.combine(fecha, datetime.min.time())
@@ -452,7 +452,7 @@ def create_appointment(
     - Patient and doctor belong to same tenant
     - Un doctor solo agenda en su propia agenda
     """
-    # Una doctora agenda la proxima revision de su paciente, no reparte citas
+    # Un médico agenda la proxima revision de su paciente, no reparte citas
     # en la agenda de sus colegas: el permiso "appointments.create" le alcanza
     # para crear, pero no dice para quien. Sin este guard, dárselo a una
     # doctora se lo da sobre las agendas de las otras cuatro.
@@ -493,7 +493,7 @@ def create_appointment(
     patient = scoped_query(db.query(Patient), Patient, current_user).filter(Patient.id == appointment_data.patient_id).first()
 
     if not patient:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró la paciente.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró el paciente.")
 
     doctor = (
         scoped_query(db.query(User), User, current_user)
@@ -536,7 +536,7 @@ def create_appointment(
 
     db.add(new_appointment)
     db.flush()
-    # El aviso a la doctora va en la misma transacción que la cita (plan 27).
+    # El aviso al médico va en la misma transacción que la cita (plan 27).
     avisos_de_citas.avisar_cita_agendada(db, new_appointment, current_user)
     db.commit()
     db.refresh(new_appointment)
@@ -544,7 +544,7 @@ def create_appointment(
     # Load relationships
     db.refresh(new_appointment, ["patient", "doctor", "room"])
 
-    # El correo a la paciente sí va después: no se deshace una cita porque el
+    # El correo al paciente sí va después: no se deshace una cita porque el
     # servidor de correo no contestó.
     send_appointment_confirmation(db, new_appointment, actor_user_id=current_user.id)
 
@@ -585,12 +585,12 @@ def reenviar_confirmacion(
     appointment_id: int,
     db: Annotated[Session, Depends(get_db)],
     # Mismo permiso y alcance que leer la cita (S-05): quien puede ver la cita
-    # puede reenviarle a la paciente la confirmación de su nueva hora.
+    # puede reenviarle al paciente la confirmación de su nueva hora.
     current_user: Annotated[User, Depends(require_permission("appointments.read"))],
 ):
-    """Reenvía a la paciente el correo de confirmación de su cita (S-05).
+    """Reenvía al paciente el correo de confirmación de su cita (S-05).
 
-    Pensado para el reagendado: al cambiar la fecha/hora, la paciente conserva
+    Pensado para el reagendado: al cambiar la fecha/hora, el paciente conserva
     por escrito la hora vieja, así que se le reenvía la nueva. Devuelve sólo lo
     que de verdad se sabe del envío (``enviado``/``motivo``); la interfaz no
     afirma «se reenvió» si el servidor de correo no lo confirmó.
@@ -615,7 +615,7 @@ def reenviar_confirmacion(
 
     # Se audita el intento (haya salido o no): deja rastro de que se pidió el
     # reenvío, a qué correo enmascarado y con qué desenlace, sin guardar el
-    # correo completo de la paciente en la bitácora.
+    # correo completo del paciente en la bitácora.
     log_action(
         db,
         action="appointment.confirmation_resent",
@@ -741,7 +741,7 @@ def change_appointment_status(
 
     Reabrir (``atendida`` → ``en_sala``) es un caso aparte: quien cerró la
     consulta por error tiene que poder corregir la nota o emitir la receta que
-    faltó. Se gobierna por la relación asistencial con la paciente —la misma
+    faltó. Se gobierna por la relación asistencial con el paciente —la misma
     regla que la nota y la receta— y queda registrado en la bitácora.
     """
     # Granular permission check: cancel requires a different permission than
@@ -771,8 +771,8 @@ def change_appointment_status(
     preparar_salida_de_consulta(appointment, status_update.status)
 
     # Reabrir devuelve la cita a `en_sala` y no a `confirmada` porque describe
-    # lo que de verdad está pasando: la paciente sigue en la clínica y su
-    # consulta volvió a manos de la doctora. Además es el estado del que se sale
+    # lo que de verdad está pasando: el paciente sigue en la clínica y su
+    # consulta volvió a manos del médico. Además es el estado del que se sale
     # finalizando, así que el flujo se retoma donde estaba en vez de inventar un
     # camino nuevo.
     es_reapertura = (
@@ -782,7 +782,7 @@ def change_appointment_status(
 
     if es_reapertura:
         # Quién puede reabrir se resuelve con la regla que ya gobierna la nota y
-        # la receta: relación asistencial con la paciente. Ser la doctora
+        # la receta: relación asistencial con el paciente. Ser el médico
         # asignada a la cita no es ni necesario ni suficiente — la que cubre a
         # una compañera y documentó la consulta es justo quien necesita
         # corregirla, y no tendría sentido dejarla escribir la nota pero no
@@ -796,8 +796,8 @@ def change_appointment_status(
             status_code=status.HTTP_404_NOT_FOUND,
         )
 
-    # El triage es requisito para *pasar* a la paciente a sala, no para
-    # devolverle a la doctora una consulta que ya atendió. Exigirlo al reabrir
+    # El triage es requisito para *pasar* al paciente a sala, no para
+    # devolverle al médico una consulta que ya atendió. Exigirlo al reabrir
     # dejaría encerradas precisamente las citas a las que nadie les capturó los
     # signos vitales, que es un descuido de recepción y no un motivo para no
     # poder corregir el expediente.
@@ -807,7 +807,7 @@ def change_appointment_status(
         and not regresa_a_sala
         and not can_transition_to_en_sala(appointment)
     ):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Primero hay que completar el triage para poder pasar a la paciente a sala.")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Primero hay que completar el triage para poder pasar al paciente a sala.")
 
     if status_update.status == AppointmentStatus.CANCELADA:
         reason = sanitize_text(status_update.cancellation_reason, 2000) if status_update.cancellation_reason else ""
@@ -924,7 +924,7 @@ def change_appointment_status(
             bloque = "\n---\n💬 Nota del doctor: " + status_update.notes
             # Tras una reapertura la cita ya no está `atendida`, así que el
             # guard de arriba no cubre este caso: el borrador sigue en la
-            # pantalla de la doctora y se re-envía tal cual al volver a cerrar.
+            # pantalla del médico y se re-envía tal cual al volver a cerrar.
             # Lo que decide es el texto y no el estado — una nota distinta sí se
             # anexa, porque en el segundo cierre puede haber algo nuevo que
             # decirle a secretaría.

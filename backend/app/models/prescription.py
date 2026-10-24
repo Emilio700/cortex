@@ -25,12 +25,12 @@ class Prescription(Base):
     # General instructions
     instructions = Column(Text)
 
-    # Motivo de consulta impreso en la receta, a peticion de la doctora y
+    # Motivo de consulta impreso en la receta, a peticion del médico y
     # receta por receta: el expediente clinico no viaja en la receta salvo que
-    # ella lo pida para esa paciente concreta. NULL = no se imprime.
+    # ella lo pida para ese paciente concreta. NULL = no se imprime.
     # Se guarda el TEXTO y no una llave a la nota de consulta a proposito: la
     # reimpresion de esta receta tiene que seguir diciendo lo mismo que el
-    # papel que ya tiene la paciente en la mano, aunque la nota se corrija
+    # papel que ya tiene el paciente en la mano, aunque la nota se corrija
     # despues.
     diagnosis = Column(Text, nullable=True)
 

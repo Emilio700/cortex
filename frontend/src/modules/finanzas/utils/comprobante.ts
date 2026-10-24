@@ -6,7 +6,7 @@
  * fiscal y nada clínico. El papel lo dice, para que nadie lo tome por factura.
  *
  * Se arma en el navegador con lo que ya devuelve el API (el pago del listado y
- * la sucursal de `GET /tenants`): sin la paciente con correo no había forma de
+ * la sucursal de `GET /tenants`): sin el paciente con correo no había forma de
  * darle comprobante, y el PDF que manda el correo no tiene endpoint de descarga.
  * Lo que el API no trae no se inventa: sin dirección o teléfono de la sucursal,
  * esa línea simplemente no sale.
@@ -78,7 +78,7 @@ export const htmlDelComprobante = (pago: Payment, clinica: DatosClinica): string
     ${renglon('Fecha', fecha)}
     ${renglon('Recibimos de', pago.patient_name)}
     ${renglon('Concepto', concepto)}
-    ${renglon('Doctora', pago.doctor_name)}
+    ${renglon('Médico', pago.doctor_name)}
     ${renglon('Método de pago', etiquetaMetodo(pago.method))}
     ${renglon('Referencia', pago.referencia)}
     ${renglon('Recibió', pago.received_by_name)}

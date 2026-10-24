@@ -45,7 +45,7 @@ class ConvertToPatientRequest(BaseModel):
     """Fields needed to create the real Patient record that this
     preregistration didn't already capture (birth date, etc.)."""
 
-    # Opcional, igual que en el alta exprés de recepción (plan 29): la paciente
+    # Opcional, igual que en el alta exprés de recepción (plan 29): el paciente
     # no siempre la da por teléfono y exigirla bloqueaba convertir. La edad en
     # todo el sistema ya muestra «—» sin fecha.
     date_of_birth: Optional[date] = None

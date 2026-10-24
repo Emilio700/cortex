@@ -1,5 +1,5 @@
 /**
- * Configuración de la orden de estudio en el perfil de la doctora (plan 26,
+ * Configuración de la orden de estudio en el perfil del médico (plan 26,
  * D-7 y D-11).
  *
  * Desde la segunda ronda la orden tiene su **propio** membrete, tan editable
@@ -137,7 +137,7 @@ export const GRUPOS_ORDEN: ReadonlyArray<GrupoOrden> = [
     ],
   },
   {
-    titulo: 'Datos de la paciente',
+    titulo: 'Datos del paciente',
     descripcion: 'Su nombre sale siempre.',
     opciones: [
       { clave: 'mostrar_fecha_nacimiento', etiqueta: 'Fecha de nacimiento' },

@@ -87,7 +87,7 @@ const FraseDelCobro = ({ resultado }: { resultado: ResultadoCobro }) => {
     // Callarlo haría que recepción cobre otra vez... o que nadie cobre.
     return (
       <strong className="text-danger">
-        El sistema no confirmó el cobro: avisa a recepción antes de que la paciente se vaya.
+        El sistema no confirmó el cobro: avisa a recepción antes de que el paciente se vaya.
       </strong>
     )
   }
@@ -116,7 +116,7 @@ const PESTANAS: { id: PestanaConsulta; nombre: string; descripcion: string; icon
   {
     id: 'expediente',
     nombre: 'Expediente',
-    descripcion: 'Todo lo de la paciente: resumen, consultas, estudios, documentos, imágenes, embarazo y consentimientos',
+    descripcion: 'Todo lo del paciente: resumen, consultas, estudios, documentos, imágenes, embarazo y consentimientos',
     icono: cilNotes,
   },
 ]
@@ -127,7 +127,7 @@ const ConsultationPage = () => {
 
   // Todo lo que viene del servidor —las cinco lecturas, sus errores y el cierre
   // de la consulta— vive en el hook. Aquí sólo queda lo que depende de dónde
-  // hizo clic la doctora.
+  // hizo clic el médico.
   const {
     citaCargada,
     appointment,
@@ -181,7 +181,7 @@ const ConsultationPage = () => {
   const [showReopenModal, setShowReopenModal] = useState(false)
   const [showTriageModal, setShowTriageModal] = useState(false)
   const { can } = useAuth()
-  // Si la asistente no alcanzó a pasarla por triage, la doctora toma los signos
+  // Si la asistente no alcanzó a pasarla por triage, el médico toma los signos
   // aquí mismo. Con la lectura fallida no se ofrece: no sabemos si ya existen.
   const puedeCapturarSignos = can('triage.create') && !isReadOnly && !errorTriage
   const [discountNote, setDiscountNote] = useState('')
@@ -189,7 +189,7 @@ const ConsultationPage = () => {
   const [consentSummary, setConsentSummary] = useState<ClinicalConsentSummary | null>(null)
 
   // El borrador de cobro sobrevive a cerrar el modal: si el cierre falló, el
-  // reintento no obliga a la doctora a capturar otra vez monto y referencia.
+  // reintento no obliga al médico a capturar otra vez monto y referencia.
   const [borradorCobro, setBorradorCobro] = useState<BorradorCobro | null>(null)
   // El error de cobro conserva su campo: la sección lo pinta junto a él.
   const [errorCobro, setErrorCobro] = useState<ErrorDeCobroDeCampo | null>(null)
@@ -217,7 +217,7 @@ const ConsultationPage = () => {
       }
       cobro = traducido.bloque
     }
-    // La nota es para que recepción sepa cuánto cobrar: si ya cobró la doctora,
+    // La nota es para que recepción sepa cuánto cobrar: si ya cobró el médico,
     // no hay nada que cobrar y una nota vieja ("cobrar sólo $500") confundiría.
     const nota = cobro?.modo === 'cobrado' ? undefined : discountNote
     if (await handleFinalize(nota, cobro)) {
@@ -244,7 +244,7 @@ const ConsultationPage = () => {
 
   if (!appointment) {
     // Tres causas distintas que antes se anunciaban con la misma frase. Un 500
-    // decía "no se encontró la cita", así que la doctora se iba a buscar en la
+    // decía "no se encontró la cita", así que el médico se iba a buscar en la
     // agenda una cita que sí existe en vez de volver a intentar.
     const motivo =
       citaCargada?.estado === 'sin-permiso'
@@ -253,7 +253,7 @@ const ConsultationPage = () => {
           ? `No se pudo cargar la cita. ${citaCargada.mensaje} ` +
             'La cita sigue en la agenda: vuelve a intentarlo en un momento.'
           : 'No se encontró la cita solicitada. Puede que la hayan eliminado o que ' +
-            'esté asignada a otra doctora.'
+            'esté asignada a otro médico.'
 
     return (
       <CContainer className="py-4">
@@ -331,7 +331,7 @@ const ConsultationPage = () => {
                 </CBadge>
               </div>
               <small className="consulta-encabezado-descripcion text-body-secondary d-block mt-1">
-                Consulta, expediente y estudios de la paciente en un solo flujo.
+                Consulta, expediente y estudios del paciente en un solo flujo.
               </small>
             </div>
             {isReadOnly ? (
@@ -424,7 +424,7 @@ const ConsultationPage = () => {
                         {appointment.patient.first_name} {appointment.patient.last_name}
                       </h2>
                       <InsigniaEmbarazo resumen={resumenEmbarazo} />
-                      {/* Sin esto, un fallo se veía igual que una paciente sin
+                      {/* Sin esto, un fallo se veía igual que un paciente sin
                           embarazo: sin semanas ni próxima revisión (plan 29, C-2). */}
                       {errorEmbarazo && (
                         <CButton
@@ -472,7 +472,7 @@ const ConsultationPage = () => {
               </CCol>
 
               {/* No pintar nada cuando la lectura falla se ve igual que una cita
-                  sin signos vitales, y eso lleva a pensar que a la paciente no
+                  sin signos vitales, y eso lleva a pensar que al paciente no
                   la pasaron por triage. Se dice en el mismo lugar donde irían
                   los números, y sin ofrecer capturarlos: podrían ya existir. */}
               {errorTriage && (
@@ -700,7 +700,7 @@ const ConsultationPage = () => {
               stepColor="primary"
               icon={<CIcon icon={cilDescriptionIcon} className="text-primary" width={20} />}
               title="Consentimiento informado"
-              subtitle="Se prepara en consulta, la paciente revisa y firma aquí."
+              subtitle="Se prepara en consulta, el paciente revisa y firma aquí."
               summary={consentSummaryBadge}
             >
               <ClinicalConsentCard
@@ -800,7 +800,7 @@ const ConsultationPage = () => {
       {/* ── EXPEDIENTE ──────────────────────────────── */}
       {/* La consulta reutiliza el expediente único (plan 32, punto 6) en vez de
           repetir sus propias pestañas «Expediente», «Estudios», «Imágenes» e
-          «Historial»: lo que la doctora ve aquí es lo mismo que en la página
+          «Historial»: lo que el médico ve aquí es lo mismo que en la página
           del expediente, con sus mismas pestañas y permisos. */}
       {visitadas.has('expediente') && (
         <div

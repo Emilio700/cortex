@@ -38,7 +38,7 @@ class AccesoClinico(Base):
     __tablename__ = "accesos_clinicos"
     __table_args__ = (
         UniqueConstraint("session_id", "patient_id", "seccion", name="uq_accesos_clinicos_sesion_paciente_seccion"),
-        # Las dos preguntas de Auditoría: «¿quién vio a esta paciente?» y
+        # Las dos preguntas de Auditoría: «¿quién vio a este paciente?» y
         # «¿qué vio esta persona?», siempre de lo más reciente a lo más viejo.
         Index("ix_accesos_clinicos_paciente_ultimo", "patient_id", "ultimo_acceso"),
         Index("ix_accesos_clinicos_usuario_ultimo", "user_id", "ultimo_acceso"),

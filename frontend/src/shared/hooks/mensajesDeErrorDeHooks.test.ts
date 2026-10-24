@@ -2,7 +2,7 @@
  * Prueba de humo: los hooks de datos nunca muestran un error en inglés.
  *
  * Antes, cuando el servidor no mandaba `detail`, el respaldo era el texto del
- * programador («Error fetching appointments») y eso le llegaba a la doctora en
+ * programador («Error fetching appointments») y eso le llegaba al médico en
  * la alerta. Ahora pasan por `mensajeDeError`, que traduce por código HTTP y
  * cae en un respaldo en español. Una prueba por hook: si alguien vuelve a
  * poner un respaldo en inglés en uno, falla el suyo.
@@ -66,10 +66,10 @@ describe('mensajes de error de los hooks', () => {
     expect(result.current.error).toBe('No se pudieron cargar las citas.')
   })
 
-  it('useCertificates: certificados de la paciente', async () => {
+  it('useCertificates: certificados del paciente', async () => {
     const { result } = renderHook(() => useCertificates())
     await intentar(() => result.current.getPatientCertificates(1))
-    expect(result.current.error).toBe('No se pudieron cargar los certificados de la paciente.')
+    expect(result.current.error).toBe('No se pudieron cargar los certificados del paciente.')
   })
 
   it('useDoctorProfile: perfil', async () => {
@@ -78,16 +78,16 @@ describe('mensajes de error de los hooks', () => {
     expect(result.current.error).toBe('No se pudo cargar tu perfil.')
   })
 
-  it('usePrescriptions: recetas de la paciente', async () => {
+  it('usePrescriptions: recetas del paciente', async () => {
     const { result } = renderHook(() => usePrescriptions())
     await intentar(() => result.current.getPatientPrescriptions(1))
-    expect(result.current.error).toBe('No se pudieron cargar las recetas de la paciente.')
+    expect(result.current.error).toBe('No se pudieron cargar las recetas del paciente.')
   })
 
-  it('useSOAPNotes: notas de la paciente', async () => {
+  it('useSOAPNotes: notas del paciente', async () => {
     const { result } = renderHook(() => useSOAPNotes())
     await intentar(() => result.current.getPatientSOAPNotes(1))
-    expect(result.current.error).toBe('No se pudieron cargar las notas de la paciente.')
+    expect(result.current.error).toBe('No se pudieron cargar las notas del paciente.')
   })
 
   it('useTriage (doctora): historial de signos', async () => {

@@ -60,7 +60,7 @@ def _bloquear_serie(db: Session, prefijo: str) -> None:
 
     El folio se calcula leyendo el último y sumando uno; sin candado, dos
     guardados concurrentes leen el mismo último y piden el mismo número, y como
-    el folio es único el segundo revienta con un 500 justo cuando la doctora
+    el folio es único el segundo revienta con un 500 justo cuando el médico
     está cerrando la consulta. El candado es de transacción: se suelta solo en
     el commit o el rollback, así que cubre exactamente la ventana entre
     calcular el folio y grabarlo.

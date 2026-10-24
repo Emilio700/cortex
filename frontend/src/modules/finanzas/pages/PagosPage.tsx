@@ -1,5 +1,5 @@
 /**
- * Historial de pagos ("Mis cobros" para la doctora).
+ * Historial de pagos ("Mis cobros" para el médico).
  *
  * Qué ve cada quien lo decide el servidor (plan 23, "Alcance por rol"): la
  * doctora sólo recibe sus pagos, así que aquí no se le ofrece elegir doctora.
@@ -60,11 +60,11 @@ const PagosPage: React.FC = () => {
   const [hasta, setHasta] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [showPaymentModal, setShowPaymentModal] = useState(false)
-  // «Registrar cobro» desde el inicio de la doctora abre el registro (plan 28).
+  // «Registrar cobro» desde el inicio del médico abre el registro (plan 28).
   useAtenderPedido('pagos:registrar', () => setShowPaymentModal(true))
   const [porAnular, setPorAnular] = useState<Payment | null>(null)
   // `pago`: el recién registrado, para ofrecer su comprobante ahí mismo, que es
-  // cuando la paciente sigue en el mostrador.
+  // cuando el paciente sigue en el mostrador.
   const [aviso, setAviso] = useState<{ color: string; texto: string; pago?: Payment } | null>(null)
 
   const loadPayments = useCallback(async () => {
@@ -211,7 +211,7 @@ const PagosPage: React.FC = () => {
         <CCardBody>
           <CRow className="g-2 align-items-end">
             {/* En tablet (md) los cuatro filtros en una fila cortaban "Todos los
-                métodos" y "Todas las doctoras": van de dos en dos hasta lg. */}
+                métodos" y "Todas los médicos": van de dos en dos hasta lg. */}
             <CCol sm={6} lg={3}>
               <CInputGroup size="sm">
                 <CInputGroupText className="bg-transparent">
@@ -236,11 +236,11 @@ const PagosPage: React.FC = () => {
               <CCol sm={6} lg={2} data-tour="pagos-selector-doctora">
                 <CFormSelect
                   size="sm"
-                  aria-label="Doctora"
+                  aria-label="Médico"
                   value={filterDoctor}
                   onChange={e => setFilterDoctor(e.target.value)}
                 >
-                  <option value="">Todas las doctoras</option>
+                  <option value="">Todas los médicos</option>
                   {doctoras.map(d => (
                     <option key={d.id} value={d.id}>{d.full_name}</option>
                   ))}
@@ -291,11 +291,11 @@ const PagosPage: React.FC = () => {
             <TablaResponsiva small hover responsive>
               <CTableHead>
                 <CTableRow>
-                  {/* En el teléfono la paciente va de título y la fecha como dato. */}
+                  {/* En el teléfono el paciente va de título y la fecha como dato. */}
                   <CTableHeaderCell data-tarjeta="dato">Fecha</CTableHeaderCell>
                   <CTableHeaderCell data-tarjeta="titulo">Paciente</CTableHeaderCell>
                   <CTableHeaderCell>Concepto</CTableHeaderCell>
-                  <CTableHeaderCell>Doctora</CTableHeaderCell>
+                  <CTableHeaderCell>Médico</CTableHeaderCell>
                   <CTableHeaderCell>Recibió</CTableHeaderCell>
                   <CTableHeaderCell>Método</CTableHeaderCell>
                   <CTableHeaderCell data-tarjeta="ocultar">Referencia</CTableHeaderCell>

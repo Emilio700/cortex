@@ -70,7 +70,7 @@ export const calcularFpp = (fur: string | null | undefined): string => {
 
 // Aquí vivían `normalizarTipoPaciente`, `esPacienteObstetrica` y
 // `esPacienteGinecologica`. Se fueron con el selector de tipo de paciente:
-// una paciente no *es* obstétrica, *está* embarazada, y eso lo dice su
+// un paciente no *es* obstétrica, *está* embarazada, y eso lo dice su
 // registro de embarazo activo, no una bandera del expediente que nadie apaga.
 
 /** Campos del formulario de pacientes que se capturan en MAYÚSCULAS. */

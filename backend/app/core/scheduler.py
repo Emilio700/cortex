@@ -148,7 +148,7 @@ def _send_appointment_reminders() -> None:
                     if not already_sent:
                         send_appointment_reminder(db, appointment, minutes_before)
 
-        # Aviso en la campana a la doctora, una hora antes: va aparte del
+        # Aviso en la campana al médico, una hora antes: va aparte del
         # correo a pacientes y sólo para quien lo pidió en sus avisos.
         quieren = {
             fila.user_id
@@ -225,7 +225,7 @@ def _sync_medication_cache() -> None:
 
 
 def _espejar_legacy() -> None:
-    """Copia hacia GEMS las pacientes que el Dr. Adolfo sigue capturando en el
+    """Copia hacia GEMS los pacientes que el Dr. Adolfo sigue capturando en el
     sistema anterior, mientras dura la transición.
 
     Va en un solo sentido y nunca pisa lo capturado en GEMS; el detalle de las
@@ -304,7 +304,7 @@ def _avisar_estudios_atrasados() -> None:
 def _registrar_espejo_legacy() -> None:
     """Registra el espejo sólo donde hay credenciales del sistema anterior.
 
-    Cada 30 minutos: la recepción da de alta a la paciente en el sistema viejo
+    Cada 30 minutos: la recepción da de alta al paciente en el sistema viejo
     un rato antes de que pase a consultorio, así que media hora basta para que
     ya esté en GEMS cuando el doctor la busque, y son 48 corridas al día sobre
     el MySQL del hosting en vez de las 96 que costaría cada cuarto de hora.

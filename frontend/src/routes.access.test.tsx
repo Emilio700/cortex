@@ -1,7 +1,7 @@
 /**
  * El menú y las rutas tienen que decidir con el mismo criterio.
  *
- * Caso real: a una doctora se le concedieron permisos desde Master, el menú le
+ * Caso real: a un médico se le concedieron permisos desde Master, el menú le
  * mostró los ítems y al abrirlos la pantalla la echaba a /403, porque la ruta
  * sólo miraba el rol. Estas pruebas atan cada ítem del menú a su ruta.
  */
@@ -33,7 +33,7 @@ describe('rutas por permiso', () => {
     }
   })
 
-  it('una doctora con el permiso de triage concedido puede abrir Triage', () => {
+  it('un médico con el permiso de triage concedido puede abrir Triage', () => {
     mockAuth = {
       user: { role: Role.DOCTOR },
       permissions: ['doctor.dashboard.read', 'triage.create'],
@@ -60,7 +60,7 @@ describe('rutas por permiso', () => {
     expect(screen.getByText('pantalla de triage')).toBeInTheDocument()
   })
 
-  it('sin el permiso, la doctora sigue sin poder abrir Triage', () => {
+  it('sin el permiso, el médico sigue sin poder abrir Triage', () => {
     mockAuth = {
       user: { role: Role.DOCTOR },
       permissions: ['doctor.dashboard.read'],
@@ -88,7 +88,7 @@ describe('rutas por permiso', () => {
   })
 
   /**
-   * Plan 23: la doctora abre "Mis cobros" y su corte por permiso. Cambia a
+   * Plan 23: el médico abre "Mis cobros" y su corte por permiso. Cambia a
    * propósito respecto de antes, cuando /finanzas era sólo de admin y
    * secretaria; sin el permiso sigue fuera.
    *
@@ -117,17 +117,17 @@ describe('rutas por permiso', () => {
     )
   }
 
-  it('la doctora con payments.read abre sus cobros', () => {
+  it('el médico con payments.read abre sus cobros', () => {
     abrir('/finanzas/pagos', ['doctor.dashboard.read', 'payments.read'])
     expect(screen.getByText('pantalla abierta')).toBeInTheDocument()
   })
 
-  it('la doctora con payments.cashcut abre su corte de caja', () => {
+  it('el médico con payments.cashcut abre su corte de caja', () => {
     abrir('/finanzas', ['doctor.dashboard.read', 'payments.cashcut'])
     expect(screen.getByText('pantalla abierta')).toBeInTheDocument()
   })
 
-  it('sin los permisos de pagos, la doctora no entra a finanzas por su rol', () => {
+  it('sin los permisos de pagos, el médico no entra a finanzas por su rol', () => {
     abrir('/finanzas/pagos', ['doctor.dashboard.read'])
     expect(screen.getByText('sin acceso')).toBeInTheDocument()
   })
@@ -151,7 +151,7 @@ describe('rutas por permiso', () => {
     expect(screen.getByText('pantalla abierta')).toBeInTheDocument()
   })
 
-  it('la administración no entra a la agenda de la doctora', () => {
+  it('la administración no entra a la agenda del médico', () => {
     // Revisión de flujos, 2026-10-04: abría por rol, pero el endpoint exige
     // doctor.appointments.read, que su perfil no trae; se niega limpio.
     abrir('/doctor/appointments', [], Role.ADMIN)

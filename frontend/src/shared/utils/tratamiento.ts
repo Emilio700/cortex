@@ -3,7 +3,7 @@
  *
  * Misma regla que el backend (`app/utils/tratamiento.py`): el tratamiento es el
  * que administración capturó en la cuenta ("Dr.", "Dra." o nada), y sin él va
- * el nombre solo. Antes cada pantalla ponía "Dr." fijo, y a las doctoras les
+ * el nombre solo. Antes cada pantalla ponía "Dr." fijo, y a los médicos les
  * salía "Dr." en la agenda; un "Dr." equivocado es peor que no poner nada
  * (plan 23, ajustes del 2026-09-28).
  */

@@ -97,12 +97,12 @@ describe('AnularResultado', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Escribe por qué')
     expect(post).not.toHaveBeenCalled()
 
-    await userEvent.type(screen.getByLabelText('Motivo (obligatorio)'), 'Era de otra paciente')
+    await userEvent.type(screen.getByLabelText('Motivo (obligatorio)'), 'Era de otro paciente')
     await userEvent.click(screen.getByRole('button', { name: 'Anular resultado' }))
 
     await waitFor(() => expect(onAnulado).toHaveBeenCalled())
     expect(post).toHaveBeenCalledWith('/clinical-tracking/results/2/anular', {
-      motivo: 'Era de otra paciente',
+      motivo: 'Era de otro paciente',
     })
     expect(onAnulado.mock.calls[0][1]).toContain('se anuló el resultado')
   })
@@ -113,7 +113,7 @@ describe('AnularResultado', () => {
     render(<AnularResultado orden={orden} resultado={orden.results[0]} onAnulado={onAnulado} />)
 
     await userEvent.click(screen.getByRole('button', { name: 'Anular resultado…' }))
-    await userEvent.type(screen.getByLabelText('Motivo (obligatorio)'), 'Era de otra paciente')
+    await userEvent.type(screen.getByLabelText('Motivo (obligatorio)'), 'Era de otro paciente')
     await userEvent.click(screen.getByRole('button', { name: 'Anular resultado' }))
 
     expect(await screen.findByRole('alert')).toHaveTextContent('El resultado sigue vigente.')

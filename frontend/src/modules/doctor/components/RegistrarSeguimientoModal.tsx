@@ -1,7 +1,7 @@
 /**
  * Registrar por qué un estudio sigue sin resultado (plan 32, punto 3).
  *
- * Lo usan la doctora (bandeja) y recepción (Subir resultado). El estudio sale
+ * Lo usan el médico (bandeja) y recepción (Subir resultado). El estudio sale
  * de «Atrasados» hasta la fecha de «Volver a revisar el», y el seguimiento
  * queda en su historial con quién y cuándo. Si el servidor no lo guardó, el
  * modal lo dice y no cierra: la interfaz no dice que sí cuando no fue así.
@@ -29,10 +29,10 @@ import BotonAyudaContextual from '../../../shared/tutoriales/BotonAyudaContextua
 import type { SeguimientoDeOrden } from '../types/clinicalTracking'
 
 export const MOTIVOS_SEGUIMIENTO: ReadonlyArray<{ valor: string; etiqueta: string }> = [
-  { valor: 'no_se_lo_ha_hecho', etiqueta: 'La paciente no se lo ha hecho' },
+  { valor: 'no_se_lo_ha_hecho', etiqueta: 'El paciente no se lo ha hecho' },
   { valor: 'en_proceso_laboratorio', etiqueta: 'Está en proceso en el laboratorio' },
   { valor: 'reagendado', etiqueta: 'Se reagendó' },
-  { valor: 'no_se_localiza', etiqueta: 'No se localiza a la paciente' },
+  { valor: 'no_se_localiza', etiqueta: 'No se localiza al paciente' },
   { valor: 'otro', etiqueta: 'Otro' },
 ]
 

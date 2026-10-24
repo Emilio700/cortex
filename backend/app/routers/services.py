@@ -25,7 +25,7 @@ def list_services(
     List services in the caller's tenant.
 
     Lo lee quien tiene ``services.read`` (los tres roles lo traen: recepción y
-    la doctora cobran con él). Antes bastaba con haber iniciado sesión, y
+    el médico cobran con él). Antes bastaba con haber iniciado sesión, y
     quitar el permiso a un perfil no le cerraba el catálogo (B-03). Only
     active services are returned by default.
     """

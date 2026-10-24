@@ -1,7 +1,7 @@
 /**
  * Pruebas del guard de cambios sin guardar en el contexto de pestañas.
  *
- * Lo que se protege aquí pasó de verdad: una doctora escribió la nota de una
+ * Lo que se protege aquí pasó de verdad: un médico escribió la nota de una
  * consulta, no oprimió Guardar y el texto se fue sin un solo aviso. Cada prueba
  * de este archivo cubre una de las formas de perderlo.
  */

@@ -26,7 +26,7 @@ from app.utils.receta_config import (
 )
 
 # «separado»: una hoja por destino físico (laboratorio, imagen, otros), porque
-# la paciente entrega cada hoja en un lugar distinto. «una_hoja»: todo junto.
+# el paciente entrega cada hoja en un lugar distinto. «una_hoja»: todo junto.
 MODOS_DE_IMPRESION = ("separado", "una_hoja")
 MODO_POR_DEFECTO = "separado"
 
@@ -56,7 +56,7 @@ AJUSTES_ORDEN_POR_DEFECTO: dict = {
     "mostrar_universidad": True,
     "mostrar_direccion": True,
     "mostrar_telefono": True,
-    # Encendidos de fábrica, pero sólo se imprimen si la doctora capturó el dato.
+    # Encendidos de fábrica, pero sólo se imprimen si el médico capturó el dato.
     "mostrar_correo": True,
     "mostrar_celular": True,
     "mostrar_registro_general": True,
@@ -67,7 +67,7 @@ AJUSTES_ORDEN_POR_DEFECTO: dict = {
     "mostrar_fecha_nacimiento": True,
     "mostrar_edad": True,
     # Sólo la IMAGEN de la firma. La raya con el nombre siempre sale: es
-    # donde firma a mano la doctora que no subió su firma o no la quiere ahí.
+    # donde firma a mano el médico que no subió su firma o no la quiere ahí.
     "mostrar_firma": True,
     # ``None`` = el nombre de la usuaria con su tratamiento.
     "nombre_impreso": None,
@@ -123,7 +123,7 @@ def resolver_ajustes_orden(doctor_profile) -> dict:
 
 
 def resolver_leyenda_orden(ajustes: dict) -> str | None:
-    """La leyenda PROPIA de la orden, si la doctora escribió una.
+    """La leyenda PROPIA de la orden, si el médico escribió una.
 
     Es adicional: la advertencia ``LEYENDA_ORDEN_POR_DEFECTO`` («es una
     solicitud: no es un resultado ni un diagnóstico») se imprime siempre,
@@ -134,7 +134,7 @@ def resolver_leyenda_orden(ajustes: dict) -> str | None:
 
 
 def resolver_modo(modo_pedido: str | None, doctor_profile) -> str:
-    """El modo pedido en la llamada; si no viene, el que la doctora dejó en su perfil."""
+    """El modo pedido en la llamada; si no viene, el que el médico dejó en su perfil."""
     if modo_pedido in MODOS_DE_IMPRESION:
         return modo_pedido
     return resolver_ajustes_orden(doctor_profile)["modo_impresion"]
@@ -175,8 +175,8 @@ def lineas_credenciales_orden(doctor_profile, ajustes: dict) -> list[str]:
 def ajustes_desde_receta(doctor_profile) -> dict:
     """«Copiar de mi receta»: ajustes de la orden armados con los de la receta.
 
-    No guarda nada; la pantalla los muestra y la doctora decide. Se copia lo
-    que la doctora personalizó en su receta con el mismo sentido: nombre
+    No guarda nada; la pantalla los muestra y el médico decide. Se copia lo
+    que el médico personalizó en su receta con el mismo sentido: nombre
     impreso, color, letra de la firma, la leyenda si escribió una propia, y
     SÓLO los interruptores que cambió respecto a la receta de fábrica. Un
     interruptor en su valor de fábrica no se copia: la receta apaga de fábrica

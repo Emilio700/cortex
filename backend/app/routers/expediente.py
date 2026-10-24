@@ -1,6 +1,6 @@
-"""El expediente único de la paciente (plan 32, punto 6).
+"""El expediente único del paciente (plan 32, punto 6).
 
-El expediente es el único lugar donde está todo de una paciente; Pacientes es
+El expediente es el único lugar donde está todo de un paciente; Pacientes es
 el directorio y las bandejas son filas de trabajo. Una sola página para todos
 los roles, pero **el servidor decide qué pestañas ve cada quien**: la vista de
 recepción no depende de esconder botones.
@@ -93,18 +93,18 @@ class EncabezadoExpediente(BaseModel):
     vista_clinica: bool
     embarazo: Optional[EmbarazoBreve] = None
     alertas: Optional[AlertasClinicas] = None
-    # «Abrir la consulta de hoy»: la cita de hoy de ESTA doctora con la paciente.
+    # «Abrir la consulta de hoy»: la cita de hoy de ESTA doctora con el paciente.
     cita_de_hoy: Optional[CitaBreve] = None
     proxima_cita: Optional[CitaBreve] = None
 
 
 def _paciente(db: Session, patient_id: int, user: User) -> Patient:
-    """La paciente con el mismo alcance que el directorio (``GET /patients``)."""
+    """El paciente con el mismo alcance que el directorio (``GET /patients``)."""
     paciente = filtrar_pacientes_del_alcance(
         scoped_query(db.query(Patient), Patient, user), user
     ).filter(Patient.id == patient_id).first()
     if not paciente:
-        raise HTTPException(status_code=404, detail="No se encontró la paciente.")
+        raise HTTPException(status_code=404, detail="No se encontró el paciente.")
     return paciente
 
 

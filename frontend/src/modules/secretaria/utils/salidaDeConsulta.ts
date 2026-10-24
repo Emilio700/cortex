@@ -1,8 +1,8 @@
 /**
  * Salir de «en consulta» sin cerrarla (plan 28, D-3).
  *
- * La cita vuelve al estado del que entró: si la doctora la abrió para
- * prepararla antes de que la paciente llegara, regresa a agendada o
+ * La cita vuelve al estado del que entró: si el médico la abrió para
+ * prepararla antes de que el paciente llegara, regresa a agendada o
  * confirmada, y la llegada real sigue pidiendo triage y avisando. Solo si
  * estaba en sala el botón dice «Regresar a sala». Sin estado guardado (una
  * cita que entró antes del cambio), en sala, como hace el servidor.
@@ -35,12 +35,12 @@ export const salidaDeConsulta = (
     return {
       destino,
       texto: 'Regresar a sala',
-      explicacion: 'La paciente vuelve a la sala de espera; la consulta sigue abierta para retomarla.',
+      explicacion: 'El paciente vuelve a la sala de espera; la consulta sigue abierta para retomarla.',
     }
   }
   return {
     destino,
     texto: 'Salir sin atender',
-    explicacion: `La paciente todavía no pasaba a sala: la cita vuelve a «${ETIQUETA[destino]}».`,
+    explicacion: `El paciente todavía no pasaba a sala: la cita vuelve a «${ETIQUETA[destino]}».`,
   }
 }

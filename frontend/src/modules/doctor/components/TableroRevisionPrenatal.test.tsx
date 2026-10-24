@@ -26,7 +26,7 @@ beforeEach(() => {
 })
 
 describe('Tablero de controles prenatales sin cita', () => {
-  it('muestra a la paciente que debía volver y no está agendada', async () => {
+  it('muestra al paciente que debía volver y no está agendada', async () => {
     get.mockResolvedValue({ data: [pendiente()] })
 
     render(<TableroRevisionPrenatal />)
@@ -36,7 +36,7 @@ describe('Tablero de controles prenatales sin cita', () => {
   })
 
   it('dice si recepción ya fue avisada, que es lo primero que se pregunta', async () => {
-    // Sin esto la doctora no puede distinguir "nadie sabe" de "ya está en manos
+    // Sin esto el médico no puede distinguir "nadie sabe" de "ya está en manos
     // de recepción", y termina llamando ella a pacientes que ya iban a ser
     // llamadas.
     get.mockResolvedValue({ data: [pendiente({ avisado_a_recepcion: true })] })
@@ -57,7 +57,7 @@ describe('Tablero de controles prenatales sin cita', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('un error del servidor no tapa el resto del tablero de la doctora', async () => {
+  it('un error del servidor no tapa el resto del tablero del médico', async () => {
     // El tablero es apoyo, no la ruta crítica de la consulta.
     get.mockRejectedValue(new Error('500'))
 

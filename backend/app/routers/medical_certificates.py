@@ -38,10 +38,10 @@ VENTANA_DE_REENVIO = timedelta(minutes=5)
 
 
 def _patient_in_scope(db: Session, patient_id: int, current_user: User) -> Patient:
-    """Resuelve a la paciente aplicando la MISMA regla clínica que la nota de consulta.
+    """Resuelve al paciente aplicando la MISMA regla clínica que la nota de consulta.
 
-    Antes se exigía ser la dueña de la paciente, igual que en las recetas y con
-    la misma consecuencia: la doctora que cubría la consulta veía la nota y
+    Antes se exigía ser la dueña del paciente, igual que en las recetas y con
+    la misma consecuencia: el médico que cubría la consulta veía la nota y
     recibía 403 en los certificados. Los roles no clínicos conservan su alcance
     por clínica.
     """
@@ -49,7 +49,7 @@ def _patient_in_scope(db: Session, patient_id: int, current_user: User) -> Patie
 
 
 def _appointment_in_scope(db: Session, appointment_id: int, current_user: User) -> Appointment:
-    """El acceso a la cita se deriva del acceso a la paciente, no de quién la agendó."""
+    """El acceso a la cita se deriva del acceso al paciente, no de quién la agendó."""
     appointment = (
         scoped_query(db.query(Appointment), Appointment, current_user)
         .filter(Appointment.id == appointment_id)
@@ -64,7 +64,7 @@ def _appointment_in_scope(db: Session, appointment_id: int, current_user: User) 
 def _certificate_in_scope(
     db: Session, certificate_id: int, current_user: User
 ) -> MedicalCertificate:
-    """Leerlo depende de la paciente; modificarlo sigue dependiendo de quién lo firmó.
+    """Leerlo depende del paciente; modificarlo sigue dependiendo de quién lo firmó.
 
     ``update_medical_certificate`` conserva su propio ``assert_owner``: nadie
     edita un documento firmado por alguien más.
@@ -88,7 +88,7 @@ def _texto_normalizado(valor: Any) -> str:
 
 
 def _huella_de_certificado(certificate_type: Any, diagnosis: Any, days_off: Any, notes: Any) -> tuple:
-    """Todo lo que la doctora capturó. Si algo de esto cambia, es otro certificado."""
+    """Todo lo que el médico capturó. Si algo de esto cambia, es otro certificado."""
     return (
         _texto_normalizado(getattr(certificate_type, "value", certificate_type)),
         _texto_normalizado(diagnosis),
@@ -159,7 +159,7 @@ def create_medical_certificate(
     appointment = _appointment_in_scope(db, certificate_in.appointment_id, current_user)
     patient = _patient_in_scope(db, certificate_in.patient_id, current_user)
     if appointment.patient_id != patient.id:
-        raise HTTPException(status_code=422, detail="La consulta no corresponde a la paciente")
+        raise HTTPException(status_code=422, detail="La consulta no corresponde al paciente")
 
     # Reenvío del mismo contenido: se devuelve el certificado que ya existe en
     # vez de emitir otro con folio distinto para la misma incapacidad.

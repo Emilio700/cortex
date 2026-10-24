@@ -1,7 +1,7 @@
-"""Datos que el inicio de la doctora necesita de la cita (plan 28, Fase 3 y D-4).
+"""Datos que el inicio del médico necesita de la cita (plan 28, Fase 3 y D-4).
 
-- La paciente de la cita trae su fecha de nacimiento, para la edad.
-- La cita trae las semanas de gestación al día de la cita, si la paciente tiene
+- El paciente de la cita trae su fecha de nacimiento, para la edad.
+- La cita trae las semanas de gestación al día de la cita, si el paciente tiene
   un embarazo activo y la sesión puede leerlo.
 - «Hoy» se puede pedir como fecha local (``fecha_desde``/``fecha_hasta``) y no
   como instante UTC del navegador.
@@ -128,7 +128,7 @@ def test_recepcion_no_recibe_las_semanas(client, db_session, e):
     assert r.status_code == 200
     [c] = r.json()
     assert c["semanas_gestacion"] is None
-    # La fecha de nacimiento sí: recepción ya la ve en la ficha de la paciente.
+    # La fecha de nacimiento sí: recepción ya la ve en la ficha del paciente.
     assert c["patient"]["date_of_birth"] == "1990-05-20"
 
 

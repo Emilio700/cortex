@@ -1,5 +1,5 @@
 /**
- * Los datos del inicio de la doctora, cada sección por su lado (plan 28, Fase 2).
+ * Los datos del inicio del médico, cada sección por su lado (plan 28, Fase 2).
  *
  * Una sección que falla no tapa a las demás: el error de las FPP no esconde la
  * agenda. Todo se refresca junto con `useCicloDeRefresco` (60 s con la pestaña

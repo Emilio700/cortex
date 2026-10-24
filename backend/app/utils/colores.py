@@ -1,8 +1,8 @@
 """Colores de la receta.
 
-La doctora elige **un** color y de ahí salen los tres tonos que el PDF
+El médico elige **un** color y de ahí salen los tres tonos que el PDF
 necesita: el acento (títulos y marcos), la línea (separadores) y el campo
-(subrayados de los datos de la paciente). Pedirle tres colores a mano sería
+(subrayados de los datos del paciente). Pedirle tres colores a mano sería
 pedirle que acierte con tres combinaciones distintas cada vez.
 
 El color de fábrica devuelve **exactamente** los tonos que ya estaban escritos
@@ -11,7 +11,7 @@ seguir imprimiendo la receta de ayer, y una derivación aritmética no reproduce
 un color elegido a ojo. Por eso el valor de fábrica se devuelve tal cual en vez
 de calcularlo.
 
-Un color claro no puede usarse tal cual para el texto: el nombre de la paciente
+Un color claro no puede usarse tal cual para el texto: el nombre del paciente
 se imprimiría casi blanco sobre blanco. Acento y línea se oscurecen hasta que
 se lean; el campo —que es una raya fina bajo el valor, no texto— sí puede ir
 claro.

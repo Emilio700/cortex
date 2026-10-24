@@ -4,7 +4,7 @@ Las tres cosas que este trabajo puede romper en producción no son que deje de
 avisar, sino que avise de más: la destinataria es **una** persona, y un buzón
 con cien avisos no se lee, se ignora. Por eso las pruebas cargan hacia ese lado.
 
-Escenario común: una doctora, una asistente y pacientes con embarazo activo.
+Escenario común: un médico, una asistente y pacientes con embarazo activo.
 """
 from datetime import date, datetime, timedelta
 
@@ -116,7 +116,7 @@ def _avisos(db):
 
 
 def test_la_revision_que_se_viene_sin_cita_le_avisa_a_la_asistente(db, consultorio):
-    """El aviso va a recepción, que es quien llama; la paciente no es usuaria."""
+    """El aviso va a recepción, que es quien llama; el paciente no es usuaria."""
     _embarazo(db, consultorio, revision=HOY + timedelta(days=5))
 
     resumen = job.ejecutar(db, hoy=HOY)
@@ -130,7 +130,7 @@ def test_la_revision_que_se_viene_sin_cita_le_avisa_a_la_asistente(db, consultor
 def test_a_la_doctora_no_se_le_avisa_nada(db, consultorio):
     """Decisión de Emilio: lo que ella necesita saber va en el tablero.
 
-    Enterarse no es una acción, y la doctora ya acumula avisos sin leer. Si
+    Enterarse no es una acción, y el médico ya acumula avisos sin leer. Si
     alguien agrega aquí un aviso "informativo", esta prueba se cae.
     """
     _embarazo(db, consultorio, revision=HOY + timedelta(days=3))
@@ -157,7 +157,7 @@ def test_correr_el_trabajo_diez_veces_manda_un_solo_aviso(db, consultorio):
 def test_mover_la_fecha_de_revision_vuelve_a_armar_el_aviso(db, consultorio):
     """La contraparte de la idempotencia: no avisar dos veces no es no avisar.
 
-    Si la doctora adelanta la revisión, recepción tiene que enterarse de la
+    Si el médico adelanta la revisión, recepción tiene que enterarse de la
     fecha nueva; una marca booleana habría dejado ese caso mudo para siempre.
     """
     embarazo = _embarazo(db, consultorio, revision=HOY + timedelta(days=6))

@@ -1,6 +1,6 @@
 """El estado «en consulta» de una cita (plan 28, D-3).
 
-Decisión de Emilio (2026-10-04): la cita pasa a «en consulta» cuando la doctora
+Decisión de Emilio (2026-10-04): la cita pasa a «en consulta» cuando el médico
 abre la consulta y a «atendida» cuando la cierra. Nadie lo marca a mano.
 
 Reglas que fijó la coordinación del plan, y por qué:
@@ -8,15 +8,15 @@ Reglas que fijó la coordinación del plan, y por qué:
 - **Entra solo por un endpoint explícito** (``POST /appointments/{id}/
   iniciar-consulta``) que la pantalla de consulta llama al abrirse, nunca por un
   GET: leer una cita no puede cambiarla.
-- **Solo la doctora de la cita.** Si la abre MASTER para supervisar, o una
+- **Solo el médico de la cita.** Si la abre MASTER para supervisar, o una
   compañera que la cubre para leerla, la agenda no puede decir que la titular
   está atendiendo.
 - **Solo desde agendada, confirmada o en sala, y solo si la cita es de hoy**
   (hora de Mazatlán). Abrir una atendida para releerla, una cancelada o la de
   la semana pasada no cambia nada.
 - **Sale** al finalizar (atendida), al cancelar o «sin cerrar»: de vuelta al
-  estado del que entró (``estado_antes_de_consulta``). Si la doctora la abrió
-  para prepararla antes de que llegara la paciente, vuelve a agendada o
+  estado del que entró (``estado_antes_de_consulta``). Si el médico la abrió
+  para prepararla antes de que llegara el paciente, vuelve a agendada o
   confirmada, y la llegada posterior sigue pidiendo triage y avisando como
   siempre; si estaba en sala, «Regresar a sala». No se revierte al salir de la pantalla: cerrar una pestaña, perder la
   red o apagar el teléfono no son señales confiables de que la consulta acabó,
@@ -84,10 +84,10 @@ def iniciar_consulta(db: Session, cita: Appointment, user: User) -> Optional[str
     anterior = cita.status
     cita.estado_antes_de_consulta = anterior.value
     cita.status = AppointmentStatus.EN_CONSULTA
-    # «Paciente en sala» ya no pide nada: la doctora la está atendiendo. Se
+    # «Paciente en sala» ya no pide nada: el médico la está atendiendo. Se
     # cierra en la misma transacción que el cambio de estado, igual que en el
     # PATCH de estado (plan 27): si no, la campana seguiría pidiéndole que
-    # atienda a la paciente que ya tiene enfrente.
+    # atienda al paciente que ya tiene enfrente.
     resolver(
         db,
         tipos=[NotificationType.PATIENT_ARRIVED],
@@ -132,7 +132,7 @@ def validar_cambio_manual(cita: Appointment, nuevo: AppointmentStatus) -> None:
     if nuevo == AppointmentStatus.EN_CONSULTA and actual != AppointmentStatus.EN_CONSULTA:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="«En consulta» no se marca a mano: la cita pasa sola a ese estado cuando la doctora abre la consulta.",
+            detail="«En consulta» no se marca a mano: la cita pasa sola a ese estado cuando el médico abre la consulta.",
         )
     if actual != AppointmentStatus.EN_CONSULTA or nuevo in CIERRES_DE_CONSULTA + (AppointmentStatus.EN_CONSULTA,):
         return
@@ -155,9 +155,9 @@ ETIQUETAS = {
 
 
 def es_salida_sin_cerrar(actual: AppointmentStatus, nuevo: AppointmentStatus) -> bool:
-    """La doctora sale de la consulta sin cerrarla (vuelve al estado previo).
+    """El médico sale de la consulta sin cerrarla (vuelve al estado previo).
 
-    No es una llegada: volver a «en sala» no exige triage (la doctora pudo
+    No es una llegada: volver a «en sala» no exige triage (el médico pudo
     abrir la consulta sin signos) ni avisa «paciente en sala» a la propia
     doctora. Volver a agendada o confirmada tampoco avisa nada; la llegada
     real, después, sí pide triage y avisa como siempre.

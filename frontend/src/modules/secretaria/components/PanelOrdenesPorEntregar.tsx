@@ -1,12 +1,12 @@
 /**
  * Recepción: órdenes por entregar del día (O-09, plan 26 fase 4).
  *
- * La otra mitad del mostrador: entregar a la paciente el papel de la orden.
- * Recepción busca a la paciente, le imprime un solo papel con sus estudios
+ * La otra mitad del mostrador: entregar al paciente el papel de la orden.
+ * Recepción busca al paciente, le imprime un solo papel con sus estudios
  * (con vista previa) y marca que ya se lo entregó. La entrega es contabilidad
  * del mostrador; NO cambia el estado clínico de la orden.
  *
- * Antes era una tarjeta por estudio (R-2): una paciente con diez estudios eran
+ * Antes era una tarjeta por estudio (R-2): un paciente con diez estudios eran
  * diez tarjetas y diez papeles. Ahora es una tarjeta por paciente.
  *
  * Regla de oro (plan 22): sólo se dice «entregada» cuando el servidor lo
@@ -55,7 +55,7 @@ const PanelOrdenesPorEntregar = () => {
       setAviso(
         resultado.ya_estaba_entregada
           ? `Esa orden ya estaba marcada como entregada (folio ${orderId}).`
-          : `Orden ${orderId} marcada como entregada a la paciente.`,
+          : `Orden ${orderId} marcada como entregada al paciente.`,
       )
       await buscar(search, incluirEntregadas, page)
     } catch (err) {

@@ -4,7 +4,7 @@
  * categoría y año. Los datos no se mueven: el servidor lee las dos fuentes
  * (`GET /patients/{id}/imagenes`). Se abren en el visor de documentos.
  *
- * Quien sube fotos clínicas (la doctora) tiene arriba el formulario de
+ * Quien sube fotos clínicas (el médico) tiene arriba el formulario de
  * siempre; un estudio de imagen se sube con «Subir archivo».
  */
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -102,7 +102,7 @@ export default function PestanaImagenes({ patientId, appointmentId }: { patientI
           onSubida={() => void cargar()}
         />
       )}
-      <section className="expediente-galeria" aria-label="Imágenes de la paciente" data-tour="expediente-imagenes">
+      <section className="expediente-galeria" aria-label="Imágenes del paciente" data-tour="expediente-imagenes">
         <div className="expediente-galeria__filtros">
           <h3 className="h6 mb-0 me-auto">Imágenes {items ? <CBadge color="primary" className="ms-1">{total}</CBadge> : null}</h3>
           <label className="visually-hidden" htmlFor="imagenes-categoria">Categoría</label>
@@ -153,7 +153,7 @@ export default function PestanaImagenes({ patientId, appointmentId }: { patientI
       <VisorDocumentos
         visible={viendo !== null}
         onClose={() => setViendo(null)}
-        titulo="Imágenes de la paciente"
+        titulo="Imágenes del paciente"
         archivos={archivos}
         inicial={viendo ?? 0}
       />

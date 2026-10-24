@@ -2,7 +2,7 @@
  * Etiquetas en español del estado y la prioridad de una orden de estudio.
  *
  * El API guarda y devuelve los valores en inglés (`ordered`, `routine`…), que
- * es lo que la doctora y recepción veían crudo en pantalla. Aquí se traducen en
+ * es lo que el médico y recepción veían crudo en pantalla. Aquí se traducen en
  * un solo lugar para que la bandeja, la lista de recepción y el expediente
  * digan lo mismo. Un valor que no se conozca se muestra tal cual, sin romper la
  * pantalla.
@@ -112,7 +112,7 @@ const TIPOS: Record<string, string> = Object.fromEntries(
 export const etiquetaTipoEstudio = (category: string): string => TIPOS[category] ?? category
 
 /**
- * Destino físico de un estudio: a dónde lleva la paciente esa hoja (plan 26,
+ * Destino físico de un estudio: a dónde lleva el paciente esa hoja (plan 26,
  * §3.2). Es la misma agrupación que usa el papel «Separado por destino», para
  * que la pantalla y el papel junten igual los estudios.
  */

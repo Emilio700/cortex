@@ -8,7 +8,7 @@
 
 /**
  * ¿Es buen momento? No si hay un modal abierto (se está capturando algo) ni si
- * el cursor está en un campo: arrancar un recorrido mientras la doctora
+ * el cursor está en un campo: arrancar un recorrido mientras el médico
  * escribe la nota le robaría el foco a media frase.
  */
 export function esMomentoOportuno(doc: Document = document): boolean {

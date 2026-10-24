@@ -1,7 +1,7 @@
 /**
- * Cuántos resultados llegaron y la doctora todavía no revisa.
+ * Cuántos resultados llegaron y el médico todavía no revisa.
  *
- * Nada empujaba a la doctora a la bandeja: un resultado recibido podía quedarse
+ * Nada empujaba al médico a la bandeja: un resultado recibido podía quedarse
  * ahí semanas. El número sale del mismo listado de la bandeja filtrado por
  * «Resultado recibido» y con `limit=1`: el servidor ya cuenta el total, así que
  * es una sola llamada y no una por orden.
@@ -15,7 +15,7 @@ import type { Badge } from '../../../_nav'
 /** La bandeja lo emite al guardar un resultado, para que el número no se quede viejo. */
 export const EVENTO_RESULTADOS_ACTUALIZADOS = 'gems:resultados-actualizados'
 
-/** Estado de la orden cuyo resultado ya llegó y falta que la doctora lo revise. */
+/** Estado de la orden cuyo resultado ya llegó y falta que el médico lo revise. */
 export const ESTADO_SIN_REVISAR = 'result_received'
 
 export const avisarResultadosActualizados = () => {
@@ -24,7 +24,7 @@ export const avisarResultadosActualizados = () => {
 
 export const useResultadosSinRevisar = (habilitado = true) => {
   // `null` mientras no se sabe: un fallo de red nunca se muestra como «0»,
-  // porque «0» le dice a la doctora que no tiene nada que revisar.
+  // porque «0» le dice al médico que no tiene nada que revisar.
   const [total, setTotal] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [cargando, setCargando] = useState(habilitado)
@@ -69,7 +69,7 @@ export const useResultadosSinRevisar = (habilitado = true) => {
  * Insignia de «Órdenes y resultados» con los resultados sin revisar.
  *
  * Con cero no se dibuja nada; si no se pudo contar se dibuja «?», nunca «0»:
- * un cero falso le diría a la doctora que no tiene nada pendiente.
+ * un cero falso le diría al médico que no tiene nada pendiente.
  */
 export const insigniaDeResultados = (
   total: number | null,

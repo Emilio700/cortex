@@ -91,7 +91,7 @@ def _auth_headers(db, user: User) -> dict[str, str]:
 
 @pytest.fixture
 def escenario(db_session):
-    """Sucursal con secretaria, dos doctores y una paciente. Sin salas aún."""
+    """Sucursal con secretaria, dos doctores y un paciente. Sin salas aún."""
     tenant = Tenant(name="Consultorio de prueba", is_active=True)
     db_session.add(tenant)
     db_session.commit()
@@ -256,7 +256,7 @@ def test_una_cita_cancelada_no_ocupa(client, db_session, escenario):
 
 
 def test_todas_las_salas_ocupadas_deja_la_franja_sin_hueco(client, db_session, escenario):
-    """La franja está libre para la doctora, pero no queda dónde atender."""
+    """La franja está libre para el médico, pero no queda dónde atender."""
     tenant = escenario["tenant"]
     sala_1 = _sala(db_session, tenant, "Sala 1", 1)
     sala_2 = _sala(db_session, tenant, "Sala 2", 2)
@@ -430,7 +430,7 @@ def test_lo_que_dice_libre_se_puede_agendar_de_verdad(client, db_session, escena
     disponible tiene que aceptarse al agendar, y cada una que marca ocupada
     tiene que rechazarse. Si esto se rompe, el modal miente.
 
-    Se monta un día con de todo: citas de la doctora, un bloqueo, y salas con
+    Se monta un día con de todo: citas del médico, un bloqueo, y salas con
     ocupación parcial y total.
     """
     tenant = escenario["tenant"]
@@ -445,7 +445,7 @@ def test_lo_que_dice_libre_se_puede_agendar_de_verdad(client, db_session, escena
     _cita(db_session, escenario, escenario["doctor_b"], datetime.combine(DIA, time(11, 0)), 30, sala_2)
     # Sólo una sala tomada a las 12:00: debe seguir habiendo hueco
     _cita(db_session, escenario, escenario["doctor_b"], datetime.combine(DIA, time(12, 0)), 30, sala_2)
-    # Bloqueo de la doctora a mediodía
+    # Bloqueo del médico a mediodía
     db_session.add(
         ScheduleBlock(
             tenant_id=tenant.id,

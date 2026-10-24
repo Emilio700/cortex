@@ -50,7 +50,7 @@ TEMPLATES: dict[ConsentType, ConsentTemplate] = {
     ConsentType.LABIAPLASTY: _template(
         ConsentType.LABIAPLASTY,
         "Consentimiento para labioplastia o estética genital",
-        "Procedimiento de estética genital femenina conforme a técnica confirmada por la paciente y médico.",
+        "Procedimiento de estética genital femenina conforme a técnica confirmada por el paciente y médico.",
         "Comprendo las limitaciones de los resultados estéticos y funcionales.",
         allows_photos=True,
     ),

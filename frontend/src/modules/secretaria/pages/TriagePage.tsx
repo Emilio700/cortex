@@ -29,7 +29,7 @@ import { EncabezadoPantalla } from '../../../shared/components/EncabezadoPantall
 
 /**
  * Inicio y fin del día local en ISO. Sin este rango el API devolvía las citas
- * más recientes de cualquier fecha y la paciente de hoy podía quedar fuera.
+ * más recientes de cualquier fecha y el paciente de hoy podía quedar fuera.
  */
 const rangoDeHoy = () => {
     const inicio = new Date()
@@ -74,7 +74,7 @@ const TriagePage: React.FC = () => {
     }, [loadAppointments])
 
     // Recepción deja esta pantalla abierta toda la mañana mientras agenda en
-    // otra pestaña; sin esto, la paciente que se confirmó allá no aparece
+    // otra pestaña; sin esto, el paciente que se confirmó allá no aparece
     // aquí hasta recargar a mano.
     useEffect(() => {
         const alVolver = () => {
@@ -85,7 +85,7 @@ const TriagePage: React.FC = () => {
     }, [loadAppointments])
 
     // El API sólo filtra por un estado a la vez; confirmada y en_sala se
-    // separan aquí. La que ya está en consulta no: está con la doctora, que
+    // separan aquí. La que ya está en consulta no: está con el médico, que
     // toma los signos ahí mismo si faltan (plan 28, D-3). El orden por hora se asegura aquí también para no depender
     // de que el servidor lo mantenga.
     const triageAppointments = appointments
@@ -109,7 +109,7 @@ const TriagePage: React.FC = () => {
                 cita: appointment,
                 sinAcceso,
                 mensaje: sinAcceso
-                    ? 'No tienes acceso a los signos vitales de esta paciente.'
+                    ? 'No tienes acceso a los signos vitales de este paciente.'
                     : 'No se pudieron cargar los signos vitales. No sabemos si ya se registraron, así que no se abrió la captura.',
             })
         } finally {
@@ -178,10 +178,10 @@ const TriagePage: React.FC = () => {
                                 <TablaResponsiva hover responsive data-tour="triage-lista">
                                     <CTableHead>
                                         <CTableRow>
-                                            {/* En el teléfono la paciente va de título y la hora como dato. */}
+                                            {/* En el teléfono el paciente va de título y la hora como dato. */}
                                             <CTableHeaderCell data-tarjeta="dato">Hora</CTableHeaderCell>
                                             <CTableHeaderCell data-tarjeta="titulo">Paciente</CTableHeaderCell>
-                                            <CTableHeaderCell>Doctora</CTableHeaderCell>
+                                            <CTableHeaderCell>Médico</CTableHeaderCell>
                                             <CTableHeaderCell>Estado</CTableHeaderCell>
                                             <CTableHeaderCell>Acciones</CTableHeaderCell>
                                         </CTableRow>

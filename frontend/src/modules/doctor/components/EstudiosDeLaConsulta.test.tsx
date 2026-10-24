@@ -94,7 +94,7 @@ const responder = () =>
 /** Forma de una llamada al endpoint de órdenes en el mock. */
 type LlamadaDeOrdenes = [ruta: string, config?: { params?: Record<string, unknown> }]
 
-/** Sólo las llamadas al endpoint de órdenes de la paciente. */
+/** Sólo las llamadas al endpoint de órdenes del paciente. */
 const llamadasDeOrdenes = () =>
   (get.mock.calls as LlamadaDeOrdenes[]).filter(
     ([ruta]) => ruta === '/clinical-tracking/patient/12/orders',
@@ -282,7 +282,7 @@ describe('EstudiosDeLaConsulta', () => {
     montar({ onVerHistorial })
     await user.click(
       await screen.findByRole('button', {
-        name: 'Ver historial de estudios de la paciente (23) →',
+        name: 'Ver historial de estudios del paciente (23) →',
       }),
     )
     expect(onVerHistorial).toHaveBeenCalled()
@@ -339,7 +339,7 @@ describe('EstudiosDeLaConsulta', () => {
     const user = userEvent.setup()
     montar({ patientName: 'ANA PRUEBA' })
 
-    expect(await screen.findByText('Resultados pendientes de la paciente (1)')).toBeInTheDocument()
+    expect(await screen.findByText('Resultados pendientes del paciente (1)')).toBeInTheDocument()
     expect(get).toHaveBeenCalledWith('/clinical-tracking/patient/12/orders', {
       params: { por_atender: true, skip: 0, limit: 50 },
     })

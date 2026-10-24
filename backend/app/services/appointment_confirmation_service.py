@@ -22,7 +22,7 @@ def enmascarar_correo(correo: str) -> str:
     bitácora: deja la primera letra del usuario y el dominio (``a***@dominio``).
 
     Recepción sólo necesita confirmar que el correo al que se reenvió es el que
-    ella espera, no leer la dirección completa de la paciente.
+    ella espera, no leer la dirección completa del paciente.
     """
     correo = (correo or "").strip()
     if "@" not in correo:
@@ -48,7 +48,7 @@ def _armar_correo_de_confirmacion(
     time_str = appointment.scheduled_at.strftime('%I:%M %p')
     reason = getattr(appointment, 'reason', '') or ''
     # Con el tratamiento capturado ("Dra."); sin él, el nombre solo: un
-    # "Dr." fijo le llegaba también a las pacientes de las doctoras.
+    # "Dr." fijo le llegaba también a los pacientes de los médicos.
     medico = nombre_con_tratamiento(doctor)
     body_text = f"Hola {patient.first_name}, tu cita está confirmada para el {date_str} a las {time_str} con {medico}."
     body_html = tmpl(clinic, patient.first_name, date_str, time_str, medico, reason)
@@ -56,13 +56,13 @@ def _armar_correo_de_confirmacion(
 
 
 def reenviar_confirmacion_de_cita(db: Session, appointment: Appointment) -> dict:
-    """Reenvía a la paciente el correo de confirmación de su cita (S-05).
+    """Reenvía al paciente el correo de confirmación de su cita (S-05).
 
-    Se usa al reagendar: la paciente conserva por escrito la hora vieja y hay
+    Se usa al reagendar: el paciente conserva por escrito la hora vieja y hay
     que mandarle la nueva. Devuelve sólo lo que de verdad se sabe del envío, sin
     afirmar de más (regla de oro, plan 22):
 
-    - ``sin_email``: la paciente no tiene correo capturado; no se intenta nada.
+    - ``sin_email``: el paciente no tiene correo capturado; no se intenta nada.
     - ``fallo_envio``: se intentó y el servidor de correo lo rechazó.
     - ``None`` (enviado): el correo se entregó al servidor SMTP.
 
@@ -93,12 +93,12 @@ def reenviar_confirmacion_de_cita(db: Session, appointment: Appointment) -> dict
 def send_appointment_confirmation(
     db: Session, appointment: Appointment, actor_user_id: Optional[int] = None
 ) -> None:
-    """Le manda a la paciente (si tiene correo) la confirmación de su cita.
+    """Le manda al paciente (si tiene correo) la confirmación de su cita.
 
     Best-effort: a failed email must not roll back or fail the appointment
     creation that already succeeded, so failures are swallowed here.
 
-    El aviso en la campana a la doctora ya no sale de aquí: se escribe en la
+    El aviso en la campana al médico ya no sale de aquí: se escribe en la
     misma transacción que la cita (``avisos_de_citas.avisar_cita_agendada``,
     plan 27), y este correo se manda después de confirmar. ``actor_user_id`` se
     conserva para no romper a quien ya llamaba a esta función.

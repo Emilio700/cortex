@@ -291,7 +291,7 @@ def test_doctora_con_permiso_agenda_en_su_propia_agenda(client, db_session, esce
 
 def test_doctora_con_permiso_no_agenda_en_la_agenda_de_otra(client, db_session, escenario):
     """El permiso de crear citas no dice para quién: sin este guard, dárselo a
-    una doctora se lo daría sobre las agendas de todas sus colegas.
+    un médico se lo daría sobre las agendas de todas sus colegas.
     """
     doctora = escenario["doctor"]
     _conceder(db_session, doctora, "appointments.create")
@@ -341,9 +341,9 @@ def test_secretaria_sigue_agendando_para_cualquier_doctor(client, db_session, es
 
 
 def test_doctora_sin_recepcion_da_de_alta_y_agenda_en_su_agenda(client, db_session, escenario):
-    """Plan 32, punto 5: el preregistro se quitó y la paciente nueva se da de
-    alta al agendar. La doctora que trabaja sola lo hace desde su Agenda con
-    ``patients.create`` concedido por usuaria: la paciente queda suya y la
+    """Plan 32, punto 5: el preregistro se quitó y el paciente nuevo se da de
+    alta al agendar. El médico que trabaja sola lo hace desde su Agenda con
+    ``patients.create`` concedido por usuaria: el paciente queda suya y la
     cita, en su propia agenda.
     """
     doctora = escenario["doctor"]

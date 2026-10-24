@@ -1,6 +1,6 @@
 /**
  * El panel de notas, recetas y certificados habla solo de lo que leyó: si
- * están vacíos lo dice sin afirmar que la paciente no tenga historial —sus
+ * están vacíos lo dice sin afirmar que el paciente no tenga historial —sus
  * citas se ven aparte, en la misma pestaña— (plan 29, T-1 y el pendiente de
  * unificar el historial de la consulta).
  */
@@ -38,26 +38,26 @@ describe('MedicalHistoryViewer', () => {
   it('sin notas, recetas ni certificados lo dice sin negar las citas', async () => {
     render(<MedicalHistoryViewer patientId={4} />)
     // Este panel no sabe de citas: solo puede hablar de las tres fuentes que
-    // consultó. Una paciente con citas y sin documentos entra aquí.
+    // consultó. Un paciente con citas y sin documentos entra aquí.
     expect(
-      await screen.findByText('Esta paciente no tiene notas, recetas ni certificados registrados.'),
+      await screen.findByText('Este paciente no tiene notas, recetas ni certificados registrados.'),
     ).toBeInTheDocument()
     expect(screen.queryByText(/No hay registros médicos previos/)).not.toBeInTheDocument()
   })
 
   it('si las recetas no se pudieron leer, no lo presenta como vacío', async () => {
     const user = userEvent.setup()
-    recetas.mockRejectedValueOnce(new Error('No se pudieron cargar las recetas de la paciente.'))
+    recetas.mockRejectedValueOnce(new Error('No se pudieron cargar las recetas del paciente.'))
     render(<MedicalHistoryViewer patientId={4} />)
 
-    expect(await screen.findByText(/No se pudieron cargar las recetas de la paciente/)).toBeInTheDocument()
+    expect(await screen.findByText(/No se pudieron cargar las recetas del paciente/)).toBeInTheDocument()
     expect(
-      screen.queryByText('Esta paciente no tiene notas, recetas ni certificados registrados.'),
+      screen.queryByText('Este paciente no tiene notas, recetas ni certificados registrados.'),
     ).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Reintentar' }))
     expect(
-      await screen.findByText('Esta paciente no tiene notas, recetas ni certificados registrados.'),
+      await screen.findByText('Este paciente no tiene notas, recetas ni certificados registrados.'),
     ).toBeInTheDocument()
   })
 })

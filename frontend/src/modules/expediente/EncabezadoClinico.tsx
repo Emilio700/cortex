@@ -29,7 +29,7 @@ export default function EncabezadoClinico({ datos, enConsulta, puedeAgendar, onA
   const alertas = datos.alertas
   const cita = datos.cita_de_hoy
   return (
-    <section className="expediente-encabezado" aria-label="Datos de la paciente" data-tour="expediente-encabezado">
+    <section className="expediente-encabezado" aria-label="Datos del paciente" data-tour="expediente-encabezado">
       <div className="expediente-encabezado__quien">
         <h2 className="expediente-encabezado__nombre">
           {datos.nombre}

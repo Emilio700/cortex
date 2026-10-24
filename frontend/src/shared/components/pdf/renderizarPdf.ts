@@ -3,7 +3,7 @@
  *
  * El visor mostraba los PDF en un `<iframe>` con una URL de Blob. En Chrome de
  * Android eso no se ve (el navegador no tiene visor de PDF incrustado) y en iOS
- * solo enseña la primera página. Las doctoras entran desde el celular, así que
+ * solo enseña la primera página. Los médicos entran desde el celular, así que
  * el visor dibuja las páginas él mismo, en todos los dispositivos: una sola
  * forma de ver el papel, la misma en la computadora y en el teléfono.
  *

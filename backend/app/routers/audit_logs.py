@@ -30,10 +30,10 @@ router = APIRouter(prefix="/audit-logs", tags=["Audit logs"])
 
 
 def _nombre_de_paciente(row: AuditLog, user: User) -> str | None:
-    """El nombre de la paciente del evento, solo si es de la sucursal de quien lee.
+    """El nombre del paciente del evento, solo si es de la sucursal de quien lee.
 
     La bitácora ya está acotada a la sucursal; esto lo asegura también para el
-    nombre por si un evento quedó con una paciente de otra sucursal.
+    nombre por si un evento quedó con un paciente de otra sucursal.
     """
     paciente = row.patient
     if paciente is None:

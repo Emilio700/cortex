@@ -66,8 +66,8 @@ const SignatureCanvas = ({ onChange, disabled = false }: SignatureCanvasProps) =
   }
 
   return <div className="border rounded bg-white p-2">
-    <canvas ref={canvasRef} className="w-100" style={{ height: 160, touchAction: 'none', cursor: disabled ? 'not-allowed' : 'crosshair' }} onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onPointerLeave={end} aria-label="Área para firma de la paciente" />
-    <div className="d-flex justify-content-between align-items-center border-top pt-2"><small className="text-body-secondary">La paciente puede firmar directamente en esta pantalla.</small><CButton size="sm" color="secondary" variant="ghost" onClick={clear} disabled={disabled || !hasSignature}><CIcon icon={cilReload} className="me-1" />Limpiar</CButton></div>
+    <canvas ref={canvasRef} className="w-100" style={{ height: 160, touchAction: 'none', cursor: disabled ? 'not-allowed' : 'crosshair' }} onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onPointerLeave={end} aria-label="Área para firma del paciente" />
+    <div className="d-flex justify-content-between align-items-center border-top pt-2"><small className="text-body-secondary">El paciente puede firmar directamente en esta pantalla.</small><CButton size="sm" color="secondary" variant="ghost" onClick={clear} disabled={disabled || !hasSignature}><CIcon icon={cilReload} className="me-1" />Limpiar</CButton></div>
   </div>
 }
 

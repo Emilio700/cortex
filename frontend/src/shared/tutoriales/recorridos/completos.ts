@@ -14,7 +14,7 @@ export const RECORRIDOS_COMPLETOS: RecorridoCompleto[] = [
     id: 'completo-doctora',
     version: 4,
     titulo: 'Recorrido completo de tu consulta',
-    resumen: 'De la agenda del día al cobro, en el orden en que atiendes a una paciente.',
+    resumen: 'De la agenda del día al cobro, en el orden en que atiendes a un paciente.',
     roles: [Role.DOCTOR],
     etapas: [
       // Su día empieza en su Inicio: ahí están sus citas de hoy y desde ahí
@@ -37,7 +37,7 @@ export const RECORRIDOS_COMPLETOS: RecorridoCompleto[] = [
     id: 'completo-recepcion',
     version: 4,
     titulo: 'Recorrido completo de recepción',
-    resumen: 'De agendar la cita a cerrar la caja, en el orden en que llega una paciente.',
+    resumen: 'De agendar la cita a cerrar la caja, en el orden en que llega un paciente.',
     roles: [Role.SECRETARIA],
     etapas: [
       { recorridoId: 'agenda', nombre: 'Agenda' },

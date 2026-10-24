@@ -36,7 +36,7 @@ export const usePatientDocuments = () => {
   const [error, setError] = useState<string | null>(null)
   const [documents, setDocuments] = useState<PatientDocument[]>([])
   const [hasMore, setHasMore] = useState(false)
-  // Cuántos archivos de la paciente son resultado de un estudio: viven en
+  // Cuántos archivos del paciente son resultado de un estudio: viven en
   // Estudios y la lista ya no los repite (plan 32, punto 6).
   const [enEstudios, setEnEstudios] = useState(0)
 

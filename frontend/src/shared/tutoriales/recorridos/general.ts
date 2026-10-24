@@ -2,7 +2,7 @@
  * Cómo moverse por el sistema. Antes arrancaba sola la primera vez; ahora,
  * como todo recorrido, sólo cuando la persona lo pide desde el centro de ayuda.
  *
- * Hay una por rol porque "lo que haces aquí" cambia mucho entre una doctora y
+ * Hay una por rol porque "lo que haces aquí" cambia mucho entre un médico y
  * recepción, pero la parte de cómo moverse por el sistema es la misma.
  */
 import { Role } from '../../types'
@@ -32,7 +32,7 @@ const navegacion: PasoRecorrido[] = [
   },
   {
     elemento: 'encabezado-buscar',
-    titulo: 'Buscar una paciente',
+    titulo: 'Buscar un paciente',
     texto:
       'Escribe su nombre, su teléfono o su número de expediente y elige de la lista: se abre su expediente. Funciona desde cualquier pantalla, también con <b>Ctrl K</b> (<b>⌘K</b> en Mac). En el celular es la lupa. Solo busca pacientes, no citas.',
     lado: 'bottom',
@@ -41,7 +41,7 @@ const navegacion: PasoRecorrido[] = [
     elemento: 'notificaciones',
     titulo: 'Avisos',
     texto:
-      'La campana abre tus <b>avisos</b>. Su número rojo cuenta lo que te pide hacer algo —una paciente en sala, una consulta por cobrar— y que sigue pendiente. Lo nuevo aparece además debajo de esta barra y <b>se queda hasta que lo cierres</b>, sin interrumpir lo que escribes. Si GEMS está en otra pestaña, su título cuenta lo pendiente: «(2) GEMS».',
+      'La campana abre tus <b>avisos</b>. Su número rojo cuenta lo que te pide hacer algo —un paciente en sala, una consulta por cobrar— y que sigue pendiente. Lo nuevo aparece además debajo de esta barra y <b>se queda hasta que lo cierres</b>, sin interrumpir lo que escribes. Si GEMS está en otra pestaña, su título cuenta lo pendiente: «(2) GEMS».',
     lado: 'bottom',
     alinear: 'end',
   },
@@ -105,7 +105,7 @@ export const RECORRIDOS_GENERALES: Recorrido[] = [
       {
         titulo: 'Te damos la bienvenida',
         texto:
-          'Este recorrido dura un minuto. Te enseña dónde está cada cosa: la agenda, las pacientes, los signos vitales, los <b>Cobros</b> y el <b>Corte de caja</b>. Puedes cerrarlo cuando quieras con la ✕ o la tecla Esc.',
+          'Este recorrido dura un minuto. Te enseña dónde está cada cosa: la agenda, los pacientes, los signos vitales, los <b>Cobros</b> y el <b>Corte de caja</b>. Puedes cerrarlo cuando quieras con la ✕ o la tecla Esc.',
       },
       ...navegacion,
       cierre(

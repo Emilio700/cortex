@@ -92,7 +92,7 @@ def _validate_appointment(
     if appointment.patient_id != pregnancy.patient_id:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="La cita no corresponde a la paciente del embarazo",
+            detail="La cita no corresponde al paciente del embarazo",
         )
     exigir_autoria_clinica(
         appointment.doctor_id, user, detalle="Solo puedes vincular citas asignadas a ti"
@@ -105,7 +105,7 @@ def _registrar_ajuste_de_revision(
     """Deja constancia de quien movio la fecha de la proxima revision.
 
     Se compara contra la sugerida y no contra el valor anterior porque lo que
-    interesa saber es si la doctora corrigio a la regla, no cuantas veces
+    interesa saber es si el médico corrigio a la regla, no cuantas veces
     toco el campo. Si la fecha vuelve a coincidir con la sugerida, la marca
     de ajuste se borra: seguir diciendo que esta ajustada seria mentir.
     """

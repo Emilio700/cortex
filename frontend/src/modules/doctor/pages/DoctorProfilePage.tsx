@@ -295,7 +295,7 @@ const DoctorProfilePage = () => {
     const faltaLogoFirma = faltanEnLogoFirma.length ? `Falta ${faltanEnLogoFirma.join(' y ')}` : null
 
     // Al llegar el perfil, en el teléfono se abre la sección incompleta (una
-    // sola vez: después manda lo que la doctora abra o cierre).
+    // sola vez: después manda lo que el médico abra o cierre).
     useEffect(() => {
         if (!profile || seccionesIniciadas.current) return
         seccionesIniciadas.current = true
@@ -452,7 +452,7 @@ const DoctorProfilePage = () => {
                                                                         setContactEmail(e.target.value)
                                                                         limpiarErrorDatos('contacto')
                                                                     }}
-                                                                    placeholder="Para que la paciente te escriba"
+                                                                    placeholder="Para que el paciente te escriba"
                                                                     invalid={Boolean(erroresDatos.contacto)}
                                                                     aria-invalid={Boolean(erroresDatos.contacto) || undefined}
                                                                     aria-describedby={erroresDatos.contacto ? 'error-perfil-correo-contacto' : undefined}
@@ -698,13 +698,13 @@ const DoctorProfilePage = () => {
                                                 <CCardBody>
                                                     {reminderError && <CAlert color="danger">{reminderError}</CAlert>}
 
-                                                    {/* Esto sólo gobierna el correo a la paciente. Decía
+                                                    {/* Esto sólo gobierna el correo al paciente. Decía
                                                         «correo y notificación in-app», pero desde el plan 27
-                                                        el aviso para la doctora se decide en el centro de
+                                                        el aviso para el médico se decide en el centro de
                                                         avisos y el de 24 h ya no existe: el texto prometía
                                                         algo que el sistema no hace (plan 29). */}
                                                     <p className="small text-body-secondary">
-                                                        Antes de cada cita le llega un correo a la paciente, si tiene uno registrado.
+                                                        Antes de cada cita le llega un correo al paciente, si tiene uno registrado.
                                                         El aviso para ti, una hora antes de cada cita, se activa en tus avisos
                                                         (la campana, abajo, en <b>Preferencias</b>).
                                                         {avisos && (

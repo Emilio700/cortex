@@ -43,7 +43,7 @@ AJUSTES_RECETA_POR_DEFECTO: dict[str, bool] = {
     "mostrar_cedula_especialidad": True,
     "mostrar_registro_ssa": True,
     "mostrar_consejo": True,
-    # Datos de la paciente
+    # Datos del paciente
     "mostrar_edad": True,
     "mostrar_fecha_nacimiento": True,
     "mostrar_alergias": True,
@@ -52,7 +52,7 @@ AJUSTES_RECETA_POR_DEFECTO: dict[str, bool] = {
     "mostrar_direccion": True,
     "mostrar_telefono": True,
     # Apagados de fábrica: son datos nuevos y ninguna receta existente debe
-    # cambiar sin que la doctora lo decida.
+    # cambiar sin que el médico lo decida.
     "mostrar_correo": False,
     "mostrar_celular": False,
     "mostrar_pie_legal": True,
@@ -103,7 +103,7 @@ def anteponer_tratamiento(nombre: str, usuario) -> str:
     Si el nombre ya empieza por "Dra." (o "Lic.", etc.) no se toca: el
     "Dr. Dr." ya se vio impreso una vez. Si no, se antepone el ``tratamiento``
     capturado en la usuaria; si no hay, va el nombre solo. Antes se ponía
-    "Dr. " fijo, y a las doctoras les salía "Dr." en su propia receta.
+    "Dr. " fijo, y a los médicos les salía "Dr." en su propia receta.
     """
     limpio = (nombre or "").strip()
     if not limpio or tiene_tratamiento(limpio):
@@ -133,7 +133,7 @@ def lineas_credenciales(doctor_profile, ajustes: dict[str, bool]) -> list[str]:
     """Las líneas de credenciales del encabezado, ya filtradas.
 
     Devuelve solo las que el médico dejó encendidas y que además tienen valor:
-    una etiqueta "SSA" sin número no aporta nada a la paciente.
+    una etiqueta "SSA" sin número no aporta nada al paciente.
     """
     especialidad = getattr(getattr(doctor_profile, "specialty", None), "name", None)
     candidatas = [
@@ -168,7 +168,7 @@ def lineas_credenciales(doctor_profile, ajustes: dict[str, bool]) -> list[str]:
 # La leyenda que estaba escrita dentro de ``pdf.py``.
 LEYENDA_POR_DEFECTO = "CUIDAMOS TU SALUD, ACOMPAÑAMOS TU VIDA."
 
-# Cabe en una línea del pie a 8 pt. Más largo se recorta y la doctora escribe
+# Cabe en una línea del pie a 8 pt. Más largo se recorta y el médico escribe
 # para nada, así que se avisa antes de guardar, no al imprimir.
 LIMITE_LEYENDA = 150
 

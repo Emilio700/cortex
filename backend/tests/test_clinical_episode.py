@@ -36,7 +36,7 @@ def test_episode_accepts_non_pregnancy_reason_and_sanitizes_title():
         episode_type="cervix",
         title="  Seguimiento de Pap  ",
         started_on=date(2026, 8, 6),
-        next_action="Revisar resultado con la paciente.",
+        next_action="Revisar resultado con el paciente.",
     )
     assert episode.episode_type.value == "cervix"
     assert episode.title == "Seguimiento de Pap"
@@ -66,7 +66,7 @@ def db_session():
 def test_el_episodio_resuelto_por_la_noche_queda_con_la_fecha_del_consultorio(db_session, monkeypatch):
     """A las 23:30 del 3 de octubre en Mazatlán el contenedor ya va en el día 4.
 
-    Con ``date.today()`` el episodio que la doctora cerraba esa noche quedaba
+    Con ``date.today()`` el episodio que el médico cerraba esa noche quedaba
     resuelto "mañana" en el expediente.
     """
     tenant = Tenant(name="Clínica de prueba", is_active=True)
@@ -75,7 +75,7 @@ def test_el_episodio_resuelto_por_la_noche_queda_con_la_fecha_del_consultorio(db
     doctora = User(
         email="doctora@gems.com",
         hashed_password="no-usado-en-estas-pruebas",
-        full_name="Doctora de prueba",
+        full_name="Médico de prueba",
         role=Role.DOCTOR,
         tenant_id=tenant.id,
         is_active=True,

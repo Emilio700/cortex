@@ -1,7 +1,7 @@
 """Receta y certificado usan la MISMA regla de acceso que la nota de consulta.
 
 Antes había dos reglas distintas para la misma consulta: la nota preguntaba si
-la doctora tiene relación asistencial con la paciente y la receta exigía ser la
+el médico tiene relación asistencial con el paciente y la receta exigía ser la
 doctora ASIGNADA A LA CITA. A la que atendía le salía la nota pero un 403 en las
 recetas, así que la sección se dibujaba vacía sin explicación.
 
@@ -12,7 +12,7 @@ separarse.
 
 Qué se movió al cerrar la cobertura clínica entre doctoras (2026-09-24)
 -----------------------------------------------------------------------
-La regla única se conservó; lo que se angostó es a quién deja pasar. Una doctora
+La regla única se conservó; lo que se angostó es a quién deja pasar. Un médico
 entra sólo si es la dueña del expediente, y una membresía de equipo tratante ya
 no la mete. Estas pruebas comparan **el veredicto de la receta contra el de la
 nota**, así que siguen midiendo lo mismo: que no vuelva a haber dos reglas. La
@@ -86,13 +86,13 @@ def _auth_headers(db, user: User) -> dict[str, str]:
 
 @pytest.fixture
 def cobertura(db_session):
-    """El escenario real: la cita se agendó con una doctora y la atiende otra.
+    """El escenario real: la cita se agendó con un médico y la atiende otra.
 
-    - ``duena``: dueña de la paciente, pero la cita NO está a su nombre.
+    - ``duena``: dueña del paciente, pero la cita NO está a su nombre.
     - ``equipo``: doctora con una membresía de equipo tratante vigente, que
       desde que se cerró la cobertura clínica ya no le abre el expediente.
-    - ``asignada``: es la doctora de la cita y nada más.
-    - ``ajena``: misma clínica, ninguna relación con la paciente.
+    - ``asignada``: es el médico de la cita y nada más.
+    - ``ajena``: misma clínica, ninguna relación con el paciente.
     - ``apoyo``: cuenta de administración de la clínica.
     """
     tenant = Tenant(name="Clínica de prueba", is_active=True)
@@ -104,7 +104,7 @@ def cobertura(db_session):
         user = User(
             email=email,
             hashed_password="no-usado-en-estas-pruebas",
-            full_name=f"Doctora {email}",
+            full_name=f"Médico {email}",
             role=Role.DOCTOR,
             tenant_id=tenant.id,
             is_active=True,
@@ -282,7 +282,7 @@ def test_el_acceso_al_documento_coincide_con_el_de_la_nota_de_consulta(client, d
 def test_tener_la_cita_asignada_no_sustituye_a_la_relacion_con_la_paciente(client, db_session, cobertura):
     """Queda documentado hacia qué lado se homologó.
 
-    La doctora de la cita sin relación asistencial ya recibía 403 antes de este
+    El médico de la cita sin relación asistencial ya recibía 403 antes de este
     cambio, y la nota de consulta también se lo da: alinear con la regla de la
     nota no le quitó ni le dio acceso a nadie por esta vía. Para cubrir a otra
     doctora, el camino es el equipo de atención, que es explícito y revocable.
@@ -301,10 +301,10 @@ def test_tener_la_cita_asignada_no_sustituye_a_la_relacion_con_la_paciente(clien
 def test_la_receta_emitida_por_la_doctora_se_reimprime_pero_no_se_reescribe(
     client, db_session, cobertura
 ):
-    """Reimprimir la receta que emitió la doctora, sí; reescribirla, no.
+    """Reimprimir la receta que emitió el médico, sí; reescribirla, no.
 
     Son dos cosas distintas y conviene que sigan separadas: leer el documento
-    depende del alcance sobre la paciente, y reescribirlo depende de haberlo
+    depende del alcance sobre el paciente, y reescribirlo depende de haberlo
     firmado. La cuenta de apoyo sirve de testigo porque tiene lo primero y no lo
     segundo; una receta que recepción pudiera corregir dejaría de ser un
     documento firmado.
@@ -328,9 +328,9 @@ def test_la_receta_emitida_por_la_doctora_se_reimprime_pero_no_se_reescribe(
 
 def test_la_doctora_que_cubre_tambien_puede_escribir_la_nota(client, db_session, cobertura):
     """El ultimo resto de A12: leer la nota y emitir receta ya se habian
-    homologado, pero crearla seguia exigiendo ser la doctora asignada a la cita.
+    homologado, pero crearla seguia exigiendo ser el médico asignada a la cita.
 
-    El hueco era absurdo en la practica: la doctora que cubre abria el
+    El hueco era absurdo en la practica: el médico que cubre abria el
     expediente, emitia la receta, y se topaba con un 403 al documentar lo que
     acababa de atender — justo el paso que ya nos costo dos meses de notas.
     """

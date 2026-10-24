@@ -94,7 +94,7 @@ def update_preregistration(
     if entry.status == PreregistrationStatus.CONVERTED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Este prerregistro ya se convirtió en expediente. Haz los cambios en el expediente de la paciente.",
+            detail="Este prerregistro ya se convirtió en expediente. Haz los cambios en el expediente del paciente.",
         )
 
     update_data = data.model_dump(exclude_unset=True)
@@ -133,7 +133,7 @@ def convert_to_patient(
     if entry.status == PreregistrationStatus.CONVERTED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Este prerregistro ya se convirtió en expediente. Busca a la paciente en la lista de pacientes.",
+            detail="Este prerregistro ya se convirtió en expediente. Busca al paciente en la lista de pacientes.",
         )
 
     name_parts = entry.full_name.strip().split(" ", 1)

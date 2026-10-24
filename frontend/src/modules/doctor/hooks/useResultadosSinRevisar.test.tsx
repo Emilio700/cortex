@@ -1,7 +1,7 @@
 /**
  * El número de resultados sin revisar sale de una sola llamada y nunca miente.
  *
- * Nada empujaba a la doctora a la bandeja. El contador lo arregla, pero un
+ * Nada empujaba al médico a la bandeja. El contador lo arregla, pero un
  * contador que ante un fallo de red dice «0» es peor que no tenerlo: le dice que
  * no tiene nada que revisar.
  */

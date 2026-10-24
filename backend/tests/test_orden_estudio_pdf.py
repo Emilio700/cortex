@@ -1,9 +1,9 @@
 """El papel de la orden de estudio (O-01 del backlog de auditoría).
 
-Hasta ahora la orden sólo vivía en el sistema: la doctora la capturaba y luego
+Hasta ahora la orden sólo vivía en el sistema: el médico la capturaba y luego
 llenaba a mano el formato del laboratorio, y la preparación se decía de viva
 voz. Decisión de Emilio: un PDF propio de la clínica, genérico para cualquier
-laboratorio; la doctora lo imprime y recepción lo puede reimprimir.
+laboratorio; el médico lo imprime y recepción lo puede reimprimir.
 
 Se comprueban dos cosas: que el papel lleve lo que el laboratorio necesita y
 nada más del expediente, y que sólo lo saque quien debe.
@@ -140,7 +140,7 @@ def _orden(db, tenant, paciente, doctora, **cambios):
 
 @pytest.fixture
 def escenario(db_session):
-    """Una doctora con su paciente y su orden; una colega; recepción; otra sucursal."""
+    """Un médico con su paciente y su orden; una colega; recepción; otra sucursal."""
     tenant = Tenant(name="G & G Sucursal Centro", is_active=True)
     otro_tenant = Tenant(name="Otra sucursal", is_active=True)
     especialidad = Specialty(name="Ginecología", slug="ginecologia", is_active=True)
@@ -276,7 +276,7 @@ def test_una_orden_cancelada_no_se_imprime(client, db_session, escenario):
 
 
 def test_sin_perfil_de_doctora_se_imprime_sin_crearle_uno(client, db_session, escenario):
-    """Una reimpresión de recepción no puede dejar filas a nombre de la doctora."""
+    """Una reimpresión de recepción no puede dejar filas a nombre del médico."""
     colega = escenario["colega"]
     paciente = Patient(
         tenant_id=escenario["tenant"].id, first_name="Ana", last_name="Ruiz", owner_doctor_id=colega.id,

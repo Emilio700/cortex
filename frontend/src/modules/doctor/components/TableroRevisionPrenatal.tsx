@@ -38,9 +38,9 @@ const describirEspera = (dias: number) => {
  * Controles prenatales vencidos o próximos que nadie ha agendado.
  *
  * Es una lista que se consulta y no una notificación, por decisión de Emilio:
- * un aviso significa "haz algo" y aquí no hay nada que la doctora tenga que
- * hacer en el momento — llamar a la paciente es trabajo de recepción, y a
- * recepción sí le llega el aviso. La doctora ya acumula avisos sin leer; otra
+ * un aviso significa "haz algo" y aquí no hay nada que el médico tenga que
+ * hacer en el momento — llamar al paciente es trabajo de recepción, y a
+ * recepción sí le llega el aviso. El médico ya acumula avisos sin leer; otra
  * campanita habría vuelto ruido también a esta.
  *
  * No se dibuja nada cuando no hay pendientes: una tarjeta que dice "todo bien"

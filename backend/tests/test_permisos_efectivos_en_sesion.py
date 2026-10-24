@@ -1,7 +1,7 @@
 """``/auth/me`` entrega los permisos efectivos de la sesión (B2 del plan maestro).
 
 Sin esto, la pantalla de Master concede permisos que el frontend nunca llega a
-mirar: la doctora recibía ``triage.create`` y su menú seguía igual. El campo es
+mirar: el médico recibía ``triage.create`` y su menú seguía igual. El campo es
 aditivo, así que ninguna pantalla vieja se entera.
 """
 from datetime import timedelta
@@ -101,11 +101,11 @@ def test_el_perfil_trae_los_permisos_del_rol(client, db_session, tenant):
 
 
 def test_un_permiso_concedido_desde_master_aparece_en_el_perfil(client, db_session, tenant):
-    """El caso que motivó todo: conceder algo a una doctora y que se note.
+    """El caso que motivó todo: conceder algo a un médico y que se note.
 
-    El caso real fue triage, que después pasó a ser de la doctora por defecto;
+    El caso real fue triage, que después pasó a ser del médico por defecto;
     se prueba con los reportes, que el rol sigue sin traer (el corte de caja
-    también sirvió de ejemplo hasta que el plan 23 se lo dio a la doctora).
+    también sirvió de ejemplo hasta que el plan 23 se lo dio al médico).
     """
     doctora = _usuario(db_session, tenant, Role.DOCTOR)
     assert "reports.read" not in client.get(

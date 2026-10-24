@@ -50,14 +50,14 @@ export function mensajeDeError(err: any, respaldo = 'Ocurrió un error inesperad
 }
 
 /**
- * Nombres de campo del backend, en el idioma en que la doctora los lee.
+ * Nombres de campo del backend, en el idioma en que el médico los lee.
  *
  * Sin esto un 422 llega diciendo "scheduled_at: field required", que es el
  * nombre de la columna y no el del campo que se dejó vacío en pantalla.
  */
 const ETIQUETAS_DE_CAMPO: Record<string, string> = {
   patient_id: 'Paciente',
-  doctor_id: 'Doctora',
+  doctor_id: 'Médico',
   scheduled_at: 'Fecha y hora',
   duration_minutes: 'Duración',
   notes: 'Notas',
@@ -73,7 +73,7 @@ const ETIQUETAS_DE_CAMPO: Record<string, string> = {
  * la lista: para agendar eso no alcanza, porque un formulario puede llegar con
  * tres campos mal y corregir uno por vuelta desespera a quien lo llena.
  *
- * Vivía duplicado en el hook de la secretaría; está aquí porque la doctora
+ * Vivía duplicado en el hook de la secretaría; está aquí porque el médico
  * agenda contra el mismo endpoint y merece los mismos mensajes.
  */
 export function parseErrorDetail(err: any): string {
@@ -102,7 +102,7 @@ export function parseErrorDetail(err: any): string {
  * Existe para separar dos cosas que antes se veían igual: "esta consulta aún
  * no tiene nota" y "no pude leer la nota". Los hooks devolvían `null` en los
  * dos casos, así que un 500 o un problema de permisos se dibujaba como un
- * formulario vacío — invitando a la doctora a reescribir encima de datos que
+ * formulario vacío — invitando al médico a reescribir encima de datos que
  * sí existían. Un formulario en blanco tiene que significar que está en
  * blanco, nunca que no supimos.
  */

@@ -1,9 +1,9 @@
 /**
  * Pendientes y seguimiento (plan 28, §4.1 punto 5).
  *
- * Un renglón por cosa que la doctora tiene que mirar, con su número y a dónde
+ * Un renglón por cosa que el médico tiene que mirar, con su número y a dónde
  * lleva. Los renglones no desaparecen cuando están en cero: aquí sí se espera
- * verlos, y «0 · al día» es la confirmación que la doctora busca. Si un
+ * verlos, y «0 · al día» es la confirmación que el médico busca. Si un
  * renglón no se pudo consultar, lo dice y ofrece reintentar; nunca «0».
  */
 import React from 'react'

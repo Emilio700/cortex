@@ -97,7 +97,7 @@ export const PatientHistory: React.FC<PatientHistoryProps> = ({ patientId: idPor
     const [patient, setPatient] = useState<PatientDetail | null>(null)
     const [loading, setLoading] = useState(true)
     // Un fallo al leer no es «sin historial» (plan 29, T-1): se dice, con
-    // «Reintentar», en vez de afirmar que la paciente no tiene citas.
+    // «Reintentar», en vez de afirmar que el paciente no tiene citas.
     const [error, setError] = useState<string | null>(null)
     const [intento, setIntento] = useState(0)
     const [activeItem, setActiveItem] = useState<number | undefined>(undefined)
@@ -116,7 +116,7 @@ export const PatientHistory: React.FC<PatientHistoryProps> = ({ patientId: idPor
             })
             .catch((err) => {
                 setData(null)
-                setError(mensajeDeError(err, 'No se pudo cargar el historial de la paciente.'))
+                setError(mensajeDeError(err, 'No se pudo cargar el historial del paciente.'))
             })
             .finally(() => setLoading(false))
     }, [patientId, intento])

@@ -20,7 +20,7 @@ from app.models.patient import Patient
 from app.models.user import User
 from app.services.notification_service import destinatarios_de_recepcion, notify, resolver
 
-# Estados en los que la paciente todavía no llega. Sólo de aquí a «en sala» es
+# Estados en los que el paciente todavía no llega. Sólo de aquí a «en sala» es
 # una llegada: volver a sala desde la consulta (plan 28) o reabrir una consulta
 # cerrada no es que alguien acabe de llegar.
 _ANTES_DE_LLEGAR = {AppointmentStatus.AGENDADA, AppointmentStatus.CONFIRMADA}
@@ -29,8 +29,8 @@ _ANTES_DE_LLEGAR = {AppointmentStatus.AGENDADA, AppointmentStatus.CONFIRMADA}
 def _paciente(db: Session, cita: Appointment) -> str:
     paciente = cita.patient or db.query(Patient).filter(Patient.id == cita.patient_id).first()
     if paciente is None:
-        return "La paciente"
-    return " ".join(filter(None, [paciente.first_name, paciente.last_name])) or "La paciente"
+        return "El paciente"
+    return " ".join(filter(None, [paciente.first_name, paciente.last_name])) or "El paciente"
 
 
 def _cuando(momento: datetime) -> str:
@@ -39,7 +39,7 @@ def _cuando(momento: datetime) -> str:
 
 def prioridad_por_cercania(*fechas: Optional[datetime]) -> str:
     """Accionable si alguna de las fechas (hora del consultorio) es hoy o
-    mañana: es un hueco o un cambio en la agenda inmediata de la doctora. Más
+    mañana: es un hueco o un cambio en la agenda inmediata del médico. Más
     lejos sólo hay que saberlo (D-6). Se compara contra la fecha local, no la
     del contenedor, que corre en UTC."""
     hoy = hoy_local()
@@ -50,7 +50,7 @@ def prioridad_por_cercania(*fechas: Optional[datetime]) -> str:
 
 
 def resolver_prenatal_si_ya_tiene_cita(db: Session, patient_id: int, actor: Optional[User] = None) -> int:
-    """Cierra el «control prenatal sin cita» si la paciente ya quedó citada
+    """Cierra el «control prenatal sin cita» si el paciente ya quedó citada
     para ese control, con la misma ventana que usa el aviso para decidir que
     hay que mandarlo (así nunca difieren en qué es «ya está citada»)."""
     from app.models.notification import Notification
@@ -92,8 +92,8 @@ def resolver_prenatal_si_ya_tiene_cita(db: Session, patient_id: int, actor: Opti
 
 
 def avisar_cita_agendada(db: Session, cita: Appointment, actor: User) -> None:
-    """La doctora se entera de la cita que le agendó alguien más; y si con
-    esa cita la paciente ya queda citada para su control prenatal, el aviso a
+    """El médico se entera de la cita que le agendó alguien más; y si con
+    esa cita el paciente ya queda citada para su control prenatal, el aviso a
     recepción de «llámala para agendar» se cierra solo."""
     db.flush()
     if actor.id != cita.doctor_id:
@@ -119,7 +119,7 @@ def avisar_reprogramacion(
     doctora_antes: int,
     actor: User,
 ) -> None:
-    """Se movió la hora o la doctora de una cita viva (D-6)."""
+    """Se movió la hora o el médico de una cita viva (D-6)."""
     if cita.status in (AppointmentStatus.CANCELADA, AppointmentStatus.ATENDIDA):
         return
     if cita.scheduled_at == antes and cita.doctor_id == doctora_antes:
@@ -135,8 +135,8 @@ def avisar_reprogramacion(
                 tenant_id=cita.tenant_id,
                 user_id=doctora_antes,
                 type=NotificationType.APPOINTMENT_RESCHEDULED,
-                title="Cita pasada a otra doctora",
-                message=f"La cita de {paciente} del {_cuando(antes)} ya no está en tu agenda: se pasó a otra doctora.",
+                title="Cita pasada a otro médico",
+                message=f"La cita de {paciente} del {_cuando(antes)} ya no está en tu agenda: se pasó a otro médico.",
                 entity_type="appointment",
                 entity_id=cita.id,
                 priority=prioridad_por_cercania(antes),
@@ -200,7 +200,7 @@ def al_cambiar_estado(
             por_user_id=actor.id,
         )
 
-    # Reabrir devuelve la consulta a la doctora: el «pendiente de cobro» del
+    # Reabrir devuelve la consulta al médico: el «pendiente de cobro» del
     # cierre anterior se cierra, y al volver a cerrar sale uno nuevo con el
     # estado del cobro de ese momento. Así recepción se entera de que volvió a
     # cerrarse, sin dos pendientes de la misma consulta a la vez.

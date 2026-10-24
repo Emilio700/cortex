@@ -13,7 +13,7 @@ class AppointmentStatus(str, enum.Enum):
     AGENDADA = "agendada"  # Scheduled
     CONFIRMADA = "confirmada"  # Confirmed
     EN_SALA = "en_sala"  # In waiting room
-    # La doctora abrió la consulta (plan 28, D-3). Nadie lo marca a mano: lo
+    # El médico abrió la consulta (plan 28, D-3). Nadie lo marca a mano: lo
     # pone ``POST /appointments/{id}/iniciar-consulta`` al abrir la pantalla de
     # consulta y se sale de él al finalizar (atendida), al regresar a la
     # paciente a sala o al cancelar. Ver ``app/services/consulta_en_curso.py``.
@@ -46,7 +46,7 @@ class Appointment(Base):
     """Appointment model"""
 
     __tablename__ = "appointments"
-    # Doctora + fecha: «Mis consultas» filtra por doctora y ordena por fecha
+    # Médico + fecha: «Mis consultas» filtra por doctora y ordena por fecha
     # sobre todo el histórico (migración 2026_09_29_0027, B-05).
     __table_args__ = (
         Index("ix_appointments_doctor_id_scheduled_at", "doctor_id", "scheduled_at"),
@@ -65,9 +65,9 @@ class Appointment(Base):
     status = Column(
         Enum(AppointmentStatus, values_callable=lambda obj: [e.value for e in obj]), default=AppointmentStatus.AGENDADA, nullable=False, index=True
     )
-    # Dónde estaba la cita antes de que la doctora abriera la consulta
+    # Dónde estaba la cita antes de que el médico abriera la consulta
     # (agendada, confirmada o en_sala). Salir sin cerrar la devuelve AHÍ: si la
-    # abrió para prepararla antes de que la paciente llegara, «regresar a sala»
+    # abrió para prepararla antes de que el paciente llegara, «regresar a sala»
     # la habría puesto en sala sin triage y sin aviso de llegada (plan 28, D-3).
     # Texto y no enum a propósito: no crea otro tipo en PostgreSQL. Nula fuera
     # de consulta.
@@ -102,7 +102,7 @@ class Appointment(Base):
     # ingreso (plan 23, decisión 4): la titular puede no ser quien atendió.
     attended_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
-    # Exención de cobro: la doctora marca la consulta "sin cargo" (cortesía,
+    # Exención de cobro: el médico marca la consulta "sin cargo" (cortesía,
     # revisión incluida) y queda quién, cuándo y por qué. Sin esto una consulta
     # sin cobrar sería indistinguible de una que a recepción se le olvidó.
     cobro_sin_cargo_motivo = Column(String(255), nullable=True)

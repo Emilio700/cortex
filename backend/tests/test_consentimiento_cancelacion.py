@@ -28,7 +28,7 @@ from app.models.user_session import UserSession
 from app.routers import clinical_consents as consent_router
 
 PREFIX = settings.API_V1_PREFIX
-TEXTO_PROPIO = "Texto redactado por la doctora para esta paciente en particular."
+TEXTO_PROPIO = "Texto redactado por el médico para este paciente en particular."
 # PNG real de 1x1 px: la firma se valida byte a byte antes de guardarse.
 FIRMA = (
     "data:image/png;base64,"
@@ -79,7 +79,7 @@ def _auth_headers(db, user: User) -> dict[str, str]:
 
 @pytest.fixture
 def escenario(db_session):
-    """Sucursal con una doctora y una paciente suya."""
+    """Sucursal con un médico y un paciente suya."""
     tenant = Tenant(name="Clínica de prueba", is_active=True)
     db_session.add(tenant)
     db_session.commit()
@@ -87,7 +87,7 @@ def escenario(db_session):
     doctora = User(
         email="doctora@gems.com",
         hashed_password="no-usado-en-estas-pruebas",
-        full_name="Doctora de prueba",
+        full_name="Médico de prueba",
         role=Role.DOCTOR,
         tenant_id=tenant.id,
         is_active=True,
@@ -176,7 +176,7 @@ def test_sin_texto_propio_se_conserva_el_de_la_plantilla(client, escenario):
 
 def test_la_plantilla_precargada_puede_ajustarse_antes_de_firmar(client, escenario):
     """Encendido el interruptor, el médico aún puede editar el texto cargado."""
-    ajustado = "Biopsia cervical con una aclaración añadida por la doctora."
+    ajustado = "Biopsia cervical con una aclaración añadida por el médico."
     cuerpo = _crear_borrador(client, escenario, custom_body=ajustado, use_template_body=True)
     assert cuerpo["rendered_body"] == ajustado
     assert cuerpo["field_values"]["body_edited"] is True
@@ -212,7 +212,7 @@ def test_cancelar_registra_motivo_autor_y_fecha_sin_perder_el_texto(client, esce
     assert cuerpo["status"] == "cancelled"
     assert cuerpo["cancelled_reason"] == "Se firmó el formato equivocado por error de captura"
     assert cuerpo["cancelled_by_user_id"] == escenario["doctora"].id
-    assert cuerpo["cancelled_by_name"] == "Doctora de prueba"
+    assert cuerpo["cancelled_by_name"] == "Médico de prueba"
     assert cuerpo["cancelled_at"]
     # El documento clínico no se destruye: sigue el texto y la firma original.
     assert cuerpo["rendered_body"] == TEXTO_PROPIO
@@ -263,7 +263,7 @@ def test_la_cancelacion_queda_en_la_auditoria(client, escenario, db_session):
     client.post(
         f"{PREFIX}/clinical-consents/{firmado['id']}/cancel",
         headers=escenario["headers"],
-        json={"reason": "Se emitió a la paciente equivocada"},
+        json={"reason": "Se emitió al paciente equivocada"},
     )
 
     registro = (
@@ -271,7 +271,7 @@ def test_la_cancelacion_queda_en_la_auditoria(client, escenario, db_session):
     )
     assert registro.entity_id == firmado["id"]
     assert registro.actor_user_id == escenario["doctora"].id
-    assert registro.reason == "Se emitió a la paciente equivocada"
+    assert registro.reason == "Se emitió al paciente equivocada"
 
 
 def test_el_pdf_descargado_de_un_cancelado_queda_marcado(client, escenario, db_session):

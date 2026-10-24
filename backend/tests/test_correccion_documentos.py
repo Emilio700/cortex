@@ -1,4 +1,4 @@
-"""Corrección de documentos subidos a la paciente equivocada (plan 29, lote 7).
+"""Corrección de documentos subidos al paciente equivocada (plan 29, lote 7).
 
 Nunca se borra: se anula (con motivo, reversible por administración) o se
 mueve (con motivo, bitácora en las dos pacientes). Permiso documents.correct,
@@ -69,11 +69,11 @@ def _bitacora(db, accion):
 def test_la_doctora_anula_con_motivo_y_sale_de_las_vistas(client, db_session, e):
     doc = _doc(db_session, e)
 
-    r = _post(client, db_session, e["doctora"], doc.id, "anular", motivo="Era de otra paciente")
+    r = _post(client, db_session, e["doctora"], doc.id, "anular", motivo="Era de otro paciente")
 
     assert r.status_code == 200, r.text
     assert r.json()["anulado_at"] is not None
-    assert r.json()["anulado_motivo"] == "Era de otra paciente"
+    assert r.json()["anulado_motivo"] == "Era de otro paciente"
     # Fuera de la lista, del detalle y de la descarga para quien no es administración.
     assert _lista(client, db_session, e["doctora"], e["ana"].id).json() == []
     assert client.get(f"{PREFIX}/documents/{doc.id}", headers=headers(db_session, e["doctora"])).status_code == 404
@@ -81,7 +81,7 @@ def test_la_doctora_anula_con_motivo_y_sale_de_las_vistas(client, db_session, e)
     db_session.refresh(doc)
     assert doc.file_path
     [rastro] = _bitacora(db_session, "document.voided")
-    assert rastro.reason == "Era de otra paciente"
+    assert rastro.reason == "Era de otro paciente"
     assert rastro.patient_id == e["ana"].id
 
 
@@ -141,7 +141,7 @@ def test_administracion_ve_los_anulados_y_revierte(client, db_session, e):
     assert _lista(client, db_session, e["doctora"], e["ana"].id, anulados=True).status_code == 403
     anulados = _lista(client, db_session, e["admin"], e["ana"].id, anulados=True).json()
     assert [d["id"] for d in anulados] == [doc.id]
-    # La doctora no puede revertir.
+    # El médico no puede revertir.
     assert _post(client, db_session, e["doctora"], doc.id, "revertir-anulacion", motivo="Era suyo").status_code == 404
 
     r = _post(client, db_session, e["admin"], doc.id, "revertir-anulacion", motivo="Sí era suyo")

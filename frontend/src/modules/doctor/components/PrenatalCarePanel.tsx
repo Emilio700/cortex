@@ -213,7 +213,7 @@ const PrenatalCarePanel = ({
         )}
         {!loading && errorLectura === null && !pregnancy && !creating && (
           <CAlert color="light" className="mb-0">
-            No hay un embarazo activo registrado para esta paciente.
+            No hay un embarazo activo registrado para este paciente.
           </CAlert>
         )}
         {!loading && creating && (

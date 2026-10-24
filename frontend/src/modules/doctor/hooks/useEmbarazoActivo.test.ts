@@ -1,6 +1,6 @@
 /**
  * «Sin embarazo activo» y «no se pudo consultar» no son lo mismo (plan 29,
- * C-2): antes un fallo dejaba la consulta igual que la de una paciente no
+ * C-2): antes un fallo dejaba la consulta igual que la de un paciente no
  * embarazada.
  */
 import { renderHook, waitFor } from '@testing-library/react'

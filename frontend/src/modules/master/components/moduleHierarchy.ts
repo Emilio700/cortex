@@ -30,7 +30,7 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
     submodules: [
       { label: 'Inicio general', actions: ['dashboard.read'] },
       { label: 'Inicio de administración', actions: ['admin.dashboard.read'] },
-      { label: 'Inicio de la doctora', actions: ['doctor.dashboard.read'] },
+      { label: 'Inicio del médico', actions: ['doctor.dashboard.read'] },
     ],
   },
   {
@@ -63,7 +63,7 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
   {
     label: 'Consultorio Médico',
     submodules: [
-      { label: 'Inicio de la doctora', actions: ['doctor.dashboard.read'] },
+      { label: 'Inicio del médico', actions: ['doctor.dashboard.read'] },
       { label: 'Mis consultas', actions: ['doctor.appointments.read'] },
       { label: 'Consulta Médica (SOAP)', actions: ['soap_notes.read', 'soap_notes.create', 'soap_notes.update'] },
       { label: 'Historial del Paciente', actions: ['medical_history.read'] },

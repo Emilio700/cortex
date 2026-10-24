@@ -1,5 +1,5 @@
 /**
- * Qué le falta a la ficha de una paciente (plan 32, punto 5).
+ * Qué le falta a la ficha de un paciente (plan 32, punto 5).
  *
  * El alta exprés crea pacientes con nombre, apellidos y celular, a propósito.
  * Lo que falta se señala con suavidad —un punto, una línea gris— y nunca

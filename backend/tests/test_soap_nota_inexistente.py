@@ -73,7 +73,7 @@ def _auth_headers(db, user: User) -> dict[str, str]:
 
 @pytest.fixture
 def escenario(db_session):
-    """Dos doctores de la misma clínica y una paciente que sólo es de uno.
+    """Dos doctores de la misma clínica y un paciente que sólo es de uno.
 
     El segundo doctor existe para poder distinguir "sin acceso" de "no existe":
     comparte tenant, así que llega hasta la comprobación asistencial.
@@ -87,7 +87,7 @@ def escenario(db_session):
         user = User(
             email=email,
             hashed_password="no-usado-en-estas-pruebas",
-            full_name=f"Doctora {email}",
+            full_name=f"Médico {email}",
             role=Role.DOCTOR,
             tenant_id=tenant.id,
             is_active=True,

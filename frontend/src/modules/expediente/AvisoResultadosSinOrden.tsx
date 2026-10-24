@@ -2,7 +2,7 @@
  * «3 archivos parecen resultados sin orden — ligarlos» (plan 32, punto 6).
  *
  * Antes de este cambio el modal de Documentos guardaba «Resultado de
- * Laboratorio» sin ligarlo a nada (C4). Aquí la doctora los liga a su orden
+ * Laboratorio» sin ligarlo a nada (C4). Aquí el médico los liga a su orden
  * pendiente o los marca como estudio de otro lugar. Discreto: una línea, y
  * nada se cambia solo. El archivo no se mueve ni se copia.
  */

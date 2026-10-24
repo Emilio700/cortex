@@ -47,7 +47,7 @@ export interface DiagnosticOrder {
   /** Las transiciones que la interfaz ofrece: solo `ordered`, `cancelled` y `rejected` (D-1). */
   acciones_de_estado?: string[]
   specimen_or_body_site?: string | null
-  /** Doctora autora; un papel lleva una sola firma (M5). */
+  /** Médico autora; un papel lleva una sola firma (M5). */
   doctor_id?: number | null
   status_reason?: string | null
   status_changed_at?: string | null
@@ -74,7 +74,7 @@ export interface DiagnosticResult {
   patient_document_id?: number | null
   document_file_name?: string | null
   document_mime_type?: string | null
-  /** Cuándo se documentó que se le comunicó a la paciente (plan 26, B-7). */
+  /** Cuándo se documentó que se le comunicó al paciente (plan 26, B-7). */
   communicated_at?: string | null
   communication_note?: string | null
   recorded_by_user_id?: number | null
@@ -82,7 +82,7 @@ export interface DiagnosticResult {
   order_status?: string | null
   /** Valoración de este resultado (D-9); «critico» abre la incidencia. */
   valoracion?: string | null
-  /** Medio con que se comunicó o entregó a la paciente (D-8). */
+  /** Medio con que se comunicó o entregó al paciente (D-8). */
   communication_channel?: string | null
   reviewed_in_appointment_id?: number | null
   /** La incidencia crítica de la orden sigue abierta (D-8). */
@@ -202,11 +202,11 @@ export interface PrenatalMilestone {
 
 /** Una orden en la bandeja por paciente (plan 26, §3.4): la orden con todos sus resultados. */
 export interface OrdenEnBandeja extends OrdenConResultados {
-  /** Algún resultado ya tiene documentada la comunicación a la paciente. */
+  /** Algún resultado ya tiene documentada la comunicación al paciente. */
   comunicada: boolean
   /**
    * Tiene una incidencia crítica abierta (D-8): se cierra al documentar que se le
-   * comunicó o entregó a la paciente, o al revisarla dentro de una consulta.
+   * comunicó o entregó al paciente, o al revisarla dentro de una consulta.
    */
   critico_sin_comunicar: boolean
   /** Alias de `critico_sin_comunicar` con el nombre nuevo. */
@@ -215,7 +215,7 @@ export interface OrdenEnBandeja extends OrdenConResultados {
   cita_fecha?: string | null
   /** Estado de esa cita: «Ver la consulta» solo se ofrece si ya está atendida. */
   cita_estado?: string | null
-  /** Atrasado con el plazo de su doctora (plan 32, punto 3). */
+  /** Atrasado con el plazo de su médico (plan 32, punto 3). */
   atrasada?: boolean
   dias_sin_resultado?: number | null
   ultimo_seguimiento?: SeguimientoDeOrden | null
@@ -235,7 +235,7 @@ export interface SeguimientoDeOrden {
   created_at: string
 }
 
-/** Una paciente en la bandeja: sus órdenes, en el orden en que conviene atenderlas. */
+/** Un paciente en la bandeja: sus órdenes, en el orden en que conviene atenderlas. */
 export interface PacienteEnBandeja {
   patient_id: number
   patient_name: string

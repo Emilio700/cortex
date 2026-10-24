@@ -34,7 +34,7 @@ export const useTriage = () => {
       const errorMessage = mensajeDeError(err, 'No se pudieron cargar los signos vitales.')
       setError(errorMessage)
       // El código viaja con el error porque quien llama tiene que distinguir
-      // «no tienes acceso a esta paciente» (403) de «no se pudo leer»: son
+      // «no tienes acceso a este paciente» (403) de «no se pudo leer»: son
       // avisos distintos y ninguno de los dos es «no hay signos».
       const fallo = new Error(errorMessage) as Error & { status?: number }
       fallo.status = err?.response?.status

@@ -1,11 +1,11 @@
-"""Corrección de documentos clínicos subidos a la paciente equivocada (plan 29, lote 7).
+"""Corrección de documentos clínicos subidos al paciente equivocada (plan 29, lote 7).
 
 Diseño aprobado por Emilio (delegado en el orquestador), que manda:
 
 - **Nunca borrado físico.** «Anular» saca el documento de las vistas normales
   con motivo, quién y cuándo; el archivo y el registro se conservan y la
   anulación se puede revertir.
-- **Mover** a otra paciente, con motivo: queda de quién venía
+- **Mover** a otro paciente, con motivo: queda de quién venía
   (``movido_desde_patient_id``) y la bitácora lo registra en las DOS pacientes.
 - **Quién:** permiso ``documents.correct`` (de fábrica doctora y
   administración; recepción no) o quien lo subió, solo en las primeras 24 h.
@@ -14,7 +14,7 @@ Diseño aprobado por Emilio (delegado en el orquestador), que manda:
 - **Ver anulados y revertir:** solo administración (y Master).
 - **Documento que es el archivo de un resultado de orden:** no se anula ni se
   mueve desde aquí. Moverlo dejaría la orden (y la bandeja, la incidencia
-  crítica y el expediente) apuntando al estudio de otra paciente; anularlo
+  crítica y el expediente) apuntando al estudio de otro paciente; anularlo
   dejaría el resultado sin su archivo diciendo que lo tiene. Se corrige desde
   la orden con «Anular resultado» (plan 29, lote 9), que anula el resultado y
   su archivo juntos; el de un resultado ya anulado no se bloquea.
@@ -54,9 +54,9 @@ def puede_corregir(db: Session, documento: PatientDocument, user: User) -> bool:
 def exigir_que_pueda_corregir(db: Session, documento: PatientDocument, user: User) -> None:
     if not puede_corregir(db, documento, user):
         detalle = (
-            "Ya pasaron 24 horas desde que lo subiste: pide la corrección a la doctora o a la administración."
+            "Ya pasaron 24 horas desde que lo subiste: pide la corrección al médico o a la administración."
             if documento.uploaded_by_user_id == user.id
-            else "No tienes permiso para corregir documentos. Pídeselo a la doctora o a la administración."
+            else "No tienes permiso para corregir documentos. Pídeselo al médico o a la administración."
         )
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=detalle)
 
@@ -74,10 +74,10 @@ def exigir_que_no_sea_resultado(db: Session, documento: PatientDocument) -> None
     raise HTTPException(
         status_code=status.HTTP_409_CONFLICT,
         detail=(
-            f"Este archivo es el resultado de la orden n.º {resultado.diagnostic_order_id} de esta paciente. "
+            f"Este archivo es el resultado de la orden n.º {resultado.diagnostic_order_id} de este paciente. "
             "No se anula ni se mueve desde Documentos, para que la orden y la bandeja de resultados no queden "
             "apuntando a un archivo equivocado. Ábrelo desde la orden y usa «Anular resultado»: anula el "
-            "resultado y este archivo juntos (la doctora que pidió el estudio o la administración)."
+            "resultado y este archivo juntos (el médico que pidió el estudio o la administración)."
         ),
     )
 
@@ -172,11 +172,11 @@ def mover(
             detail="Este documento está anulado. Revierte la anulación antes de moverlo.",
         )
     if destino_patient_id == documento.patient_id:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="El documento ya es de esa paciente.")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="El documento ya es de ese paciente.")
     if destino_tenant_id != documento.tenant_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Solo se puede mover a una paciente de la misma sucursal.",
+            detail="Solo se puede mover a un paciente de la misma sucursal.",
         )
     exigir_que_pueda_corregir(db, documento, user)
     exigir_que_no_sea_resultado(db, documento)

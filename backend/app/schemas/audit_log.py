@@ -14,7 +14,7 @@ class AuditLogItem(BaseModel):
     entity_type: str
     entity_id: int | None
     patient_id: int | None
-    # Nombre de la paciente para leer la bitácora sin buscar el número
+    # Nombre del paciente para leer la bitácora sin buscar el número
     # (plan 29, lote 5). Solo la de la misma sucursal (Master, todas).
     patient_name: str | None = None
     outcome: str
@@ -42,7 +42,7 @@ class AccesoSeccion(BaseModel):
 
 
 class AccesoSesionItem(BaseModel):
-    """Lo que una persona abrió del expediente de una paciente en una sesión."""
+    """Lo que una persona abrió del expediente de un paciente en una sesión."""
 
     # Recortado: identifica la sesión al leer sin exponer el id completo.
     sesion: str

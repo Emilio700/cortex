@@ -49,7 +49,7 @@ class Alta:
     # así que no pueden romperlo.
     excluidos: set[str] = field(default_factory=set)
     # Campos que el sitio pasa aparte (``tenant_id=...``): los pone el router,
-    # no la paciente, y por eso el esquema no tiene por qué pedirlos.
+    # no el paciente, y por eso el esquema no tiene por qué pedirlos.
     explicitos: set[str] = field(default_factory=set)
 
     def __str__(self) -> str:
@@ -246,7 +246,7 @@ def test_el_esquema_de_alta_no_pide_campos_que_la_tabla_no_tiene(alta: Alta):
     """Un campo sin columna revienta el alta entera, no sólo ese dato.
 
     Es exactamente lo que pasó con ``soap_notes.diagnosis``: el modelo no
-    reconoce el argumento, la construcción lanza y la doctora recibe un 500 sin
+    reconoce el argumento, la construcción lanza y el médico recibe un 500 sin
     saber que lo que escribió no se guardó en ningún lado.
     """
     sobrantes = _campos_que_llegan(alta) - _donde_se_puede_escribir(alta.modelo)

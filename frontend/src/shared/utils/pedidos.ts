@@ -28,7 +28,7 @@ export interface PedidosConocidos {
     nueva?: boolean
     paciente?: { id: number; first_name: string; last_name: string; phone?: string; email?: string }
   }
-  /** Ver en la Agenda solo las citas de una paciente. */
+  /** Ver en la Agenda solo las citas de un paciente. */
   'agenda:paciente': { id: number; nombre: string }
   /** Abrir el registro de pago en Cobros. */
   'pagos:registrar': true

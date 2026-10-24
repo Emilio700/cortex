@@ -1,10 +1,10 @@
-"""Registrar que alguien abrió una sección clínica de una paciente.
+"""Registrar que alguien abrió una sección clínica de un paciente.
 
 Se llama desde las lecturas clínicas **después** de que pasó la revisión de
 permisos y de alcance: solo queda lo que de verdad se entregó. Una lectura
 negada (403/404) no es un acceso.
 
-Es de mejor esfuerzo: si escribir la bitácora falla, la doctora sigue viendo
+Es de mejor esfuerzo: si escribir la bitácora falla, el médico sigue viendo
 el expediente a media consulta y el fallo queda en el log del servidor. Negarle
 la información clínica porque no se pudo anotar que la vio sería peor para la
 paciente.
@@ -58,8 +58,8 @@ def registrar_acceso(
             return
         contexto = current_audit_context()
         nueva = AccesoClinico(
-            # La sucursal de la paciente, no la de quien mira: Master cruza
-            # sucursales y su acceso tiene que verlo la admin de esa paciente.
+            # La sucursal del paciente, no la de quien mira: Master cruza
+            # sucursales y su acceso tiene que verlo la admin de ese paciente.
             tenant_id=tenant_id
             or db.query(Patient.tenant_id).filter(Patient.id == patient_id).scalar()
             or user.tenant_id,
@@ -90,4 +90,4 @@ def registrar_acceso(
         db.commit()
     except SQLAlchemyError:
         db.rollback()
-        logger.exception("No se pudo registrar el acceso a %s de la paciente %s", seccion, patient_id)
+        logger.exception("No se pudo registrar el acceso a %s del paciente %s", seccion, patient_id)

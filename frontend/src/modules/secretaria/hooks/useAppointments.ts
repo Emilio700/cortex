@@ -127,7 +127,7 @@ export const useAppointments = () => {
   }, [])
 
   /**
-   * S-05: reenvía a la paciente el correo de confirmación de su cita. El
+   * S-05: reenvía al paciente el correo de confirmación de su cita. El
    * servidor dice si de veras se envió (`enviado`) y por qué no (`motivo`), así
    * que la interfaz sólo afirma «se reenvió» con la confirmación del servidor.
    */

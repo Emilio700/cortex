@@ -27,7 +27,7 @@ export interface UserUpdate {
 export type Tratamiento = 'Dr.' | 'Dra.'
 
 /**
- * Doctoras que apoya una secretaria y si puede ver su corte de caja
+ * Médicos que apoya una secretaria y si puede ver su corte de caja
  * (plan 23, ajustes del 2026-09-28). Es lo que el servidor dice que quedó.
  */
 export interface DoctorasQueApoya {

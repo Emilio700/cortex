@@ -5,7 +5,7 @@ agenda: el resultado y su aviso existen los dos o ninguno.
 
 El resultado **crítico** no pasa por aquí a propósito: es una incidencia que
 se deriva de su estado abierto (plan 26, D-8), no una fila de aviso que alguien
-pueda dar por atendida sin haberle comunicado nada a la paciente.
+pueda dar por atendida sin haberle comunicado nada al paciente.
 """
 from __future__ import annotations
 
@@ -19,12 +19,12 @@ from app.services.notification_service import notify, resolver
 
 
 def avisar_resultado_recibido(db: Session, order: DiagnosticOrder, patient: Patient, actor: User) -> None:
-    """A la doctora que pidió el estudio: llegó su resultado (con archivo o
+    """Al médico que pidió el estudio: llegó su resultado (con archivo o
     capturado sin él) y falta que lo revise. A quien lo registró no se le
     avisa de su propio acto."""
     if order.doctor_id == actor.id:
         return
-    nombre = " ".join(filter(None, [patient.first_name, patient.last_name])) or "la paciente"
+    nombre = " ".join(filter(None, [patient.first_name, patient.last_name])) or "el paciente"
     notify(
         db,
         tenant_id=order.tenant_id,

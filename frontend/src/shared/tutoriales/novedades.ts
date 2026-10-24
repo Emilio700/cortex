@@ -5,7 +5,7 @@
  * Dice qué se movió y a dónde. Nunca se abre sola: la franja del encabezado
  * lo avisa una vez por usuaria y la página vive en el «?». Cada novedad enlaza
  * a su recorrido guiado; `recorridos` es una lista de candidatos porque el
- * recorrido que explica un cambio depende del rol (la bienvenida de la doctora
+ * recorrido que explica un cambio depende del rol (la bienvenida del médico
  * no es la de recepción). Una novedad cuyo recorrido nadie del rol puede ver
  * no se le muestra, salvo las marcadas `paraTodas`.
  *
@@ -35,16 +35,16 @@ export const NOVEDADES: Novedad[] = [
   },
   {
     id: 'preregistro',
-    titulo: 'Preregistro se quitó: la paciente nueva se da de alta al agendar',
+    titulo: 'Preregistro se quitó: el paciente nuevo se da de alta al agendar',
     texto:
-      'En la ventana de la cita, «+ Registrar paciente nueva» pide nombre, apellidos y celular, y si los da, correo, alergias y última menstruación. Avisa si parece que ya está registrada. La doctora que trabaja sin recepción puede hacerlo en su propia agenda si administración le concede el permiso.',
+      'En la ventana de la cita, «+ Registrar paciente nuevo» pide nombre, apellidos y celular, y si los da, correo, alergias y última menstruación. Avisa si parece que ya está registrada. El médico que trabaja sin recepción puede hacerlo en su propia agenda si administración le concede el permiso.',
     recorridos: ['cita-formulario'],
   },
   {
     id: 'expediente',
     titulo: 'El expediente es el centro de cada paciente',
     texto:
-      'Todo lo de una paciente está en su expediente, por secciones: resumen, consultas, estudios, documentos, imágenes, embarazo, consentimientos y equipo. «Documentos» ya no es una pantalla del menú: vive ahí, y las fotos clínicas y los estudios de imagen se ven juntos en una sola pestaña de Imágenes. Se abre desde Pacientes, el buscador de arriba, la Agenda o la bandeja.',
+      'Todo lo de un paciente está en su expediente, por secciones: resumen, consultas, estudios, documentos, imágenes, embarazo, consentimientos y equipo. «Documentos» ya no es una pantalla del menú: vive ahí, y las fotos clínicas y los estudios de imagen se ven juntos en una sola pestaña de Imágenes. Se abre desde Pacientes, el buscador de arriba, la Agenda o la bandeja.',
     recorridos: ['doctora-expediente', 'documentos'],
   },
   {
@@ -58,7 +58,7 @@ export const NOVEDADES: Novedad[] = [
     id: 'menu',
     titulo: 'El menú se llama como cada pantalla',
     texto:
-      'La doctora encuentra «Mis Consultas» y «Órdenes y resultados» con el mismo nombre que llevan arriba. El mostrador de órdenes de recepción también se llama «Órdenes y resultados», y sólo sale en el menú de recepción: la doctora y administración conservan su bandeja.',
+      'El médico encuentra «Mis Consultas» y «Órdenes y resultados» con el mismo nombre que llevan arriba. El mostrador de órdenes de recepción también se llama «Órdenes y resultados», y sólo sale en el menú de recepción: el médico y administración conservan su bandeja.',
     recorridos: ['doctora-mis-consultas', 'ordenes-resultados', 'recepcion-entrega'],
     paraTodas: true,
   },
@@ -93,7 +93,7 @@ export const NOVEDADES: Novedad[] = [
   {
     id: 'resumen',
     titulo: 'Resumen clínico en PDF',
-    texto: 'Desde el expediente se genera un resumen clínico de la paciente, con su folio, para imprimir o entregar.',
+    texto: 'Desde el expediente se genera un resumen clínico del paciente, con su folio, para imprimir o entregar.',
     recorridos: ['resumen-clinico'],
   },
   {

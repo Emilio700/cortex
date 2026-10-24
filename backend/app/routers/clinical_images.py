@@ -78,7 +78,7 @@ def _validate_related_resources(
             .first()
         )
         if not appointment or appointment.patient_id != patient_id:
-            raise HTTPException(status_code=422, detail="La consulta no corresponde a la paciente")
+            raise HTTPException(status_code=422, detail="La consulta no corresponde al paciente")
         exigir_autoria_clinica(
             appointment.doctor_id,
             current_user,
@@ -92,7 +92,7 @@ def _validate_related_resources(
         )
         if not episode or episode.patient_id != patient_id:
             raise HTTPException(
-                status_code=422, detail="El episodio clínico no corresponde a la paciente"
+                status_code=422, detail="El episodio clínico no corresponde al paciente"
             )
 
 

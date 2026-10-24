@@ -182,7 +182,7 @@ def test_una_express_ya_documentada_no_se_cancela(client, db_session, e):
 
 
 def test_sin_permiso_de_cancelar_citas_no_la_cancela(client, db_session, e):
-    """La doctora no cancela citas: anula el cobro y recepción cancela la consulta."""
+    """El médico no cancela citas: anula el cobro y recepción cancela la consulta."""
     from app.models.payment import Payment, PaymentStatus
 
     r = client.post(

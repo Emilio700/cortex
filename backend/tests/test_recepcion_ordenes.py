@@ -146,7 +146,7 @@ def test_no_se_entrega_una_orden_cancelada(client, db_session, escenario):
 # ---------------------------------------------------------------------------
 
 def test_la_doctora_solo_ve_y_entrega_sus_propias_ordenes(client, db_session, escenario):
-    """La doctora tiene el permiso, pero acotada a las órdenes que ella pidió."""
+    """El médico tiene el permiso, pero acotada a las órdenes que ella pidió."""
     # La colega no pidió la orden del escenario: no la ve ni la puede entregar.
     lista = _por_entregar(client, db_session, escenario["colega"])
     assert lista.json()["total"] == 0

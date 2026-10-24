@@ -109,7 +109,7 @@ ETIQUETAS: Dict[str, str] = {
     "chief_complaint": "Motivo de la consulta",
     "observations": "Observaciones",
     # Nota de consulta
-    "subjective": "Lo que refiere la paciente",
+    "subjective": "Lo que refiere el paciente",
     "objective": "Exploración",
     "assessment": "Diagnóstico",
     "plan": "Plan",
@@ -138,7 +138,7 @@ ETIQUETAS: Dict[str, str] = {
     "certificate_type": "Tipo de certificado",
     "consent_type": "Tipo de consentimiento",
     "consent_id": "Consentimiento",
-    "acknowledgements": "Puntos que la paciente debe confirmar",
+    "acknowledgements": "Puntos que el paciente debe confirmar",
     "patient_signed_name": "Nombre de quien firma",
     "signature_data_url": "Firma",
     "folio_number": "Folio",

@@ -1,8 +1,8 @@
-"""Las imágenes de una paciente, unificadas en la pantalla (plan 32, punto 6).
+"""Las imágenes de un paciente, unificadas en la pantalla (plan 32, punto 6).
 
 Hay dos repositorios y se quedan como están: ``clinical_images`` (fotos,
 ultrasonidos y procedimientos subidos en la consulta) y los documentos tipo
-``imaging_study`` (rayos X, ultrasonidos o mastografías que trajo la paciente,
+``imaging_study`` (rayos X, ultrasonidos o mastografías que trajo el paciente,
 o el resultado de una orden de imagen). Mover archivos clínicos entre tablas
 es el cambio que, si falla a la mitad, deja expedientes incompletos: aquí solo
 se **leen** las dos fuentes, se juntan por fecha y se nombran con un solo
@@ -99,7 +99,7 @@ def imagenes_de_paciente(
         Patient.id == patient_id
     ).first()
     if paciente is None:
-        raise HTTPException(status_code=404, detail="No se encontró la paciente.")
+        raise HTTPException(status_code=404, detail="No se encontró el paciente.")
     if categoria is not None and categoria not in CATEGORIAS:
         raise HTTPException(status_code=422, detail=f"Categoría desconocida: {categoria}.")
     permisos = get_user_permissions(user, db)

@@ -2,7 +2,7 @@
  * Vista "Lista" de la agenda: el rango visible en forma de tabla, agrupado
  * por día.
  *
- * Para qué sirve: repasar el día en voz alta con la paciente enfrente e
+ * Para qué sirve: repasar el día en voz alta con el paciente enfrente e
  * imprimir la hoja del día o de la semana. Por eso es una tabla y no otra
  * rejilla: se lee de arriba abajo y el navegador la imprime bien.
  *
@@ -73,7 +73,7 @@ export const AgendaLista: React.FC<AgendaListaProps> = ({ citas, onCitaClick }) 
                                         Hora
                                     </th>
                                     <th scope="col">Paciente</th>
-                                    <th scope="col">Doctora</th>
+                                    <th scope="col">Médico</th>
                                     <th scope="col">Tipo</th>
                                     <th scope="col">Motivo</th>
                                     <th scope="col">Sala</th>

@@ -1,6 +1,6 @@
 """Plantillas clínicas que precargan estudios en la orden (O-03 del backlog).
 
-Son opcionales y de sólo lectura: la doctora elige una, el frontend copia sus
+Son opcionales y de sólo lectura: el médico elige una, el frontend copia sus
 estudios al formulario de la orden agrupada (O-02) y ella confirma. Nada se crea
 sin esa confirmación manual; la plantilla no escribe nada por sí sola. La
 pregunta 2.3 (quién administra las plantillas) sigue abierta, así que hoy no se
@@ -92,7 +92,7 @@ def test_recepcion_no_ve_las_plantillas(client, db_session, escenario):
 # ---------------------------------------------------------------------------
 
 def test_los_estudios_de_una_plantilla_crean_la_orden_al_confirmar(client, db_session, escenario):
-    """El flujo real: se lee la plantilla, se precarga el formulario y la doctora
+    """El flujo real: se lee la plantilla, se precarga el formulario y el médico
     confirma con POST /order-groups (O-02). La confirmación es lo que crea."""
     plantilla = _detalle(client, db_session, escenario["doctora"], "control_prenatal_subsecuente").json()
 
@@ -112,7 +112,7 @@ def test_los_estudios_de_una_plantilla_crean_la_orden_al_confirmar(client, db_se
 
 
 def test_la_doctora_puede_editar_los_estudios_antes_de_confirmar(client, db_session, escenario):
-    """Precargar no obliga: la doctora quita uno y agrega otro, y se crea lo que
+    """Precargar no obliga: el médico quita uno y agrega otro, y se crea lo que
     ella confirmó, no lo que traía la plantilla."""
     plantilla = _detalle(client, db_session, escenario["doctora"], "control_prenatal_subsecuente").json()
     estudios = plantilla["estudios"][:1]  # se queda con uno

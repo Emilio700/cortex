@@ -4,7 +4,7 @@
  * Decisión de Emilio (3.5): **sólo advertir**. Se consultan candidatas con
  * `POST /patients/possible-duplicates` y se muestran; no se bloquea el alta ni
  * se fusiona. Si la consulta falla, se guarda igual: una advertencia no puede
- * impedir registrar a una paciente.
+ * impedir registrar a un paciente.
  */
 import { useCallback, useRef, useState } from 'react'
 import api from '../../../shared/services/api'

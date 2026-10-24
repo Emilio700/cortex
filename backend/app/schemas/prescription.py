@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, ConfigDict, field_validator
 
 # Tope del motivo de consulta impreso en la receta. Es una línea bajo los datos
-# de la paciente, no un párrafo: lo que no quepa se recorta al imprimir, así que
+# del paciente, no un párrafo: lo que no quepa se recorta al imprimir, así que
 # es mejor que no entre por la puerta.
 LIMITE_MOTIVO = 300
 

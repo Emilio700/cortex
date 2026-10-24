@@ -7,7 +7,7 @@ veía por ningún lado. Es exactamente el caso que este proyecto no se permite: 
 el sistema no hizo algo, la interfaz no puede decir que sí.
 
 La salida elegida es un contador por usuario, no revocar su sesión: revocarla a
-media consulta le costaría a una doctora la nota que está capturando, que es
+media consulta le costaría a un médico la nota que está capturando, que es
 peor que el problema. Estas pruebas fijan que el contador sube, que viaja en
 cada respuesta autenticada y que nadie pierde la sesión por el camino.
 """
@@ -178,7 +178,7 @@ def test_la_sesion_abierta_ve_el_permiso_nuevo_sin_volver_a_entrar(
 def test_cambiar_permisos_no_echa_a_nadie_de_su_sesion(client, db_session, escenario):
     """Revocar la sesión costaría la nota a medio capturar: no se hace.
 
-    La versión sube, la sesión sigue viva y el token que la doctora tiene en la
+    La versión sube, la sesión sigue viva y el token que el médico tiene en la
     mano sigue sirviendo.
     """
     doctora = escenario["doctora"]

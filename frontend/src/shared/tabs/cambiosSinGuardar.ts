@@ -2,7 +2,7 @@
  * Registro de cambios sin guardar, por pestaña.
  *
  * Las pestañas son keep-alive: los componentes nunca se desmontan y el texto
- * que la doctora escribe vive sólo en memoria hasta que oprime Guardar. Antes
+ * que el médico escribe vive sólo en memoria hasta que oprime Guardar. Antes
  * de este registro había tres formas de perderlo sin un solo aviso: cerrar la
  * pestaña con la "x", abrir la novena pestaña (MAX_TABS descartaba la más
  * vieja en silencio) y cerrar el navegador.

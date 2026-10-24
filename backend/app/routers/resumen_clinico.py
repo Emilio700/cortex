@@ -5,7 +5,7 @@ folio y con la marca «VISTA PREVIA»; después la emisión, que solo se acepta
 con la constancia de esa vista previa y las mismas secciones. Así la vista
 previa es obligatoria también para quien llame a la API sin la pantalla.
 
-Solo lo emite una doctora con relación asistencial con la paciente: el papel
+Solo lo emite un médico con relación asistencial con el paciente: el papel
 lleva su membrete y su firma. Recepción no lo genera.
 """
 from __future__ import annotations
@@ -61,7 +61,7 @@ def _solo_doctora(user: User) -> None:
     if user.role != Role.DOCTOR:
         raise HTTPException(
             status_code=403,
-            detail="El resumen clínico lo emite la doctora: lleva su membrete y su firma.",
+            detail="El resumen clínico lo emite el médico: lleva su membrete y su firma.",
         )
 
 

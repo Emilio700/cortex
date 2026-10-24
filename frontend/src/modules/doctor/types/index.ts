@@ -63,7 +63,7 @@ export interface Prescription {
   patient_id: number
   doctor_id: number
   tenant_id: number
-  // Folio visible para la doctora (REC-{tenant}-{año}-{NNNN}). El backend ya lo
+  // Folio visible para el médico (REC-{tenant}-{año}-{NNNN}). El backend ya lo
   // devuelve y lo imprime en el PDF; el `id` es un número heredado de la
   // migración legacy y no significa nada en el consultorio.
   folio_number?: string | null
@@ -71,7 +71,7 @@ export interface Prescription {
   instructions?: string
   /**
    * Motivo de consulta impreso en la receta. Va en la RECETA y no en el perfil
-   * de la doctora porque la decision es por paciente, y se guarda el texto
+   * del médico porque la decision es por paciente, y se guarda el texto
    * para que una reimpresion diga lo mismo que el papel que ya tiene la
    * paciente. Vacío o ausente = no se imprime.
    */

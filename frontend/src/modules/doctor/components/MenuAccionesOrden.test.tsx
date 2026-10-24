@@ -79,13 +79,13 @@ describe('MenuAccionesOrden', () => {
     const confirmar = screen.getByRole('button', { name: 'Confirmar' })
     expect(confirmar).toBeDisabled()
 
-    await user.type(screen.getByLabelText('Motivo de la cancelación'), 'La paciente ya lo trae')
+    await user.type(screen.getByLabelText('Motivo de la cancelación'), 'El paciente ya lo trae')
     await user.click(confirmar)
 
     await waitFor(() => expect(onChanged).toHaveBeenCalled())
     expect(post).toHaveBeenCalledWith('/clinical-tracking/orders/4/status', {
       status: 'cancelled',
-      reason: 'La paciente ya lo trae',
+      reason: 'El paciente ya lo trae',
     })
   })
 

@@ -4,7 +4,7 @@ import routes from '../../routes'
 import { RUTA_DE_INICIO_POR_ROL, rutaDeInicio } from './inicio'
 
 describe('rutaDeInicio', () => {
-  it('cada rol llega a su propio inicio; la doctora, a su tablero con métricas', () => {
+  it('cada rol llega a su propio inicio; el médico, a su tablero con métricas', () => {
     expect(rutaDeInicio(Role.DOCTOR)).toBe('/doctor/dashboard')
     expect(rutaDeInicio(Role.ADMIN)).toBe('/admin/dashboard')
     expect(rutaDeInicio(Role.SECRETARIA)).toBe('/secretaria/agenda')

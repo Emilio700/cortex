@@ -1,5 +1,5 @@
 /**
- * Doctoras de la sucursal para los selectores de finanzas.
+ * Médicos de la sucursal para los selectores de finanzas.
  *
  * Mismo endpoint que usa la agenda (`/users/directory?role=doctor`): una sola
  * lista de doctoras en todo el sistema, y no otra que pida permisos de

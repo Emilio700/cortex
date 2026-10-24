@@ -410,7 +410,7 @@ def _aviso(db, user, prioridad=NotificationPriority.ACCIONABLE, tipo=Notificatio
 
 
 def test_el_correo_a_la_paciente_ya_no_avisa_en_la_campana(db_session, e):
-    """El recordatorio por correo (perfil) y el aviso a la doctora (centro de
+    """El recordatorio por correo (perfil) y el aviso al médico (centro de
     avisos) van separados: antes el de una hora sólo salía si además tenía
     encendido el correo a pacientes con «1 hora antes» (plan 29)."""
     from app.services.appointment_reminder_service import send_appointment_reminder

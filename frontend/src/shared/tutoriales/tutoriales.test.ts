@@ -126,7 +126,7 @@ describe('catálogo de recorridos', () => {
     }
   })
 
-  it('los que necesitan una paciente o un formulario explican cómo llegar', () => {
+  it('los que necesitan un paciente o un formulario explican cómo llegar', () => {
     for (const r of CATALOGO.filter((x) => x.contexto || x.ruta?.includes(':'))) {
       expect(r.comoLlegar?.trim(), r.id).toBeTruthy()
     }
@@ -141,7 +141,7 @@ describe('catálogo de recorridos', () => {
 })
 
 describe('qué recorridos ve cada rol', () => {
-  it('la doctora ve la consulta y sus cobros, pero no cobrar como recepción ni administración', () => {
+  it('el médico ve la consulta y sus cobros, pero no cobrar como recepción ni administración', () => {
     const vistos = ids(
       recorridosDisponibles(CATALOGO, { role: Role.DOCTOR, permissions: PERMISOS.doctora }),
     )
@@ -221,7 +221,7 @@ describe('qué recorridos ve cada rol', () => {
     expect(puedeVerRecorrido(triage, { role: Role.DOCTOR })).toBe(false)
   })
 
-  it('soloRoles se suma al permiso: la doctora con payments.read no ve el cobro de recepción', () => {
+  it('soloRoles se suma al permiso: el médico con payments.read no ve el cobro de recepción', () => {
     const pagos = CATALOGO.find((r) => r.id === 'pagos-recepcion')!
     expect(puedeVerRecorrido(pagos, { role: Role.DOCTOR, permissions: ['payments.read'] })).toBe(false)
     expect(puedeVerRecorrido(pagos, { role: Role.SECRETARIA, permissions: ['payments.read'] })).toBe(true)
@@ -235,7 +235,7 @@ describe('rutas', () => {
     expect(rutaCoincide('/finanzas', '/finanzas/pagos')).toBe(false)
   })
 
-  it('en Cobros la doctora tiene "Mis cobros" y recepción "Cobros y recibos"', () => {
+  it('en Cobros el médico tiene "Mis cobros" y recepción "Cobros y recibos"', () => {
     const deDoctora = recorridosDeRuta(
       recorridosDisponibles(CATALOGO, { role: Role.DOCTOR, permissions: PERMISOS.doctora }),
       '/finanzas/pagos',
@@ -379,7 +379,7 @@ describe('cómo se abre un recorrido desde el centro', () => {
     })
   })
 
-  it('nunca elige una consulta ni una paciente: pide que la abra la persona', () => {
+  it('nunca elige una consulta ni un paciente: pide que la abra la persona', () => {
     expect(comoAbrir(de('doctora-consulta'), '/doctor/dashboard')).toEqual({
       tipo: 'necesita',
       razon: 'datos',
@@ -432,7 +432,7 @@ describe('recorrido completo por rol', () => {
     }
   })
 
-  it('la doctora aprende en el orden de su trabajo: agenda, avisos, consulta, signos, nota, receta, cobro y sus cobros', () => {
+  it('el médico aprende en el orden de su trabajo: agenda, avisos, consulta, signos, nota, receta, cobro y sus cobros', () => {
     const completo = completoDeRol(RECORRIDOS_COMPLETOS, doctora)!
     const { aplicables, saltadas } = resolverCompleto(
       completo,

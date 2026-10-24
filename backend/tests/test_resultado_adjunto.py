@@ -1,7 +1,7 @@
 """Recepción adjunta el resultado del laboratorio a su orden (O-04).
 
 Decisión de Emilio: el sobre del laboratorio llega al mostrador; recepción
-sube el PDF o la foto ligado a la orden, y la doctora lo interpreta y lo marca
+sube el PDF o la foto ligado a la orden, y el médico lo interpreta y lo marca
 revisado. Recepción no ve más clínica de la necesaria: ni la indicación, ni el
 resultado interpretado, ni el resto del expediente.
 """
@@ -179,7 +179,7 @@ def test_sin_el_permiso_recepcion_no_adjunta(client, db_session, escenario):
 
 
 def test_recepcion_adjunta_pero_no_lee_la_interpretacion(client, db_session, escenario):
-    """La doctora interpreta; recepción no tiene por dónde leerlo."""
+    """El médico interpreta; recepción no tiene por dónde leerlo."""
     adjunto = _adjuntar(client, db_session, escenario["orden"], escenario["secretaria"]).json()
     doctora = _auth_headers(db_session, escenario["doctora"])
     revisado = client.patch(

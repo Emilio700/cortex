@@ -21,7 +21,7 @@ export interface OrdenPorEntregar {
   study_name: string
   requested_on: string
   status: string
-  /** Doctora autora: un papel lleva la firma de una sola (M5). */
+  /** Médico autora: un papel lleva la firma de una sola (M5). */
   doctor_id?: number | null
   doctor_name?: string | null
   priority?: string | null

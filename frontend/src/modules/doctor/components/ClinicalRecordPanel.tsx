@@ -336,7 +336,7 @@ const ClinicalRecordPanel = ({
           <CFormLabel className="mt-3" htmlFor="episode-follow-up">Seguimiento sugerido</CFormLabel>
           <CFormInput id="episode-follow-up" type="date" min={form.started_on} value={form.follow_up_on} onChange={(event) => setForm((current) => ({ ...current, follow_up_on: event.target.value }))} />
           <CFormLabel className="mt-3" htmlFor="episode-action">Próxima acción</CFormLabel>
-          <CFormTextarea id="episode-action" rows={2} value={form.next_action} onChange={(event) => setForm((current) => ({ ...current, next_action: event.target.value }))} placeholder="Ej. Revisar resultado y comunicarse con la paciente." />
+          <CFormTextarea id="episode-action" rows={2} value={form.next_action} onChange={(event) => setForm((current) => ({ ...current, next_action: event.target.value }))} placeholder="Ej. Revisar resultado y comunicarse con el paciente." />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" disabled={saving} onClick={() => setShowCreate(false)}>Cancelar</CButton>

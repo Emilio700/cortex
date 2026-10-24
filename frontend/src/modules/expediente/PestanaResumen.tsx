@@ -122,7 +122,7 @@ export default function PestanaResumen({
     return (
       <CAlert color="light" className="mb-0">
         Aquí ves la ficha, las citas, los documentos de referencia y el estado de sus estudios. Lo clínico lo
-        lleva la doctora.
+        lleva el médico.
       </CAlert>
     )
   }

@@ -4,7 +4,7 @@ C1: ``GET /patients/{id}/history`` pedía solo ``patients.read`` y devolvía la
 nota SOAP, el triage y las recetas de cada cita a recepción, que no tiene
 ``soap_notes.read`` ni ``prescriptions.read``.
 
-C2: cada resultado de orden se guarda también como documento de la paciente y
+C2: cada resultado de orden se guarda también como documento del paciente y
 ``/documents`` solo pedía ``documents.read``: recepción abría el resultado de
 cualquier paciente. Decisión de Emilio: ve el archivo que ella recibió o subió,
 nunca la interpretación, y no navega por los resultados de las demás.

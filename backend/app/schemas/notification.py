@@ -26,7 +26,7 @@ class NotificationResponse(BaseModel):
     # Pantalla del «Ir» para quien pide la lista, o nula si no puede abrir
     # ninguna: el frontend no inventa destinos.
     ruta: Optional[str] = None
-    # Una doctora en dos sucursales recibe avisos de ambas: el de la sucursal
+    # Un médico en dos sucursales recibe avisos de ambas: el de la sucursal
     # que no tiene activa dice de cuál es y no ofrece «Ir» (la pantalla le
     # respondería «no se encontró» hasta que cambie de sucursal).
     tenant_id: Optional[int] = None

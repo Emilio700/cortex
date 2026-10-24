@@ -38,7 +38,7 @@ def iniciar_consulta_de_la_cita(
     )
     if cita is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró la cita.")
-    # Una doctora que no es la titular solo llega aquí si puede abrir la
+    # Un médico que no es la titular solo llega aquí si puede abrir la
     # consulta (la cubre); si no, la cita no existe para ella.
     if alcance_operativo_acotado(current_user) and cita.doctor_id != current_user.id:
         exigir_relacion_asistencial(db, cita.patient_id, current_user)

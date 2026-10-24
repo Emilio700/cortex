@@ -1,4 +1,4 @@
-"""Datos de contacto que la doctora imprime en la receta y la orden (plan 26, ronda 3).
+"""Datos de contacto que el médico imprime en la receta y la orden (plan 26, ronda 3).
 
 Son aparte de ``users.email`` (con el que entra al sistema) y del teléfono del
 consultorio: el correo y el celular/WhatsApp que ella quiere dar a sus

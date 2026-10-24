@@ -73,7 +73,7 @@ def _auth_headers(db, user: User) -> dict[str, str]:
 
 @pytest.fixture
 def escenario(db_session):
-    """Una doctora, su paciente y una cita a la que nadie le tomó la presión."""
+    """Un médico, su paciente y una cita a la que nadie le tomó la presión."""
     tenant = Tenant(name="Clínica de prueba", is_active=True)
     db_session.add(tenant)
     db_session.commit()
@@ -82,7 +82,7 @@ def escenario(db_session):
     doctora = User(
         email="doctora@gems.com",
         hashed_password="no-usado-en-estas-pruebas",
-        full_name="Doctora De Prueba",
+        full_name="Médico De Prueba",
         role=Role.DOCTOR,
         tenant_id=tenant.id,
         is_active=True,

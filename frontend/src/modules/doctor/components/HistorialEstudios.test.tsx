@@ -156,7 +156,7 @@ describe('HistorialEstudios', () => {
     const vista = within(container)
 
     expect(
-      await vista.findByText('Esta paciente no tiene órdenes de estudios registradas.'),
+      await vista.findByText('Este paciente no tiene órdenes de estudios registradas.'),
     ).toBeInTheDocument()
   })
 })

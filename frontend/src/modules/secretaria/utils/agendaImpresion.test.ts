@@ -2,7 +2,7 @@
  * La agenda impresa lleva las columnas que decidió Emilio y nada más.
  *
  * Hora, paciente, teléfono, doctora, servicio y estado. El motivo y las notas
- * son para la doctora; la hoja se queda en el mostrador.
+ * son para el médico; la hoja se queda en el mostrador.
  */
 import { describe, expect, it } from 'vitest'
 
@@ -35,7 +35,7 @@ const texto = (html: string) =>
 
 describe('agenda impresa', () => {
   it('tiene las columnas de la decisión, en ese orden', () => {
-    expect(COLUMNAS_AGENDA_IMPRESA).toEqual(['Hora', 'Paciente', 'Teléfono', 'Doctora', 'Servicio', 'Estado'])
+    expect(COLUMNAS_AGENDA_IMPRESA).toEqual(['Hora', 'Paciente', 'Teléfono', 'Médico', 'Servicio', 'Estado'])
   })
 
   it('cada fila lleva hora, paciente, teléfono, doctora, servicio y el estado en español', () => {

@@ -123,7 +123,7 @@ beforeEach(() => {
 const rellenarObligatorios = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.click(screen.getByLabelText(/Paciente/))
   await user.click(await screen.findByText('ANA LÓPEZ'))
-  await user.selectOptions(screen.getByLabelText(/Doctor/), '7')
+  await user.selectOptions(screen.getByLabelText(/Médico/), '7')
 }
 
 describe('AppointmentModal · sala', () => {

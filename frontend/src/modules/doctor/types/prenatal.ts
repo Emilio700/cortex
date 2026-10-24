@@ -20,7 +20,7 @@ export interface Pregnancy {
   high_risk_status: string
   outcome: string
   notes?: string | null
-  /** Fecha de la próxima revisión que vale: la que la doctora aceptó o movió. */
+  /** Fecha de la próxima revisión que vale: la que el médico aceptó o movió. */
   next_review_on?: string | null
   /** Lo que propuso la regla de intervalos, para saber si se ajustó. */
   next_review_suggested_on?: string | null

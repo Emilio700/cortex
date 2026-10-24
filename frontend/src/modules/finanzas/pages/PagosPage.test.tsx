@@ -2,7 +2,7 @@
  * Pagos en recepción (plan 23).
  *
  * La regla que manda: la secretaria no puede volver a cobrar, sin darse
- * cuenta, una consulta que ya cobró la doctora. Y ninguna pantalla afirma un
+ * cuenta, una consulta que ya cobró el médico. Y ninguna pantalla afirma un
  * pago que el servidor no confirmó.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -95,7 +95,7 @@ const CITAS_ATENDIDAS = [
 ]
 
 const SERVICIOS = [{ id: 3, name: 'CONSULTA GINECOLÓGICA', price: '800.00', is_active: true }]
-const DOCTORAS = [
+const MÉDICOS = [
   { id: 7, full_name: 'CINTIA MORALES', role: 'doctor' },
   { id: 8, full_name: 'KARLA PÉREZ', role: 'doctor' },
 ]
@@ -133,7 +133,7 @@ describe('PagosPage', () => {
     apiGet.mockReset().mockImplementation((url: string) => {
       if (url === '/appointments') return Promise.resolve({ data: CITAS_ATENDIDAS })
       if (url === '/services') return Promise.resolve({ data: SERVICIOS })
-      if (url === '/users/directory') return Promise.resolve({ data: DOCTORAS })
+      if (url === '/users/directory') return Promise.resolve({ data: MÉDICOS })
       return Promise.resolve({ data: [] })
     })
   })
@@ -220,7 +220,7 @@ describe('PagosPage', () => {
           return Promise.resolve({ data: estado === 'en_sala' ? [EN_SALA] : CITAS_ATENDIDAS })
         }
         if (url === '/services') return Promise.resolve({ data: SERVICIOS })
-        if (url === '/users/directory') return Promise.resolve({ data: DOCTORAS })
+        if (url === '/users/directory') return Promise.resolve({ data: MÉDICOS })
         return Promise.resolve({ data: [] })
       })
     })
@@ -284,14 +284,14 @@ describe('PagosPage', () => {
       })
     })
 
-    it('la que la doctora marcó sin cargo también se bloquea, y cobrarla se confirma', async () => {
+    it('la que el médico marcó sin cargo también se bloquea, y cobrarla se confirma', async () => {
       const user = await abrirModalDePago()
 
       expect(botonDeCita('LUZ MORA')).toBeDisabled()
-      expect(screen.getByText(/La doctora la marcó sin cargo: REVISIÓN INCLUIDA/)).toBeInTheDocument()
+      expect(screen.getByText(/El médico la marcó sin cargo: REVISIÓN INCLUIDA/)).toBeInTheDocument()
       await user.click(screen.getByRole('button', { name: /Cobrar de todos modos/ }))
       await user.click(screen.getByRole('button', { name: /Sí, cobrarla/ }))
-      // Es un cobro aparte de lo que decidió la doctora, y el botón lo dice.
+      // Es un cobro aparte de lo que decidió el médico, y el botón lo dice.
       expect(screen.getByRole('button', { name: 'Registrar cobro adicional' })).toBeInTheDocument()
       await user.type(screen.getByLabelText(/Monto/), '300')
       await registrar(user)
@@ -314,7 +314,7 @@ describe('PagosPage', () => {
 
     it('el 409 del servidor se muestra tal cual y la cita pasa a verse cobrada', async () => {
       createPayment.mockRejectedValue(
-        new ErrorDeCobro('Ya la cobró la Dra. Cintia a las 11:05: $800.00 con tarjeta.', 409, {
+        new ErrorDeCobro('Ya la cobró el Dr. Cintia a las 11:05: $800.00 con tarjeta.', 409, {
           ...pagoDePrueba({ id: 91, received_by_name: 'DRA. CINTIA', method: 'card', paid_at: '2026-09-24T11:05:00' }),
         } as any),
       )
@@ -325,7 +325,7 @@ describe('PagosPage', () => {
       await registrar(user)
 
       expect(
-        await screen.findByText('Ya la cobró la Dra. Cintia a las 11:05: $800.00 con tarjeta.'),
+        await screen.findByText('Ya la cobró el Dr. Cintia a las 11:05: $800.00 con tarjeta.'),
       ).toBeInTheDocument()
       expect(botonDeCita('ANA LÓPEZ')).toBeDisabled()
       // Ni se cerró el modal ni se anunció un pago.
@@ -451,22 +451,22 @@ describe('PagosPage', () => {
           ? Promise.resolve({ data: [{ id: 300, first_name: 'SOFÍA', last_name: 'VEGA' }] })
           : Promise.resolve({ data: [] }),
       )
-      await user.type(screen.getByPlaceholderText('Nombre de la paciente'), 'sofia')
+      await user.type(screen.getByPlaceholderText('Nombre del paciente'), 'sofia')
       await user.click(screen.getByRole('button', { name: 'Buscar' }))
       await user.click(await screen.findByRole('button', { name: 'SOFÍA VEGA' }))
       return user
     }
 
-    it('la secretaria tiene que elegir la doctora del ingreso, y se manda', async () => {
+    it('la secretaria tiene que elegir el médico del ingreso, y se manda', async () => {
       const user = await abrirSuelto()
       await user.type(screen.getByLabelText(/Monto/), '1200')
       await user.type(screen.getByLabelText('Concepto'), 'ultrasonido')
 
       await registrar(user)
-      expect(await screen.findByRole('alert')).toHaveTextContent(/Elige la doctora/)
+      expect(await screen.findByRole('alert')).toHaveTextContent(/Elige el médico/)
       expect(createPayment).not.toHaveBeenCalled()
 
-      await user.selectOptions(screen.getByLabelText(/Doctora a la que pertenece/), '8')
+      await user.selectOptions(screen.getByLabelText(/Médico a la que pertenece/), '8')
       await registrar(user)
 
       await waitFor(() => expect(createPayment).toHaveBeenCalledTimes(1))
@@ -477,7 +477,7 @@ describe('PagosPage', () => {
 
     it('la primera pregunta es qué se cobra, y sin contestarla no se registra', async () => {
       const user = await abrirSuelto(null)
-      await user.selectOptions(screen.getByLabelText(/Doctora a la que pertenece/), '7')
+      await user.selectOptions(screen.getByLabelText(/Médico a la que pertenece/), '7')
       await user.type(screen.getByLabelText(/Monto/), '500')
 
       await registrar(user)
@@ -487,9 +487,9 @@ describe('PagosPage', () => {
       expect(createConsultaExpress).not.toHaveBeenCalled()
     })
 
-    it('la consulta express va a su propia operación, con la doctora, y no como pago suelto', async () => {
+    it('la consulta express va a su propia operación, con el médico, y no como pago suelto', async () => {
       const user = await abrirSuelto('Consulta sin cita (express)')
-      await user.selectOptions(screen.getByLabelText(/Doctora a la que pertenece/), '8')
+      await user.selectOptions(screen.getByLabelText(/Médico a la que pertenece/), '8')
       await user.type(screen.getByLabelText(/Monto/), '500')
 
       await registrar(user)
@@ -506,7 +506,7 @@ describe('PagosPage', () => {
     it('si el servidor no devolvió la cita, el aviso no dice que quedó en la agenda', async () => {
       createConsultaExpress.mockResolvedValue(pagoDePrueba({ appointment_id: null }))
       const user = await abrirSuelto('Consulta sin cita (express)')
-      await user.selectOptions(screen.getByLabelText(/Doctora a la que pertenece/), '8')
+      await user.selectOptions(screen.getByLabelText(/Médico a la que pertenece/), '8')
       await user.type(screen.getByLabelText(/Monto/), '500')
 
       await registrar(user)
@@ -517,7 +517,7 @@ describe('PagosPage', () => {
 
     it('con una consulta de hoy pregunta si es otra, y sólo al confirmar la registra', async () => {
       createConsultaExpress.mockRejectedValueOnce(
-        new ErrorDeCobro('Esta paciente ya tiene una consulta hoy a las 10:00 con esa doctora, sin cobrar.', 409, undefined, {
+        new ErrorDeCobro('Este paciente ya tiene una consulta hoy a las 10:00 con esa doctora, sin cobrar.', 409, undefined, {
           id: 55,
           scheduled_at: '2026-09-28T10:00:00',
           status: 'atendida',
@@ -525,7 +525,7 @@ describe('PagosPage', () => {
         }),
       )
       const user = await abrirSuelto('Consulta sin cita (express)')
-      await user.selectOptions(screen.getByLabelText(/Doctora a la que pertenece/), '8')
+      await user.selectOptions(screen.getByLabelText(/Médico a la que pertenece/), '8')
       await user.type(screen.getByLabelText(/Monto/), '500')
 
       await registrar(user)
@@ -544,7 +544,7 @@ describe('PagosPage', () => {
 
     it('sin servicio ni concepto no se registra', async () => {
       const user = await abrirSuelto()
-      await user.selectOptions(screen.getByLabelText(/Doctora a la que pertenece/), '7')
+      await user.selectOptions(screen.getByLabelText(/Médico a la que pertenece/), '7')
       await user.type(screen.getByLabelText(/Monto/), '1200')
 
       await registrar(user)
@@ -558,9 +558,9 @@ describe('PagosPage', () => {
     it('la secretaria ve el selector de doctora en "Todas" y la lista no se filtra', async () => {
       render(<PagosPage />)
 
-      const selector = await screen.findByLabelText('Doctora')
+      const selector = await screen.findByLabelText('Médico')
       expect(selector).toHaveValue('')
-      expect(within(selector).getByRole('option', { name: 'Todas las doctoras' })).toBeInTheDocument()
+      expect(within(selector).getByRole('option', { name: 'Todas los médicos' })).toBeInTheDocument()
       await waitFor(() => expect(fetchPayments).toHaveBeenCalled())
       expect(fetchPayments.mock.calls[0][0]).not.toHaveProperty('doctor_id')
     })
@@ -570,7 +570,7 @@ describe('PagosPage', () => {
       render(<PagosPage />)
       await screen.findByRole('option', { name: 'KARLA PÉREZ' })
 
-      await user.selectOptions(screen.getByLabelText('Doctora'), '8')
+      await user.selectOptions(screen.getByLabelText('Médico'), '8')
       await user.type(screen.getByLabelText('Desde'), '2026-09-01')
 
       await waitFor(() =>
@@ -580,17 +580,17 @@ describe('PagosPage', () => {
       )
     })
 
-    it('la doctora ve "Mis cobros" y no ve selector de doctora', async () => {
+    it('el médico ve "Mis cobros" y no ve selector de doctora', async () => {
       sesion.user = { id: 7, role: 'doctor' as Role, full_name: 'CINTIA MORALES' }
       sesion.permissions = ['payments.read', 'payments.create', 'payments.cashcut']
       render(<PagosPage />)
 
       expect(await screen.findByText('Mis cobros')).toBeInTheDocument()
-      expect(screen.queryByLabelText('Doctora')).not.toBeInTheDocument()
+      expect(screen.queryByLabelText('Médico')).not.toBeInTheDocument()
       expect(apiGet).not.toHaveBeenCalledWith('/users/directory', expect.anything())
     })
 
-    it('en el cobro suelto la doctora no elige doctora: el ingreso es suyo', async () => {
+    it('en el cobro suelto el médico no elige doctora: el ingreso es suyo', async () => {
       sesion.user = { id: 7, role: Role.DOCTOR, full_name: 'CINTIA MORALES' }
       sesion.permissions = ['payments.read', 'payments.create']
       const user = userEvent.setup()
@@ -598,7 +598,7 @@ describe('PagosPage', () => {
       await abrirAltaDesdeEncabezado(user)
       await user.click(await screen.findByText(/Cobro suelto/))
 
-      expect(screen.queryByLabelText(/Doctora a la que pertenece/)).not.toBeInTheDocument()
+      expect(screen.queryByLabelText(/Médico a la que pertenece/)).not.toBeInTheDocument()
     })
   })
 

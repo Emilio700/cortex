@@ -1,9 +1,9 @@
 /**
- * «Resultados pendientes de la paciente» dentro de la consulta (plan 26, N3).
+ * «Resultados pendientes del paciente» dentro de la consulta (plan 26, N3).
  *
  * Los resultados de estudios pedidos en consultas anteriores llegaban a la
- * bandeja, pero en la consulta de hoy, con la paciente enfrente, no se veían. Y
- * revisar con la paciente es justo lo que cierra una incidencia crítica (D-8).
+ * bandeja, pero en la consulta de hoy, con el paciente enfrente, no se veían. Y
+ * revisar con el paciente es justo lo que cierra una incidencia crítica (D-8).
  * Aquí salen los recibidos sin revisar y los que tienen una incidencia abierta,
  * de cualquier cita anterior (`?por_atender=true`), y «Revisar» los abre en el
  * panel con la cita de HOY: así la revisión cuenta como hecha en consulta.
@@ -84,9 +84,9 @@ const ResultadosPorAtender = ({
       className="border border-warning rounded p-3 mb-3"
       data-tour="consulta-resultados-pendientes"
     >
-      <div className="fw-semibold mb-1">Resultados pendientes de la paciente ({total})</div>
+      <div className="fw-semibold mb-1">Resultados pendientes del paciente ({total})</div>
       <div className="small text-body-secondary mb-2">
-        De consultas anteriores. Revisarlos aquí, con la paciente, cierra la incidencia si es
+        De consultas anteriores. Revisarlos aquí, con el paciente, cierra la incidencia si es
         crítico.
       </div>
       {total > ordenes.length && (

@@ -1,6 +1,6 @@
 /**
  * Recorridos de cobros: registrar pagos sin cobrar doble, la consulta express,
- * "Mis cobros" de la doctora y el corte de caja.
+ * "Mis cobros" del médico y el corte de caja.
  *
  * En el menú, /finanzas/pagos se llama «Cobros» y /finanzas «Corte de caja»;
  * los textos usan esos nombres porque son los que la persona ve.
@@ -9,7 +9,7 @@
  * pasos apuntan a los ids acordados con ese trabajo; mientras no existan, se
  * saltan solos y el recorrido muestra sólo lo que sí hay.
  *
- * La doctora y recepción comparten rutas (/finanzas/pagos, /finanzas) pero no
+ * El médico y recepción comparten rutas (/finanzas/pagos, /finanzas) pero no
  * el trabajo que hacen ahí, así que además del permiso sus recorridos se
  * separan con `soloRoles`: ambas tienen payments.read.
  */
@@ -33,46 +33,46 @@ export const RECORRIDOS_COBROS: Recorrido[] = [
       {
         titulo: 'Los cobros de la clínica',
         texto:
-          'Aquí se registra lo que paga cada paciente y se envían recibos. Una regla antes de empezar: <b>antes de cobrar, revisa si la doctora ya cobró esa cita</b>.',
+          'Aquí se registra lo que paga cada paciente y se envían recibos. Una regla antes de empezar: <b>antes de cobrar, revisa si el médico ya cobró esa cita</b>.',
       },
       {
         elemento: 'pagos-registrar',
         titulo: 'Registrar un pago',
         texto:
-          '<b>Registrar pago</b> abre el formulario de cobro. Ahí eliges la cita atendida de la paciente, el monto y cómo pagó (efectivo, tarjeta o transferencia). Si la paciente llegó <b>sin cita</b>, también se cobra desde aquí, como consulta express.',
+          '<b>Registrar pago</b> abre el formulario de cobro. Ahí eliges la cita atendida del paciente, el monto y cómo pagó (efectivo, tarjeta o transferencia). Si el paciente llegó <b>sin cita</b>, también se cobra desde aquí, como consulta express.',
         lado: 'bottom',
         alinear: 'end',
       },
       {
         elemento: 'pagos-selector-doctora',
         titulo: 'Por doctora',
-        texto: 'Por omisión ves <b>todas</b>. Elige una doctora para ver sólo sus cobros.',
+        texto: 'Por omisión ves <b>todas</b>. Elige un médico para ver sólo sus cobros.',
         lado: 'bottom',
       },
       {
         elemento: 'pagos-filtros',
         titulo: 'Filtros',
-        texto: 'Por fechas, por método de pago o buscando a la paciente o el concepto.',
+        texto: 'Por fechas, por método de pago o buscando al paciente o el concepto.',
         lado: 'bottom',
       },
       {
         elemento: 'pagos-tabla',
         titulo: 'Lo cobrado',
         texto:
-          'Cada pago con la paciente, la doctora, el concepto, el monto, el método, <b>quién lo recibió</b> y la referencia si fue con tarjeta o transferencia.',
+          'Cada pago con el paciente, el médico, el concepto, el monto, el método, <b>quién lo recibió</b> y la referencia si fue con tarjeta o transferencia.',
         lado: 'top',
       },
       {
         elemento: 'pagos-imprimir',
         titulo: 'Imprimir comprobante',
         texto:
-          'El botón de la impresora abre la impresión de un comprobante sencillo: datos de la clínica, folio del pago, fecha, concepto, monto y método. No es factura, y así lo dice el papel. Sirve también para la paciente que no tiene correo.',
+          'El botón de la impresora abre la impresión de un comprobante sencillo: datos de la clínica, folio del pago, fecha, concepto, monto y método. No es factura, y así lo dice el papel. Sirve también para el paciente que no tiene correo.',
         lado: 'left',
       },
       {
         elemento: 'pagos-recibo',
         titulo: 'Enviar recibo',
-        texto: 'Le llega a la paciente por correo, con el recibo en PDF.',
+        texto: 'Le llega al paciente por correo, con el recibo en PDF.',
         lado: 'left',
       },
       {
@@ -117,7 +117,7 @@ export const RECORRIDOS_COBROS: Recorrido[] = [
         elemento: 'pago-cobro-adicional',
         titulo: '¿De verdad hay que cobrar algo más?',
         texto:
-          'Por ejemplo un estudio que se hizo después. Para eso es <b>cobro adicional</b>: es una acción aparte, pide confirmación y se guarda con <b>Registrar cobro adicional</b>, para que nunca pase por accidente. Lo mismo con una cita que la doctora marcó sin cargo.',
+          'Por ejemplo un estudio que se hizo después. Para eso es <b>cobro adicional</b>: es una acción aparte, pide confirmación y se guarda con <b>Registrar cobro adicional</b>, para que nunca pase por accidente. Lo mismo con una cita que el médico marcó sin cargo.',
         lado: 'top',
       },
       {
@@ -134,21 +134,21 @@ export const RECORRIDOS_COBROS: Recorrido[] = [
         elemento: 'pago-cobro-suelto',
         titulo: 'Cobro sin cita',
         texto:
-          'En la pestaña <b>Cobro suelto (sin cita)</b>: para cuando no hay una cita agendada que cobrar. Busca a la paciente y elige doctora.',
+          'En la pestaña <b>Cobro suelto (sin cita)</b>: para cuando no hay una cita agendada que cobrar. Busca al paciente y elige doctora.',
         lado: 'top',
       },
       {
         elemento: 'pago-que-se-cobra',
         titulo: '¿Qué se cobra?',
         texto:
-          'Lo primero es decir qué es:<ul><li><b>Consulta sin cita (express)</b>: la paciente pasó a consulta sin haber agendado.</li><li><b>Otro concepto</b>: un estudio, un producto o cualquier cosa que no sea una consulta.</li></ul>',
+          'Lo primero es decir qué es:<ul><li><b>Consulta sin cita (express)</b>: el paciente pasó a consulta sin haber agendado.</li><li><b>Otro concepto</b>: un estudio, un producto o cualquier cosa que no sea una consulta.</li></ul>',
         lado: 'bottom',
       },
       {
         elemento: 'pago-express',
         titulo: 'La consulta express',
         texto:
-          'Al cobrarla, el sistema <b>crea la cita por ti</b>, ya como atendida, y en la agenda sale marcada <b>Express</b>. Así la consulta queda registrada y cobrada una sola vez: no la agendes aparte. Se guarda con <b>Registrar consulta y pago</b>; si la paciente ya tuvo consulta hoy, el sistema te lo avisa para que no se registre dos veces, y sólo si de verdad fue otra consulta eliges <b>«Sí, fue otra consulta: registrarla»</b>.',
+          'Al cobrarla, el sistema <b>crea la cita por ti</b>, ya como atendida, y en la agenda sale marcada <b>Express</b>. Así la consulta queda registrada y cobrada una sola vez: no la agendes aparte. Se guarda con <b>Registrar consulta y pago</b>; si el paciente ya tuvo consulta hoy, el sistema te lo avisa para que no se registre dos veces, y sólo si de verdad fue otra consulta eliges <b>«Sí, fue otra consulta: registrarla»</b>.',
         lado: 'bottom',
       },
     ],
@@ -180,14 +180,14 @@ export const RECORRIDOS_COBROS: Recorrido[] = [
       {
         elemento: 'pagos-tabla',
         titulo: 'Cada cobro',
-        texto: 'Con la paciente, el monto, el método y <b>quién lo recibió</b>: tú o recepción.',
+        texto: 'Con el paciente, el monto, el método y <b>quién lo recibió</b>: tú o recepción.',
         lado: 'top',
       },
       {
         elemento: 'pagos-imprimir',
         titulo: 'Imprimir comprobante',
         texto:
-          'El botón de la impresora abre la impresión de un comprobante sencillo: datos de la clínica, folio del pago, fecha, concepto, monto y método. No es factura, y así lo dice el papel. Sirve también para la paciente que no tiene correo.',
+          'El botón de la impresora abre la impresión de un comprobante sencillo: datos de la clínica, folio del pago, fecha, concepto, monto y método. No es factura, y así lo dice el papel. Sirve también para el paciente que no tiene correo.',
         lado: 'left',
       },
       {
@@ -226,7 +226,7 @@ export const RECORRIDOS_COBROS: Recorrido[] = [
         elemento: 'finanzas-selector-doctora',
         titulo: 'Por doctora',
         texto:
-          'Todas juntas o una sola. Útil para entregarle a cada doctora lo suyo. En recepción sólo aparecen <b>las doctoras que apoyas</b> (con «Todas mis doctoras» para verlas juntas): administración decide a quién apoyas y si puedes ver su corte. Ese corte suma sólo a tus doctoras: tu caja es <b>Mi caja</b>, arriba.',
+          'Todas juntas o una sola. Útil para entregarle a cada médico lo suyo. En recepción sólo aparecen <b>los médicos que apoyas</b> (con «Todas mis doctoras» para verlas juntas): administración decide a quién apoyas y si puedes ver su corte. Ese corte suma sólo a tus doctoras: tu caja es <b>Mi caja</b>, arriba.',
         lado: 'bottom',
       },
       {
@@ -245,21 +245,21 @@ export const RECORRIDOS_COBROS: Recorrido[] = [
       {
         elemento: ['finanzas-bloque-doctoras', 'finanzas-por-doctora'],
         titulo: 'Por doctora',
-        texto: 'Cuánto corresponde a cada doctora en el periodo.',
+        texto: 'Cuánto corresponde a cada médico en el periodo.',
         lado: 'top',
       },
       {
         elemento: 'finanzas-por-quien-recibio',
         titulo: 'Por quién lo recibió',
         texto:
-          'Lo que cobró recepción y lo que cobró cada doctora en su consultorio: quién tiene el dinero y quién tiene que entregar qué. En recepción tu propia fila no sale aquí: lo tuyo está en <b>Mi caja</b>.',
+          'Lo que cobró recepción y lo que cobró cada médico en su consultorio: quién tiene el dinero y quién tiene que entregar qué. En recepción tu propia fila no sale aquí: lo tuyo está en <b>Mi caja</b>.',
         lado: 'top',
       },
       {
         elemento: 'finanzas-corte',
         titulo: 'Desglose por método',
         texto:
-          'Efectivo, tarjeta y transferencia por separado. Este <b>efectivo</b> incluye lo que cada doctora cobró en su consultorio, que no está en la caja de recepción: para cuadrar una caja, mira lo que recibió cada quien (en recepción, <b>Mi caja</b>).',
+          'Efectivo, tarjeta y transferencia por separado. Este <b>efectivo</b> incluye lo que cada médico cobró en su consultorio, que no está en la caja de recepción: para cuadrar una caja, mira lo que recibió cada quien (en recepción, <b>Mi caja</b>).',
         lado: 'top',
       },
     ],

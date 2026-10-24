@@ -86,6 +86,6 @@ class MotivoDeCorreccion(BaseModel):
 
 
 class MoverDocumento(MotivoDeCorreccion):
-    """Mover a otra paciente de la misma sucursal."""
+    """Mover a otro paciente de la misma sucursal."""
 
     patient_id: int

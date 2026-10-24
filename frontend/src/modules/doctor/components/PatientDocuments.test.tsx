@@ -1,4 +1,4 @@
-/** Documentos de la paciente (plan 29: lote 4 y lote 7, corrección). */
+/** Documentos del paciente (plan 29: lote 4 y lote 7, corrección). */
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -94,7 +94,7 @@ describe('PatientDocuments · corrección (plan 29, lote 7)', () => {
   })
 
   it('si el servidor lo rechaza (resultado de orden), lo dice en el diálogo y no anuncia nada', async () => {
-    anularDocumento.mockRejectedValue(new Error('Este archivo es el resultado de la orden n.º 7 de esta paciente.'))
+    anularDocumento.mockRejectedValue(new Error('Este archivo es el resultado de la orden n.º 7 de este paciente.'))
     const user = userEvent.setup()
     render(<PatientDocuments patientId={4} />)
 
@@ -108,19 +108,19 @@ describe('PatientDocuments · corrección (plan 29, lote 7)', () => {
     expect(screen.queryByText(/Se anuló/)).toBeNull()
   })
 
-  it('mover busca a la paciente correcta y la manda con el motivo', async () => {
+  it('mover busca al paciente correcta y la manda con el motivo', async () => {
     get.mockResolvedValue({ data: [{ id: 5, first_name: 'BERTA', last_name: 'RUIZ' }] })
     moverDocumento.mockResolvedValue({ ...DOC, patient_id: 5, movido_desde_patient_id: 4 })
     const user = userEvent.setup()
     render(<PatientDocuments patientId={4} />)
 
     await user.click(screen.getByRole('button', { name: 'Corregir Biometría' }))
-    await user.click(screen.getByRole('button', { name: 'Mover a otra paciente' }))
+    await user.click(screen.getByRole('button', { name: 'Mover a otro paciente' }))
     const dialogo = await screen.findByRole('dialog')
     await user.type(within(dialogo).getByLabelText('Paciente correcta'), 'ber')
     await user.click(await within(dialogo).findByRole('button', { name: /BERTA RUIZ/ }))
     await user.type(within(dialogo).getByLabelText(/Motivo/), 'Se subió a otra')
-    await user.click(within(dialogo).getByRole('button', { name: 'Mover a otra paciente' }))
+    await user.click(within(dialogo).getByRole('button', { name: 'Mover a otro paciente' }))
 
     expect(moverDocumento).toHaveBeenCalledWith(9, 5, 'Se subió a otra')
     expect(await screen.findByText(/Se movió «Biometría» al expediente de BERTA RUIZ/)).toBeInTheDocument()

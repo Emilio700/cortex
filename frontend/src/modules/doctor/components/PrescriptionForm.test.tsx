@@ -197,7 +197,7 @@ describe('PrescriptionForm · receta que llega tarde', () => {
         expect(screen.getByText(/REC-2-2026-0007/)).toBeInTheDocument()
     })
 
-    it('NO pisa lo que la doctora ya esta escribiendo', async () => {
+    it('NO pisa lo que el médico ya esta escribiendo', async () => {
         const usuario = userEvent.setup()
         const { rerender } = renderReceta({ prescriptions: [] })
         await capturarMedicamento(usuario)
@@ -304,7 +304,7 @@ describe('PrescriptionForm · el motivo de la consulta', () => {
         expect(createPrescription.mock.calls[0][0].diagnosis).toBeNull()
     })
 
-    it('al encenderlo propone lo que dijo la paciente en el triage', async () => {
+    it('al encenderlo propone lo que dijo el paciente en el triage', async () => {
         const usuario = userEvent.setup()
         renderReceta({ triage: triageConMotivo() })
 

@@ -36,7 +36,7 @@ vi.mock('../../../shared/components/ToastProvider', () => ({
 }))
 
 vi.mock('../../../shared/context/AuthContext', () => ({
-  useAuth: () => ({ user: { id: 7, role: sesion.role, full_name: 'DOCTORA PRUEBA' }, can: () => false }),
+  useAuth: () => ({ user: { id: 7, role: sesion.role, full_name: 'MÉDICO PRUEBA' }, can: () => false }),
 }))
 
 vi.mock('../../../shared/services/salas', () => ({

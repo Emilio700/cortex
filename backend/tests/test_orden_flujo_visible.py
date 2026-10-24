@@ -5,7 +5,7 @@ laboratorio no se pueden medir. El modelo los conserva (las órdenes viejas
 siguen siendo válidas), pero la respuesta trae lo necesario para que la
 pantalla no dependa de ellos: ``estado_visible`` y ``acciones_de_estado``.
 
-Además, la doctora anexa resultados ella misma (el estudio que la paciente le
+Además, el médico anexa resultados ella misma (el estudio que el paciente le
 manda por WhatsApp), con el mismo endpoint que recepción, y una orden admite
 varios archivos.
 """

@@ -55,7 +55,7 @@ class Patient(Base):
     cesareas = Column(Integer, nullable=True)
     abortos = Column(Integer, nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
-    # Notas del doctor para reconocer a la paciente (de donde es, quien la
+    # Notas del doctor para reconocer al paciente (de donde es, quien la
     # recomendo). Separado de allergies, que se imprime en las recetas.
     notas_referencia = Column(Text, nullable=True)
 

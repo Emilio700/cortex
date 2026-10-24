@@ -23,8 +23,8 @@ UPPERCASE_FIELDS = (
 
 # Lo clínico de la ficha (opción C, decisión de Emilio, plan 32): antecedentes
 # personales, familiares y ginecológicos, datos obstétricos (FPP y G/P/C/A) y
-# las notas de referencia, que son el recordatorio personal de la doctora
-# (de dónde viene la paciente, quién la recomendó). Recepción no los ve ni los
+# las notas de referencia, que son el recordatorio personal del médico
+# (de dónde viene el paciente, quién la recomendó). Recepción no los ve ni los
 # captura; nombre, contacto, fecha de nacimiento, alergias y FUR sí.
 CAMPOS_CLINICOS_DE_FICHA = (
     "personal_history",
@@ -141,7 +141,7 @@ class PatientCreate(_PatientTextMixin, PatientBase):
         if isinstance(datos, dict):
             celular = datos.get("cell_phone")
             if celular is None or not str(celular).strip():
-                raise ValueError("El celular es obligatorio para registrar a la paciente.")
+                raise ValueError("El celular es obligatorio para registrar al paciente.")
             datos = {**datos, "cell_phone": str(celular).strip()}
         return datos
 
@@ -216,7 +216,7 @@ class PatientOwnerUpdate(BaseModel):
 
 
 class PosiblesDuplicadosConsulta(BaseModel):
-    """Lo que se lleva capturado de una paciente nueva, para advertir si ya existe (B-06 / S-06).
+    """Lo que se lleva capturado de un paciente nuevo, para advertir si ya existe (B-06 / S-06).
 
     Todo es opcional: la pantalla pregunta con lo que tenga. No se valida el
     formato del teléfono aquí (eso lo contesta la respuesta) para no fallar la
@@ -229,7 +229,7 @@ class PosiblesDuplicadosConsulta(BaseModel):
     cell_phone: Optional[str] = None
     email: Optional[str] = None
     date_of_birth: Optional[date] = None
-    # Al editar una paciente, ella misma no es su propio duplicado.
+    # Al editar un paciente, ella misma no es su propio duplicado.
     exclude_patient_id: Optional[int] = None
 
 
@@ -240,7 +240,7 @@ class TelefonoRevisado(BaseModel):
 
 
 class PosibleDuplicado(BaseModel):
-    """Lo mínimo para que recepción reconozca a la paciente, sin abrir su expediente."""
+    """Lo mínimo para que recepción reconozca al paciente, sin abrir su expediente."""
 
     patient_id: int
     full_name: str

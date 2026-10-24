@@ -1,5 +1,5 @@
 /**
- * El inicio de la doctora (plan 28, Fase 2).
+ * El inicio del médico (plan 28, Fase 2).
  *
  * Lo que no puede pasar: que una sección que falla tumbe a las demás, que un
  * error se vea como «0», que un refresco fallido borre lo que había sin avisar,
@@ -305,10 +305,10 @@ describe('DoctorDashboard · agenda y pestañas', () => {
     expect(navigate).toHaveBeenCalledWith('/doctor/consultation/2')
   })
 
-  it('MASTER lee que ve las citas de todas las doctoras', async () => {
+  it('MASTER lee que ve las citas de todas los médicos', async () => {
     usuario.actual = { ...usuario.actual, role: 'master' }
     montar()
-    expect(await screen.findByText(/Viendo las citas de todas las doctoras/)).toBeInTheDocument()
+    expect(await screen.findByText(/Viendo las citas de todas los médicos/)).toBeInTheDocument()
   })
 })
 

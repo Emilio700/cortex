@@ -4,7 +4,7 @@ Lo que se cuida aquí, en el orden en que dolería si fallara en consulta:
 
 1. Que nadie cobre dos veces la misma cita: ni por doble clic, ni porque la
    doctora y la secretaria cobraron cada una por su lado.
-2. Que la doctora vea el dinero que es suyo y sólo ése, en todas las vistas por
+2. Que el médico vea el dinero que es suyo y sólo ése, en todas las vistas por
    igual (lista, detalle, historial, corte, top de servicios).
 3. Que los totales cuadren: la suma por doctora más "sin doctora" es el total de
    la sucursal, y un pago anulado no cuenta en ninguno.
@@ -199,7 +199,7 @@ def _vigentes_de(db, cita_id):
 # ---------------------------------------------------------------------------
 
 def test_cobrar_dos_veces_la_misma_cita_da_409_con_el_cobro_existente(client, db_session, e):
-    """El caso real: la doctora cobró con tarjeta y recepción iba a cobrar otra vez."""
+    """El caso real: el médico cobró con tarjeta y recepción iba a cobrar otra vez."""
     primero = _cobrar(
         client,
         _headers(db_session, e["cintia"]),
@@ -391,12 +391,12 @@ def test_no_se_asigna_un_cobro_a_quien_no_es_doctora(client, db_session, e):
 
 
 # ---------------------------------------------------------------------------
-# Alcance: la doctora ve lo suyo, en todas las vistas por igual
+# Alcance: el médico ve lo suyo, en todas las vistas por igual
 # ---------------------------------------------------------------------------
 
 @pytest.fixture
 def pagos(db_session, e):
-    """Un pago de cada doctora y uno histórico sin doctora."""
+    """Un pago de cada médico y uno histórico sin doctora."""
     return {
         "cintia": _pago(db_session, e["tenant"], e["paciente_cintia"], e["secretaria"], e["cintia"], "800.00"),
         "rosa": _pago(db_session, e["tenant"], e["paciente_rosa"], e["secretaria"], e["rosa"], "500.00"),
@@ -430,7 +430,7 @@ def test_la_doctora_no_abre_el_pago_de_una_colega(client, db_session, e, pagos):
 
 
 def test_la_doctora_solo_ve_sus_pagos_en_el_historial_de_la_paciente(client, db_session, e, pagos):
-    # Un pago de Cintia a la paciente de Rosa (la cubrió en un cobro suelto).
+    # Un pago de Cintia al paciente de Rosa (la cubrió en un cobro suelto).
     propio = _pago(db_session, e["tenant"], e["paciente_rosa"], e["cintia"], e["cintia"], "300.00")
 
     respuesta = client.get(
@@ -626,7 +626,7 @@ def test_la_suma_por_doctora_mas_sin_doctora_es_el_corte_de_la_sucursal(client, 
     assert sin_doctora and sin_doctora[0]["doctor_name"] == "Sin doctora asignada"
     assert Decimal(sin_doctora[0]["total_amount"]) == Decimal("120.00")
 
-    # El corte filtrado por cada doctora da lo mismo que su renglón del desglose.
+    # El corte filtrado por cada médico da lo mismo que su renglón del desglose.
     for renglon in por_doctora:
         if renglon["doctor_id"] is None:
             continue
@@ -639,7 +639,7 @@ def test_la_suma_por_doctora_mas_sin_doctora_es_el_corte_de_la_sucursal(client, 
 
 
 def test_el_corte_dice_quien_tiene_el_dinero(client, db_session, e):
-    """La doctora cobró en efectivo: ese dinero no está en la caja de recepción."""
+    """El médico cobró en efectivo: ese dinero no está en la caja de recepción."""
     _pago(db_session, e["tenant"], e["paciente_cintia"], e["cintia"], e["cintia"], "800.00")
     _pago(db_session, e["tenant"], e["paciente_rosa"], e["secretaria"], e["rosa"], "500.00")
 

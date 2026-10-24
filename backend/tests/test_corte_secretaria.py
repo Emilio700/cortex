@@ -1,4 +1,4 @@
-"""La secretaria ve el corte de las doctoras que apoya, y de nadie más.
+"""La secretaria ve el corte de los médicos que apoya, y de nadie más.
 
 El caso real: Jhoany apoya al Dr. Adolfo y tiene que cuadrar lo que él cobró
 sin ver cuánto ingresó cada colega. Lo que se cuida aquí:

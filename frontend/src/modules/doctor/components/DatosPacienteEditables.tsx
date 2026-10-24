@@ -1,8 +1,8 @@
 /**
- * Completar el expediente de la paciente SIN salir de la consulta.
+ * Completar el expediente del paciente SIN salir de la consulta.
  *
  * Hasta ahora, para capturar una fecha de nacimiento o un teléfono que faltaba,
- * la doctora tenía que irse al perfil de la paciente, editarlo y volver: al
+ * el médico tenía que irse al perfil del paciente, editarlo y volver: al
  * salir de la pestaña perdía la nota que llevaba escrita. Es exactamente la
  * pérdida de trabajo que ya nos costó caro, sólo que por otra puerta.
  *
@@ -11,13 +11,13 @@
  *
  * Qué se puede tocar aquí y qué no:
  *
- * - SÍ: lo que la doctora levanta en el interrogatorio (contacto, alergias,
+ * - SÍ: lo que el médico levanta en el interrogatorio (contacto, alergias,
  *   tipo de sangre, antecedentes y la historia gineco-obstétrica).
  * - NO el nombre ni los apellidos: es identidad, se corrige en recepción con
  *   una identificación en la mano.
  * - NO la dirección ni el doctor dueño: son administrativos.
  * - NO `patient_type`. No es un dato, es un interruptor que nadie apaga: el
- *   97% de las pacientes marcadas como obstétricas no tienen ningún embarazo
+ *   97% de los pacientes marcadas como obstétricas no tienen ningún embarazo
  *   activo. Ya no se edita en ninguna pantalla.
  * - NO la FUR ni la fecha probable de parto: son del embarazo, no del
  *   expediente. Se capturan en el control prenatal, junto con el método de
@@ -59,8 +59,8 @@ import { enMayusculas } from '../../../shared/utils/mayusculas'
 import { CORREO, esCorreo } from '../../../shared/utils/validacion'
 import type { Patient } from '../../secretaria/types'
 
-/** Etiqueta del registro de cambios sin guardar, tal como la lee la doctora. */
-export const ETIQUETA_CAMBIOS = 'Datos de la paciente'
+/** Etiqueta del registro de cambios sin guardar, tal como la lee el médico. */
+export const ETIQUETA_CAMBIOS = 'Datos del paciente'
 
 /** Lo único que este formulario puede escribir. La lista es la salvaguarda. */
 const CAMPOS = [
@@ -138,7 +138,7 @@ const aFormulario = (paciente: Patient): Formulario => ({
 interface DatosPacienteEditablesProps {
     /** Expediente ya cargado. Sin él no se edita: ver el comentario de abajo. */
     paciente: Patient | null
-    /** Recibe a la paciente tal como quedó guardada en el servidor. */
+    /** Recibe al paciente tal como quedó guardada en el servidor. */
     onGuardado: (paciente: Patient) => void
     /** Consulta cerrada: se mira, no se escribe. */
     readOnly?: boolean
@@ -180,7 +180,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
     /**
      * Sin expediente cargado no se ofrece editar.
      *
-     * Si la lectura de la paciente falló, no sabemos qué hay guardado: un
+     * Si la lectura del paciente falló, no sabemos qué hay guardado: un
      * formulario en blanco invitaría a escribir encima de datos que sí existen.
      */
     if (!paciente || readOnly) return null
@@ -239,7 +239,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
         }
         setErrores({})
 
-        // Sólo los campos que la doctora tocó. Lo que no viaja, el backend no lo
+        // Sólo los campos que el médico tocó. Lo que no viaja, el backend no lo
         // toca: es lo que hace segura una edición parcial desde un formulario
         // corto como éste.
         const cuerpo: Record<string, string | number | null> = {}
@@ -297,7 +297,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
 
     // El lápiz se vuelve un botón con texto cuando falta justo lo que se nota en
     // el encabezado —la edad en guion o un expediente sin ningún teléfono—,
-    // porque ése es el hueco que manda a la doctora a salirse de la consulta.
+    // porque ése es el hueco que manda al médico a salirse de la consulta.
     const faltanDatosClave =
         getAge(paciente.date_of_birth) === null || (!paciente.phone && !paciente.cell_phone)
 
@@ -309,7 +309,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
                     size="sm"
                     variant="outline"
                     className="d-inline-flex align-items-center gap-1 py-0 px-2"
-                    aria-label="Completar datos de la paciente"
+                    aria-label="Completar datos del paciente"
                     data-tour="consulta-datos-paciente"
                     onClick={abrir}
                 >
@@ -322,8 +322,8 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
                     size="sm"
                     className="p-0 text-decoration-none"
                     data-tour="consulta-datos-paciente"
-                    aria-label="Completar datos de la paciente"
-                    title="Completar datos de la paciente"
+                    aria-label="Completar datos del paciente"
+                    title="Completar datos del paciente"
                     onClick={abrir}
                 >
                     <CIcon icon={cilPencil} size="sm" />
@@ -338,7 +338,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
 
             <CModal visible={abierto} onClose={intentarCerrar} size="lg" scrollable>
                 <CModalHeader closeButton={false}>
-                    <CModalTitle>Datos de la paciente</CModalTitle>
+                    <CModalTitle>Datos del paciente</CModalTitle>
                     <CButton
                         color="link"
                         className="ms-auto p-0 text-decoration-none fs-4 lh-1 text-body"
@@ -355,7 +355,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
                             consulta a mitad de la nota. */}
                         <p className="text-body-secondary small">
                             Completa lo que levantaste en el interrogatorio sin salir de la consulta.
-                            El nombre y la dirección se cambian desde el perfil de la paciente, en
+                            El nombre y la dirección se cambian desde el perfil del paciente, en
                             recepción. Las fechas del embarazo (FUR y fecha probable de parto) se
                             capturan en el control prenatal.
                         </p>

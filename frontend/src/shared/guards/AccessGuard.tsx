@@ -24,7 +24,7 @@ import { rutaDeInicioPermitida } from '../utils/inicio'
  * Dentro de las pestañas, redirigir a /403 no funcionaba: la pestaña
  * sincroniza la URL con su ruta en un efecto que corre después del de la
  * redirección y regresaba a la ruta negada, y la pestaña quedaba en blanco
- * (p. ej. una doctora que abría /admin/salas). Aquí se dice en el lugar.
+ * (p. ej. un médico que abría /admin/salas). Aquí se dice en el lugar.
  */
 const AccesoDenegadoEnPestana = () => {
   const navigate = useNavigate()

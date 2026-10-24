@@ -1,7 +1,7 @@
 """El papel del resumen clínico (plan 32, punto 8).
 
 Usa el mismo membrete, la misma firma en cada hoja y el mismo partido de
-páginas que la orden de estudios (``_PapelDeOrden``): la doctora ya lo
+páginas que la orden de estudios (``_PapelDeOrden``): el médico ya lo
 configuró para la orden y el resumen sale con su misma imagen.
 
 La vista previa lleva la marca «VISTA PREVIA — SIN VALIDEZ» en cada hoja y no

@@ -1,8 +1,8 @@
 /**
  * Qué tarjetas de la bandeja están abiertas (plan 32, punto 3).
  *
- * Plegadas por omisión: con una paciente de 11 estudios ya no cabía nada más
- * en la pantalla. Lo que la doctora abre o cierra a mano se recuerda solo en
+ * Plegadas por omisión: con un paciente de 11 estudios ya no cabía nada más
+ * en la pantalla. Lo que el médico abre o cierra a mano se recuerda solo en
  * su navegador; si el almacenamiento falla (ventana privada, sitio bloqueado)
  * la bandeja funciona igual, solo que sin memoria.
  */

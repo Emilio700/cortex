@@ -25,7 +25,7 @@ describe('getAge', () => {
 
     it('cuenta el cumpleanios el mismo dia, sin correrse por la zona horaria', () => {
         // Con `new Date('2000-09-24')` la fecha cae el dia anterior en Mexico y
-        // la paciente aparecia con un anio de mas justo el dia de su cumpleanios.
+        // el paciente aparecia con un anio de mas justo el dia de su cumpleanios.
         expect(getAge('2000-09-24')).toBe(26)
     })
 

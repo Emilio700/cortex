@@ -4,7 +4,7 @@
  * Antes esto vivía repetido en el login y en el cambio de contraseña, y el
  * resto de la aplicación mandaba a «/» o a «/dashboard»: «/» no tiene pantalla
  * (se veía «Inicio» y «Selecciona una sección del menú») y «/dashboard» es la
- * página genérica de accesos, no el tablero de la doctora con sus métricas.
+ * página genérica de accesos, no el tablero del médico con sus métricas.
  * Ahora todos los caminos de regreso al inicio salen de aquí.
  */
 import { Role } from '../types'
@@ -60,7 +60,7 @@ export const puedeAbrirRuta = (
  *
  * Si a un rol le quitan el permiso de su propio tablero, «Volver al inicio» en
  * la pantalla 403 lo regresaba a la misma 403. Se prueba primero su inicio; si
- * no puede verlo, el inicio de otro rol que sí pueda abrir (una doctora que
+ * no puede verlo, el inicio de otro rol que sí pueda abrir (un médico que
  * también hace recepción) y, si no, la primera pantalla fija que le dejen ver.
  * Nunca devuelve «/» ni «/dashboard»: los dos redirigen aquí y harían un bucle.
  */

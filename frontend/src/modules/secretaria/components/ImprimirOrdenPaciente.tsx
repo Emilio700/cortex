@@ -1,10 +1,10 @@
 /**
- * «Imprimir orden de la paciente» en recepción, una por doctora (plan 26, M5).
+ * «Imprimir orden del paciente» en recepción, una por doctora (plan 26, M5).
  *
- * Un papel lleva la firma de una sola doctora: si la paciente tiene órdenes de
+ * Un papel lleva la firma de una sola doctora: si el paciente tiene órdenes de
  * dos, el servidor responde 409 y recepción se quedaba sin salida. Aquí se
- * ofrece un botón por doctora. Con la doctora conocida se piden TODAS sus
- * órdenes pendientes de la paciente (`pendientes=true&doctor_id=`), no solo las
+ * ofrece un botón por doctora. Con el médico conocida se piden TODAS sus
+ * órdenes pendientes del paciente (`pendientes=true&doctor_id=`), no solo las
  * de la página que se ve (M5); sin `doctor_id`, las de la página, como antes.
  */
 import BotonVistaPreviaOrden from '../../doctor/components/BotonVistaPreviaOrden'
@@ -29,7 +29,7 @@ interface Props {
   color?: string
   /**
    * `'listadas'`: el papel lleva exactamente estas órdenes (en «Por entregar»,
-   * las de hoy). `'pendientes'`: todas las pendientes de la paciente con esa
+   * las de hoy). `'pendientes'`: todas las pendientes del paciente con esa
    * doctora, aunque no estén en la página (R2).
    */
   alcance?: 'listadas' | 'pendientes'
@@ -73,11 +73,11 @@ const ImprimirOrdenPaciente = ({
           etiqueta={
             alcance === 'listadas'
               ? varias
-                ? `Imprimir orden de hoy de ${grupo.nombre ?? 'otra doctora'}`
+                ? `Imprimir orden de hoy de ${grupo.nombre ?? 'otro médico'}`
                 : 'Imprimir orden de hoy'
               : varias
-                ? `Imprimir pendientes de ${grupo.nombre ?? 'otra doctora'}`
-                : 'Imprimir pendientes de la paciente'
+                ? `Imprimir pendientes de ${grupo.nombre ?? 'otro médico'}`
+                : 'Imprimir pendientes del paciente'
           }
           titulo={`Órdenes de estudio de ${patientName}${varias && grupo.nombre ? ` · ${grupo.nombre}` : ''}`}
           nombreArchivo={nombreArchivoPaciente(patientId)}

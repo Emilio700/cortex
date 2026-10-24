@@ -15,9 +15,9 @@ export const useTriage = () => {
 
   /**
    * Devuelve `Cargado` y no `Triage | null` porque `null` significaba las dos
-   * cosas a la vez: "a esta paciente todavía no le toman los signos vitales" y
+   * cosas a la vez: "a este paciente todavía no le toman los signos vitales" y
    * "no pude leerlos". La pantalla se dibujaba igual en ambos casos y la
-   * doctora concluía que nadie había pasado a la paciente por triage; ahora
+   * doctora concluía que nadie había pasado al paciente por triage; ahora
    * que puede capturarlos desde la consulta, además los escribiría encima.
    *
    * Aquí no se traduce ningún código: el endpoint ya responde 204 cuando la

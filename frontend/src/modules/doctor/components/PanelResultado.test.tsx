@@ -111,7 +111,7 @@ describe('PanelResultado', () => {
     expect(boton).toBeDisabled()
     await waitFor(() => expect(screen.getByLabelText(/Cuándo y a quién/)).toHaveFocus())
 
-    await user.type(screen.getByLabelText(/Cuándo y a quién/), '3/10, a la paciente')
+    await user.type(screen.getByLabelText(/Cuándo y a quién/), '3/10, al paciente')
     expect(boton).toBeDisabled()
     await user.click(screen.getByLabelText('WhatsApp'))
     await user.click(boton)
@@ -121,7 +121,7 @@ describe('PanelResultado', () => {
       '/clinical-tracking/results/2',
       expect.objectContaining({
         review_status: 'communicated',
-        communication_note: '3/10, a la paciente',
+        communication_note: '3/10, al paciente',
         communication_channel: 'whatsapp',
       }),
     )

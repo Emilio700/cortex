@@ -77,7 +77,7 @@ def _texto_del_pdf(datos: bytes) -> str:
 
     ReportLab escapa en octal lo que no es ASCII imprimible, asi que una "\u00d1"
     viaja como ``\\321``. Se desescapa para poder comparar contra el texto tal
-    como lo veria la paciente y no contra su forma escapada.
+    como lo veria el paciente y no contra su forma escapada.
     """
     cadenas = re.findall(rb"\((?:\\.|[^\\()])*\)", datos)
 
@@ -207,7 +207,7 @@ def test_el_nombre_configurado_se_usa_en_la_receta():
 
 def test_el_nombre_no_duplica_el_tratamiento():
     """El "Dr. Dr." ya salió impreso una vez; no puede volver a pasar."""
-    for configurado in ["Dra. Yara Gutierrez", "DR. ADOLFO PEREZ", "Doctora Yara"]:
+    for configurado in ["Dra. Yara Gutierrez", "DR. ADOLFO PEREZ", "Médico Yara"]:
         texto = _receta_en_texto(_perfil(prescription_display_name=configurado))
         assert "Dr. Dr." not in texto
         assert "Dra. Dra." not in texto
@@ -227,7 +227,7 @@ def test_sin_tratamiento_escrito_se_antepone_el_de_la_usuaria():
 
 
 def test_sin_tratamiento_capturado_va_el_nombre_solo():
-    """Un "Dr." puesto a una doctora es peor que no poner nada (plan 23, ajustes)."""
+    """Un "Dr." puesto a un médico es peor que no poner nada (plan 23, ajustes)."""
     assert nombre_para_receta(_perfil(prescription_display_name="Yara Gutierrez")) == (
         "Yara Gutierrez"
     )
@@ -345,7 +345,7 @@ def test_los_signos_vitales_estan_apagados_de_origen():
 
 
 def test_las_alergias_se_siguen_imprimiendo():
-    """Es dato de seguridad de la paciente, no expediente."""
+    """Es dato de seguridad del paciente, no expediente."""
     assert "ALERGIAS: PENICILINA" in _receta_en_texto(_perfil())
 
 
@@ -923,5 +923,5 @@ def test_las_columnas_nuevas_son_del_tipo_que_les_toca():
     assert not isinstance(
         columnas["prescription_signature_style"].type, (Integer, Boolean)
     )
-    # El motivo vive en la receta, no en el perfil de la doctora.
+    # El motivo vive en la receta, no en el perfil del médico.
     assert "diagnosis" in Prescription.__table__.columns

@@ -23,7 +23,7 @@ describe('faltantesDeFicha', () => {
 })
 
 describe('AvisoCompletarFicha', () => {
-  it('dice qué falta y se descarta para esa paciente', () => {
+  it('dice qué falta y se descarta para ese paciente', () => {
     const { unmount } = render(<AvisoCompletarFicha paciente={{ id: 5, date_of_birth: null }} />)
     expect(screen.getByText(/Completa sus datos/)).toHaveTextContent('falta fecha de nacimiento')
 

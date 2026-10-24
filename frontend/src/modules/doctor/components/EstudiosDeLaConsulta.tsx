@@ -2,8 +2,8 @@
  * «Estudios de esta consulta» (plan 26, fase 2, §3.3).
  *
  * Antes la tarjeta del plan clínico decía «10 en esta consulta», el badge
- * contaba toda la paciente (con tope de 30) y la lista enseñaba las 3 órdenes
- * más recientes de la paciente, fueran de esta consulta o no: tres números y
+ * contaba toda el paciente (con tope de 30) y la lista enseñaba las 3 órdenes
+ * más recientes del paciente, fueran de esta consulta o no: tres números y
  * ninguno coincidía con lo que se veía (C-1). Aquí se cargan las órdenes de
  * esta cita, todas, con sus resultados, y el título cuenta exactamente las
  * filas que se ven. El historial completo queda a un enlace.
@@ -50,12 +50,12 @@ import { useOrdenesDeLaConsulta } from '../hooks/useFuenteDeOrdenes'
 interface Props {
   patientId: number
   appointmentId: number
-  /** La doctora puede crear, anexar y cancelar (no en una consulta cerrada). */
+  /** El médico puede crear, anexar y cancelar (no en una consulta cerrada). */
   canWrite: boolean
   pregnancyContext: Record<string, number>
-  /** Lleva a la pestaña Estudios, con el historial completo de la paciente. */
+  /** Lleva a la pestaña Estudios, con el historial completo del paciente. */
   onVerHistorial?: () => void
-  /** Nombre de la paciente, para el encabezado del panel de resultados. */
+  /** Nombre del paciente, para el encabezado del panel de resultados. */
   patientName?: string
   /** Informa cuántos estudios hay en esta consulta y en todo el expediente. */
   onConteo?: (conteo: { consulta: number; expediente: number | null }) => void
@@ -350,7 +350,7 @@ const EstudiosDeLaConsulta = ({
       {onVerHistorial && (totalExpediente ?? 0) > 0 && (
         <div className="mt-2">
           <CButton color="link" size="sm" className="px-0" onClick={onVerHistorial}>
-            Ver historial de estudios de la paciente ({totalExpediente}) →
+            Ver historial de estudios del paciente ({totalExpediente}) →
           </CButton>
         </div>
       )}

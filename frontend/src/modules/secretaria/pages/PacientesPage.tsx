@@ -118,7 +118,7 @@ const PacientesPage: React.FC = () => {
     }, [searchTerm, soloIncompletas])
 
     // Al volver a la pestaña se recarga en silencio con la misma búsqueda y
-    // página: una paciente registrada en otra sesión debe aparecer sin cerrar
+    // página: un paciente registrado en otra sesión debe aparecer sin cerrar
     // la pestaña. El formulario abierto no se toca (su estado vive aparte).
     useAlReactivarPestana(() => { void loadPatients(searchTerm || undefined, currentPage, true) })
 
@@ -136,7 +136,7 @@ const PacientesPage: React.FC = () => {
         setShowForm(true)
     }
 
-    // «Agendar» abre la Agenda con «Nueva cita» y la paciente ya elegida.
+    // «Agendar» abre la Agenda con «Nueva cita» y el paciente ya elegida.
     const handleAgendar = (patient: Patient) => {
         pedir('agenda:dia', {
             fecha: hoyLocalISO(),
@@ -172,16 +172,16 @@ const PacientesPage: React.FC = () => {
     }
 
     /**
-     * S-06: si la persona resulta ser una paciente ya registrada, se abre su
+     * S-06: si la persona resulta ser un paciente ya registrada, se abre su
      * expediente en el mismo formulario (pasa a modo edición) en vez de
-     * duplicarla. Sólo se cambia si el servidor devolvió a la paciente.
+     * duplicarla. Sólo se cambia si el servidor devolvió al paciente.
      */
     const elegirPacienteExistente = async (candidato: { patient_id: number; full_name: string }) => {
         try {
             const existente = await getPatient(candidato.patient_id)
             setSelectedPatient(existente)
         } catch (err: any) {
-            showError(err?.message || 'No se pudo abrir la paciente seleccionada.')
+            showError(err?.message || 'No se pudo abrir el paciente seleccionado.')
         }
     }
 
@@ -222,7 +222,7 @@ const PacientesPage: React.FC = () => {
                                     <CFormSwitch
                                         id="solo-fichas-incompletas"
                                         label="Fichas incompletas"
-                                        title="Sólo las pacientes a las que les falta la fecha de nacimiento"
+                                        title="Sólo los pacientes a las que les falta la fecha de nacimiento"
                                         checked={soloIncompletas}
                                         onChange={(e) => setSoloIncompletas(e.target.checked)}
                                     />

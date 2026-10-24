@@ -8,7 +8,7 @@
  * una lectura falla — que es justamente lo que se nos escapó en producción.
  *
  * Aquí vive el estado que depende del servidor; en la página queda lo que sólo
- * depende de dónde hizo clic la doctora (pestaña activa, modal, borrador de la
+ * depende de dónde hizo clic el médico (pestaña activa, modal, borrador de la
  * nota para secretaría).
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -34,9 +34,9 @@ import { salidaDeConsulta } from '../../secretaria/utils/salidaDeConsulta'
 /**
  * Lo que el servidor confirmó del cobro al cerrar.
  *
- * `modo` es lo que eligió la doctora (null si no se mandó cobro: la cita ya
+ * `modo` es lo que eligió el médico (null si no se mandó cobro: la cita ya
  * estaba cobrada). `estado` es lo que dijo el servidor, y es lo único que la
- * pantalla anuncia: si la doctora eligió "Lo cobra recepción" pero recepción
+ * pantalla anuncia: si el médico eligió "Lo cobra recepción" pero recepción
  * ya había cobrado mientras tanto, decir "pendiente de cobro" hacía que se
  * cobrara otra vez. `confirmado` es falso si el estado no corresponde a lo
  * elegido o si el servidor no lo dijo (un backend viejo que ignora el bloque).
@@ -48,7 +48,7 @@ export interface ResultadoCobro {
   cobros: CobroResumen[]
 }
 
-/** Qué estados de cobro corresponden a cada decisión de la doctora. */
+/** Qué estados de cobro corresponden a cada decisión del médico. */
 const ESTADOS_ESPERADOS: Record<CobroCapturado['modo'], EstadoCobro[]> = {
   cobrado: ['cobrada'],
   sin_cargo: ['sin_cargo'],
@@ -93,9 +93,9 @@ export const useCargaDeConsulta = (appointmentId: string | undefined) => {
   const [citaCargada, setCitaCargada] = useState<CitaCargada | null>(null)
   const [triage, setTriage] = useState<Triage | null>(null)
   const [fullPatient, setFullPatient] = useState<Patient | null>(null)
-  // Si la ficha no se pudo leer, no se sabe si la paciente tiene alergias: la
+  // Si la ficha no se pudo leer, no se sabe si el paciente tiene alergias: la
   // pantalla lo dice en vez de callar (plan 29, C-1). Callar se veía igual que
-  // «sin alergias registradas», y la doctora recetaba creyéndolo.
+  // «sin alergias registradas», y el médico recetaba creyéndolo.
   const [errorPaciente, setErrorPaciente] = useState<string | null>(null)
   const fullPatientRef = useRef<Patient | null>(null)
   fullPatientRef.current = fullPatient
@@ -205,7 +205,7 @@ export const useCargaDeConsulta = (appointmentId: string | undefined) => {
           setErrorPaciente(patientData?.estado === 'error' ? patientData.mensaje : null)
 
           // No pintarlos cuando la lectura falló se ve idéntico a una cita sin
-          // triage: la doctora concluiría que no le tomaron la presión, y ahora
+          // triage: el médico concluiría que no le tomaron la presión, y ahora
           // además le ofreceríamos capturar encima de unos que sí existen.
           setErrorTriage(triageCargado.estado === 'error' ? triageCargado.mensaje : null)
           setTriage(triageCargado.estado === 'ok' ? triageCargado.dato : null)
@@ -246,7 +246,7 @@ export const useCargaDeConsulta = (appointmentId: string | undefined) => {
   }, [appointmentId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
-   * Refresca a la paciente que se está mostrando en el encabezado.
+   * Refresca al paciente que se está mostrando en el encabezado.
    *
    * Existe porque ahora el expediente se puede completar desde la consulta: sin
    * esto, la edad seguiría saliendo en guion y la insignia de alergias seguiría
@@ -254,7 +254,7 @@ export const useCargaDeConsulta = (appointmentId: string | undefined) => {
    * ya no es el de la base.
    *
    * Lo normal es pasarle el registro que devolvió el guardado: el PUT contesta
-   * con la paciente tal como quedó, así que es el dato más fresco que existe y
+   * con el paciente tal como quedó, así que es el dato más fresco que existe y
    * evita un viaje extra que, si fallara, dejaría datos viejos en pantalla
    * justo después de un guardado exitoso. Sin argumento vuelve a leerla.
    */
@@ -281,7 +281,7 @@ export const useCargaDeConsulta = (appointmentId: string | undefined) => {
   )
 
   /**
-   * Vuelve a leer los signos vitales después de que la doctora los capturó.
+   * Vuelve a leer los signos vitales después de que el médico los capturó.
    *
    * Se relee en lugar de pintar lo que se mandó: lo que se muestra es lo que
    * quedó en la base, con el IMC que calcula el servidor. Si la relectura falla
@@ -371,7 +371,7 @@ export const useCargaDeConsulta = (appointmentId: string | undefined) => {
       setFinalized(true)
       return true
     } catch (err: any) {
-      // Fallar en silencio le hacía creer a la doctora que ya había cerrado.
+      // Fallar en silencio le hacía creer al médico que ya había cerrado.
       console.error('Error al finalizar:', err)
       const error = aErrorDeCobro(
         err,
@@ -379,7 +379,7 @@ export const useCargaDeConsulta = (appointmentId: string | undefined) => {
           'inténtalo de nuevo.',
       )
       // 409: alguien más ya la cobró. Lo que dice el servidor pasa a ser la
-      // verdad de la pantalla, para que la doctora vea quién y cuánto y pueda
+      // verdad de la pantalla, para que el médico vea quién y cuánto y pueda
       // cerrar sin volver a cobrar.
       if (error.status === 409 && error.cobroExistente) {
         const existente = error.cobroExistente
@@ -442,7 +442,7 @@ export const useCargaDeConsulta = (appointmentId: string | undefined) => {
       setResultadoCobro(null)
       // Un cierre nuevo es un intento de cobro nuevo.
       idIntentoCobro.current = null
-      // La doctora reabre desde dentro de la consulta: sigue atendiendo. El
+      // El médico reabre desde dentro de la consulta: sigue atendiendo. El
       // servidor reabre a «en sala» (su regla de siempre, que también usa
       // recepción) y aquí se pide «en consulta» con las mismas reglas que al
       // abrir: si la cita no es de hoy o no es suya, se queda en sala.
@@ -461,8 +461,8 @@ export const useCargaDeConsulta = (appointmentId: string | undefined) => {
 
   /**
    * Salir de la consulta sin cerrarla: la cita vuelve al estado del que entró
-   * («Regresar a sala» si estaba en sala; si la doctora la abrió antes de que
-   * la paciente llegara, vuelve a agendada o confirmada). Devuelve `true` solo
+   * («Regresar a sala» si estaba en sala; si el médico la abrió antes de que
+   * el paciente llegara, vuelve a agendada o confirmada). Devuelve `true` solo
    * si el servidor lo confirmó; el estado que se pinta es el que contestó.
    */
   const regresarASala = async (): Promise<boolean> => {

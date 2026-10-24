@@ -1,9 +1,9 @@
 """Seguimiento de estudios atrasados (plan 32, punto 3).
 
-- La regla usa los plazos de la doctora que pidió el estudio (7/15/30 de fábrica).
+- La regla usa los plazos del médico que pidió el estudio (7/15/30 de fábrica).
 - Un seguimiento con «volver a revisar» lo saca de atrasados hasta esa fecha;
   el más reciente manda.
-- Lo registran la doctora y recepción, con alcance de sucursal; queda quién y cuándo.
+- Lo registran el médico y recepción, con alcance de sucursal; queda quién y cuándo.
 - El aviso diario es uno por doctora, agrupado, y se cierra solo.
 Reloj fijo: 05:30 UTC del 10 de octubre, que en Mazatlán sigue siendo el 9.
 """

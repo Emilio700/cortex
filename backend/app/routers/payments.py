@@ -6,7 +6,7 @@ wrong charge is voided (``POST /payments/{id}/anular``) with a reason, and the
 correct one is captured.
 
 Todo lo que lee pagos pasa por ``filtrar_pagos_del_alcance``: lista, detalle,
-historial de la paciente, corte y recibo. Una doctora ve el ingreso que es
+historial del paciente, corte y recibo. Un médico ve el ingreso que es
 suyo; recepción y administración, la sucursal.
 """
 from datetime import date, datetime, time
@@ -121,7 +121,7 @@ def create_payment(
 
     patient = scoped_query(db.query(Patient), Patient, current_user).filter(Patient.id == payment_data.patient_id).first()
     if not patient:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró a la paciente. Puede que la hayan eliminado; actualiza la lista de pacientes.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró al paciente. Puede que la hayan eliminado; actualiza la lista de pacientes.")
 
     cita = None
     if payment_data.appointment_id is not None:
@@ -132,7 +132,7 @@ def create_payment(
         )
         if not cita:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró la cita. Puede que la hayan eliminado; vuelve a la agenda y actualízala.")
-        # La doctora cobra sus propias citas; la de una colega no es suya ni
+        # El médico cobra sus propias citas; la de una colega no es suya ni
         # siquiera para saber que existe (mismo 404 que la agenda).
         if alcance_operativo_acotado(current_user) and current_user.id not in (
             cita.doctor_id,
@@ -142,7 +142,7 @@ def create_payment(
         if cita.patient_id != patient.id:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="La cita no es de esta paciente. Vuelve a elegir la cita que vas a cobrar.",
+                detail="La cita no es de este paciente. Vuelve a elegir la cita que vas a cobrar.",
             )
     elif payment_data.service_id is None and not payment_data.description:
         # Un cobro suelto sin concepto no se puede explicar después en el corte.
@@ -212,7 +212,7 @@ DURACION_EXPRESS_MIN = 15
 
 
 def _consultas_de_hoy(db: Session, patient_id: int, doctor_id: int) -> list[Appointment]:
-    """Consultas de hoy de la paciente con esa doctora que ya ocurrieron o están en curso.
+    """Consultas de hoy del paciente con esa doctora que ya ocurrieron o están en curso.
 
     Cuenta la que ya empezó (su hora ya pasó) o la que ya está en sala o
     atendida aunque sea más tarde (llegó temprano). Una cita agendada para más
@@ -277,14 +277,14 @@ def create_consulta_express(
 
     patient = scoped_query(db.query(Patient), Patient, current_user).filter(Patient.id == datos.patient_id).first()
     if not patient:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró a la paciente. Puede que la hayan eliminado; actualiza la lista de pacientes.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró al paciente. Puede que la hayan eliminado; actualiza la lista de pacientes.")
 
     cobro_service.validar_servicio(db, datos.service_id, current_user)
     doctor_id = cobro_service.resolver_doctora_del_cobro_suelto(
         db, current_user, datos.doctor_id, patient.tenant_id
     )
 
-    # Se bloquea la fila de la paciente antes de revisar sus consultas del
+    # Se bloquea la fila del paciente antes de revisar sus consultas del
     # día: dos personas registrando la misma express a la vez no pueden ver,
     # las dos, que no había nada. En SQLite no hace nada.
     (
@@ -301,7 +301,7 @@ def create_consulta_express(
             hora = previa.scheduled_at.strftime("%H:%M")
             if vigentes:
                 detalle = (
-                    f"Esta paciente ya tiene una consulta hoy a las {hora} con esa doctora. "
+                    f"Este paciente ya tiene una consulta hoy a las {hora} con esa doctora. "
                     + cobro_service.describir_cobro(vigentes[0])
                     + " Si de verdad fue otra consulta, confírmalo."
                 )
@@ -309,7 +309,7 @@ def create_consulta_express(
                 # Sólo se manda a «Cobro de cita» si ahí va a aparecer: esa
                 # lista trae las citas en sala y atendidas de hoy.
                 detalle = (
-                    f"Esta paciente ya tiene una consulta hoy a las {hora} con esa doctora, sin cobrar. "
+                    f"Este paciente ya tiene una consulta hoy a las {hora} con esa doctora, sin cobrar. "
                     "Cóbrala desde «Cobro de cita»; si de verdad fue otra consulta, confírmalo."
                 )
             else:
@@ -317,7 +317,7 @@ def create_consulta_express(
                 # así que no está en «Cobro de cita». Mandarla ahí era dejar a
                 # recepción sin salida y empujarla a registrar otra consulta.
                 detalle = (
-                    f"Esta paciente tiene una cita hoy a las {hora} con esa doctora que sigue "
+                    f"Este paciente tiene una cita hoy a las {hora} con esa doctora que sigue "
                     f"«{ETIQUETA_ESTADO_CITA.get(previa.status, previa.status.value)}» en la agenda. "
                     "Si es esta consulta, pásala a sala desde la agenda y cóbrala en «Cobro de cita»; "
                     "si de verdad fue otra consulta, confírmalo."
@@ -456,7 +456,7 @@ def list_payments(
         query = query.filter(Payment.paid_at >= inicio_utc)
     if fin_utc:
         query = query.filter(Payment.paid_at <= fin_utc)
-    # A la doctora el alcance ya la fijó a lo suyo: su doctor_id se ignora en
+    # Al médico el alcance ya la fijó a lo suyo: su doctor_id se ignora en
     # vez de confiar en él.
     if doctor_id and not alcance_operativo_acotado(current_user):
         query = query.filter(Payment.doctor_id == doctor_id)
@@ -484,7 +484,7 @@ def get_cash_cut(
     Los tres desgloses salen de la MISMA consulta base que el total, así que
     cada uno suma exactamente el total. Los anulados no cuentan.
 
-    La secretaria ve el corte de las doctoras que apoya y de nadie más (la
+    La secretaria ve el corte de los médicos que apoya y de nadie más (la
     asignación la hace administración); con ``doctor_id`` puede ver el de una
     de ellas, nunca el de otra.
     """
@@ -595,7 +595,7 @@ def _caja_de(db: Session, user: User, inicio_utc: datetime, fin_utc: datetime) -
 
     Sale de la misma base que la lista de cobros (``scoped_query`` a la
     sucursal, sólo vigentes), no del corte acotado: es el arqueo de su caja, y
-    el efectivo que cobró para una doctora que no apoya también está en el
+    el efectivo que cobró para un médico que no apoya también está en el
     cajón.
     """
     base = solo_pagos_vigentes(scoped_query(db.query(Payment), Payment, user)).filter(
@@ -631,7 +631,7 @@ def _pago_del_alcance(db: Session, payment_id: int, user: User) -> Payment:
         .first()
     )
     if not pago:
-        # 404 y no 403 para el pago de otra doctora: no se confirma que existe.
+        # 404 y no 403 para el pago de otro médico: no se confirma que existe.
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=PAGO_NO_ENCONTRADO)
     return pago
 
@@ -723,7 +723,7 @@ def _express_cancelable(db: Session, pago: Payment, user: User) -> Appointment:
 
     Sólo aplica a la cita que se creó al cobrar (``origen = express``), que no
     tenga otros cobros vigentes (un cobro adicional sí fue real) ni nota,
-    receta o certificado: si la doctora ya la documentó, ocurrió, y cancelarla
+    receta o certificado: si el médico ya la documentó, ocurrió, y cancelarla
     escondería información clínica.
     """
     from app.models.medical_certificate import MedicalCertificate
@@ -780,7 +780,7 @@ def send_payment_receipt(
     if not patient or not patient.email:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="El paciente no tiene un correo registrado")
 
-    # El recibo lleva a la doctora a quien pertenece el ingreso. Antes ponía a
+    # El recibo lleva al médico a quien pertenece el ingreso. Antes ponía a
     # quien cobró, así que un recibo cobrado en recepción salía a nombre de la
     # secretaria como si fuera médica. El tratamiento es el capturado ("Dra.");
     # sin él va el nombre solo, nunca un "Dr." supuesto.
@@ -791,7 +791,7 @@ def send_payment_receipt(
     clinic = get_clinic_info(db, user_id=payment.doctor_id, tenant_id=payment.tenant_id)
     method_label = PAYMENT_METHOD_LABELS.get(payment.method, payment.method.value)
     amount_str = f"{payment.amount:,.2f}"
-    # Hora del consultorio: la paciente no sabe qué es UTC.
+    # Hora del consultorio: el paciente no sabe qué es UTC.
     date_str = utc_a_local(payment.paid_at).strftime('%d/%m/%Y %H:%M')
     body_text = f"Hola {patient.first_name}, confirmamos tu pago de ${amount_str} MXN ({method_label}) el {date_str}. Gracias."
     body_html = pay_tmpl(clinic, patient.first_name, amount_str, method_label, date_str, payment.description or "")
@@ -834,10 +834,10 @@ def list_patient_payments(
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[User, Depends(require_permission("payments.read"))],
 ):
-    """Historial de pagos de una paciente, acotado al alcance de quien consulta."""
+    """Historial de pagos de un paciente, acotado al alcance de quien consulta."""
     patient = scoped_query(db.query(Patient), Patient, current_user).filter(Patient.id == patient_id).first()
     if not patient:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró a la paciente. Puede que la hayan eliminado; actualiza la lista de pacientes.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró al paciente. Puede que la hayan eliminado; actualiza la lista de pacientes.")
 
     return (
         _con_nombres(filtrar_pagos_del_alcance(db.query(Payment), current_user))

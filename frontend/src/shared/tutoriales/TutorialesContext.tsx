@@ -83,7 +83,7 @@ export type ModoInicio = 'continuar' | 'inicio'
 
 /**
  * Por qué el centro muestra un recorrido en lugar de arrancarlo:
- * - `datos`: necesita una paciente o consulta concreta.
+ * - `datos`: necesita un paciente o consulta concreta.
  * - `formulario`: necesita un formulario abierto.
  * - `sin-elementos`: se intentó, pero la pantalla no tiene nada que señalar.
  * - `paso-no-visible`: se buscó un paso que ahora no está a la vista.
@@ -148,7 +148,7 @@ interface TutorialesContextValue {
   centroAbierto: boolean
   abrirCentro: () => void
   cerrarCentro: () => void
-  /** Ir a una pantalla (sólo navegar; nunca elige una paciente). */
+  /** Ir a una pantalla (sólo navegar; nunca elige un paciente). */
   irA: (ruta: string) => void
   puedeIrA: (ruta: string) => boolean
   /** Aviso de la primera vez junto al botón de ayuda. */

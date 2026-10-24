@@ -455,7 +455,7 @@ const RecetaConfigCard = ({
                             <div>
                                 <div className="fw-semibold">Vista previa</div>
                                 <div className="text-body-secondary small">
-                                    Es la receta real, con una paciente de ejemplo.
+                                    Es la receta real, con un paciente de ejemplo.
                                 </div>
                             </div>
                             <CButton

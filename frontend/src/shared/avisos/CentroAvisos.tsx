@@ -298,7 +298,7 @@ const CentroAvisos = () => {
               </div>
             ) : abiertos.length === 0 ? (
               <p className="text-body-secondary small mb-0">
-                Nada por atender. Lo que te pida hacer algo —una paciente en sala, una consulta por cobrar— aparece
+                Nada por atender. Lo que te pida hacer algo —un paciente en sala, una consulta por cobrar— aparece
                 aquí hasta que se resuelva.
               </p>
             ) : (

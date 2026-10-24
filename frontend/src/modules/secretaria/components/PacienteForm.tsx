@@ -160,7 +160,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
             setFormData({
                 first_name: patient.first_name,
                 last_name: patient.last_name,
-                // Una paciente dada de alta express llega sin fecha: el campo se
+                // Un paciente dada de alta express llega sin fecha: el campo se
                 // abre vacío para que se capture, no relleno con nada inventado.
                 date_of_birth: patient.date_of_birth || '',
                 gender: patient.gender || '',
@@ -433,7 +433,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                     </CRow>
 
                     {/* Alergias y FUR van en el alta exprés (opción C, plan 32): son lo
-                        que recepción pregunta en la llamada y lo que la doctora
+                        que recepción pregunta en la llamada y lo que el médico
                         necesita ver primero. Las dos son opcionales. */}
                     <CRow className="mb-3">
                         <CCol md={8}>
@@ -476,7 +476,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                         (duplicados?.candidatos.length ?? 0) > 0 && (
                             <CAlert color="warning" className="mb-3">
                                 <div className="fw-semibold mb-1">
-                                    Puede que esta paciente ya esté registrada
+                                    Puede que este paciente ya esté registrada
                                 </div>
                                 <div className="small mb-2">
                                     Revisa si es alguna de estas antes de crearla de nuevo:
@@ -501,7 +501,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                                                     className="ms-2"
                                                     onClick={() => onElegirExistente(c)}
                                                 >
-                                                    Es esta paciente
+                                                    Es este paciente
                                                 </CButton>
                                             )}
                                         </li>
@@ -556,7 +556,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                             {isSecretaryOrAdmin && (
                                 <CRow className="mb-3">
                                     <CCol md={6}>
-                                        <CFormLabel htmlFor="owner_doctor_id">Doctora titular</CFormLabel>
+                                        <CFormLabel htmlFor="owner_doctor_id">Médico titular</CFormLabel>
                                         <CFormSelect
                                             id="owner_doctor_id"
                                             value={formData.owner_doctor_id ?? ''}
@@ -568,7 +568,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                                                 <option key={d.id} value={d.id}>{d.full_name}</option>
                                             ))}
                                         </CFormSelect>
-                                        <small className="text-muted">Asigna esta paciente a una doctora.</small>
+                                        <small className="text-muted">Asigna este paciente a un médico.</small>
                                     </CCol>
                                 </CRow>
                             )}
@@ -768,11 +768,11 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                                         onChange={(e) =>
                                             setFormData({ ...formData, notas_referencia: e.target.value })
                                         }
-                                        placeholder="Ej. Vecina de la Sra. López, viene de El Quelite, la recomendó la Dra. Castro..."
+                                        placeholder="Ej. Vecina de la Sra. López, viene de El Quelite, la recomendó el Dr. Castro..."
                                         disabled={loading}
                                     />
                                     <small className="text-muted">
-                                        Para recordar a la paciente: de dónde es, quién la recomendó, a qué se
+                                        Para recordar al paciente: de dónde es, quién la recomendó, a qué se
                                         dedica. <strong>No se imprime en las recetas.</strong>
                                     </small>
                                 </CCol>
@@ -817,7 +817,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                             )}
                             {!veAntecedentes && (
                                 <p className="small text-body-secondary mb-0">
-                                    Los antecedentes y la historia gineco-obstétrica los captura la doctora
+                                    Los antecedentes y la historia gineco-obstétrica los captura el médico
                                     en el expediente clínico.
                                 </p>
                             )}

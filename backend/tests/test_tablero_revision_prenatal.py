@@ -2,7 +2,7 @@
 
 Lo que se prueba aquí no es que la lista se dibuje, sino las tres cosas que la
 vuelven confiable: que sólo muestre lo que de verdad falta agendar, que no le
-enseñe a una doctora el seguimiento de otra, y que coincida con lo que recepción
+enseñe a un médico el seguimiento de otra, y que coincida con lo que recepción
 recibió por notificación. Si el tablero y el aviso divergen, no hay forma de
 saber cuál de los dos miente.
 """
@@ -80,7 +80,7 @@ def consultorio(db_session):
         user = User(
             email=email,
             hashed_password="no-se-usa",
-            full_name=f"Doctora {email}",
+            full_name=f"Médico {email}",
             role=Role.DOCTOR,
             tenant_id=tenant.id,
             is_active=True,
@@ -207,7 +207,7 @@ def test_lo_muy_atrasado_no_llena_el_tablero(client, db_session, consultorio):
 
 
 def test_el_tablero_dice_si_recepcion_ya_fue_avisada(client, db_session, consultorio):
-    """Lo primero que la doctora pregunta antes de ponerse a llamar ella.
+    """Lo primero que el médico pregunta antes de ponerse a llamar ella.
 
     Es también la prueba de que el tablero y el recordatorio leen la misma
     marca: si divergieran, no habría manera de saber cuál miente.
@@ -228,7 +228,7 @@ def test_el_tablero_dice_si_recepcion_ya_fue_avisada(client, db_session, consult
 def test_el_tablero_no_manda_ningun_aviso(client, db_session, consultorio):
     """Consultarlo es pasivo: es una lista, no un disparador.
 
-    Emilio fue explícito en que la doctora no necesita otra campanita. Si
+    Emilio fue explícito en que el médico no necesita otra campanita. Si
     alguien engancha aquí un ``notify()``, esta prueba se cae.
     """
     from app.models.notification import Notification

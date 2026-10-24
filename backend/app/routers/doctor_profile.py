@@ -135,7 +135,7 @@ def update_my_profile(
         # Con traza y qué campos se intentaban actualizar, para diagnosticar sin
         # exponer nada a la usuaria (a ella se le responde el 500 en español).
         logger.exception(
-            "No se pudo actualizar el perfil de la doctora; campos intentados: %s",
+            "No se pudo actualizar el perfil del médico; campos intentados: %s",
             list(profile_in.model_dump(exclude_unset=True).keys()),
         )
         raise HTTPException(status_code=500, detail="No fue posible actualizar el perfil") from e
@@ -443,7 +443,7 @@ def order_settings_from_prescription(
     los de la receta, SIN guardarlos.
 
     La orden ya no lee la receta; esto evita capturar dos veces. La pantalla
-    los muestra, la doctora los ajusta y los guarda con ``PUT /me``.
+    los muestra, el médico los ajusta y los guarda con ``PUT /me``.
     """
     from app.utils.orden_config import ajustes_desde_receta
 
@@ -463,7 +463,7 @@ def preview_my_order(
     """El PDF REAL de una orden de muestra con los ajustes **sin guardar**.
 
     Lo genera el mismo código que la orden de verdad, con datos de ejemplo,
-    para que la doctora vea cómo le va a quedar antes de decidir. No guarda
+    para que el médico vea cómo le va a quedar antes de decidir. No guarda
     nada.
     """
     from fastapi.responses import StreamingResponse
@@ -516,7 +516,7 @@ def get_plazos_atrasado(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_permission("doctor_profile.read")),
 ):
-    """Los plazos de la doctora; sin perfil o sin cambiar, los de fábrica."""
+    """Los plazos del médico; sin perfil o sin cambiar, los de fábrica."""
     from app.services.estudios_atrasados import normalizar_plazos
 
     profile = db.query(DoctorProfile).filter(DoctorProfile.user_id == current_user.id).first()

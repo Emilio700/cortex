@@ -24,7 +24,7 @@ router = APIRouter(prefix="/triage", tags=["Triage"])
 
 
 def _exigir_alcance_de_captura(db: Session, patient_id: int, user: User) -> None:
-    """La doctora captura signos sólo de sus pacientes; recepción, de la clínica.
+    """El médico captura signos sólo de sus pacientes; recepción, de la clínica.
 
     Recepción toma signos de todas las citas de su sucursal y así se queda. La
     doctora los toma cuando nadie lo hizo en la sala de espera, dentro de la
@@ -39,7 +39,7 @@ def _exigir_alcance_de_lectura(db: Session, patient_id: int, user: User) -> None
     """Leer los signos pide lo mismo que leer la nota de esa consulta.
 
     Antes bastaba con ser del mismo tenant, así que cualquier doctora de la
-    sucursal podía abrir el historial de signos de una paciente ajena aunque
+    sucursal podía abrir el historial de signos de un paciente ajena aunque
     su nota le diera 403. Se acota por el eje clínico (es lectura del
     expediente) y sólo a quien lo tiene acotado: recepción toma los signos de
     toda la sucursal y tiene que poder volver a abrirlos para corregirlos, así
@@ -56,7 +56,7 @@ def create_triage(
     current_user: Annotated[User, Depends(require_permission("triage.create"))],
 ):
     """
-    Create triage for appointment (recepción, o la doctora desde la consulta)
+    Create triage for appointment (recepción, o el médico desde la consulta)
 
     Validates:
     - Appointment exists and belongs to current tenant
@@ -88,7 +88,7 @@ def create_triage(
     db.commit()
     db.refresh(new_triage)
     # El registro dice quién tomó los signos: recepción en la sala de espera o
-    # la doctora dentro de la consulta. Sin él no hay forma de saberlo después.
+    # el médico dentro de la consulta. Sin él no hay forma de saberlo después.
     log_action(
         db,
         action="triage.created",
@@ -134,8 +134,8 @@ def get_triage_by_appointment(
     if not appointment:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró la cita. Puede que la hayan eliminado; vuelve a la agenda y actualízala.")
 
-    # Antes de mirar si hay signos: con el 204 primero, una doctora ajena podría
-    # enterarse de si a la paciente ya la pasaron por triage.
+    # Antes de mirar si hay signos: con el 204 primero, un médico ajena podría
+    # enterarse de si al paciente ya la pasaron por triage.
     _exigir_alcance_de_lectura(db, appointment.patient_id, current_user)
 
     triage = db.query(Triage).filter(Triage.appointment_id == appointment_id).first()
@@ -160,7 +160,7 @@ def update_triage(
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[User, Depends(require_permission("triage.create"))],
 ):
-    """Update existing triage (recepción, o la doctora desde la consulta)"""
+    """Update existing triage (recepción, o el médico desde la consulta)"""
     triage = scoped_query(db.query(Triage).join(Appointment), Appointment, current_user).filter(Triage.id == triage_id).first()
 
     if not triage:

@@ -62,14 +62,14 @@ const routes: Route[] = [
   { path: '/', exact: true, name: 'Inicio' },
   {
     // La página genérica de accesos se retiró (plan 28, Fase 1): repetía el
-    // menú y la doctora caía ahí creyendo que era su inicio. Se conserva la
+    // menú y el médico caía ahí creyendo que era su inicio. Se conserva la
     // ruta sin pantalla para que marcadores y pestañas guardadas no den 404:
     // `AppContent` manda toda ruta sin pantalla al inicio del rol.
     path: '/dashboard',
     name: 'Inicio',
   },
   {
-    // El preregistro se quitó (plan 32, punto 5): la paciente nueva se da de
+    // El preregistro se quitó (plan 32, punto 5): el paciente nuevo se da de
     // alta al agendar, con el alta exprés de la ventana de cita. La ruta queda
     // sin pantalla y lleva a la Agenda para no romper marcadores ni pestañas
     // guardadas. La tabla y su lectura en el servidor se conservan, como
@@ -158,7 +158,7 @@ const routes: Route[] = [
     requires: ['doctor.appointments.read'],
     name: 'Consulta Médica',
     element: ConsultationPage,
-    // Es el espacio de escritura de la consulta, de la doctora; administración
+    // Es el espacio de escritura de la consulta, del médico; administración
     // revisa por el Expediente Clínico, no aquí (revisión de flujos, 2026-10-04).
     roles: orMaster(Role.DOCTOR),
   },
@@ -230,7 +230,7 @@ const routes: Route[] = [
     name: 'Corte de caja',
     element: FinanzasDashboard,
     // La secretaria NO entra por su rol: el corte se le concede por usuaria
-    // (payments.cashcut) y acotado a las doctoras que apoya (plan 23). Antes
+    // (payments.cashcut) y acotado a los médicos que apoya (plan 23). Antes
     // el respaldo por rol la dejaba entrar a una pantalla que el servidor le
     // negaba con 403 (visto en el ambiente local; decisión de Emilio,
     // 2026-10-04).

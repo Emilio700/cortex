@@ -15,7 +15,7 @@ Tres defensas, cada una para un caso distinto:
 1. ``client_request_id`` con índice único: el doble clic y el reintento por red
    devuelven el mismo pago.
 2. Antes de revisar si la cita ya tiene cobro se bloquea su fila con
-   ``SELECT … FOR UPDATE``: si la doctora y la secretaria cobran al mismo
+   ``SELECT … FOR UPDATE``: si el médico y la secretaria cobran al mismo
    tiempo, la segunda espera a que la primera confirme y entonces ve su pago.
 3. La revisión misma, que responde 409 con el cobro que ya existe.
 
@@ -134,7 +134,7 @@ def exigir_cita_sin_cobro(db: Session, cita: Appointment, *, cobro_adicional: bo
         return
     exigir_sin_pagos_vigentes(db, cita)
     if cita.cobro_sin_cargo_motivo:
-        quien = cita.cobro_sin_cargo_por.full_name if cita.cobro_sin_cargo_por else "La doctora"
+        quien = cita.cobro_sin_cargo_por.full_name if cita.cobro_sin_cargo_por else "El médico"
         raise CobroDobleError(
             f"{quien} marcó esta consulta sin cargo: {cita.cobro_sin_cargo_motivo}. "
             "Si de todos modos hay algo que cobrar, regístralo como cobro adicional.",
@@ -209,7 +209,7 @@ def doctora_de_la_cita(cita: Appointment) -> int:
 def resolver_doctora_del_cobro_suelto(
     db: Session, user: User, doctor_id: Optional[int], tenant_id: int
 ) -> int:
-    """Cobro sin cita: la doctora que cobra es la dueña del ingreso, sin excepción.
+    """Cobro sin cita: el médico que cobra es la dueña del ingreso, sin excepción.
 
     Recepción tiene que decir de quién es: un cobro sin doctora no aparece en
     el corte de nadie y el total por doctora deja de cuadrar con la sucursal.
@@ -233,7 +233,7 @@ def resolver_doctora_del_cobro_suelto(
     if not doctora:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="No se encontró a la doctora en esta sucursal. Actualiza la lista de doctoras.",
+            detail="No se encontró al médico en esta sucursal. Actualiza la lista de doctoras.",
         )
     return doctora.id
 
@@ -316,8 +316,8 @@ def corregir_doctora_al_atender(db: Session, cita: Appointment, atendio_id: int)
 # Estado de cobro de una cita (lo que ve la agenda y el modal de recepción)
 # ---------------------------------------------------------------------------
 
-# «En consulta» se cobra igual que «en sala»: la paciente ya llegó y puede
-# pagar antes de que la doctora cierre (plan 28, D-3).
+# «En consulta» se cobra igual que «en sala»: el paciente ya llegó y puede
+# pagar antes de que el médico cierre (plan 28, D-3).
 ESTADOS_QUE_SE_COBRAN = (AppointmentStatus.ATENDIDA, AppointmentStatus.EN_SALA, AppointmentStatus.EN_CONSULTA)
 
 

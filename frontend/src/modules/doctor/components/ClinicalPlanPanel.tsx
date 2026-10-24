@@ -34,7 +34,7 @@ import {
 } from '../utils/etiquetasPlanClinico'
 
 export interface ClinicalPlanSummary {
-  /** Órdenes de estudios de la paciente en todo el expediente (null si no se supo). */
+  /** Órdenes de estudios del paciente en todo el expediente (null si no se supo). */
   total: number | null
   /** Órdenes de estudios de esta misma consulta: las mismas que se ven en la lista. */
   currentAppointment: number
@@ -48,7 +48,7 @@ interface ClinicalPlanPanelProps {
   onSummaryChange?: (summary: ClinicalPlanSummary) => void
   /** Lleva a la pestaña Estudios, con el historial completo. */
   onVerHistorial?: () => void
-  /** Nombre de la paciente, para el encabezado del panel de resultados. */
+  /** Nombre del paciente, para el encabezado del panel de resultados. */
   patientName?: string
 }
 

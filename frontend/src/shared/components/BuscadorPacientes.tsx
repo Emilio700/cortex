@@ -13,7 +13,7 @@
  *   Enter abre, Esc cierra.
  * - En el celular no ocupa el encabezado: es una lupa que abre el campo
  *   encima, a todo el ancho.
- * - Elegir una paciente abre su expediente si la sesión puede leerlo
+ * - Elegir un paciente abre su expediente si la sesión puede leerlo
  *   (`medical_history.read`); si no, su historial de recepción.
  */
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react'

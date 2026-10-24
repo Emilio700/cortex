@@ -170,7 +170,7 @@ export interface TarjetaCita {
 export const etiquetaTipoCita = (cita: Appointment): string =>
   TIPO_LABELS[cita.appointment_type ?? 'consulta'] ?? 'Consulta'
 
-/** Nombre de la paciente tal como debe verse, sin dejar nunca la tarjeta muda. */
+/** Nombre del paciente tal como debe verse, sin dejar nunca la tarjeta muda. */
 export const nombrePaciente = (cita: Appointment): string => {
   if (!cita.patient) return `Paciente #${cita.patient_id}`
   const nombre = `${cita.patient.first_name ?? ''} ${cita.patient.last_name ?? ''}`.trim()
@@ -283,7 +283,7 @@ export const CSV_CABECERAS = [
   'Fecha',
   'Hora',
   'Paciente',
-  'Doctora',
+  'Médico',
   'Tipo',
   'Motivo',
   'Sala',

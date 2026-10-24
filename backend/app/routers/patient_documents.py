@@ -84,7 +84,7 @@ def _documento(db: Session, document_id: int, current_user: User, *, incluir_anu
 
 
 def _avisar_documento_nuevo(db: Session, documento: PatientDocument, patient, actor: User) -> None:
-    """Avisa a cada doctora que tiene alguna cita con la paciente.
+    """Avisa a cada médico que tiene alguna cita con el paciente.
 
     No hay asignación directa paciente-doctora en el modelo de datos, así que
     el historial de citas es la única forma confiable de saber quién la trata.
@@ -125,19 +125,19 @@ async def upload_document(
     study_date: str = Form(None),
     file: UploadFile = File(...),
 ):
-    """Sube un documento de la paciente: una referencia o nota de otro médico, u otro archivo.
+    """Sube un documento del paciente: una referencia o nota de otro médico, u otro archivo.
 
     Plan 32, punto 6: un resultado de laboratorio o un estudio de imagen ya no
     entra aquí como archivo suelto. El de una orden se adjunta a su orden y el
     de otro lugar se sube como estudio externo, para que llegue a Estudios.
-    Así la doctora se entera y la orden no se queda «pendiente» (C4).
+    Así el médico se entera y la orden no se queda «pendiente» (C4).
     """
     if document_type in (DocumentType.LAB_RESULT, DocumentType.IMAGING_STUDY):
         raise HTTPException(
             status_code=422,
             detail="Los resultados de estudios no se suben como documento: adjúntalo a su orden o súbelo como estudio de otro lugar.",
         )
-    # «Otros archivos» los guarda la doctora; recepción sube referencias de otro médico.
+    # «Otros archivos» los guarda el médico; recepción sube referencias de otro médico.
     if document_type == DocumentType.OTHER and "medical_history.read" not in get_user_permissions(current_user, db):
         raise HTTPException(status_code=403, detail="Desde recepción se suben referencias o notas de otro médico.")
     patient = _patient_with_document_access(db, patient_id, current_user)
@@ -184,7 +184,7 @@ async def upload_document(
     try:
         db.add(db_document)
         db.flush()
-        # El aviso a las doctoras va en la misma transacción que el documento
+        # El aviso a los médicos va en la misma transacción que el documento
         # (plan 27, M-4): si falla, no queda un documento registrado a medias
         # con un 500 que invita a subirlo otra vez.
         _avisar_documento_nuevo(db, db_document, patient, current_user)
@@ -238,7 +238,7 @@ def get_patient_documents(
         response.headers["X-Resultados-En-Estudios"] = str(query.filter(PatientDocument.id.in_(de_resultados)).count())
         query = query.filter(PatientDocument.id.notin_(de_resultados))
     # Recepción ve las referencias de otro médico y lo que ella subió; los
-    # «otros archivos» son de la doctora (decisión de Emilio).
+    # «otros archivos» son del médico (decisión de Emilio).
     if "medical_history.read" not in get_user_permissions(current_user, db):
         query = query.filter(
             (PatientDocument.document_type == DocumentType.EXTERNAL_NOTE)
@@ -316,12 +316,12 @@ def delete_document(
 
     Antes borraba el archivo y el registro sin dejar rastro del contenido. Un
     documento subido por error se anula (con motivo, y se puede revertir) o se
-    mueve a la paciente correcta.
+    mueve al paciente correcta.
     """
     _documento(db, document_id, current_user, incluir_anulado=True)
     raise HTTPException(
         status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
-        detail="Los documentos clínicos no se borran. Anúlalo con su motivo o muévelo a la paciente correcta.",
+        detail="Los documentos clínicos no se borran. Anúlalo con su motivo o muévelo al paciente correcta.",
     )
 
 
@@ -364,7 +364,7 @@ def mover_documento(
     datos: MoverDocumento,
     current_user: User = Depends(require_permission("documents.read")),
 ):
-    """Mueve un documento a la paciente correcta, de la misma sucursal.
+    """Mueve un documento al paciente correcta, de la misma sucursal.
 
     Misma puerta y misma regla que anular: ``documents.correct`` o quien lo
     subió en las primeras 24 h, aplicada en ``correccion.mover``.
@@ -387,7 +387,7 @@ def download_document(
     registrar_acceso(db, current_user, document.patient_id, SeccionClinica.DOCUMENTOS)
 
     if not default_storage.exists(document.file_path):
-        raise HTTPException(status_code=404, detail="El archivo ya no está guardado en el sistema. Vuelve a subirlo desde el expediente de la paciente.")
+        raise HTTPException(status_code=404, detail="El archivo ya no está guardado en el sistema. Vuelve a subirlo desde el expediente del paciente.")
 
     log_action(
         db,

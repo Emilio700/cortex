@@ -2,7 +2,7 @@
  * Visor de documentos con carrusel (plan 26, D-2 y §3.5).
  *
  * Un solo visor para todo lo que se abre en GEMS: el resultado que subió
- * recepción, las fotos que la paciente mandó por WhatsApp, el PDF de una orden
+ * recepción, las fotos que el paciente mandó por WhatsApp, el PDF de una orden
  * antes de imprimirla. Antes cada pantalla hacía `window.open` de un Blob sin
  * tipo y el navegador, según su humor, lo mostraba o lo descargaba.
  *

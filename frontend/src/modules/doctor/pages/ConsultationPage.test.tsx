@@ -49,7 +49,7 @@ vi.mock('../hooks/useSOAPNotes', () => ({
     getSOAPNoteByAppointment,
     createSOAPNote,
     updateSOAPNote,
-    // Lectura del historial completo de la paciente (pestaña Historial).
+    // Lectura del historial completo del paciente (pestaña Historial).
     getPatientSOAPNotes: vi.fn().mockResolvedValue([]),
   }),
 }))
@@ -265,7 +265,7 @@ describe('ConsultationPage · el error de finalizar se ve', () => {
 })
 
 /**
- * Plan 23. La doctora cobra muchas veces ella misma y recepción, sin saberlo,
+ * Plan 23. El médico cobra muchas veces ella misma y recepción, sin saberlo,
  * volvía a cobrar. Al cerrar dice quién cobra, y eso viaja en el MISMO PATCH
  * que cierra la cita: el servidor aplica las dos cosas o ninguna.
  */
@@ -448,7 +448,7 @@ describe('ConsultationPage · quién cobra la consulta al finalizar', () => {
       response: {
         status: 409,
         data: {
-          detail: 'Ya la cobró la Dra. Cintia a las 11:05: $800.00 con tarjeta.',
+          detail: 'Ya la cobró el Dr. Cintia a las 11:05: $800.00 con tarjeta.',
           cobro_existente: {
             id: 77,
             amount: '800.00',
@@ -465,7 +465,7 @@ describe('ConsultationPage · quién cobra la consulta al finalizar', () => {
     await confirmar(usuario)
 
     expect(
-      await screen.findByText('Ya la cobró la Dra. Cintia a las 11:05: $800.00 con tarjeta.'),
+      await screen.findByText('Ya la cobró el Dr. Cintia a las 11:05: $800.00 con tarjeta.'),
     ).toBeInTheDocument()
     expect(screen.queryByText(/Consulta finalizada/)).not.toBeInTheDocument()
     // Ya no se le ofrece cobrar: cerrar ahora no cobra otra vez.
@@ -738,7 +738,7 @@ describe('ConsultationPage · signos vitales que no se pudieron leer', () => {
 
 /**
  * A18. "No se encontró la cita o no tienes permisos" mezclaba tres cosas: que
- * la cita no existe, que es de otra doctora y que no se pudo leer. Ante un 500
+ * la cita no existe, que es de otro médico y que no se pudo leer. Ante un 500
  * mandaba a buscar en la agenda una cita que está ahí.
  */
 describe('ConsultationPage · por qué no se abrió la cita', () => {
@@ -792,8 +792,8 @@ describe('ConsultationPage · por qué no se abrió la cita', () => {
 /**
  * Completar el expediente sin salir de la consulta.
  *
- * El caso que lo motivó: la doctora abre la consulta, ve la edad en guion y
- * para capturar la fecha de nacimiento tenía que irse al perfil de la paciente
+ * El caso que lo motivó: el médico abre la consulta, ve la edad en guion y
+ * para capturar la fecha de nacimiento tenía que irse al perfil del paciente
  * —perdiendo la nota que llevaba escrita en esta pestaña—. Ahora se hace desde
  * el encabezado, y lo que se ve arriba tiene que quedar al día: mostrar el dato
  * viejo después de haberlo guardado es la misma mentira de siempre.
@@ -830,7 +830,7 @@ describe('ConsultationPage · completar el expediente desde el encabezado', () =
 
   const abrirEditorDeDatos = async (usuario: ReturnType<typeof userEvent.setup>) => {
     await usuario.click(
-      await screen.findByRole('button', { name: 'Completar datos de la paciente' }),
+      await screen.findByRole('button', { name: 'Completar datos del paciente' }),
     )
     await screen.findByLabelText('Fecha de nacimiento')
     // CoreUI activa la trampa de foco al terminar la animación del modal y ahí
@@ -845,7 +845,7 @@ describe('ConsultationPage · completar el expediente desde el encabezado', () =
     put.mockResolvedValue({ data: pacienteDePrueba({ date_of_birth: nacimiento.iso }) })
     await abrirConsulta()
 
-    // El hueco se ve: es lo que manda a la doctora a salirse de la consulta.
+    // El hueco se ve: es lo que manda al médico a salirse de la consulta.
     expect(await screen.findByText('—')).toBeInTheDocument()
 
     await abrirEditorDeDatos(usuario)
@@ -902,7 +902,7 @@ describe('ConsultationPage · completar el expediente desde el encabezado', () =
     await abrirConsulta()
 
     expect(
-      screen.queryByRole('button', { name: 'Completar datos de la paciente' }),
+      screen.queryByRole('button', { name: 'Completar datos del paciente' }),
     ).not.toBeInTheDocument()
   })
 })
@@ -943,14 +943,14 @@ describe('ConsultationPage · reabrir una consulta cerrada por error', () => {
     const usuario = userEvent.setup()
     getAppointment.mockResolvedValue(citaCargada('atendida'))
     patch.mockRejectedValue({
-      response: { data: { detail: 'No tienes una relación asistencial activa con esta paciente' } },
+      response: { data: { detail: 'No tienes una relación asistencial activa con este paciente' } },
     })
     await abrirConsulta()
 
     await reabrir(usuario)
 
     expect(
-      await screen.findByText('No tienes una relación asistencial activa con esta paciente'),
+      await screen.findByText('No tienes una relación asistencial activa con este paciente'),
     ).toBeInTheDocument()
     // Lo que no ocurrió no se dibuja: sigue cerrada y sin poder capturar.
     expect(screen.getByLabelText(/Síntomas \/ Motivo de consulta/)).toBeDisabled()
@@ -990,11 +990,11 @@ describe('ConsultationPage · reabrir una consulta cerrada por error', () => {
  * que algo se ponga rojo.
  */
 /**
- * Muchas veces no hay asistente que pase a la paciente por triage en la sala de
- * espera. La doctora toma los signos al empezar la consulta, desde la consulta,
+ * Muchas veces no hay asistente que pase al paciente por triage en la sala de
+ * espera. El médico toma los signos al empezar la consulta, desde la consulta,
  * para que no se cierre sin presión ni peso en el expediente.
  */
-describe('ConsultationPage · la doctora registra los signos que no se tomaron', () => {
+describe('ConsultationPage · el médico registra los signos que no se tomaron', () => {
   const capturarPresion = async (usuario: ReturnType<typeof userEvent.setup>) => {
     await usuario.click(await screen.findByRole('button', { name: 'Registrar signos vitales' }))
     await screen.findByPlaceholderText('Sistólica')
@@ -1261,7 +1261,7 @@ describe('ConsultationPage · alergias (plan 29, C-1)', () => {
     getPatient.mockRejectedValue(new Error('El sistema no está respondiendo.'))
     await abrirConsulta()
 
-    expect(await screen.findAllByText('No se pudieron leer las alergias de la paciente.')).not.toHaveLength(0)
+    expect(await screen.findAllByText('No se pudieron leer las alergias del paciente.')).not.toHaveLength(0)
   })
 
   it('«Reintentar» vuelve a leer la ficha y, si sale, muestra las alergias', async () => {
@@ -1273,7 +1273,7 @@ describe('ConsultationPage · alergias (plan 29, C-1)', () => {
     await usuario.click(reintentar)
 
     expect((await screen.findAllByText(/Alergias: PENICILINA/)).length).toBeGreaterThan(0)
-    expect(screen.queryByText('No se pudieron leer las alergias de la paciente.')).not.toBeInTheDocument()
+    expect(screen.queryByText('No se pudieron leer las alergias del paciente.')).not.toBeInTheDocument()
   })
 
   it('con la ficha leída y alergias registradas, las muestra', async () => {
@@ -1298,7 +1298,7 @@ describe('ConsultationPage · alergias junto a la receta (plan 29, C-3)', () => 
     getPatient.mockRejectedValue(new Error('sin red'))
     await abrirConsulta()
 
-    await waitFor(() => expect(receta()).toHaveTextContent('No se pudieron leer las alergias de la paciente.'))
+    await waitFor(() => expect(receta()).toHaveTextContent('No se pudieron leer las alergias del paciente.'))
   })
 
   it('sin nada registrado dice eso, no que no tenga alergias', async () => {
@@ -1310,9 +1310,9 @@ describe('ConsultationPage · alergias junto a la receta (plan 29, C-3)', () => 
 })
 
 describe('ConsultationPage · embarazo que no se pudo consultar (plan 29, C-2)', () => {
-  it('lo dice y deja reintentar, en vez de verse como una paciente sin embarazo', async () => {
+  it('lo dice y deja reintentar, en vez de verse como un paciente sin embarazo', async () => {
     const usuario = userEvent.setup()
-    embarazo.error = 'No se pudo consultar si la paciente tiene un embarazo activo.'
+    embarazo.error = 'No se pudo consultar si el paciente tiene un embarazo activo.'
     try {
       await abrirConsulta()
       await usuario.click(await screen.findByRole('button', { name: /No se pudo consultar el embarazo/ }))
@@ -1394,7 +1394,7 @@ describe('ConsultationPage · una sola historia en Expediente › Consultas (pla
     // defecto que motivó este lote).
     expect(screen.getByText('Notas, recetas y certificados')).toBeInTheDocument()
     expect(
-      await screen.findByText('Esta paciente no tiene notas, recetas ni certificados registrados.'),
+      await screen.findByText('Este paciente no tiene notas, recetas ni certificados registrados.'),
     ).toBeInTheDocument()
     expect(screen.queryByText(/No hay registros médicos previos/)).not.toBeInTheDocument()
   })

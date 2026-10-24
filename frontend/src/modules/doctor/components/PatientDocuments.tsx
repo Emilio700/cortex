@@ -135,7 +135,7 @@ const PatientDocuments: React.FC<PatientDocumentsProps> = ({ patientId, onVerEst
                 <div className="d-flex justify-content-between align-items-center">
                     <h3 className="h6 mb-0">
                         <CIcon icon={cilCloudUpload} className="me-2" aria-hidden="true" />
-                        Documentos de la paciente
+                        Documentos del paciente
                     </h3>
                     {/* Sin lista no hay número: un «0» diría que no tiene documentos.
                         Con más páginas, el número es de los ya cargados. */}
@@ -173,7 +173,7 @@ const PatientDocuments: React.FC<PatientDocumentsProps> = ({ patientId, onVerEst
                 )}
                 {verAnulados && (
                     <CAlert color="warning" className="py-2 small mb-3">
-                        Estás viendo los documentos anulados de esta paciente. No aparecen en el expediente.
+                        Estás viendo los documentos anulados de este paciente. No aparecen en el expediente.
                     </CAlert>
                 )}
                 {error && (
@@ -276,7 +276,7 @@ const PatientDocuments: React.FC<PatientDocumentsProps> = ({ patientId, onVerEst
                                                                     as="button"
                                                                     onClick={() => setCorrigiendo({ doc, accion: 'mover' })}
                                                                 >
-                                                                    Mover a otra paciente
+                                                                    Mover a otro paciente
                                                                 </CDropdownItem>
                                                                 <CDropdownItem
                                                                     as="button"

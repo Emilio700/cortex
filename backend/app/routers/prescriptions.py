@@ -33,29 +33,29 @@ logger = logging.getLogger(__name__)
 # reenvío y no por una receta nueva. Cinco minutos cubren lo que se vio en
 # producción —dos recetas idénticas con un minuto de diferencia, la segunda
 # creada al confirmar la impresión— y el reintento tras un error de red que en
-# realidad sí llegó. Más allá de eso ya no es un reenvío: es la doctora
+# realidad sí llegó. Más allá de eso ya no es un reenvío: es el médico
 # volviendo a la consulta, y ahí su decisión manda.
 VENTANA_DE_REENVIO = timedelta(minutes=5)
 
 
 def _patient_in_scope(db: Session, patient_id: int, current_user: User) -> Patient:
-    """Resuelve a la paciente aplicando la MISMA regla clínica que la nota de consulta.
+    """Resuelve al paciente aplicando la MISMA regla clínica que la nota de consulta.
 
-    Antes se exigía ser la dueña de la paciente. Con tres doctoras que se cubren
+    Antes se exigía ser la dueña del paciente. Con tres doctoras que se cubren
     entre ellas, la que atendía la consulta veía la nota (que usa el helper
     canónico) y recibía 403 en las recetas, así que la sección se le dibujaba
     vacía sin explicación. Los roles no clínicos conservan su alcance por
-    clínica: homologar la regla de la doctora no es motivo para tocar el acceso
+    clínica: homologar la regla del médico no es motivo para tocar el acceso
     de recepción ni el de administración.
     """
     return resolver_paciente_con_relacion_asistencial(db, patient_id, current_user)
 
 
 def _appointment_in_scope(db: Session, appointment_id: int, current_user: User) -> Appointment:
-    """El acceso a la cita se deriva del acceso a la paciente, no de quién la agendó.
+    """El acceso a la cita se deriva del acceso al paciente, no de quién la agendó.
 
-    Que la secretaria haya agendado con otra doctora no dice nada sobre quién
-    puede atender: la relación asistencial con la paciente es la que manda.
+    Que la secretaria haya agendado con otro médico no dice nada sobre quién
+    puede atender: la relación asistencial con el paciente es la que manda.
     """
     appointment = (
         scoped_query(db.query(Appointment), Appointment, current_user)
@@ -71,9 +71,9 @@ def _appointment_in_scope(db: Session, appointment_id: int, current_user: User) 
 def _prescription_in_scope(
     db: Session, prescription_id: int, current_user: User
 ) -> Prescription:
-    """Leer la receta depende de la paciente; modificarla sigue dependiendo de quién la firmó.
+    """Leer la receta depende del paciente; modificarla sigue dependiendo de quién la firmó.
 
-    Por eso aquí ya no se exige ser la doctora que la emitió: la que cubre la
+    Por eso aquí ya no se exige ser el médico que la emitió: la que cubre la
     consulta necesita poder verla y reimprimirla. ``update_prescription``
     conserva su propio ``assert_owner``, que es otra cosa: nadie edita un
     documento firmado por alguien más.
@@ -151,7 +151,7 @@ def _receta_ya_emitida(
 
     Deliberadamente NO se pone una restricción única en la tabla. Dos recetas
     DISTINTAS en la misma consulta son clínicamente válidas —la interfaz ya las
-    rotula "Receta 1 de 2"— y un falso positivo aquí le negaría a la doctora una
+    rotula "Receta 1 de 2"— y un falso positivo aquí le negaría al médico una
     receta legítima a media consulta. Se exige que coincida todo: la cita, la
     doctora, los medicamentos, las indicaciones, el motivo y que esté dentro de
     la ventana.
@@ -234,11 +234,11 @@ def create_prescription(
     appointment = _appointment_in_scope(db, prescription_in.appointment_id, current_user)
     patient = _patient_in_scope(db, prescription_in.patient_id, current_user)
     if appointment.patient_id != patient.id:
-        raise HTTPException(status_code=422, detail="La consulta no corresponde a la paciente")
+        raise HTTPException(status_code=422, detail="La consulta no corresponde al paciente")
 
     # Reenvío del mismo contenido: se devuelve la receta que ya existe en vez de
     # crear otra. No es un error —el cliente pidió algo que ya está hecho— así
-    # que responde igual que un alta normal y la doctora se queda con el folio
+    # que responde igual que un alta normal y el médico se queda con el folio
     # que ya tenía en pantalla, en vez de con dos folios del mismo tratamiento.
     ya_emitida = _receta_ya_emitida(db, prescription_in, current_user)
     if ya_emitida:
@@ -293,7 +293,7 @@ def preview_prescription_pdf(
         appointment = _appointment_in_scope(db, prescription_in.appointment_id, current_user)
         patient = _patient_in_scope(db, prescription_in.patient_id, current_user)
         if appointment.patient_id != patient.id:
-            raise HTTPException(status_code=422, detail="La consulta no corresponde a la paciente")
+            raise HTTPException(status_code=422, detail="La consulta no corresponde al paciente")
 
         # Get Doctor Profile (reuses fallback helper)
         doctor_profile = _get_or_create_doctor_profile(db, current_user.id)

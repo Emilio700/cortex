@@ -4,7 +4,7 @@
  *
  * El hook del doctor era de sólo lectura; al darle la capacidad de agendar, el
  * riesgo no es que reviente, es que trate un 400 con explicación —el horario se
- * ocupó mientras la doctora capturaba— como un error genérico. Ese mensaje es
+ * ocupó mientras el médico capturaba— como un error genérico. Ese mensaje es
  * el único que le dice qué hacer, y perderlo la deja reintentando lo mismo.
  */
 import { renderHook } from '@testing-library/react'
@@ -55,7 +55,7 @@ describe('agendar desde el hook del doctor', () => {
         expect(agendada).toHaveProperty('mensaje', expect.stringContaining('horario libre'))
     })
 
-    it('agendar en la agenda de otra doctora se reporta como falta de permiso', async () => {
+    it('agendar en la agenda de otro médico se reporta como falta de permiso', async () => {
         post.mockRejectedValue({
             response: {
                 status: 403,

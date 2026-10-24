@@ -227,7 +227,7 @@ def test_reenvio_con_fallo_de_envio_lo_reporta_sin_mentir(
 def test_una_doctora_ajena_no_reenvia_ni_se_entera_de_la_cita(
     client, db_session, escenario, monkeypatch
 ):
-    """Alcance como la lectura de la cita: otra doctora recibe 404, no 403,
+    """Alcance como la lectura de la cita: otro médico recibe 404, no 403,
     para no confirmarle que la cita existe."""
     otra = _user(db_session, escenario["tenant"], "otra.doctora@gems.com", Role.DOCTOR)
 
