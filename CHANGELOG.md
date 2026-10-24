@@ -35,6 +35,11 @@ Todos los cambios notables de Cortex. Formato basado en
   estudio previo (`+3.3 (+18.3 %)`).
 - Módulo `modules/imagen` con la separación dominio · servicios · componentes ·
   páginas, documentada en `docs/DESIGN.md`.
+- Generador de un estudio DICOM sintético (`python -m scripts.generar_estudio_demo`)
+  para probar la carga y el visor sin usar imágenes de pacientes: cuatro series
+  (T1, T1+C, T2, FLAIR) con paciente ficticio `DEMO^SINTETICO`.
+- Barrera de error por pestaña y de último recurso: una pantalla que falla ya no
+  deja el sitio en blanco; muestra el motivo y ofrece recargar o volver al inicio.
 
 ### Cambiado
 - Voz de la interfaz en masculino genérico: «el paciente», «el médico».
