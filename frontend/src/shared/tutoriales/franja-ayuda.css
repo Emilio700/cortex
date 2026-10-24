@@ -1,0 +1,12 @@
+/*
+ * Franja de la ayuda dentro del encabezado (aviso de la primera vez y
+ * mensajes breves). Va en el flujo del encabezado, no flotando: no tapa nada.
+ *
+ * Este archivo sí se carga siempre: la franja puede salir sin que nadie pida
+ * la ayuda. Lo pesado vive en recorrido.css, que sólo llega al abrirla.
+ */
+.gems-franja-ayuda {
+  background-color: var(--cui-tertiary-bg, #f8f9fa);
+  color: var(--cui-body-color, #212529);
+  width: 100%;
+}

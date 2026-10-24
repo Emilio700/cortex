@@ -1,0 +1,142 @@
+/* Franja de estado de la bandeja (plan 32, punto 3): segmentos conectados,
+   no tarjetas sueltas. Comparte tonos con el inicio de la doctora (plan 28). */
+.franja-bandeja {
+  display: flex;
+  margin-bottom: 1rem;
+  border: 1px solid var(--cui-border-color, #dbe1ea);
+  border-radius: 14px;
+  background: var(--cui-body-bg, #fff);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.franja-bandeja__segmento {
+  --tono: var(--hf-blue, #2563eb);
+  --tono-texto: #1d4ed8;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  align-content: start;
+  gap: 0.15rem;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.7rem 1rem 0.8rem;
+  border: 0;
+  border-left: 1px solid var(--cui-border-color, #dbe1ea);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  transition: background-color 160ms ease-out;
+}
+.franja-bandeja__segmento:first-child {
+  border-left: 0;
+}
+.franja-bandeja__segmento:hover {
+  background: var(--cui-tertiary-bg, #f5f7fb);
+}
+.franja-bandeja__segmento:focus-visible {
+  outline: 3px solid var(--hf-blue, #2563eb);
+  outline-offset: -3px;
+}
+/* El elegido se lee como pestaña viva: fondo del tono y una línea abajo. */
+.franja-bandeja__segmento.is-elegido {
+  background: color-mix(in srgb, var(--tono) 9%, transparent);
+  box-shadow: inset 0 -3px 0 var(--tono);
+}
+
+.franja-bandeja__segmento--azul { --tono: var(--hf-blue, #2563eb); --tono-texto: #1d4ed8; }
+.franja-bandeja__segmento--morado { --tono: #7c3aed; --tono-texto: #6d28d9; }
+.franja-bandeja__segmento--ambar { --tono: #f59e0b; --tono-texto: #92400e; }
+.franja-bandeja__segmento--critico { --tono: #dc2626; --tono-texto: #b91c1c; }
+.franja-bandeja__segmento--atrasado { --tono: #d97706; --tono-texto: #92400e; }
+
+.franja-bandeja__numero {
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--tono-texto);
+}
+.franja-bandeja__etiqueta {
+  font-size: 0.8rem;
+  color: var(--cui-secondary-color, #475569);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.franja-bandeja__barra {
+  display: block;
+  height: 4px;
+  margin-top: 0.35rem;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--tono) 14%, transparent);
+  overflow: hidden;
+}
+.franja-bandeja__relleno {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--tono);
+  transition: width 200ms ease-out;
+}
+
+/* Crítico con algo abierto: una franja roja al costado que no se confunde
+   con un color de tarjeta más. */
+.franja-bandeja__segmento--critico.is-alerta::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--tono);
+}
+/* Atrasado: la barra va en trama, se distingue sin depender del color. */
+.franja-bandeja__segmento--atrasado .franja-bandeja__relleno {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--tono) 0 4px,
+    color-mix(in srgb, var(--tono) 45%, transparent) 4px 7px
+  );
+}
+
+.franja-bandeja--error {
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #92400e;
+  background: var(--hf-amber-light, #fff7ed);
+}
+.franja-bandeja__reintentar {
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+}
+
+/* Teléfono: la franja se desliza de lado, cada segmento con su ancho. */
+@media (max-width: 767.98px) {
+  .franja-bandeja {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .franja-bandeja__segmento {
+    flex: 0 0 9.5rem;
+    scroll-snap-align: start;
+  }
+  /* En el teléfono la etiqueta baja de renglón en vez de cortarse. */
+  .franja-bandeja__etiqueta {
+    white-space: normal;
+    line-height: 1.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .franja-bandeja__segmento,
+  .franja-bandeja__relleno {
+    transition: none;
+  }
+}

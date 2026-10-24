@@ -1,0 +1,194 @@
+/* Expediente único (plan 32, punto 6). Mismo lenguaje que Mis Consultas y
+   la bandeja: superficies claras, borde suave, nada de tarjetas de tablero. */
+.expediente {
+  --ex-borde: var(--cui-border-color, #dbe1ea);
+  --ex-fondo: var(--cui-body-bg, #fff);
+  --ex-texto-2: var(--cui-secondary-color, #475569);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-width: 0;
+}
+.expediente * { min-width: 0; }
+
+/* --- Encabezado clínico ------------------------------------------------- */
+.expediente-encabezado {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.6rem 1rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--ex-borde);
+  border-radius: 14px;
+  background: var(--ex-fondo);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.expediente-encabezado__quien { grid-column: 1; }
+.expediente-encabezado__nombre {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.expediente-encabezado__datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1rem;
+  margin-top: 0.15rem;
+  font-size: 0.85rem;
+  color: var(--ex-texto-2);
+}
+.expediente-encabezado__senales { grid-column: 1; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.expediente-encabezado__accion { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+
+.expediente-senal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--ex-borde);
+  border-radius: 999px;
+  background: var(--cui-tertiary-bg, #f5f7fb);
+  color: var(--cui-body-color);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+button.expediente-senal { cursor: pointer; }
+button.expediente-senal:focus-visible { outline: 3px solid var(--cui-primary, #2563eb); outline-offset: 2px; }
+.expediente-senal--alergia { background: #fef2f2; border-color: #fecaca; color: #991b1b; font-weight: 600; }
+.expediente-senal--embarazo { background: #fdf2f8; border-color: #fbcfe8; color: #9d174d; }
+.expediente-senal--critico { background: #fee2e2; border-color: #dc2626; color: #991b1b; font-weight: 700; }
+.expediente-senal--atrasado { background: #fff7ed; border: 1px dashed #b45309; color: #92400e; font-weight: 600; }
+
+/* --- Pestañas ----------------------------------------------------------- */
+.expediente-pestanas {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 12px;
+  background: var(--cui-tertiary-bg, #f1f4f9);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.expediente-pestana {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0 0.9rem;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ex-texto-2);
+  font-weight: 500;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+.expediente-pestana:hover { color: var(--cui-body-color); background: rgba(255, 255, 255, 0.6); }
+.expediente-pestana.is-activa {
+  background: var(--ex-fondo);
+  color: #1d4ed8;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+.expediente-pestana:focus-visible { outline: 3px solid var(--cui-primary, #2563eb); outline-offset: -3px; }
+
+/* --- Resumen (fotografía clínica) --------------------------------------- */
+.expediente-foto {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--ex-borde);
+  border-radius: 14px;
+  background: var(--ex-fondo);
+  overflow: hidden;
+}
+.expediente-foto__bloque { padding: 0.85rem 1rem; border-left: 1px solid var(--ex-borde); border-top: 1px solid var(--ex-borde); }
+.expediente-foto__bloque:nth-child(-n + 3) { border-top: 0; }
+.expediente-foto__bloque:nth-child(3n + 1) { border-left: 0; }
+.expediente-foto__bloque--ancho { grid-column: 1 / -1; border-left: 0; }
+.expediente-foto__titulo {
+  margin: 0 0 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ex-texto-2);
+}
+.expediente-foto__motivo {
+  margin: 0.2rem 0;
+  font-size: 0.85rem;
+  color: var(--ex-texto-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.expediente-foto__lista { margin: 0; padding-left: 1rem; font-size: 0.875rem; }
+.expediente-enlace {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: #1d4ed8;
+  text-decoration: underline;
+  font-size: 0.82rem;
+  min-height: 32px;
+}
+
+.expediente-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.expediente-lista__fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--ex-borde);
+  border-radius: 10px;
+  background: var(--ex-fondo);
+}
+
+/* --- Teléfono ----------------------------------------------------------- */
+@media (max-width: 767.98px) {
+  .expediente-encabezado { grid-template-columns: 1fr; padding: 0.75rem; }
+  .expediente-encabezado__accion { grid-column: 1; grid-row: auto; }
+  .expediente-encabezado__accion .btn { width: 100%; min-height: 44px; }
+  .expediente-pestana { min-height: 44px; }
+  .expediente-foto { grid-template-columns: 1fr; }
+  .expediente-foto__bloque { border-left: 0 !important; border-top: 1px solid var(--ex-borde) !important; }
+  .expediente-foto__bloque:first-child { border-top: 0 !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .expediente-pestana { transition: none; }
+}
+
+/* Subir archivo y el aviso de resultados sin orden (plan 32, punto 6). */
+.expediente-acciones { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.75rem; }
+.aviso-sin-orden {
+  padding: 0.5rem 0.85rem;
+  border: 1px dashed var(--ex-borde, #dbe1ea);
+  border-radius: 10px;
+  font-size: 0.875rem;
+  color: var(--cui-secondary-color, #475569);
+}
+@media (max-width: 767.98px) {
+  .expediente-acciones .btn { width: 100%; min-height: 44px; }
+}
+
+/* Galería combinada de imágenes (plan 32, punto 6). */
+.expediente-galeria { padding: 0.9rem 1rem; border: 1px solid var(--ex-borde, #dbe1ea); border-radius: 14px; background: var(--cui-body-bg, #fff); }
+.expediente-galeria__filtros { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+.expediente-galeria__filtros .form-select { width: auto; }
+.expediente-galeria__lista { list-style: none; margin: 0 0 0.75rem; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 0.6rem; }
+.expediente-galeria__item {
+  display: grid; gap: 0.15rem; width: 100%; min-height: 44px; padding: 0.65rem 0.75rem; text-align: left;
+  border: 1px solid var(--ex-borde, #dbe1ea); border-radius: 10px; background: var(--cui-tertiary-bg, #f5f7fb); color: inherit;
+  transition: box-shadow 150ms ease-out;
+}
+.expediente-galeria__item:hover { box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08); }
+.expediente-galeria__item:focus-visible { outline: 3px solid var(--cui-primary, #2563eb); outline-offset: 2px; }
+.expediente-galeria__categoria { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #1d4ed8; }
+.expediente-galeria__titulo { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.expediente-galeria__meta { font-size: 0.78rem; color: var(--cui-secondary-color, #475569); }
+@media (prefers-reduced-motion: reduce) { .expediente-galeria__item { transition: none; } }

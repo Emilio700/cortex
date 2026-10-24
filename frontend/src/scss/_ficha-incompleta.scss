@@ -1,0 +1,54 @@
+// Fichas incompletas (plan 32, punto 5): sutil, a pedido de Emilio.
+
+.punto-ficha-incompleta {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+  cursor: help;
+
+  &__punto {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--cui-warning, #f9b115);
+    box-shadow: 0 0 0 2px rgba(249, 177, 21, 0.18);
+  }
+}
+
+.aviso-completar-ficha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0.4rem 0.3rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--cui-secondary-color);
+  background: var(--cui-tertiary-bg, #f3f4f7);
+
+  &__accion {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-weight: 600;
+    color: var(--cui-link-color, var(--cui-primary));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  &__cerrar {
+    display: inline-flex;
+    flex-shrink: 0;
+    padding: 0.35rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--cui-secondary-color);
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(127, 127, 127, 0.15);
+    }
+  }
+}

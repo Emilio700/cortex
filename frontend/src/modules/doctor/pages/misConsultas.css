@@ -1,0 +1,374 @@
+/* Mis Consultas (plan 32, punto 4). Mismo lenguaje que el inicio de la
+   doctora (plan 28) y la franja de la bandeja: superficies claras con borde
+   suave, sombra mínima, acentos por tono y nada de tarjetas de tablero. */
+
+.mis-consultas {
+  --mc-borde: var(--cui-border-color, #dbe1ea);
+  --mc-fondo: var(--cui-body-bg, #fff);
+  --mc-suave: var(--cui-tertiary-bg, #f5f7fb);
+  --mc-texto-2: var(--cui-secondary-color, #475569);
+  --mc-radio: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  min-width: 0;
+}
+.mis-consultas * { min-width: 0; }
+
+/* --- Resumen del día, dentro del encabezado azul -------------------------- */
+.resumen-dia {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  min-width: 15rem;
+}
+.resumen-dia__segmentos {
+  display: flex;
+  margin: 0;
+}
+.resumen-dia__segmento {
+  flex: 1 1 0;
+  padding: 0 0.75rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
+}
+.resumen-dia__segmento:first-child { border-left: 0; padding-left: 0; }
+.resumen-dia__segmento dt { font-size: 0.75rem; font-weight: 500; opacity: 0.95; }
+.resumen-dia__segmento dd {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.resumen-dia__barra {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+.resumen-dia__barra span {
+  display: block;
+  height: 100%;
+  background: #fff;
+  border-radius: 2px;
+  transition: width 200ms ease-out;
+}
+.resumen-dia--error { display: block; font-size: 0.85rem; }
+.resumen-dia__reintentar {
+  border: 0;
+  background: none;
+  color: #fff;
+  text-decoration: underline;
+  padding: 0;
+  min-height: 44px;
+}
+
+/* --- Barra de filtros única ---------------------------------------------- */
+.consultas-filtros {
+  padding: 1rem 1.1rem 0.85rem;
+  border: 1px solid var(--mc-borde);
+  border-radius: var(--mc-radio);
+  background: var(--mc-fondo);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.consultas-filtros__fila {
+  display: grid;
+  grid-template-columns: minmax(15rem, 1.1fr) minmax(14rem, 1.6fr) auto;
+  gap: 0.75rem 1rem;
+  align-items: end;
+}
+.consultas-filtros__mas {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(10rem, 1fr)) auto;
+  gap: 0.75rem 1rem;
+  align-items: end;
+}
+@media (min-width: 1200px) {
+  .consultas-filtros__fila { grid-template-columns: minmax(14rem, 1fr) minmax(11rem, 1.3fr) minmax(10.5rem, 0.8fr) minmax(10.5rem, 0.8fr) auto; }
+  .consultas-filtros__mas { grid-column: auto / span 3; grid-template-columns: subgrid; }
+}
+.consultas-filtros__campo { display: grid; gap: 0.3rem; }
+.consultas-filtros__etiqueta { font-size: 0.82rem; font-weight: 600; margin: 0; color: var(--cui-body-color); }
+.consultas-filtros__avanzados { min-height: 38px; white-space: nowrap; }
+.consultas-filtros__plegar { display: none; }
+
+.consultas-periodo,
+.consultas-buscador {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 38px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--cui-border-color, #dbe1ea);
+  border-radius: 8px;
+  background: var(--mc-fondo);
+  color: var(--cui-body-color);
+}
+.consultas-periodo { width: 100%; text-align: left; font-variant-numeric: tabular-nums; }
+.consultas-periodo:focus-visible,
+.consultas-buscador:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--cui-primary, #2563eb) 35%, transparent);
+  border-color: var(--cui-primary, #2563eb);
+}
+.consultas-buscador input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  min-height: 36px;
+}
+
+.consultas-filtros__avanzado {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 14rem));
+  gap: 0.75rem 1rem;
+  padding-top: 0.85rem;
+}
+
+.consultas-filtros__pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+}
+.consultas-pildoras { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.consultas-pildora {
+  min-height: 36px;
+  padding: 0 0.85rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--mc-suave);
+  color: var(--cui-body-color);
+  font-size: 0.85rem;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+.consultas-pildora:hover { background: color-mix(in srgb, var(--cui-primary, #2563eb) 10%, var(--mc-suave)); }
+.consultas-pildora.is-activa { background: var(--cui-primary, #2563eb); color: #fff; font-weight: 600; }
+.consultas-pildora:focus-visible,
+.consultas-vista button:focus-visible {
+  outline: 3px solid var(--cui-primary, #2563eb);
+  outline-offset: 2px;
+}
+
+.consultas-filtros__vista { display: flex; align-items: center; gap: 0.75rem; margin-left: auto; }
+.consultas-conteo { font-size: 0.85rem; color: var(--mc-texto-2); white-space: nowrap; }
+.consultas-vista {
+  display: inline-flex;
+  border: 1px solid var(--mc-borde);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.consultas-vista button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 36px;
+  padding: 0 0.85rem;
+  border: 0;
+  background: var(--mc-fondo);
+  color: var(--cui-body-color);
+  font-size: 0.85rem;
+}
+.consultas-vista button + button { border-left: 1px solid var(--mc-borde); }
+.consultas-vista button.is-activa { background: var(--cui-primary, #2563eb); color: #fff; }
+
+/* --- Renglones ----------------------------------------------------------- */
+.consultas-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+  transition: opacity 150ms ease-out;
+}
+.consultas-lista.is-cargando { opacity: 0.6; }
+
+.consulta-renglon {
+  display: grid;
+  grid-template-columns: 9rem minmax(11rem, 1.2fr) 8.5rem minmax(10rem, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--mc-borde);
+  border-radius: 12px;
+  background: var(--mc-fondo);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  transition: box-shadow 160ms ease-out, transform 160ms ease-out;
+}
+.consulta-renglon:hover { box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08); transform: translateY(-1px); }
+.consulta-renglon--cancelada { opacity: 0.8; }
+
+.consulta-renglon__cuando { display: flex; align-items: center; gap: 0.75rem; }
+.consulta-fecha {
+  display: grid;
+  justify-items: center;
+  width: 3.1rem;
+  padding: 0.3rem 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--cui-primary, #2563eb) 8%, var(--mc-fondo));
+  color: #1d4ed8;
+  line-height: 1.05;
+}
+.consulta-fecha__dia, .consulta-fecha__mes { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; }
+.consulta-fecha__numero { font-size: 1.3rem; font-weight: 800; }
+.consulta-renglon__hora { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.consulta-renglon__paciente { display: flex; align-items: center; gap: 0.75rem; }
+.consulta-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.consulta-avatar--azul { background: #dbeafe; color: #1d4ed8; }
+.consulta-avatar--morado { background: #ede9fe; color: #6d28d9; }
+.consulta-avatar--verde { background: #dcfce7; color: #15803d; }
+.consulta-avatar--ambar { background: #fef3c7; color: #92400e; }
+.consulta-avatar--rosa { background: #fce7f3; color: #be185d; }
+.consulta-avatar--cian { background: #cffafe; color: #0e7490; }
+.consulta-renglon__nombre { display: grid; gap: 0.1rem; }
+.consulta-renglon__titulo {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.consulta-renglon__datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.9rem;
+  font-size: 0.8rem;
+  color: var(--mc-texto-2);
+}
+
+.consulta-renglon__estado { display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+.consulta-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+/* Texto oscuro sobre fondo claro del mismo tono: AA en todos. */
+.consulta-estado--agendada { background: #eef2f7; color: #334155; }
+.consulta-estado--confirmada { background: #dbeafe; color: #1e40af; }
+.consulta-estado--en_sala { background: #fef3c7; color: #92400e; }
+.consulta-estado--en_consulta { background: #ede9fe; color: #5b21b6; }
+.consulta-estado--atendida { background: #dcfce7; color: #166534; }
+.consulta-estado--cancelada { background: #fee2e2; color: #991b1b; }
+
+.consulta-renglon__motivo {
+  display: flex;
+  gap: 0.6rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--mc-borde);
+}
+.consulta-renglon__motivo-icono { flex: none; color: #2563eb; margin-top: 0.15rem; }
+.consulta-renglon__motivo-texto { display: grid; font-size: 0.85rem; }
+.consulta-renglon__motivo-titulo { font-weight: 600; font-size: 0.8rem; }
+.consulta-renglon__motivo-texto .is-recortado {
+  color: var(--mc-texto-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.consulta-renglon__motivo-texto .is-completo { color: var(--mc-texto-2); white-space: pre-wrap; }
+.consulta-renglon__ver-mas {
+  justify-self: start;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: #1d4ed8;
+  font-size: 0.8rem;
+  text-decoration: underline;
+}
+
+.consulta-renglon__acciones { display: flex; align-items: center; gap: 0.25rem; justify-content: flex-end; }
+.consulta-renglon__icono { min-width: 40px; min-height: 40px; }
+.consulta-renglon__principal { min-height: 40px; min-width: 10rem; white-space: nowrap; }
+
+/* Pantallas medianas: el motivo baja a su renglón. */
+@media (max-width: 1199.98px) {
+  .consulta-renglon { grid-template-columns: 9rem minmax(11rem, 1fr) 8.5rem auto; }
+  .consulta-renglon__motivo { grid-column: 2 / -1; grid-row: 2; padding-left: 0; border-left: 0; }
+}
+
+.consultas-vacio {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  border: 1px dashed var(--mc-borde);
+  border-radius: var(--mc-radio);
+  background: var(--mc-fondo);
+}
+.consultas-calendario {
+  padding: 1rem;
+  border: 1px solid var(--mc-borde);
+  border-radius: var(--mc-radio);
+  background: var(--mc-fondo);
+  max-width: 28rem;
+}
+
+.consultas-paginas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+.consultas-paginas__controles { display: flex; align-items: center; gap: 0.5rem; }
+.consultas-paginas__tamano { width: auto; }
+
+/* --- Teléfono: cada renglón es una tarjeta ------------------------------- */
+@media (max-width: 767.98px) {
+  .consultas-filtros { padding: 0.85rem; }
+  .consultas-filtros__fila { grid-template-columns: 1fr; }
+  .consultas-filtros__plegar { display: inline-flex; justify-self: start; min-height: 44px; }
+  .consultas-filtros__mas { display: none; grid-template-columns: 1fr; }
+  .consultas-filtros__mas.is-abierto { display: grid; }
+  .consultas-pildoras { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.25rem; }
+  .consultas-pildora { flex: none; min-height: 44px; }
+  .consultas-filtros__vista { margin-left: 0; width: 100%; justify-content: space-between; }
+  .consultas-vista button { min-height: 44px; }
+
+  .consulta-renglon {
+    grid-template-columns: 1fr auto;
+    gap: 0.6rem;
+    padding: 0.85rem;
+  }
+  .consulta-renglon:hover { transform: none; }
+  .consulta-renglon__cuando { grid-column: 1; }
+  .consulta-renglon__estado { grid-column: 2; grid-row: 1; align-items: flex-end; }
+  .consulta-renglon__paciente { grid-column: 1 / -1; }
+  .consulta-renglon__motivo { grid-column: 1 / -1; grid-row: auto; padding-left: 0; border-left: 0; }
+  .consulta-renglon__acciones { grid-column: 1 / -1; justify-content: stretch; }
+  .consulta-renglon__principal { flex: 1; min-width: 0; min-height: 44px; }
+  .consulta-renglon__icono { min-width: 44px; min-height: 44px; }
+  .consultas-paginas { justify-content: center; }
+  .consultas-paginas > span { width: 100%; text-align: center; }
+  .resumen-dia { min-width: 0; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consultas-pildora,
+  .consultas-lista,
+  .consulta-renglon,
+  .resumen-dia__barra span { transition: none; }
+  .consulta-renglon:hover { transform: none; }
+}

@@ -1,0 +1,853 @@
+// ═══════════════════════════════════════════════════════════════
+// INICIO DE LA DOCTORA (plan 28, Fase 2)
+//
+// Celular primero: las doctoras entran desde el teléfono. Una columna en el
+// orden en que se usa, sin scroll horizontal a 360 px, botones de 44 px como
+// mínimo. En escritorio, dos columnas como el boceto. Animaciones sutiles que
+// se apagan con `prefers-reduced-motion`.
+// ═══════════════════════════════════════════════════════════════
+
+.inicio-doctora {
+  --inicio-gap: 0.875rem;
+  --inicio-toque: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--inicio-gap);
+  min-width: 0;
+  padding-bottom: 1rem;
+
+  @media (min-width: 768px) {
+    --inicio-gap: 1.25rem;
+  }
+
+  // Nada empuja la página a lo ancho: el texto largo se corta, no desborda.
+  * {
+    min-width: 0;
+  }
+
+  // Los tonos, con contraste AA sobre su fondo claro.
+  .inicio-fondo-azul { background: var(--hf-blue-light); color: #1d4ed8; }
+  .inicio-fondo-ambar { background: var(--hf-amber-light); color: #b45309; }
+  .inicio-fondo-verde { background: var(--hf-green-light); color: #15803d; }
+  .inicio-fondo-morado { background: var(--hf-purple-light); color: #6d28d9; }
+  .inicio-fondo-rojo { background: var(--hf-red-light); color: #b91c1c; }
+
+  .inicio-tono-azul { background: var(--hf-blue); }
+  .inicio-tono-ambar { background: #f59e0b; }
+  .inicio-tono-verde { background: var(--hf-green); }
+
+  .inicio-detalle-critico { color: #b91c1c; font-weight: 600; }
+  .inicio-detalle-chico { color: var(--hf-text-secondary); font-size: 0.75rem; }
+
+  .inicio-enlace {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--hf-blue);
+    text-decoration: underline;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  button:focus-visible,
+  .inicio-indicador-accion:focus-visible {
+    outline: 3px solid var(--hf-blue);
+    outline-offset: 2px;
+  }
+}
+
+// --- Aparecer, una vez, sin distraer -------------------------------------
+@keyframes inicio-aparecer {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.inicio-aparece {
+  animation: inicio-aparecer 0.24s ease-out both;
+}
+
+// --- Encabezado ------------------------------------------------------------
+.inicio-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.25rem 0.125rem 0;
+}
+
+.inicio-saludo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--hf-heading);
+  margin: 0;
+  overflow-wrap: anywhere;
+
+  @media (min-width: 768px) {
+    font-size: 1.6rem;
+  }
+}
+
+.inicio-encabezado-sub {
+  margin: 0.125rem 0 0;
+  color: var(--hf-text-secondary);
+  font-size: 0.875rem;
+}
+
+.inicio-fecha::first-letter {
+  text-transform: uppercase;
+}
+
+.inicio-actualizado {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--hf-text-secondary);
+
+  .inicio-actualizar {
+    min-height: var(--inicio-toque);
+    padding-inline: 0.5rem;
+  }
+}
+
+.inicio-actualizado-error {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+// --- Indicadores: 2×2 en el celular, 4 en fila en escritorio ----------------
+.inicio-indicadores {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--inicio-gap);
+  }
+}
+
+.inicio-indicador {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem;
+  background: var(--hf-surface);
+  border: 1px solid var(--hf-border);
+  border-radius: var(--hf-radius-lg);
+  transition: border-color var(--hf-transition), box-shadow var(--hf-transition), transform var(--hf-transition);
+
+  &:hover {
+    border-color: var(--hf-border-hover);
+    box-shadow: var(--hf-shadow);
+  }
+
+  @media (min-width: 768px) {
+    padding: 1rem 1.125rem;
+  }
+}
+
+// El botón cubre la tarjeta entera: toda ella es el objetivo táctil.
+.inicio-indicador-accion {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-radius: inherit;
+  cursor: pointer;
+
+  &:active + .inicio-indicador-icono {
+    transform: scale(0.96);
+  }
+}
+
+.inicio-indicador-icono {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--hf-radius);
+  transition: transform var(--hf-transition);
+}
+
+.inicio-indicador-valor {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--hf-heading);
+  margin-top: 0.25rem;
+}
+
+.inicio-indicador-etiqueta {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--hf-text);
+}
+
+.inicio-indicador-detalle {
+  font-size: 0.78rem;
+  color: var(--hf-text-secondary);
+}
+
+.inicio-esqueleto-numero {
+  display: inline-block;
+  width: 2.5rem;
+  height: 1.5rem;
+}
+
+.inicio-esqueleto-mini {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1rem;
+}
+
+.inicio-barra {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--hf-surface-alt);
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.inicio-barra-relleno {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.4s ease-out;
+}
+
+// --- Cuerpo: una columna, o dos en escritorio --------------------------------
+.inicio-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--inicio-gap);
+}
+
+// En el celular las columnas no existen: sus secciones se ordenan solas.
+.inicio-columna {
+  display: contents;
+}
+
+.inicio-orden-agenda { order: 1; }
+.inicio-orden-pendientes { order: 2; }
+.inicio-orden-acciones { order: 3; }
+.inicio-orden-recientes { order: 4; }
+.inicio-orden-calendario { order: 5; }
+
+@media (min-width: 992px) {
+  .inicio-cuerpo {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .inicio-columna {
+    display: flex;
+    flex-direction: column;
+    gap: var(--inicio-gap);
+  }
+
+  [class*='inicio-orden-'] {
+    order: 0;
+  }
+}
+
+// --- Tarjeta genérica de sección --------------------------------------------
+.inicio-tarjeta {
+  background: var(--hf-surface);
+  border: 1px solid var(--hf-border);
+  border-radius: var(--hf-radius-lg);
+  overflow: hidden;
+}
+
+.inicio-tarjeta-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  padding: 0.875rem 1rem 0.5rem;
+}
+
+.inicio-tarjeta-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--hf-heading);
+  margin: 0;
+}
+
+.inicio-tarjeta-pie {
+  border-top: 1px solid var(--hf-border-light);
+  text-align: center;
+}
+
+.inicio-pie-enlace {
+  min-height: var(--inicio-toque);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.inicio-aviso-chico {
+  font-size: 0.78rem;
+  color: #b91c1c;
+}
+
+.inicio-estado-error {
+  padding: 1rem;
+  text-align: center;
+  color: #b91c1c;
+
+  p { margin-bottom: 0.5rem; }
+}
+
+.inicio-vacio {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--hf-text-secondary);
+  margin: 0;
+}
+
+.inicio-vacio-icono {
+  width: 2rem;
+  height: 2rem;
+  opacity: 0.35;
+  margin-bottom: 0.5rem;
+}
+
+.inicio-vacio-nota {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+// --- Pestañas: control segmentado que se desplaza, sin desbordar la página --
+.inicio-pestanas {
+  display: flex;
+  gap: 0.375rem;
+  padding: 0 1rem 0.625rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.inicio-pestana {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 36px;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--hf-border);
+  border-radius: 999px;
+  background: var(--hf-surface);
+  color: var(--hf-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--hf-transition), color var(--hf-transition), border-color var(--hf-transition);
+
+  @media (pointer: coarse) {
+    min-height: var(--inicio-toque);
+  }
+
+  &.es-activa {
+    background: var(--hf-blue);
+    border-color: var(--hf-blue);
+    color: #fff;
+
+    .inicio-pestana-numero {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+  }
+}
+
+.inicio-pestana-numero {
+  min-width: 1.4rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--hf-surface-alt);
+  color: var(--hf-text-secondary);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+// --- Línea de tiempo de la agenda ---------------------------------------------
+.inicio-linea {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0.25rem;
+  position: relative;
+}
+
+.inicio-cita-item {
+  border-top: 1px solid var(--hf-border-light);
+
+  &.es-cancelada .inicio-cita {
+    opacity: 0.55;
+
+    .inicio-cita-nombre { text-decoration: line-through; }
+  }
+}
+
+.inicio-cita {
+  display: grid;
+  grid-template-columns: 3.1rem 0.75rem 2.5rem minmax(0, 1fr);
+  grid-template-areas:
+    'hora punto avatar texto'
+    'hora punto avatar insignias';
+  align-items: center;
+  column-gap: 0.5rem;
+  row-gap: 0.25rem;
+  width: 100%;
+  min-height: 64px;
+  padding: 0.625rem 1rem;
+  background: none;
+  border: 0;
+  text-align: left;
+  color: inherit;
+  transition: background var(--hf-transition);
+
+  @media (min-width: 576px) {
+    grid-template-columns: 3.5rem 0.75rem 2.5rem minmax(0, 1fr) auto;
+    grid-template-areas: 'hora punto avatar texto insignias';
+  }
+}
+
+button.inicio-cita {
+  cursor: pointer;
+
+  &:hover { background: var(--hf-surface-hover); }
+  &:active { background: var(--hf-surface-alt); }
+}
+
+.inicio-cita--esqueleto {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--hf-border-light);
+}
+
+.inicio-cita-hora {
+  grid-area: hora;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--hf-heading);
+  line-height: 1.15;
+}
+
+.inicio-cita-duracion {
+  display: block;
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: var(--hf-text-secondary);
+}
+
+// El punto de la línea: el color repite lo que dice la insignia en texto.
+.inicio-cita-punto {
+  grid-area: punto;
+  justify-self: center;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  background: var(--hf-surface);
+}
+
+.inicio-cita-avatar {
+  grid-area: avatar;
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: var(--hf-blue-light);
+  color: #1d4ed8;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.inicio-cita-texto {
+  grid-area: texto;
+  display: flex;
+  flex-direction: column;
+}
+
+.inicio-cita-nombre {
+  font-weight: 600;
+  color: var(--hf-heading);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inicio-cita-sub {
+  font-size: 0.8rem;
+  color: var(--hf-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inicio-cita-insignias {
+  grid-area: insignias;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: flex-start;
+
+  @media (min-width: 576px) {
+    justify-content: flex-end;
+  }
+}
+
+.inicio-insignia {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.inicio-insignia-aviso {
+  background: var(--hf-amber-light);
+  color: #92400e;
+  border-color: var(--hf-amber-border);
+}
+
+// Estado: texto + color (el color nunca va solo).
+.inicio-estado-por-atender { color: #475569; }
+.inicio-insignia.inicio-estado-por-atender { background: #f1f5f9; border-color: #e2e8f0; }
+.inicio-estado-en-sala { color: #b45309; }
+.inicio-insignia.inicio-estado-en-sala { background: var(--hf-amber-light); border-color: var(--hf-amber-border); }
+.inicio-estado-en-consulta { color: #6f42c1; }
+.inicio-insignia.inicio-estado-en-consulta { background: #f1ebfa; border-color: #ddd0f3; }
+.inicio-estado-atendida { color: #15803d; }
+.inicio-insignia.inicio-estado-atendida { background: var(--hf-green-light); border-color: var(--hf-green-border); }
+.inicio-estado-cancelada { color: #b91c1c; }
+.inicio-insignia.inicio-estado-cancelada { background: var(--hf-red-light); border-color: var(--hf-red-border); }
+
+.inicio-cita-punto.inicio-estado-atendida { background: currentColor; }
+.inicio-cita-punto.inicio-estado-en-consulta {
+  background: currentColor;
+  animation: inicio-latido 2s ease-in-out infinite;
+}
+
+@keyframes inicio-latido {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(111, 66, 193, 0.35); }
+  50% { box-shadow: 0 0 0 5px rgba(111, 66, 193, 0); }
+}
+
+// --- Pendientes ------------------------------------------------------------
+.inicio-pendientes {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0.25rem;
+}
+
+.inicio-pendiente {
+  border-top: 1px solid var(--hf-border-light);
+}
+
+.inicio-pendiente-fila {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.625rem 1rem;
+  background: none;
+  border: 0;
+  text-align: left;
+  color: inherit;
+}
+
+button.inicio-pendiente-fila {
+  cursor: pointer;
+
+  &:hover { background: var(--hf-surface-hover); }
+}
+
+.inicio-pendiente-icono {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--hf-radius);
+}
+
+.inicio-pendiente-texto {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.inicio-pendiente-titulo {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--hf-heading);
+}
+
+.inicio-pendiente-sub {
+  font-size: 0.78rem;
+  color: var(--hf-text-secondary);
+}
+
+.inicio-pendiente-numero {
+  flex: 0 0 auto;
+  min-width: 1.9rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--hf-surface-alt);
+  color: var(--hf-text-secondary);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.inicio-numero-rojo { background: var(--hf-red-light); color: #b91c1c; }
+.inicio-numero-ambar { background: var(--hf-amber-light); color: #b45309; }
+.inicio-numero-azul { background: var(--hf-blue-light); color: #1d4ed8; }
+.inicio-numero-morado { background: var(--hf-purple-light); color: #6d28d9; }
+
+.inicio-pendiente-reintentar {
+  margin: -0.25rem 1rem 0.5rem 4rem;
+  min-height: 32px;
+  font-size: 0.8rem;
+}
+
+.inicio-sublista {
+  list-style: none;
+  margin: -0.25rem 0 0.5rem;
+  padding: 0 1rem 0 4rem;
+}
+
+.inicio-subitem {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: var(--inicio-toque);
+  padding: 0.25rem 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px dashed var(--hf-border-light);
+  font-size: 0.85rem;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  align-items: center;
+
+  &:hover .inicio-subitem-nombre { text-decoration: underline; }
+}
+
+.inicio-subitem-nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inicio-subitem-dato {
+  flex: 0 0 auto;
+  color: var(--hf-text-secondary);
+}
+
+.inicio-subitem-mas {
+  font-size: 0.8rem;
+  color: var(--hf-text-secondary);
+  padding-top: 0.25rem;
+}
+
+// --- Acciones: rejilla de 2 en el celular, lista en escritorio -------------
+.inicio-acciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.inicio-accion {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 52px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--hf-border);
+  border-radius: var(--hf-radius);
+  background: var(--hf-surface-alt);
+  color: var(--hf-text);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--hf-transition), border-color var(--hf-transition), transform var(--hf-transition);
+
+  &:hover:not(:disabled) {
+    border-color: var(--hf-blue-border);
+    background: var(--hf-blue-light);
+  }
+
+  &:active:not(:disabled) { transform: scale(0.98); }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  // «Siguiente paciente»: la acción principal ocupa toda la fila.
+  &.es-principal {
+    grid-column: 1 / -1;
+    background: var(--hf-blue);
+    border-color: var(--hf-blue);
+    color: #fff;
+
+    &:hover:not(:disabled) { background: #1d4ed8; border-color: #1d4ed8; }
+
+    &:disabled {
+      background: var(--hf-surface-alt);
+      border-color: var(--hf-border);
+      color: var(--hf-text-secondary);
+      opacity: 1;
+    }
+
+    // Sin opacidad: sobre el azul de la acción principal bajaba a 4.48:1 (axe).
+    .inicio-accion-detalle { color: inherit; }
+  }
+}
+
+.inicio-accion-icono {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.inicio-accion-texto {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.inicio-accion-detalle {
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--hf-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// --- Recientes -------------------------------------------------------------
+.inicio-recientes {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0.25rem;
+}
+
+.inicio-reciente {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--hf-border-light);
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover { background: var(--hf-surface-hover); }
+
+  .inicio-cita-texto { flex: 1 1 auto; }
+}
+
+.inicio-reciente-fecha {
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  color: var(--hf-text-secondary);
+}
+
+// --- Calendario ------------------------------------------------------------
+.inicio-calendario {
+  padding: 0.75rem 0.75rem 0;
+}
+
+.inicio-calendario-aviso {
+  padding: 0 1rem;
+}
+
+.inicio-calendario-ayuda {
+  margin: 0;
+  padding: 0.25rem 1rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--hf-text-secondary);
+}
+
+// --- Sin animaciones para quien las pidió apagadas -------------------------
+@media (prefers-reduced-motion: reduce) {
+  .inicio-aparece,
+  .inicio-cita-punto.inicio-estado-en-consulta {
+    animation: none;
+  }
+
+  .inicio-doctora * {
+    transition: none !important;
+  }
+}
+
+// La franja de críticos (plan 26) dentro del inicio: en el celular el botón
+// baja a su propia línea y ocupa el ancho, en vez de apretarse junto al título.
+.inicio-doctora [data-tour='doctora-criticos'] {
+  margin-bottom: 0 !important;
+
+  .hf-section-header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    min-height: var(--inicio-toque);
+
+    @media (max-width: 575.98px) {
+      width: 100%;
+    }
+  }
+}
+
+// En el inicio el calendario se toca con el pulgar: días de 44 px.
+.inicio-calendario .mini-calendario-dia,
+.inicio-calendario .mini-calendario-nav {
+  min-height: var(--inicio-toque);
+  min-width: var(--inicio-toque);
+}
+
+// «Reintentar» también se toca con el pulgar.
+.inicio-estado-error .btn,
+.inicio-calendario-aviso .btn,
+.inicio-pendiente-reintentar {
+  min-height: var(--inicio-toque);
+}
+
+
+// Edad y semanas de gestación en su propio renglón: al final del subtítulo
+// se cortaban en el celular y eran justo lo que la doctora busca.
+.inicio-cita-datos {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--hf-text);
+}

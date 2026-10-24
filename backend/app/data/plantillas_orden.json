@@ -1,0 +1,81 @@
+{
+  "_nota": "Plantillas clínicas OPCIONALES que PRECARGAN estudios en la orden agrupada (O-03). La doctora elige una, revisa los estudios y confirma: nada se crea sin su confirmación manual (el alta sigue siendo POST /order-groups, O-02). Los estudios son sugerencias editables antes de confirmar. Semilla en código porque la pregunta 2.3 (quién administra las plantillas) sigue abierta: hoy son de sólo lectura. Si cambia el contenido, sube 'version' del conjunto para que el frontend sepa que cambió.",
+  "version": 1,
+  "plantillas": [
+    {
+      "clave": "primera_consulta_prenatal",
+      "nombre": "Primera consulta prenatal",
+      "descripcion": "Laboratorio inicial del control prenatal y ultrasonido obstétrico.",
+      "indicacion_sugerida": "Control prenatal, primer trimestre.",
+      "estudios": [
+        {"category": "laboratory", "study_name": "Biometría hemática completa", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Grupo sanguíneo y factor Rh", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Glucosa en ayuno", "preparation_instructions": "Ayuno de 8 horas"},
+        {"category": "laboratory", "study_name": "Examen general de orina", "preparation_instructions": "Primera orina de la mañana, chorro medio"},
+        {"category": "laboratory", "study_name": "Urocultivo", "preparation_instructions": "Chorro medio, aseo previo"},
+        {"category": "laboratory", "study_name": "VDRL / RPR", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Prueba de VIH", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Antígeno de superficie de hepatitis B (HBsAg)", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Perfil tiroideo (TSH)", "preparation_instructions": null},
+        {"category": "obstetric", "study_name": "Ultrasonido obstétrico", "preparation_instructions": null}
+      ]
+    },
+    {
+      "clave": "control_prenatal_subsecuente",
+      "nombre": "Control prenatal subsecuente",
+      "descripcion": "Laboratorio de seguimiento en una consulta prenatal de control.",
+      "indicacion_sugerida": "Control prenatal subsecuente.",
+      "estudios": [
+        {"category": "laboratory", "study_name": "Biometría hemática completa", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Examen general de orina", "preparation_instructions": "Primera orina de la mañana, chorro medio"},
+        {"category": "laboratory", "study_name": "Glucosa en ayuno", "preparation_instructions": "Ayuno de 8 horas"}
+      ]
+    },
+    {
+      "clave": "tamizaje_diabetes_gestacional",
+      "nombre": "Tamizaje de diabetes gestacional",
+      "descripcion": "Curva de tolerancia a la glucosa para tamizaje entre las semanas 24 y 28.",
+      "indicacion_sugerida": "Tamizaje de diabetes gestacional.",
+      "estudios": [
+        {"category": "laboratory", "study_name": "Curva de tolerancia a la glucosa oral (75 g)", "preparation_instructions": "Ayuno de 8 horas; la toma dura alrededor de 2 horas en el laboratorio"},
+        {"category": "laboratory", "study_name": "Glucosa en ayuno", "preparation_instructions": "Ayuno de 8 horas"}
+      ]
+    },
+    {
+      "clave": "papanicolau_hpv",
+      "nombre": "Papanicolau / HPV",
+      "descripcion": "Citología cervical y prueba de virus del papiloma humano.",
+      "indicacion_sugerida": "Tamizaje de cáncer cervicouterino.",
+      "estudios": [
+        {"category": "gynecology", "study_name": "Citología cervicovaginal (Papanicolau)", "specimen_or_body_site": "Cérvix", "preparation_instructions": "No en menstruación; evitar duchas, óvulos y relaciones 48 horas antes"},
+        {"category": "gynecology", "study_name": "Prueba de VPH (virus del papiloma humano)", "specimen_or_body_site": "Cérvix", "preparation_instructions": "No en menstruación; evitar duchas, óvulos y relaciones 48 horas antes"}
+      ]
+    },
+    {
+      "clave": "its",
+      "nombre": "Infecciones de transmisión sexual",
+      "descripcion": "Panel de tamizaje de infecciones de transmisión sexual.",
+      "indicacion_sugerida": "Tamizaje de infecciones de transmisión sexual.",
+      "estudios": [
+        {"category": "laboratory", "study_name": "VDRL / RPR", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Prueba de VIH", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Antígeno de superficie de hepatitis B (HBsAg)", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Anticuerpos de hepatitis C", "preparation_instructions": null},
+        {"category": "gynecology", "study_name": "PCR de gonorrea y clamidia", "specimen_or_body_site": "Endocervical", "preparation_instructions": null}
+      ]
+    },
+    {
+      "clave": "fertilidad",
+      "nombre": "Estudio de fertilidad",
+      "descripcion": "Perfil hormonal e imagen para el abordaje inicial de fertilidad.",
+      "indicacion_sugerida": "Estudio inicial de fertilidad.",
+      "estudios": [
+        {"category": "laboratory", "study_name": "Perfil hormonal (FSH, LH, estradiol, prolactina, progesterona)", "preparation_instructions": "Toma según el día del ciclo que indique la doctora"},
+        {"category": "laboratory", "study_name": "Hormona antimülleriana (AMH)", "preparation_instructions": null},
+        {"category": "laboratory", "study_name": "Perfil tiroideo (TSH)", "preparation_instructions": null},
+        {"category": "gynecology", "study_name": "Ultrasonido pélvico", "preparation_instructions": null},
+        {"category": "gynecology", "study_name": "Histerosalpingografía", "preparation_instructions": "Entre los días 7 y 12 del ciclo, ya sin sangrado"}
+      ]
+    }
+  ]
+}

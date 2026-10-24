@@ -1,0 +1,148 @@
+// ═══════════════════════════════════════════════════════════════
+// Contraste del texto (plan 29, lote 6, pasada de axe)
+// ═══════════════════════════════════════════════════════════════
+//
+// El azul del sistema es ahora #1a66cc en todas partes (ver style.scss: el
+// #3399ff de antes daba 2.9:1 con letra blanca, también en botones sólidos;
+// decisión de Emilio, 2026-10-04). Las reglas de abajo nacieron cuando el
+// tema traía el azul claro; se conservan porque siguen fijando el azul
+// correcto en enlaces y botones «link», «ghost» y «outline» —«Corregir signos
+// vitales», «Ver la ayuda», «Reintentar»— y en el texto, sin depender de que
+// el tema siga oscuro.
+// La app se usa siempre en tema claro (App.tsx fija el modo).
+
+:root {
+  --gems-azul-texto: #1a66cc; // 5.5:1 sobre blanco, 5.0:1 sobre el gris de fondo
+  --gems-gris-texto: #5f6b78; // 4.95:1 sobre el gris de fondo
+  --cui-link-color: var(--gems-azul-texto);
+  --cui-link-color-rgb: 26, 102, 204;
+  --cui-link-hover-color: #14519f;
+  --cui-link-hover-color-rgb: 20, 81, 159;
+  // Texto terciario de las tarjetas (#999 daba 2.8:1).
+  --hf-text-tertiary: #6b7280;
+}
+
+.btn-link,
+.btn-ghost-primary,
+.btn-outline-primary {
+  --cui-btn-color: var(--gems-azul-texto);
+}
+
+.btn-outline-primary {
+  --cui-btn-border-color: var(--gems-azul-texto);
+}
+
+.btn-ghost-secondary {
+  --cui-btn-color: var(--gems-gris-texto);
+}
+
+.text-primary {
+  color: var(--gems-azul-texto) !important;
+}
+
+// Contorno amarillo («Regresar a sala»): el amarillo del tema como letra
+// sobre blanco daba 1.5:1. Se conserva el borde y se oscurece la letra.
+.btn-outline-warning {
+  --cui-btn-color: #7a5f00;
+}
+
+// Pestaña activa (pastillas): letra clara sobre el azul del tema (hoy ya
+// oscuro; el valor coincide con el del tema y no depende de él).
+.nav-pills {
+  --cui-nav-pills-link-active-bg: var(--gems-azul-texto);
+  --cui-nav-pills-link-active-color: #fff;
+}
+
+// Insignias moradas («Embarazo · 28 sem»): blanco sobre #747af2 daba 3.6:1.
+// Se cambia el color base (rgb) y no el fondo con !important: así las
+// insignias pálidas (`bg-opacity-10` con letra de color) siguen pálidas.
+.badge.bg-info {
+  --cui-info-rgb: 74, 80, 208;
+}
+
+// Atajos de la receta: el verde de «Duración» y el ámbar de «Motivo» daban
+// 3.3:1 como letra y como fondo con letra blanca. Mismo tono, más oscuro.
+.gems-chip-duracion.btn {
+  --cui-btn-color: #15803d;
+  --cui-btn-border-color: #15803d;
+  --cui-btn-hover-bg: #15803d;
+  --cui-btn-hover-border-color: #15803d;
+  --cui-btn-active-bg: #15803d;
+  --cui-btn-active-border-color: #15803d;
+}
+
+.gems-chip-motivo.btn {
+  --cui-btn-color: #b45309;
+  --cui-btn-border-color: #b45309;
+  --cui-btn-hover-bg: #b45309;
+  --cui-btn-hover-border-color: #b45309;
+  --cui-btn-active-bg: #b45309;
+  --cui-btn-active-border-color: #b45309;
+}
+
+// Insignias de estado (Atendida, En sala, Activa…): letra blanca sobre el
+// verde, azul y rojo del tema daba 2.0, 2.9 y 3.9:1. El azul ya viene
+// oscurecido del tema; el verde y el rojo se corrigen aquí sólo en
+// insignias, y los botones con esos fondos se quedan como están.
+.badge.bg-success {
+  --cui-success-rgb: 31, 122, 77;
+}
+
+.badge.bg-primary {
+  --cui-primary-rgb: 26, 102, 204;
+}
+
+.badge.bg-danger {
+  --cui-danger-rgb: 196, 23, 75;
+}
+
+// Botones de contorno verde, rojo y morado: la letra del color del tema sobre
+// blanco daba 2.0, 3.9 y 3.6:1.
+.btn-outline-success {
+  --cui-btn-color: #1f7a4d;
+}
+
+.btn-outline-danger {
+  // #b01242 y no #c4174b: dentro de un aviso rojo (fondo #fcd7e2, el
+  // «Reintentar» de los errores) el anterior daba 4.46:1 (axe, plan 32).
+  --cui-btn-color: #b01242;
+}
+
+.btn-outline-info {
+  --cui-btn-color: #4a50d0;
+}
+
+// Avisos flotantes (ToastProvider) con letra blanca: el rojo y el verde del
+// tema daban 3.9 y 2.0:1. Se oscurecen igual que las insignias (plan 32).
+.toast.bg-danger {
+  --cui-danger-rgb: 196, 23, 75;
+}
+
+.toast.bg-success {
+  --cui-success-rgb: 31, 122, 77;
+}
+
+// Insignias amarillas (estado «En sala», pendientes): la letra blanca del
+// tema sobre #fc0 daba 1.5:1. Con letra oscura, 10:1 (axe, plan 32).
+.badge.bg-warning {
+  color: #3d2e00 !important;
+}
+
+// Botones fantasma morados («¿Cómo se llena?»): el morado del tema sobre
+// blanco daba 3.6:1. El mismo morado oscuro que los de contorno.
+.btn-ghost-info {
+  --cui-btn-color: #4a50d0;
+}
+
+// Ventanas (modales): el vidrio al 72 % dejaba ver la agenda detrás y el
+// contraste de cada texto dependía de lo que pasara por debajo (axe medía
+// 3.3:1 en «Cerrar»). Casi opacas, conservan el desenfoque del borde.
+.modal-content {
+  background-color: rgba(var(--cui-body-bg-rgb, 255, 255, 255), 0.97);
+}
+
+// Botón gris de contorno («Cerrar», «Cancelar»): #6b7785 sobre blanco daba
+// 4.4:1, apenas debajo de AA.
+.btn-outline-secondary {
+  --cui-btn-color: #5b6573;
+}

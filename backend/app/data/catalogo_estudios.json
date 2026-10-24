@@ -1,0 +1,218 @@
+{
+  "fuente": "Formato de solicitud de Imágenes Diagnósticas de Mazatlán",
+  "grupos": [
+    {
+      "clave": "tomografia",
+      "nombre": "Tomografía multicorte",
+      "modalidad": "TAC",
+      "modificadores": [
+        "Simple",
+        "Contrastada"
+      ],
+      "estudios": [
+        "Cráneo",
+        "Cuello",
+        "Tórax",
+        "UROTC",
+        "Abdomen completo",
+        "Otra region"
+      ]
+    },
+    {
+      "clave": "angiografia_tc",
+      "nombre": "Angiografía por TC",
+      "modalidad": "TAC",
+      "requiere_region": true,
+      "estudios": [
+        "Angiografía por TC"
+      ]
+    },
+    {
+      "clave": "riesgo_cardiaco",
+      "nombre": "Detección temprana de riesgo de infarto cardiaco",
+      "modalidad": "TAC",
+      "estudios": [
+        "Angiografía de arterias coronarias por TC",
+        "Score de calcio de arterias coronarias"
+      ]
+    },
+    {
+      "clave": "resonancia",
+      "nombre": "Resonancia magnética",
+      "modalidad": "RM",
+      "modificadores": [
+        "Simple",
+        "Contrastada"
+      ],
+      "estudios": [
+        "Cerebro",
+        "Mamas",
+        "Próstata multiparamétrica",
+        "Colangioresonancia",
+        "Abdomen superior",
+        "Abdomen inferior",
+        "Columna",
+        "Neuro eje (cerebro, cervical, torácica, lumbar)",
+        "Cuerpo completo",
+        "Otra region"
+      ]
+    },
+    {
+      "clave": "angioresonancia",
+      "nombre": "Angioresonancia",
+      "modalidad": "RM",
+      "requiere_region": true,
+      "estudios": [
+        "Angioresonancia"
+      ]
+    },
+    {
+      "clave": "imagen_mujer",
+      "nombre": "Imagen de la mujer",
+      "modalidad": "Imagen",
+      "destacado": true,
+      "estudios": [
+        "Mamografía + US mamario",
+        "US mamario",
+        "Elastografía mamaria",
+        "Densitometría ósea",
+        "Histerosalpingografía",
+        "Histerosonografía"
+      ]
+    },
+    {
+      "clave": "ultrasonidos",
+      "nombre": "Ultrasonidos",
+      "modalidad": "US",
+      "requiere_region": true,
+      "estudios": [
+        "Ultrasonido especializado",
+        "Ultrasonido Doppler venoso",
+        "Ultrasonido Doppler arterial"
+      ]
+    },
+    {
+      "clave": "us_embarazo",
+      "nombre": "US especializado embarazo",
+      "modalidad": "US",
+      "destacado": true,
+      "estudios": [
+        "US obstétrico estructural",
+        "US Doppler obstétrico",
+        "US 4D"
+      ]
+    },
+    {
+      "clave": "biopsias",
+      "nombre": "Biopsias",
+      "modalidad": "Intervencionismo",
+      "requiere_region": true,
+      "estudios": [
+        "Biopsia"
+      ]
+    },
+    {
+      "clave": "rx_cabeza_cuello",
+      "nombre": "Rayos X - Cabeza y cuello",
+      "modalidad": "RX",
+      "estudios": [
+        "Cráneo AP y lateral",
+        "Towne",
+        "Mastoides",
+        "Art. temporomandibular",
+        "Senos paranasales",
+        "Lateral de cuello",
+        "Waters",
+        "Caldwell",
+        "Perfilograma",
+        "Panorámica dental",
+        "Cefalometría"
+      ]
+    },
+    {
+      "clave": "rx_columna",
+      "nombre": "Rayos X - Columna vertebral",
+      "modalidad": "RX",
+      "modificadores": [
+        "Oblicuas"
+      ],
+      "estudios": [
+        "Cervical AP/Lat",
+        "Torácica AP/Lat",
+        "Lumbar AP/Lat",
+        "Pelvis - cadera",
+        "Sacrococcígea",
+        "Columna dinámicas"
+      ]
+    },
+    {
+      "clave": "rx_abdomen",
+      "nombre": "Rayos X - Abdomen",
+      "modalidad": "RX",
+      "estudios": [
+        "Rx abdomen simple",
+        "Esofagograma",
+        "Serie esofagogastrica",
+        "Gastroduodenal",
+        "Colangiografía por sonda",
+        "Tránsito intestinal",
+        "Colon doble contraste"
+      ]
+    },
+    {
+      "clave": "rx_torax",
+      "nombre": "Rayos X - Tórax",
+      "modalidad": "RX",
+      "estudios": [
+        "PA",
+        "Óseo",
+        "Lateral"
+      ]
+    },
+    {
+      "clave": "vias_urinarias",
+      "nombre": "Vías urinarias",
+      "modalidad": "RX",
+      "estudios": [
+        "Urografía excretora",
+        "Uretrografía",
+        "Cistografía",
+        "Uretrocistografía miccional"
+      ]
+    },
+    {
+      "clave": "extremidades",
+      "nombre": "Extremidades",
+      "modalidad": "RX",
+      "requiere_lateralidad": true,
+      "estudios": [
+        "Clavícula",
+        "Hombro",
+        "Húmero",
+        "Brazo",
+        "Codo",
+        "Antebrazo",
+        "Muñeca",
+        "Mano",
+        "Cadera",
+        "Muslo",
+        "Rodilla",
+        "Pierna",
+        "Tobillo",
+        "Pie",
+        "Serie ósea metastásica",
+        "Comparativa de calcáneos",
+        "Edad ósea radiológica"
+      ]
+    },
+    {
+      "clave": "otros",
+      "nombre": "Otros estudios",
+      "modalidad": "Otros",
+      "estudios": [
+        "Elastografía hepática (fibrosis - cirrosis)",
+        "Ecocardiograma"
+      ]
+    }
+  ]
+}

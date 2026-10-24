@@ -1,0 +1,45 @@
+/* Rastro de cada estudio (plan 32, punto 3): texto chico y gris para que
+   no compita con la acción; la línea de tiempo, con una guía vertical. */
+.rastro { font-size: 0.75rem; color: var(--cui-secondary-color, #475569); margin-top: 0.15rem; }
+.rastro__ver {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: #1d4ed8;
+  text-decoration: underline;
+  font-size: inherit;
+}
+.rastro__linea { margin-top: 0.4rem; }
+.rastro__eventos {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 0.9rem;
+  border-left: 2px solid var(--cui-border-color, #dbe1ea);
+  display: grid;
+  gap: 0.3rem;
+}
+.rastro__evento { position: relative; }
+.rastro__evento::before {
+  content: '';
+  position: absolute;
+  left: calc(-0.9rem - 5px);
+  top: 0.35rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cui-body-bg, #fff);
+  border: 2px solid #64748b;
+}
+.rastro__evento--revisado::before,
+.rastro__evento--comunicado::before { border-color: #15803d; }
+.rastro__evento--anulado::before,
+.rastro__evento--estado::before { border-color: #b91c1c; }
+.rastro__evento--seguimiento::before { border-color: #b45309; }
+.rastro__titulo { font-weight: 600; color: var(--cui-body-color); }
+.rastro__leyendas {
+  list-style: none;
+  margin: 0.3rem 0 0;
+  padding: 0;
+  font-size: 0.75rem;
+  color: var(--cui-secondary-color, #475569);
+}

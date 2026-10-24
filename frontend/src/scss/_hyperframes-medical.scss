@@ -1,0 +1,422 @@
+// ─────────────────────────────────────────────────────────────────
+// HyperFrames Medical Design System
+// Inspired by HyperFrames DESIGN.md — flat, border-based,
+// warm neutral tones, clean typography. Adapted for G.E.M.S
+// medical SaaS (doctors, consultorios, patients).
+// ─────────────────────────────────────────────────────────────────
+
+:root {
+  // ── Warm neutral background palette ──
+  --hf-bg: #f8f7f5;
+  --hf-surface: #ffffff;
+  --hf-surface-hover: #fafaf9;
+  --hf-surface-alt: #f3f2ef;
+
+  // ── Borders (flat, no heavy shadows) ──
+  --hf-border: #e8e5e0;
+  --hf-border-light: #f0ede8;
+  --hf-border-hover: #d5d1ca;
+
+  // ── Typography ──
+  --hf-text: #1a1a1a;
+  --hf-text-secondary: #6b6b6b;
+  --hf-text-tertiary: #999999;
+  --hf-heading: #0f172a;
+
+  // ── Accent colors (medical-appropriate) ──
+  --hf-blue: #2563eb;
+  --hf-blue-light: #eff6ff;
+  --hf-blue-border: #bfdbfe;
+  --hf-green: #16a34a;
+  --hf-green-light: #f0fdf4;
+  --hf-green-border: #bbf7d0;
+  --hf-amber: #d97706;
+  --hf-amber-light: #fffbeb;
+  --hf-amber-border: #fde68a;
+  --hf-purple: #7c3aed;
+  --hf-purple-light: #f5f3ff;
+  --hf-purple-border: #ddd6fe;
+  --hf-red: #dc2626;
+  --hf-red-light: #fef2f2;
+  --hf-red-border: #fecaca;
+
+  // ── Radii (slightly softer than CoreUI defaults) ──
+  --hf-radius-sm: 6px;
+  --hf-radius: 10px;
+  --hf-radius-lg: 14px;
+  --hf-radius-xl: 20px;
+
+  // ── Shadows (subtle, flat aesthetic) ──
+  --hf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --hf-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --hf-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+
+  // ── Transitions (HyperFrames pace: 0.15s-0.2s) ──
+  --hf-transition: 0.15s ease;
+  --hf-transition-slow: 0.2s ease;
+
+  // ── Page gradient (warm medical white → subtle blue tint) ──
+  --hf-page-bg: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #f8f7f5 100%);
+}
+
+// ── Page background ──
+body.hf-theme {
+  background: var(--hf-page-bg);
+  background-attachment: fixed;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CARDS
+// ═══════════════════════════════════════════════════════════════
+
+.hf-card {
+  background: var(--hf-surface);
+  border: 1px solid var(--hf-border);
+  border-radius: var(--hf-radius-lg);
+  overflow: hidden;
+  transition: border-color var(--hf-transition), box-shadow var(--hf-transition);
+
+  &:hover {
+    border-color: var(--hf-border-hover);
+  }
+}
+
+// Elevated card — slightly lifted
+.hf-card-raised {
+  @extend .hf-card;
+  box-shadow: var(--hf-shadow);
+
+  &:hover {
+    box-shadow: var(--hf-shadow-lg);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HERO BANNER
+// ═══════════════════════════════════════════════════════════════
+
+.hf-hero {
+  position: relative;
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 40%, #3b82f6 100%);
+  border-radius: var(--hf-radius-xl);
+  padding: 2rem 2rem 1.75rem;
+  color: #fff;
+  overflow: hidden;
+
+  // Subtle medical pattern overlay
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  h1 {
+    position: relative;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #fff;
+    margin: 0;
+  }
+
+  .hf-hero-sub {
+    position: relative;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 0.25rem;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// KPI TILES
+// ═══════════════════════════════════════════════════════════════
+
+.hf-stat-card {
+  background: var(--hf-surface);
+  border: 1px solid var(--hf-border);
+  border-radius: var(--hf-radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: border-color var(--hf-transition), box-shadow var(--hf-transition);
+
+  &:hover {
+    border-color: var(--hf-border-hover);
+    box-shadow: var(--hf-shadow);
+  }
+}
+
+.hf-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--hf-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.25rem;
+
+  &.hf-stat-blue {
+    background: var(--hf-blue-light);
+    color: var(--hf-blue);
+    border: 1px solid var(--hf-blue-border);
+  }
+
+  &.hf-stat-green {
+    background: var(--hf-green-light);
+    color: var(--hf-green);
+    border: 1px solid var(--hf-green-border);
+  }
+
+  &.hf-stat-amber {
+    background: var(--hf-amber-light);
+    color: var(--hf-amber);
+    border: 1px solid var(--hf-amber-border);
+  }
+}
+
+.hf-stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--hf-heading);
+  line-height: 1;
+}
+
+.hf-stat-label {
+  font-size: 0.82rem;
+  color: var(--hf-text-secondary);
+  margin-top: 2px;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// APPOINTMENT LIST ITEMS
+// ═══════════════════════════════════════════════════════════════
+
+.hf-appointment-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--hf-border-light);
+  cursor: pointer;
+  transition: background var(--hf-transition);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--hf-surface-hover);
+  }
+}
+
+.hf-appointment-time {
+  width: 54px;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--hf-blue);
+  text-align: center;
+  background: var(--hf-blue-light);
+  border: 1px solid var(--hf-blue-border);
+  border-radius: var(--hf-radius-sm);
+  padding: 6px 4px;
+  line-height: 1.2;
+
+  .time-duration {
+    font-weight: 400;
+    font-size: 0.7rem;
+    color: var(--hf-text-tertiary);
+  }
+}
+
+.hf-appointment-info {
+  flex: 1;
+  min-width: 0;
+
+  .patient-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--hf-heading);
+  }
+
+  .patient-meta {
+    font-size: 0.78rem;
+    color: var(--hf-text-secondary);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATUS BADGES
+// ═══════════════════════════════════════════════════════════════
+
+.hf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 999px;
+  white-space: nowrap;
+
+  .hf-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.hf-badge-success {
+    background: var(--hf-green-light);
+    color: var(--hf-green);
+    border: 1px solid var(--hf-green-border);
+    .hf-badge-dot { background: var(--hf-green); }
+  }
+
+  &.hf-badge-warning {
+    background: var(--hf-amber-light);
+    color: var(--hf-amber);
+    border: 1px solid var(--hf-amber-border);
+    .hf-badge-dot { background: var(--hf-amber); }
+  }
+
+  &.hf-badge-info {
+    background: var(--hf-blue-light);
+    color: var(--hf-blue);
+    border: 1px solid var(--hf-blue-border);
+    .hf-badge-dot { background: var(--hf-blue); }
+  }
+
+  &.hf-badge-neutral {
+    background: var(--hf-surface-alt);
+    color: var(--hf-text-secondary);
+    border: 1px solid var(--hf-border);
+    .hf-badge-dot { background: var(--hf-text-tertiary); }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION HEADER
+// ═══════════════════════════════════════════════════════════════
+
+.hf-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  h5 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--hf-heading);
+    margin: 0;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EMPTY STATE
+// ═══════════════════════════════════════════════════════════════
+
+.hf-empty-state {
+  text-align: center;
+  padding: 2.5rem 1rem;
+
+  .hf-empty-icon {
+    font-size: 2.5rem;
+    color: var(--hf-text-tertiary);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--hf-text-secondary);
+    font-size: 0.9rem;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SKELETON LOADING
+// ═══════════════════════════════════════════════════════════════
+
+.hf-skeleton {
+  background: linear-gradient(90deg, var(--hf-surface-alt) 25%, var(--hf-border-light) 50%, var(--hf-surface-alt) 75%);
+  background-size: 200% 100%;
+  animation: hf-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--hf-radius-sm);
+}
+
+@keyframes hf-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CAMPOS DE CAPTURA CLÍNICA
+// El doctor no localizaba los campos en pantalla: los bordes de CoreUI son
+// demasiado claros. Se refuerzan para que cada campo se lea como una caja
+// definida, sin salirse de los tokens del tema.
+// ═══════════════════════════════════════════════════════════════
+
+.gems-campo {
+  &.form-control,
+  &.form-select {
+    background-color: var(--cui-body-bg);
+    border-width: 2px;
+    border-color: var(--cui-gray-500);
+
+    &:hover:not(:disabled):not([readonly]) {
+      border-color: var(--cui-gray-600);
+    }
+
+    &:focus {
+      border-color: var(--cui-primary);
+    }
+
+    &::placeholder {
+      color: var(--cui-tertiary-color);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ATAJOS DE PAUTA (dosis / frecuencia / duración)
+// Antes eran casi invisibles: cada columna lleva ahora su propio tono, con
+// contraste suficiente, y el atajo elegido queda relleno. Se pintan sobre las
+// variables de botón de CoreUI para no pelearse con sus estados.
+// ═══════════════════════════════════════════════════════════════
+
+.gems-chip {
+  &.btn {
+    --cui-btn-bg: transparent;
+    --cui-btn-disabled-bg: transparent;
+    --cui-btn-hover-color: #fff;
+    --cui-btn-active-color: #fff;
+    font-weight: 600;
+    border-width: 2px;
+  }
+
+  // El elegido no deja lugar a dudas: relleno, blanco y ligeramente elevado.
+  &.gems-chip-activo.btn {
+    --cui-btn-bg: var(--cui-btn-border-color);
+    --cui-btn-color: #fff;
+    box-shadow: var(--hf-shadow);
+  }
+}
+
+// `motivo` es ambar: es el tono de "dato que conviene leer" (DESIGN.md 2).
+@each $tono, $color in (dosis: var(--hf-blue), frecuencia: var(--hf-purple), duracion: var(--hf-green), motivo: var(--hf-amber)) {
+  .gems-chip-#{$tono}.btn {
+    --cui-btn-color: #{$color};
+    --cui-btn-border-color: #{$color};
+    --cui-btn-hover-bg: #{$color};
+    --cui-btn-hover-border-color: #{$color};
+    --cui-btn-active-bg: #{$color};
+    --cui-btn-active-border-color: #{$color};
+  }
+}

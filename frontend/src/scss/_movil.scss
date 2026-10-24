@@ -1,0 +1,513 @@
+// ═══════════════════════════════════════════════════════════════
+// EL TELÉFONO (plan 29, lote 2)
+// Las doctoras entran desde el celular. En ≤ 576 px se quita lo que no sirve
+// en una pantalla a la vez y cuesta altura antes del primer dato; el
+// escritorio no cambia.
+// ═══════════════════════════════════════════════════════════════
+
+@media (max-width: 575.98px) {
+  // T-2: las pestañas no aportan con una sola pantalla a la vista y costaban
+  // altura. El título lo dice el encabezado de cada pantalla (las migas ya
+  // no existen en ningún tamaño, plan 32, punto 2).
+  .tabs-bar-marco {
+    display: none !important;
+  }
+
+  // El contenido arranca pegado al encabezado y con menos margen lateral.
+  .header {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .wrapper > .body > .container-lg,
+  .body > .container-lg {
+    padding-inline: 0.75rem !important;
+  }
+
+  // P-2: el héroe de cada página pasa a un título compacto de una línea; la
+  // descripción se quita y las acciones se quedan a la derecha.
+  .hero-banner {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem !important;
+    border-radius: 12px;
+
+    h1, h2, h3, h4 {
+      font-size: 1.15rem;
+      margin-bottom: 0 !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    // La descripción y el ícono grande sobran en una línea.
+    .opacity-75,
+    p,
+    .bg-opacity-25,
+    .bg-opacity-20 {
+      display: none;
+    }
+
+    &.p-4 {
+      padding: 0.75rem 1rem !important;
+    }
+
+    > .row {
+      --cui-gutter-y: 0.5rem;
+      align-items: center !important;
+
+      // El título nunca se queda sin lugar: si las acciones no caben a su
+      // lado, bajan a su propio renglón.
+      > .col {
+        min-width: 8rem;
+      }
+
+      > .col-auto {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.375rem;
+
+        .btn {
+          min-height: 44px;
+          margin: 0 !important;
+        }
+      }
+    }
+  }
+
+  // El encabezado cabe en un solo renglón a 360 px: la sucursal se recorta
+  // (el nombre completo va en el `title` y en el inicio).
+  .header > .container-fluid {
+    flex-wrap: nowrap;
+    padding-inline: 0.5rem !important;
+    gap: 0.125rem;
+
+    .ms-2 {
+      margin-inline-start: 0.125rem !important;
+    }
+  }
+
+  .encabezado-sucursal {
+    padding-inline-start: 0.375rem !important;
+    margin-inline-start: 0.125rem !important;
+    min-width: 0;
+  }
+
+  .encabezado-sucursal-nombre {
+    display: inline-block;
+    max-width: 4.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}
+
+// ─── T-3: tablas como tarjetas en el teléfono (`TablaResponsiva`) ──────────
+@media (max-width: 575.98px) {
+  .tabla-tarjetas-contenedor .table-responsive {
+    overflow-x: visible;
+  }
+
+  table.tabla-tarjetas {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+
+    thead {
+      display: none;
+    }
+
+    tbody {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+    }
+
+    tbody tr {
+      display: flex;
+      flex-direction: column;
+      padding: 0.75rem 0.875rem;
+      border: 1px solid var(--cui-border-color);
+      border-radius: 12px;
+      background: var(--cui-body-bg);
+      // Las rayas y el realce de la tabla no tienen sentido en una tarjeta.
+      --cui-table-accent-bg: transparent;
+      --cui-table-bg-state: transparent;
+    }
+
+    tbody td {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.25rem 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      text-align: right;
+      overflow-wrap: anywhere;
+
+      &::before {
+        content: attr(data-etiqueta);
+        flex: 0 0 auto;
+        max-width: 45%;
+        color: var(--cui-secondary-color);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-align: left;
+      }
+
+      &[data-tarjeta='titulo'] {
+        order: -1;
+        display: block;
+        text-align: left;
+        font-weight: 700;
+        font-size: 1rem;
+        padding-bottom: 0.375rem !important;
+
+        &::before { content: none; }
+      }
+
+      &[data-tarjeta='acciones'] {
+        order: 99;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        padding-top: 0.625rem !important;
+        border-top: 1px solid var(--cui-border-color-translucent) !important;
+        text-align: left;
+        white-space: normal !important;
+
+        &::before { content: none; }
+
+        .btn,
+        a.btn,
+        button {
+          min-height: 44px;
+          min-width: 44px;
+        }
+
+        // Sin cursor no hay `title`: el botón de solo ícono dice qué hace.
+        [data-solo-icono]::after {
+          content: attr(title);
+          margin-inline-start: 0.375rem;
+          font-size: 0.85rem;
+          font-weight: 600;
+        }
+
+        [data-solo-icono] {
+          display: inline-flex;
+          align-items: center;
+          border: 1px solid var(--cui-border-color);
+          margin: 0 !important;
+        }
+
+        // Los grupos de botones de la tabla se separan para el pulgar.
+        .d-flex,
+        .btn-group {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+      }
+
+      &[data-tarjeta='ocultar'] {
+        display: none;
+      }
+
+      &[data-tarjeta='mensaje'] {
+        display: block;
+        text-align: center;
+
+        &::before { content: none; }
+      }
+
+      // Una celda vacía no deja una etiqueta colgando.
+      &:empty {
+        display: none;
+      }
+    }
+  }
+}
+
+// Las pantallas que ya eran tarjetas (órdenes por entregar, subir resultado):
+// sus botones, al alcance del pulgar.
+@media (max-width: 575.98px) {
+  [data-tour='panel-entrega'],
+  [data-tour='panel-resultados'] {
+    .btn {
+      min-height: 44px;
+    }
+  }
+}
+
+// Al saltar a los documentos de la paciente, que el encabezado fijo no los tape.
+.documentos-columna {
+  scroll-margin-top: 10rem;
+}
+
+// ─── A-3: la Agenda en el teléfono ─────────────────────────────────────────
+@media (max-width: 575.98px) {
+  // Un solo calendario: el grande (en vista Día) manda; el mini del panel se
+  // repetía justo debajo.
+  [data-tour='agenda-mini-calendario'] {
+    display: none !important;
+  }
+
+  .agenda-calendar .fc .fc-toolbar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .agenda-calendar .fc .fc-toolbar-title {
+    font-size: 1rem;
+  }
+
+  .agenda-calendar .fc .fc-button {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  // Exportar e imprimir la agenda son tareas de escritorio (la impresión pide
+  // la vista Lista de un periodo): en el teléfono dejan sitio a «Nueva cita».
+  [data-tour='agenda-exportar'],
+  [data-tour='agenda-imprimir'] {
+    display: none !important;
+  }
+}
+
+// ─── C-4/C-5: la consulta en el teléfono ───────────────────────────────────
+@media (max-width: 575.98px) {
+  // Cabecera compacta: «Volver», título, folio y estado en lo mínimo; las
+  // descripciones (la de la pantalla y la de «Regresar a sala», que también
+  // va en el `title` del botón) se quitan para llegar antes a la paciente.
+  .consulta-encabezado {
+    margin-bottom: 0.5rem !important;
+
+    > .card-body {
+      padding: 0.625rem 0.75rem !important;
+    }
+
+    h4 {
+      font-size: 1.05rem;
+    }
+
+    .consulta-encabezado-descripcion {
+      display: none !important;
+    }
+
+    // El estado y «Regresar a sala» en un renglón, no en columna.
+    > .card-body > .d-flex {
+      gap: 0.5rem !important;
+    }
+
+    [data-tour='consulta-estado'] {
+      flex-direction: row !important;
+      align-items: center !important;
+      flex-wrap: wrap;
+
+      .btn {
+        min-height: 40px;
+      }
+    }
+
+    h4 + .badge,
+    .mt-2 {
+      margin-top: 0.25rem !important;
+    }
+
+    .border-top.mt-3.pt-3 {
+      margin-top: 0.5rem !important;
+      padding-top: 0.5rem !important;
+    }
+
+    .nav-link {
+      min-height: 44px;
+    }
+  }
+
+  .consulta-pagina {
+    padding-top: 0 !important;
+  }
+
+  // «Finalizar»: solo el botón, a todo el ancho y pegado abajo.
+  .consulta-barra-finalizar {
+    bottom: 0.5rem !important;
+
+    > .card-body {
+      padding: 0.5rem !important;
+    }
+
+    .consulta-barra-finalizar-texto {
+      display: none;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 48px;
+      font-size: 1rem;
+    }
+  }
+
+  // Mientras se escribe, la barra no tapa el campo: con el teclado abierto
+  // ocupaba casi toda la pantalla. Vuelve en cuanto se sale del campo.
+  .consulta-pagina:has(textarea:focus, input:not([type='checkbox']):not([type='radio']):focus, select:focus, [contenteditable='true']:focus)
+    .consulta-barra-finalizar {
+    display: none;
+  }
+}
+
+// ─── E-2: el expediente en el teléfono ─────────────────────────────────────
+@media (max-width: 575.98px) {
+  // Las frases que explican cada bloque ya se saben a la tercera vez y en el
+  // teléfono empujaban lo útil hacia abajo.
+  .texto-de-apoyo {
+    display: none !important;
+  }
+
+  // Última atención y próxima cita, lo primero (antes del control prenatal).
+  .expediente-resumen {
+    order: -1;
+  }
+
+  .expediente-resumen-datos {
+    --cui-gutter-y: 0.5rem;
+
+    > [class*='col-'] > div {
+      padding: 0.5rem 0.75rem !important;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+
+      > .mt-1 { margin-top: 0 !important; text-align: right; }
+    }
+  }
+}
+
+// Lote 7: el menú «Corregir» de cada documento, al alcance del pulgar.
+.documentos-corregir-boton {
+  min-width: 36px;
+  min-height: 36px;
+
+  @media (max-width: 575.98px) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+// ─── Lote 8: formularios en el teléfono ────────────────────────────────────
+@media (max-width: 575.98px) {
+  // Modales a pantalla completa, con el pie (las acciones) siempre a la vista:
+  // el cuerpo se desplaza y el pie no. Con `interactive-widget=resizes-content`
+  // el alto (dvh) se encoge al abrir el teclado y el pie queda arriba de él.
+  .modal-dialog {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    min-height: 100dvh;
+    height: 100dvh;
+    align-items: stretch;
+  }
+
+  // También el scrollable de CoreUI, que se quedaba a un margen del borde.
+  .modal-dialog-scrollable {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+
+  .modal-content {
+    height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    // A pantalla completa el vidrio translúcido dejaba ver la página detrás.
+    background: var(--cui-body-bg);
+    backdrop-filter: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  // Muchos formularios envuelven cuerpo y pie en un <form>.
+  .modal-content > form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    // La cita fija un alto máximo propio en escritorio; aquí manda el flex.
+    max-height: none !important;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .modal-header,
+  .modal-footer {
+    flex-shrink: 0;
+  }
+
+  .modal-footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--cui-modal-bg, var(--cui-body-bg));
+    border-top: 1px solid var(--cui-border-color);
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    > * {
+      margin: 0 !important;
+    }
+
+    .btn {
+      min-height: 44px;
+      flex: 1 1 auto;
+    }
+  }
+
+  // Campos de 44 px y letra de 16 px (con menos, iOS hace zoom al enfocar).
+  .modal {
+    .form-control,
+    .form-select {
+      min-height: 44px;
+      font-size: 1rem;
+    }
+
+    textarea.form-control {
+      min-height: 5rem;
+    }
+
+    .form-check-input {
+      width: 1.35em;
+      height: 1.35em;
+    }
+
+    .btn-close {
+      padding: 0.9rem;
+    }
+  }
+}
+
+// La nota y la receta de la consulta (no son modal): campos de 44 px y letra
+// de 16 px en el teléfono (con menos, iOS hace zoom al enfocar).
+.nota-campo {
+  font-size: 0.925rem;
+}
+
+@media (max-width: 575.98px) {
+  .consulta-pagina {
+    .form-control,
+    .form-select,
+    .nota-campo {
+      min-height: 44px;
+      font-size: 1rem;
+    }
+  }
+}

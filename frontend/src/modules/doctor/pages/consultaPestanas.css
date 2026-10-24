@@ -1,0 +1,27 @@
+/* Pestañas de la consulta (plan 29, lote 6). En la computadora, icono y
+   nombre en un renglón; en el teléfono, el nombre en letra chica debajo del
+   icono, para que las cinco quepan y se sepa qué es cada una. */
+.consulta-pestana {
+  gap: 0.35rem;
+  border: 0;
+  background: transparent;
+}
+
+@media (max-width: 767.98px) {
+  .consulta-pestanas .consulta-pestana {
+    flex-direction: column;
+    gap: 0.15rem;
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0.35rem 0.5rem !important;
+    font-size: 0.7rem;
+    line-height: 1.1;
+  }
+
+  /* Las cinco a partes iguales: a 360 px caben sin desplazarse de lado. */
+  .consulta-pestanas .nav-item {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}

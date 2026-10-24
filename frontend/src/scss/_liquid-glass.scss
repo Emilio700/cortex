@@ -1,0 +1,1389 @@
+// Fase 7 · Liquid glass design system
+//
+// Glassmorphism layered on top of CoreUI's own --cui-* custom properties -
+// no component library swap, no new dependency. Two-tier intensity per the
+// "punto medio" product decision: dashboards/KPIs/banners get a livelier,
+// more colorful glass treatment (reference: MOPE-style dashboards - visible
+// gradients, circular icon chips, generous radius/padding); dense data
+// tables (patient lists, agendas) stay closer to the original sober tier so
+// legibility of clinical data isn't compromised.
+//
+// Token naming: --glass-* to stay clearly distinguishable from CoreUI's own
+// --cui-* variables while still resolving against them, so a future CoreUI
+// upgrade that changes --cui-* automatically flows through here too.
+
+:root {
+  --glass-blur: 12px;
+  --glass-blur-strong: 20px; // reserved for floating elements (modals, dropdowns) and hero banners
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-bg-strong: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-border-highlight: rgba(255, 255, 255, 0.75); // 1px top highlight
+  --glass-shadow: 0 2px 8px rgba(20, 40, 80, 0.08), 0 1px 3px rgba(20, 40, 80, 0.05);
+  --glass-shadow-strong: 0 12px 32px rgba(20, 40, 80, 0.14), 0 4px 10px rgba(20, 40, 80, 0.08);
+
+  // Larger, more visible radii than CoreUI's default 0.375-0.5rem - part of
+  // what reads as "modern SaaS dashboard" rather than "admin template".
+  --glass-radius: 1rem;
+  --glass-radius-lg: 1.25rem;
+
+  // Page-background gradient - visible cool blue-to-teal wash (still
+  // static, no animation) instead of the near-flat 2-3% variation from the
+  // first pass, which read as "no change at all" against a real dashboard.
+  --page-gradient: linear-gradient(
+    135deg,
+    #eef6fb 0%,
+    #e3f1ee 45%,
+    #eaf3fb 100%
+  );
+
+  // Hero/banner gradient - the saturated brand-color band used for section
+  // headers and KPI accent chips (see .hero-banner, .kpi-icon below).
+  --hero-gradient: linear-gradient(120deg, #2d7ef7 0%, #39c2c9 100%);
+}
+
+[data-coreui-theme="dark"] {
+  --glass-blur: 12px;
+  --glass-blur-strong: 20px;
+  --glass-bg: rgba(30, 36, 46, 0.78);
+  --glass-bg-strong: rgba(26, 31, 40, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-highlight: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+  --glass-shadow-strong: 0 14px 36px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  --page-gradient: linear-gradient(
+    135deg,
+    #10151d 0%,
+    #131b1f 45%,
+    #10151d 100%
+  );
+
+  --hero-gradient: linear-gradient(120deg, #1c5fc4 0%, #1f8f96 100%);
+}
+
+// Gradient backdrop for the app shell. Applied to body instead of .wrapper
+// so it sits behind the sidebar/header too.
+body {
+  background-image: var(--page-gradient);
+  background-attachment: fixed;
+}
+
+// Base glass surface - mixin-like placeholder selector, applied via @extend
+// from specific component classes below rather than globally overriding
+// .card (a plain white card is still correct for dense data tables where
+// transparency would hurt legibility - glass is opt-in per surface).
+%glass-surface {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-top-color: var(--glass-border-highlight);
+  box-shadow: var(--glass-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+%glass-surface-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-strong));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
+  border: 1px solid var(--glass-border);
+  border-top-color: var(--glass-border-highlight);
+  box-shadow: var(--glass-shadow-strong);
+}
+
+// Opt-in utility class for domain cards (appointment/patient/notification
+// cards, dashboard KPI tiles) - see components ported in this phase.
+.glass-card {
+  @extend %glass-surface;
+  border-radius: var(--glass-radius);
+
+  &:hover {
+    box-shadow: var(--glass-shadow-strong);
+    transform: translateY(-2px);
+  }
+}
+
+// Saturated gradient banner for section headers (dashboards, module
+// landing cards) - the MOPE-style "hero" band. Text is always white/high
+// contrast on top of it regardless of theme, since the gradient itself
+// doesn't invert for dark mode (a strong brand-color band reads fine in
+// both themes without needing its own dark variant).
+.hero-banner {
+  background: var(--hero-gradient);
+  border-radius: var(--glass-radius-lg);
+  padding: 1.75rem 2rem;
+  color: #fff;
+  box-shadow: var(--glass-shadow-strong);
+
+  h1, h2, h3, h4, h5 {
+    color: #fff;
+  }
+}
+
+// Circular color-chip icon container used in KPI tiles (the colored circle
+// behind an icon, e.g. "Cobrado hoy" / "Citas Hoy" cards).
+.kpi-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+// KPI tile - a glass-card variant with more generous padding and the
+// icon-left / number-right layout used across dashboards.
+.kpi-tile {
+  @extend %glass-surface;
+  border-radius: var(--glass-radius);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  &:hover {
+    box-shadow: var(--glass-shadow-strong);
+    transform: translateY(-2px);
+  }
+
+  .kpi-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .kpi-label {
+    color: var(--cui-secondary-color);
+    font-size: 0.8125rem;
+  }
+}
+
+// Floating surfaces get the stronger blur tier per the hybrid rule: content
+// cards stay maximally legible, but things that float above content
+// (modals, dropdown menus, popovers) can afford more depth since the
+// blurred backdrop is secondary information there, not something being read.
+.modal-content,
+.popover {
+  @extend %glass-surface-strong;
+}
+
+// Dropdowns need solid white bg for readability - glass blur makes text hard to read
+.dropdown-menu {
+  background: #fff;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow-strong);
+}
+
+[data-coreui-theme="dark"] .dropdown-menu {
+  background: #1e2229;
+  border-color: var(--glass-border);
+}
+
+// The header is a floating/persistent chrome element too.
+.header {
+  @extend %glass-surface-strong;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+[data-coreui-theme="dark"] .header {
+  border-bottom-color: var(--glass-border);
+}
+
+// Floating sidebar (MOPE-reference look): inset from the viewport edge with
+// its own rounded corners and glass surface, rather than a flush panel
+// pinned to screen edges. Only applied at the >= lg breakpoint where the
+// sidebar is a permanent fixture next to content - on mobile it still
+// slides in full-bleed as an overlay, where insetting it would look broken
+// against the backdrop scrim.
+@media (min-width: 992px) {
+  .sidebar.sidebar-fixed:not(.sidebar-end) {
+    top: 0.75rem;
+    bottom: 0.75rem;
+    inset-inline-start: 0.75rem;
+    height: auto;
+    border-radius: var(--glass-radius-lg);
+    overflow: hidden;
+  }
+
+  .wrapper {
+    padding-inline-start: calc(var(--cui-sidebar-occupy-start, 0px) + 0.75rem) !important;
+  }
+}
+
+// Reusable autocomplete/search-results dropdown (e.g. patient search in
+// AppointmentModal) - was hardcoded white/#ddd/#f0f0f0 before Fase 7,
+// breaking dark mode entirely. Glass-strong tier since it floats above form
+// content.
+.patient-search-dropdown {
+  @extend %glass-surface-strong;
+  position: absolute;
+  z-index: 1000;
+  border-radius: var(--cui-border-radius, 0.375rem);
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 2px;
+}
+
+.autocomplete-dropdown-item {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--cui-border-color-translucent);
+  transition: background-color 0.12s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: var(--cui-tertiary-bg);
+  }
+}
+
+// Appointment list item hover (AppointmentListCard.tsx) - ported from a
+// component-embedded <style> tag; was already dark-mode-safe (used
+// --cui-tertiary-bg) but centralizing keeps all glass-adjacent styling in
+// one place instead of scattered <style> tags per component.
+.appointment-list-item:hover {
+  background-color: var(--cui-tertiary-bg);
+}
+
+// Skeleton loaders (Fase 7.2) - CPlaceholder already ships in CoreUI Pro,
+// this just gives it a softer shimmer consistent with the glass tone
+// instead of the flat default gray, in both themes.
+.placeholder {
+  background-color: var(--cui-tertiary-bg);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: glass-shimmer 1.6s ease-in-out infinite;
+}
+
+[data-coreui-theme="dark"] .placeholder {
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.06),
+    transparent
+  );
+}
+
+@keyframes glass-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Microinteractions (Fase 7.6) - CSS-only, no animation library added for
+// this (package.json audit confirmed none is installed; the scope here
+// doesn't warrant pulling one in).
+.nav-underline-border .nav-link,
+.nav-tabs .nav-link {
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.btn {
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+// FullCalendar (AgendaCalendar.tsx) - Fase 7.4 rewrite. The Fase 7.1 pass
+// only styled the column header and "today" highlight, leaving the toolbar,
+// event chips and grid lines on FullCalendar's plain default look - visibly
+// inconsistent against the rest of the glass system (flagged directly by
+// the user: "esta muy feo ese muy simple rompe la estetica"). This section
+// now covers the whole calendar surface: toolbar buttons, event chips,
+// grid lines, all-day/now-indicator, and the month view's day cells.
+.agenda-calendar {
+  @extend %glass-surface;
+  padding: 1.25rem;
+  border-radius: var(--glass-radius);
+}
+
+.fc {
+  font-size: 0.875rem;
+  color: var(--cui-body-color);
+}
+
+// --- Toolbar (prev/next/today, title, view switcher) ---------------------
+.fc .fc-toolbar {
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.fc .fc-button {
+  background: var(--cui-tertiary-bg);
+  border: 1px solid var(--cui-border-color-translucent);
+  color: var(--cui-body-color);
+  text-transform: capitalize;
+  font-weight: 500;
+  border-radius: 0.6rem !important;
+  padding: 0.4rem 0.85rem;
+  box-shadow: none;
+  transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    background: var(--cui-secondary-bg);
+    color: var(--cui-body-color);
+  }
+
+  &:active,
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(var(--cui-primary-rgb), 0.25) !important;
+  }
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background: var(--cui-primary);
+  border-color: var(--cui-primary);
+  color: #fff;
+}
+
+.fc .fc-button-group .fc-button {
+  border-radius: 0 !important;
+
+  &:first-child {
+    border-top-left-radius: 0.6rem !important;
+    border-bottom-left-radius: 0.6rem !important;
+  }
+
+  &:last-child {
+    border-top-right-radius: 0.6rem !important;
+    border-bottom-right-radius: 0.6rem !important;
+  }
+}
+
+.fc .fc-today-button {
+  text-transform: capitalize;
+}
+
+// --- Grid / column headers ------------------------------------------------
+.fc-theme-standard .fc-scrollgrid,
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border-color: var(--cui-border-color-translucent);
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.fc .fc-col-header-cell {
+  background: linear-gradient(to bottom, var(--cui-tertiary-bg), transparent);
+  border-bottom: 2px solid var(--cui-border-color) !important;
+  padding: 0.85rem 0.5rem !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0;
+  color: var(--cui-body-color);
+  text-decoration: none !important;
+}
+
+.fc .fc-col-header-cell-cushion::first-line {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--cui-secondary-color);
+}
+
+.fc .fc-col-header-cell .fc-scrollgrid-sync-inner {
+  text-align: center;
+}
+
+.fc .fc-timegrid-slot {
+  height: 2.75rem;
+}
+
+.fc .fc-timegrid-slot-label-cushion {
+  font-size: 0.75rem;
+  color: var(--cui-secondary-color);
+}
+
+.fc .fc-timegrid-axis-cushion {
+  font-size: 0.7rem;
+  color: var(--cui-secondary-color);
+  text-transform: uppercase;
+}
+
+// Current-time indicator - a clean accent line instead of FullCalendar's
+// default thin red hairline, so it reads as an intentional design choice.
+.fc .fc-timegrid-now-indicator-line {
+  border-color: var(--cui-danger);
+  border-width: 2px;
+}
+
+.fc .fc-timegrid-now-indicator-arrow {
+  border-color: var(--cui-danger);
+  border-width: 5px;
+}
+
+// --- Month view day cells --------------------------------------------------
+.fc .fc-daygrid-day-frame {
+  padding: 0.35rem;
+}
+
+.fc .fc-daygrid-day-number {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cui-body-color);
+  padding: 0.35rem;
+}
+
+// Días del mes vecino: visibles pero en segundo plano; el gris por defecto de
+// FullCalendar daba 1.76:1 y axe lo marcaba (serio). Este cumple 4.5:1.
+.fc .fc-day-other .fc-daygrid-day-number {
+  color: #6b7280;
+}
+
+// FullCalendar apaga el bloque del número del mes vecino con `opacity: 0.3`
+// (efectivo 1.46:1, axe serio). Se quita: el tono ya lo baja la regla de
+// arriba y el contraste queda en 4.83:1.
+.fc .fc-day-other .fc-daygrid-day-top {
+  opacity: 1;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: var(--cui-warning-bg-subtle) !important;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number,
+.fc .fc-day-today .fc-col-header-cell-cushion {
+  color: var(--cui-warning-text-emphasis);
+  font-weight: 700;
+}
+
+.fc .fc-daygrid-more-link {
+  font-weight: 600;
+  color: var(--cui-primary);
+}
+
+// --- Events (Google Calendar style — solid status colors) -----------------
+.fc-event {
+  border: none !important;
+  border-radius: 5px !important;
+  cursor: pointer;
+  padding: 3px 6px !important;
+  font-weight: 700 !important;
+  font-size: 0.74rem !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  color: #fff !important;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+}
+
+// Status colors via classNames
+.fc-status-agendada   { background: #0d6efd !important; }  // blue
+.fc-status-confirmada { background: #198754 !important; }  // green
+.fc-status-en_sala    { background: #b8520b !important; }  // naranja oscuro: con letra blanca #fd7e14 daba 2.9:1 (axe, plan 32)
+.fc-status-en_consulta { background: #6f42c1 !important; } // purple (plan 28, D-3)
+.fc-status-atendida   { background: #6c757d !important; }  // gray
+.fc-status-cancelada  { background: #dc3545 !important; }  // red
+
+.fc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+  z-index: 5;
+  filter: brightness(1.05);
+}
+
+.fc-daygrid-event {
+  margin: 1px 4px !important;
+  padding: 3px 6px !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+}
+
+.fc-daygrid-event-dot {
+  display: none !important;
+}
+
+.fc-timegrid-event {
+  min-height: 22px;
+}
+
+// Event content wrapper
+.gc-event-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  overflow: hidden;
+  color: inherit;
+}
+
+.gc-event-time {
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.gc-event-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// --- Empty state (no appointments) -----------------------------------------
+.agenda-calendar-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: var(--cui-secondary-color);
+  text-align: center;
+
+  .agenda-calendar-empty-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cui-primary-bg-subtle);
+    color: var(--cui-primary);
+    margin-bottom: 1rem;
+  }
+}
+
+// ── Flip Card ─────────────────────────────────────────────────────────
+.flip-card {
+  perspective: 1000px;
+  cursor: pointer;
+  height: 100%;
+  min-height: 110px;
+
+  &:hover .flip-card-inner {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  border-radius: var(--glass-radius);
+
+  .flipped & {
+    transform: rotateY(180deg);
+  }
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--glass-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flip-card-front {
+  z-index: 2;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+  overflow-y: auto;
+}
+
+// ── Professional stat cards ──────────────────────────────────────────
+.stat-card {
+  background: var(--cui-body-bg);
+  border: 1px solid var(--cui-border-color-translucent);
+}
+
+.border-top-primary { border-top: 3px solid var(--cui-primary) !important; }
+.border-top-info    { border-top: 3px solid var(--cui-info) !important; }
+.border-top-success { border-top: 3px solid var(--cui-success) !important; }
+.border-top-warning { border-top: 3px solid var(--cui-warning) !important; }
+.border-top-danger  { border-top: 3px solid var(--cui-danger) !important; }
+
+.stat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: var(--cui-secondary-color);
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--cui-body-color);
+}
+
+.stat-value-large {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--cui-body-color);
+}
+
+.stat-detail {
+  font-size: 0.72rem;
+  color: var(--cui-secondary-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .placeholder {
+    animation: none;
+  }
+
+  .btn,
+  .glass-card,
+  .nav-underline-border .nav-link,
+  .nav-tabs .nav-link,
+  .fc-event,
+  .autocomplete-dropdown-item {
+    transition: none;
+  }
+}
+
+// ── Punto 6: Ocultar placeholder al hacer clic ──────────────
+// El doctor pidió que el texto de sugerencia desaparezca al enfocar
+// cualquier campo, para no confundir. Se aplica globalmente con CSS
+// en vez de tocar cada componente React.
+input:focus::placeholder,
+textarea:focus::placeholder {
+  color: transparent;
+  opacity: 0;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AGENDA POR SALAS (vista de día en columnas)
+// Las vistas por recurso de FullCalendar son de pago, así que el cuadrante
+// por salas es propio: aquí van sólo sus piezas, sin tocar nada del
+// calendario de siempre.
+// ═══════════════════════════════════════════════════════════════
+
+.agenda-salas-cita {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0;
+  overflow: hidden;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 6px;
+  color: #fff;
+  text-align: left;
+  line-height: 1.15;
+  font-size: 0.72rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: filter 0.1s ease, box-shadow 0.1s ease;
+
+  &:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+    z-index: 6;
+  }
+
+  .agenda-salas-cita-hora {
+    font-weight: 700;
+  }
+
+  .agenda-salas-cita-nombre {
+    font-weight: 600;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .agenda-salas-cita-doctor {
+    opacity: 0.85;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.agenda-salas-hueco {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2px;
+  border: 1px dashed var(--cui-success);
+  border-radius: 6px;
+  background: var(--cui-success-bg-subtle);
+  color: var(--cui-success-text-emphasis);
+  font-weight: 600;
+  line-height: 1.1;
+  overflow: hidden;
+
+  &:hover {
+    background: var(--cui-success);
+    color: #fff;
+  }
+}
+
+// Sala dentro de la píldora de una cita del calendario de siempre.
+.gc-event-sala-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.gc-event-sala {
+  margin-left: auto;
+  padding-left: 0.3rem;
+  font-weight: 600;
+  opacity: 0.9;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ===========================================================================
+// Tablero de la agenda (AgendaPage) — panel lateral, vista Lista y leyenda.
+//
+// Todo lo de aquí abajo es nuevo y se añade AL FINAL a propósito: no pisa ni
+// una regla anterior. Los colores salen de las variables de CoreUI; los
+// cinco de estado ya estaban definidos arriba en `.fc-status-*` y se repiten
+// en JS para poder pintar la leyenda y las tarjetas del panel.
+// ===========================================================================
+
+// --- Vista "Lista": se esconde la rejilla, se deja la barra de navegación ---
+// FullCalendar sigue montado; es él quien manda el rango visible.
+.agenda-calendar--solo-toolbar {
+  padding-bottom: 0.5rem;
+
+  .fc-view-harness {
+    display: none;
+  }
+
+  .fc .fc-toolbar {
+    margin-bottom: 0;
+  }
+}
+
+// --- Panel lateral de contexto ---------------------------------------------
+.agenda-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.agenda-panel-bloque {
+  border-radius: var(--glass-radius, 14px);
+}
+
+.agenda-panel-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: transparent;
+  padding-block: 0.75rem;
+}
+
+.agenda-panel-lista {
+  max-height: 26rem;
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.agenda-panel-vacio {
+  text-align: center;
+  padding: 2rem 0.5rem;
+  color: var(--cui-secondary-color);
+}
+
+.agenda-panel-pie {
+  padding: 0.75rem;
+  border-top: 1px solid var(--cui-border-color-translucent);
+}
+
+// --- Tarjeta de cita del panel (DESIGN.md §4.4) ----------------------------
+.agenda-tarjeta-dia {
+  display: flex;
+  // La lista del día tiene alto máximo y desplazamiento: sin esto las
+  // tarjetas se encogían para caber y el nombre se encimaba con
+  // «Consulta / Sala» (plan 29, A-1).
+  flex-shrink: 0;
+  align-items: stretch;
+  border: 1px solid var(--cui-border-color-translucent);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--cui-body-bg);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
+    transform: translateY(-1px);
+  }
+}
+
+// Franja del color del estado, a la izquierda.
+.agenda-tarjeta-dia-estado {
+  width: 5px;
+  flex-shrink: 0;
+}
+
+.agenda-tarjeta-dia-cuerpo {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "hora paciente"
+    "hora meta"
+    "hora pie";
+  // Separación entre renglones: el nombre se encimaba con «Consulta / Sala»
+  // (plan 29, A-1).
+  gap: 0.2rem 0.6rem;
+  align-items: center;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 0.55rem 0.5rem 0.55rem 0.7rem;
+  color: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--cui-primary);
+    outline-offset: -2px;
+  }
+}
+
+.agenda-tarjeta-dia-hora {
+  grid-area: hora;
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.agenda-tarjeta-dia-paciente {
+  grid-area: paciente;
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agenda-tarjeta-dia-meta {
+  grid-area: meta;
+  line-height: 1.35;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.7rem;
+  font-size: 0.72rem;
+  color: var(--cui-secondary-color);
+}
+
+.agenda-tarjeta-dia-dato {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+
+  svg {
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+}
+
+// Motivo extra: la nota opcional para el doctor. Ambar, que es el tono de
+// "atencion / dato que conviene leer" segun DESIGN.md, y nunca como texto
+// sobre el -light: el color va en el texto y el -light solo de fondo.
+.agenda-tarjeta-dia-pie {
+  grid-area: pie;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+// Estado en texto, con el color de la barra en el borde y un punto: el texto
+// queda oscuro para leerse (el naranja de «en sala» no da contraste como
+// texto) (plan 29, A-2).
+.agenda-tarjeta-dia-estado-texto {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--cui-body-color);
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 0 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.5;
+  background: var(--cui-body-bg);
+  white-space: nowrap;
+}
+
+.agenda-tarjeta-dia-estado-punto {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+}
+
+.agenda-tarjeta-dia-motivo {
+  justify-self: start;
+  max-width: 100%;
+  border: 1px solid var(--hf-amber-border, #fcd34d);
+  background: var(--hf-amber-light, #fef3c7);
+  color: var(--hf-amber, #d97706);
+  border-radius: 999px;
+  padding: 0 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// En la vista Lista el motivo se lee en su columna, sin pastilla: la tabla
+// se imprime y una pastilla de color no aporta nada en papel.
+.agenda-lista-motivo {
+  font-weight: 600;
+}
+
+.agenda-tarjeta-dia-menu {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-right: 0.15rem;
+
+  // Los tres puntos casi no se veían.
+  .btn {
+    color: var(--cui-secondary-color);
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
+
+// --- Resumen del mes: cuatro cifras ----------------------------------------
+.agenda-cifras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.agenda-cifra {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "icono valor"
+    "icono etiqueta";
+  align-items: center;
+  gap: 0 0.55rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--cui-border-color-translucent);
+  background: var(--cui-tertiary-bg);
+}
+
+.agenda-cifra-icono {
+  grid-area: icono;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+}
+
+.agenda-cifra-valor {
+  grid-area: valor;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.agenda-cifra-etiqueta {
+  grid-area: etiqueta;
+  font-size: 0.72rem;
+  color: var(--cui-secondary-color);
+}
+
+// Un tono por significado, según DESIGN.md §2: azul informa, ámbar avisa,
+// rojo cancela, verde confirma, gris es "no hay dato".
+.agenda-cifra--azul .agenda-cifra-icono {
+  background: var(--cui-primary-bg-subtle);
+  color: var(--cui-primary-text-emphasis);
+}
+
+.agenda-cifra--ambar .agenda-cifra-icono {
+  background: var(--cui-warning-bg-subtle);
+  color: var(--cui-warning-text-emphasis);
+}
+
+.agenda-cifra--rojo .agenda-cifra-icono {
+  background: var(--cui-danger-bg-subtle);
+  color: var(--cui-danger-text-emphasis);
+}
+
+.agenda-cifra--verde .agenda-cifra-icono {
+  background: var(--cui-success-bg-subtle);
+  color: var(--cui-success-text-emphasis);
+}
+
+.agenda-cifra--gris .agenda-cifra-icono {
+  background: var(--cui-tertiary-bg);
+  color: var(--cui-secondary-color);
+}
+
+.agenda-cifras-nota {
+  margin-top: 0.75rem;
+  font-size: 0.72rem;
+  color: var(--cui-secondary-color);
+}
+
+// --- Mini calendario --------------------------------------------------------
+.mini-calendario-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.mini-calendario-titulo {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.mini-calendario-nav {
+  border: 1px solid var(--cui-border-color-translucent);
+  background: var(--cui-tertiary-bg);
+  color: var(--cui-body-color);
+  border-radius: 8px;
+  width: 1.9rem;
+  height: 1.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--cui-primary-bg-subtle);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cui-primary);
+    outline-offset: 1px;
+  }
+}
+
+.mini-calendario-fila {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.mini-calendario-dias {
+  margin-bottom: 2px;
+}
+
+.mini-calendario-inicial {
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--cui-secondary-color);
+  text-decoration: none;
+  border: 0;
+  cursor: default;
+}
+
+.mini-calendario-dia {
+  position: relative;
+  aspect-ratio: 1;
+  min-height: 2rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--cui-body-color);
+  font-size: 0.8rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--cui-primary-bg-subtle);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cui-primary);
+    outline-offset: 1px;
+  }
+
+  // Días del mes anterior o siguiente: presentes para no dejar huecos en la
+  // rejilla, pero en segundo plano. El gris cumple 4.5:1: el secundario al
+  // 45 % daba 1.86:1 y axe lo marcaba (serio).
+  &.es-relleno {
+    color: #6b7280;
+    opacity: 1;
+  }
+
+  // Hoy: sólo un contorno. Lo sólido se reserva para lo seleccionado.
+  &.es-hoy {
+    border-color: var(--cui-primary);
+    font-weight: 700;
+  }
+
+  // Seleccionado: relleno sólido con texto blanco (DESIGN.md §3.3).
+  &.es-seleccionado {
+    background: var(--cui-primary);
+    border-color: var(--cui-primary);
+    color: #fff;
+    font-weight: 700;
+    opacity: 1;
+  }
+}
+
+// Punto bajo el número: ese día tiene citas.
+.mini-calendario-punto {
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--cui-primary);
+
+  .es-seleccionado & {
+    background: #fff;
+  }
+}
+
+// --- Leyenda al pie del calendario -----------------------------------------
+.agenda-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--cui-border-color-translucent);
+  font-size: 0.75rem;
+}
+
+.agenda-leyenda-grupo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.85rem;
+}
+
+.agenda-leyenda-titulo {
+  font-weight: 700;
+  color: var(--cui-secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 0.68rem;
+}
+
+.agenda-leyenda-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.agenda-leyenda-cuadro {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.agenda-leyenda-punto {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px var(--cui-border-color-translucent);
+}
+
+// --- Vista Lista ------------------------------------------------------------
+.agenda-lista {
+  margin-top: 0.5rem;
+}
+
+.agenda-lista-dia + .agenda-lista-dia {
+  margin-top: 1.5rem;
+}
+
+.agenda-lista-dia-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.agenda-lista-dia-total {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--cui-secondary-color);
+}
+
+.agenda-lista-tabla {
+  margin-bottom: 0;
+  font-size: 0.85rem;
+
+  th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--cui-secondary-color);
+    font-weight: 700;
+  }
+
+  tbody tr {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--cui-tertiary-bg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--cui-primary);
+      outline-offset: -2px;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+// El nombre de la paciente es un boton de verdad: la fila entera se pincha
+// con el raton, pero quien va con el teclado necesita algo enfocable.
+.agenda-lista-abrir {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cui-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+.agenda-lista-estado {
+  display: inline-block;
+  border: 1px solid currentcolor;
+  border-radius: 999px;
+  padding: 1px 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.agenda-lista-vacia {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--cui-secondary-color);
+}
+
+// --- Impresión: la hoja del día que se lleva el doctor ----------------------
+// La vista Lista existe en buena parte para imprimirse. Al imprimir sobran
+// el panel lateral y la barra de navegación del calendario.
+@media print {
+  .agenda-lista-tabla tbody tr {
+    cursor: default;
+  }
+
+  .agenda-lista-dia {
+    break-inside: avoid;
+  }
+
+  .agenda-panel,
+  .agenda-calendar--solo-toolbar .fc-toolbar {
+    display: none !important;
+  }
+}
+
+// ── Franjas de horario ocupadas ─────────────────────────────────────
+// Rojo apagado y tachadas: antes eran grises sobre gris y había que pasar
+// el ratón por cada una para saber cuáles se podían pulsar.
+.gems-franja-ocupada {
+  text-decoration: line-through;
+  opacity: 0.55;
+
+  &:disabled {
+    // CoreUI baja mucho la opacidad de los deshabilitados; aquí conviene
+    // que el rojo siga leyéndose para identificar lo ocupado de un vistazo.
+    opacity: 0.55;
+    --cui-btn-disabled-color: var(--cui-danger);
+    --cui-btn-disabled-border-color: var(--cui-danger);
+  }
+}
+
+// ── Modal de cita ───────────────────────────────────────────────────
+// Respaldo del scroll: si por lo que sea no se aplica `modal-dialog-scrollable`,
+// el cuerpo sigue teniendo su propia barra en vez de cortar el contenido.
+.gems-modal-cita {
+  .modal-body {
+    max-height: calc(100vh - 12rem);
+    overflow-y: auto;
+  }
+}

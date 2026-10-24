@@ -1,0 +1,59 @@
+/* Bandeja por paciente plegable (plan 32, punto 3). Cerrada, cada tarjeta
+   es un renglón; por eso la cabecera entera es el botón y no una flechita. */
+.bandeja-tarjeta {
+  transition: box-shadow 160ms ease-out;
+}
+.bandeja-tarjeta:hover {
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+.bandeja-tarjeta--critica {
+  border-left-width: 4px;
+}
+.bandeja-tarjeta__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.6rem 1rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+.bandeja-tarjeta__cabecera:focus-visible {
+  outline: 2px solid var(--cui-primary);
+  outline-offset: -2px;
+}
+.bandeja-tarjeta__flecha {
+  flex: none;
+  transform: rotate(-90deg);
+  transition: transform 160ms ease-out;
+}
+.bandeja-tarjeta__flecha.is-abierta {
+  transform: rotate(0deg);
+}
+.bandeja-grupo__titulo {
+  letter-spacing: 0.01em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bandeja-tarjeta,
+  .bandeja-tarjeta__flecha {
+    transition: none;
+  }
+}
+
+/* Atrasado (plan 32, punto 3): ámbar oscuro con reloj y borde punteado, para
+   que no se confunda con «Pendiente de resultado», que también es ámbar. */
+.insignia-atrasado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.05rem 0.5rem;
+  border: 1px dashed #b45309;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #92400e;
+  font-weight: 600;
+}

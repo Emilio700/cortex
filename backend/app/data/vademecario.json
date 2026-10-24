@@ -1,0 +1,2151 @@
+[
+  {
+    "id": 1,
+    "nombre": "CITRACAL D",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 4345
+  },
+  {
+    "id": 2,
+    "nombre": "ASPIRINA PROTEC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 4310
+  },
+  {
+    "id": 3,
+    "nombre": "ELEVIT",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 3892
+  },
+  {
+    "id": 4,
+    "nombre": "C TECH",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 1847
+  },
+  {
+    "id": 5,
+    "nombre": "FOLIVITAL",
+    "presentacion": "Tabletas",
+    "detalle": "4 MG",
+    "veces_recetado": 1528
+  },
+  {
+    "id": 6,
+    "nombre": "GESTAGENO",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 1287
+  },
+  {
+    "id": 7,
+    "nombre": "PHARMATON MATRUELLE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 1275
+  },
+  {
+    "id": 8,
+    "nombre": "CEFALEXINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 1018
+  },
+  {
+    "id": 9,
+    "nombre": "NANAVIT",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 962
+  },
+  {
+    "id": 10,
+    "nombre": "ELEVIT 2 OMEGAS",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 897
+  },
+  {
+    "id": 11,
+    "nombre": "COMPLEJO B",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 869
+  },
+  {
+    "id": 12,
+    "nombre": "CARDISPAN",
+    "presentacion": "Tabletas",
+    "detalle": "MASTICABLES",
+    "veces_recetado": 860
+  },
+  {
+    "id": 13,
+    "nombre": "REGENESIS",
+    "presentacion": "Comprimidos",
+    "detalle": null,
+    "veces_recetado": 856
+  },
+  {
+    "id": 14,
+    "nombre": "MADECASSOL C",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 771
+  },
+  {
+    "id": 15,
+    "nombre": "GYNOTRAN",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 716
+  },
+  {
+    "id": 16,
+    "nombre": "FRASCOS CELESTONE SOLUSPAN",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 665
+  },
+  {
+    "id": 17,
+    "nombre": "FOLIVITAL",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 449
+  },
+  {
+    "id": 18,
+    "nombre": "GESLUTIN",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 430
+  },
+  {
+    "id": 19,
+    "nombre": "VAGITROL V",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 425
+  },
+  {
+    "id": 20,
+    "nombre": "ELEVIT",
+    "presentacion": "Comprimidos",
+    "detalle": null,
+    "veces_recetado": 404
+  },
+  {
+    "id": 21,
+    "nombre": "CARDISPAN",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 358
+  },
+  {
+    "id": 22,
+    "nombre": "REGENESIS MAX",
+    "presentacion": "Comprimidos",
+    "detalle": null,
+    "veces_recetado": 353
+  },
+  {
+    "id": 23,
+    "nombre": "REGENESIS MAX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 346
+  },
+  {
+    "id": 24,
+    "nombre": "PLENAFEM",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 333
+  },
+  {
+    "id": 25,
+    "nombre": "NANAVIT",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 330
+  },
+  {
+    "id": 26,
+    "nombre": "NATELE",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 316
+  },
+  {
+    "id": 27,
+    "nombre": "MACMIROR COMPLEX",
+    "presentacion": "Crema",
+    "detalle": "VAGINAL",
+    "veces_recetado": 273
+  },
+  {
+    "id": 28,
+    "nombre": "FRASCOS CELESTONE SOLUSPAM",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 246
+  },
+  {
+    "id": 29,
+    "nombre": "LAS NOCHES 7 DIAS 2 CAJAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 244
+  },
+  {
+    "id": 30,
+    "nombre": "OSTEOMIN D",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 244
+  },
+  {
+    "id": 31,
+    "nombre": "LUTORAL E",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 243
+  },
+  {
+    "id": 32,
+    "nombre": "NITROFURANTOINA",
+    "presentacion": "Tabletas",
+    "detalle": "100 MG",
+    "veces_recetado": 237
+  },
+  {
+    "id": 33,
+    "nombre": "OS-CAL D",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 219
+  },
+  {
+    "id": 34,
+    "nombre": "YAZMIN",
+    "presentacion": "Grageas",
+    "detalle": "INICIAR EL DIA SANGRADO MENSTRUAL",
+    "veces_recetado": 216
+  },
+  {
+    "id": 35,
+    "nombre": "FRASCOS GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 208
+  },
+  {
+    "id": 36,
+    "nombre": "MEFIROS",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 208
+  },
+  {
+    "id": 37,
+    "nombre": "DACTIL OB",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 184
+  },
+  {
+    "id": 38,
+    "nombre": "SEMANAS 3 FRASCOS GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 183
+  },
+  {
+    "id": 39,
+    "nombre": "DESPAMEN",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 175
+  },
+  {
+    "id": 40,
+    "nombre": "UTROGESTAN",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 172
+  },
+  {
+    "id": 41,
+    "nombre": "MACRODANTINA",
+    "presentacion": "Tabletas",
+    "detalle": "100 MG",
+    "veces_recetado": 158
+  },
+  {
+    "id": 42,
+    "nombre": "YAZMIN",
+    "presentacion": "Grageas",
+    "detalle": null,
+    "veces_recetado": 141
+  },
+  {
+    "id": 43,
+    "nombre": "MES ASPIRINA PROTEC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 133
+  },
+  {
+    "id": 44,
+    "nombre": "GESTAGENO",
+    "presentacion": "Perlas",
+    "detalle": "100 MG",
+    "veces_recetado": 131
+  },
+  {
+    "id": 45,
+    "nombre": "FCOS CELESTONE SOLUSPAM",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 129
+  },
+  {
+    "id": 46,
+    "nombre": "YAZMIN",
+    "presentacion": "Grageas",
+    "detalle": "(21) INICIAR EL DIA SANGRADO MENSTRUAL",
+    "veces_recetado": 127
+  },
+  {
+    "id": 47,
+    "nombre": "ITALDERMOL",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 121
+  },
+  {
+    "id": 48,
+    "nombre": "PREMARIN",
+    "presentacion": "Crema",
+    "detalle": "VAGINAL",
+    "veces_recetado": 121
+  },
+  {
+    "id": 49,
+    "nombre": "DICYNONE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 119
+  },
+  {
+    "id": 50,
+    "nombre": "OVESTIN",
+    "presentacion": "Crema",
+    "detalle": "VAGINAL",
+    "veces_recetado": 118
+  },
+  {
+    "id": 51,
+    "nombre": "FCOS CELESTONE SOLUSPAN",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 116
+  },
+  {
+    "id": 52,
+    "nombre": "CAJAS NEURALIN",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 111
+  },
+  {
+    "id": 53,
+    "nombre": "FISIOFER",
+    "presentacion": "Solucion",
+    "detalle": null,
+    "veces_recetado": 110
+  },
+  {
+    "id": 54,
+    "nombre": "MEDIA",
+    "presentacion": "Tableta",
+    "detalle": "DIARIO C TECH TABLETAS",
+    "veces_recetado": 110
+  },
+  {
+    "id": 55,
+    "nombre": "DIAS ASPIRINA PROTEC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 108
+  },
+  {
+    "id": 56,
+    "nombre": "LAS NOCHES 10 DIAS 2 CAJAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 103
+  },
+  {
+    "id": 57,
+    "nombre": "SEMANAS 3 FCOS GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 103
+  },
+  {
+    "id": 58,
+    "nombre": "GINOTRAN",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 102
+  },
+  {
+    "id": 59,
+    "nombre": "DESPAMEN LBD",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 98
+  },
+  {
+    "id": 60,
+    "nombre": "VODELAN",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 89
+  },
+  {
+    "id": 61,
+    "nombre": "AMOXICILINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 87
+  },
+  {
+    "id": 62,
+    "nombre": "TRANSVITAL E",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 84
+  },
+  {
+    "id": 63,
+    "nombre": "YAZMIN",
+    "presentacion": "Grageas",
+    "detalle": "INICIAR HOY",
+    "veces_recetado": 83
+  },
+  {
+    "id": 64,
+    "nombre": "LAS NOCHES 12 DIAS 2 CAJAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 82
+  },
+  {
+    "id": 65,
+    "nombre": "LAS NOCHES 7 DIAS 2 CAJAS TRIVAFLUC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 80
+  },
+  {
+    "id": 66,
+    "nombre": "MES 3 FRASCOS GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 76
+  },
+  {
+    "id": 67,
+    "nombre": "CLAVULIN 12H",
+    "presentacion": "Tabletas",
+    "detalle": "875 MG",
+    "veces_recetado": 76
+  },
+  {
+    "id": 68,
+    "nombre": "INOFOLIC HP",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 73
+  },
+  {
+    "id": 69,
+    "nombre": "YAZMIN",
+    "presentacion": "Grageas",
+    "detalle": "(21) INICIAR HOY",
+    "veces_recetado": 72
+  },
+  {
+    "id": 70,
+    "nombre": "PREMASTAN",
+    "presentacion": "Gel",
+    "detalle": null,
+    "veces_recetado": 70
+  },
+  {
+    "id": 71,
+    "nombre": "HS 10 DIAS ESPACIL COMPUESTO",
+    "presentacion": "Grageas",
+    "detalle": null,
+    "veces_recetado": 70
+  },
+  {
+    "id": 72,
+    "nombre": "PROESSE FORTE",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 69
+  },
+  {
+    "id": 73,
+    "nombre": "MACMIROR COMPLEX",
+    "presentacion": "Crema",
+    "detalle": null,
+    "veces_recetado": 68
+  },
+  {
+    "id": 74,
+    "nombre": "ALDOMET",
+    "presentacion": "Tabletas",
+    "detalle": "250 MG",
+    "veces_recetado": 66
+  },
+  {
+    "id": 75,
+    "nombre": "SEMANAS ASPIRINA PROTEC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 66
+  },
+  {
+    "id": 76,
+    "nombre": "AS-COR",
+    "presentacion": "Gotas",
+    "detalle": null,
+    "veces_recetado": 64
+  },
+  {
+    "id": 77,
+    "nombre": "CABERGOLINA",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 64
+  },
+  {
+    "id": 78,
+    "nombre": "HS 10 DIAS DACTIL OB",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 63
+  },
+  {
+    "id": 79,
+    "nombre": "YAZMIN",
+    "presentacion": "Grageas",
+    "detalle": "INICIAR EL DIA DEL SANGRADO MENSTRUAL",
+    "veces_recetado": 63
+  },
+  {
+    "id": 80,
+    "nombre": "MEDIA",
+    "presentacion": "Tableta",
+    "detalle": "DIARIO CARDISPAN TABLETAS MASTICABLES",
+    "veces_recetado": 61
+  },
+  {
+    "id": 81,
+    "nombre": "MACMIROR COMPLEX",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 61
+  },
+  {
+    "id": 82,
+    "nombre": "ACIDO FOLICO",
+    "presentacion": "Tabletas",
+    "detalle": "4 MG",
+    "veces_recetado": 59
+  },
+  {
+    "id": 83,
+    "nombre": "DIAS NITROFURANTOINA",
+    "presentacion": "Tabletas",
+    "detalle": "100 MG",
+    "veces_recetado": 57
+  },
+  {
+    "id": 84,
+    "nombre": "FEMISAN",
+    "presentacion": "Crema",
+    "detalle": "VAGINAL",
+    "veces_recetado": 57
+  },
+  {
+    "id": 85,
+    "nombre": "DAIRIO ASPIRINA PROTEC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 55
+  },
+  {
+    "id": 86,
+    "nombre": "TAMOXIFENO",
+    "presentacion": "Tabletas",
+    "detalle": "20 MG",
+    "veces_recetado": 54
+  },
+  {
+    "id": 87,
+    "nombre": "MEDIA DIARIO C TECH",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 53
+  },
+  {
+    "id": 88,
+    "nombre": "PENTREXYL",
+    "presentacion": "Comprimidos",
+    "detalle": "1 G",
+    "veces_recetado": 52
+  },
+  {
+    "id": 89,
+    "nombre": "REGENESIS",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 51
+  },
+  {
+    "id": 90,
+    "nombre": "PRIMOGYN",
+    "presentacion": "Tabletas",
+    "detalle": "1 MG",
+    "veces_recetado": 50
+  },
+  {
+    "id": 91,
+    "nombre": "DANAZOL",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 50
+  },
+  {
+    "id": 92,
+    "nombre": "PENTREXYL",
+    "presentacion": "Comprimidos",
+    "detalle": "500 MG",
+    "veces_recetado": 49
+  },
+  {
+    "id": 93,
+    "nombre": "TREXEN DUO",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 49
+  },
+  {
+    "id": 94,
+    "nombre": "REDOXON",
+    "presentacion": "Tabletas",
+    "detalle": "EFERVECENTES",
+    "veces_recetado": 48
+  },
+  {
+    "id": 95,
+    "nombre": "SEMANAS CEFALEXINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 47
+  },
+  {
+    "id": 96,
+    "nombre": "FCOS GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 46
+  },
+  {
+    "id": 97,
+    "nombre": "DUNOX PRO",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 46
+  },
+  {
+    "id": 98,
+    "nombre": "PROESSE PRO",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 46
+  },
+  {
+    "id": 99,
+    "nombre": "AMPICILINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 45
+  },
+  {
+    "id": 100,
+    "nombre": "FOSFOMICINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 45
+  },
+  {
+    "id": 101,
+    "nombre": "MES GESTAGENO",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 44
+  },
+  {
+    "id": 102,
+    "nombre": "OVESTIN",
+    "presentacion": "Gel",
+    "detalle": "VAGINAL",
+    "veces_recetado": 44
+  },
+  {
+    "id": 103,
+    "nombre": "FOLIVITAL",
+    "presentacion": "Tabletas",
+    "detalle": "5 MG",
+    "veces_recetado": 43
+  },
+  {
+    "id": 104,
+    "nombre": "DYCINONE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 43
+  },
+  {
+    "id": 105,
+    "nombre": "TUBO POR LAS NOCHES 10 DIAS 2 CAJAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 43
+  },
+  {
+    "id": 106,
+    "nombre": "GINORELLE 20",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 43
+  },
+  {
+    "id": 107,
+    "nombre": "MATERN PLUS",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 43
+  },
+  {
+    "id": 108,
+    "nombre": "HS 10 DIAS REDOXON",
+    "presentacion": "Tabletas",
+    "detalle": "EFERVECENTES",
+    "veces_recetado": 42
+  },
+  {
+    "id": 109,
+    "nombre": "MES CEFALEXINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 42
+  },
+  {
+    "id": 110,
+    "nombre": "ILIMIT",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 41
+  },
+  {
+    "id": 111,
+    "nombre": "MES 3 FCOS GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 41
+  },
+  {
+    "id": 112,
+    "nombre": "CAJAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 38
+  },
+  {
+    "id": 113,
+    "nombre": "LAS NOCHES TERMINARSELOS 2 CAJAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 38
+  },
+  {
+    "id": 114,
+    "nombre": "GINORELLE 20",
+    "presentacion": "Tabletas",
+    "detalle": "INICIAR HOY",
+    "veces_recetado": 38
+  },
+  {
+    "id": 115,
+    "nombre": "DAIRIO C TECH",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 38
+  },
+  {
+    "id": 116,
+    "nombre": "MACRODANTINA",
+    "presentacion": "Capsulas",
+    "detalle": "100 MG",
+    "veces_recetado": 37
+  },
+  {
+    "id": 117,
+    "nombre": "AN",
+    "presentacion": "Gel",
+    "detalle": "IQUE TABLETAS",
+    "veces_recetado": 36
+  },
+  {
+    "id": 118,
+    "nombre": "LAS NOCHES 10 DIAS 2 CAJAS TRIVAFLUC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 36
+  },
+  {
+    "id": 119,
+    "nombre": "DIAS CEFALEXINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 36
+  },
+  {
+    "id": 120,
+    "nombre": "FEMISAN",
+    "presentacion": "Tabletas",
+    "detalle": "VAGINALES",
+    "veces_recetado": 35
+  },
+  {
+    "id": 121,
+    "nombre": "ACICRAN MAX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 35
+  },
+  {
+    "id": 122,
+    "nombre": "YAZMIN",
+    "presentacion": "Grageas",
+    "detalle": "(21)",
+    "veces_recetado": 35
+  },
+  {
+    "id": 123,
+    "nombre": "ACICLOVIR",
+    "presentacion": "Tabletas",
+    "detalle": "400 MG",
+    "veces_recetado": 34
+  },
+  {
+    "id": 124,
+    "nombre": "HS 10 DIAS PARACETAMOL",
+    "presentacion": "Tabletas",
+    "detalle": "500 MG",
+    "veces_recetado": 33
+  },
+  {
+    "id": 125,
+    "nombre": "LAS NOCHES 3 MESES GYNOTRAN",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 33
+  },
+  {
+    "id": 126,
+    "nombre": "MESES OVESTIN",
+    "presentacion": "Crema",
+    "detalle": "VAGINAL",
+    "veces_recetado": 33
+  },
+  {
+    "id": 127,
+    "nombre": "HS 10 DIAS 2 FRASCOS CELESTONE SOLUSPAN",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 33
+  },
+  {
+    "id": 128,
+    "nombre": "BELLAFEM PLENITUD",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 33
+  },
+  {
+    "id": 129,
+    "nombre": "RUANDA",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 33
+  },
+  {
+    "id": 130,
+    "nombre": "CAJAS CELESTONE SOLUSPAN",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 32
+  },
+  {
+    "id": 131,
+    "nombre": "ASPIRINA PROTEC",
+    "presentacion": "Tabletas",
+    "detalle": "100 MG",
+    "veces_recetado": 32
+  },
+  {
+    "id": 132,
+    "nombre": "HS 10 DIAS GYNOTRAN",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 32
+  },
+  {
+    "id": 133,
+    "nombre": "MATER PLUS",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 32
+  },
+  {
+    "id": 134,
+    "nombre": "HS 10 DIAS MACMIROR COMPLEX",
+    "presentacion": "Crema",
+    "detalle": "VAGINAL",
+    "veces_recetado": 31
+  },
+  {
+    "id": 135,
+    "nombre": "MEFIROS",
+    "presentacion": "Perlas",
+    "detalle": "100 MG",
+    "veces_recetado": 31
+  },
+  {
+    "id": 136,
+    "nombre": "HS 10 DIAS BUSCAPINA N",
+    "presentacion": "Comprimidos",
+    "detalle": null,
+    "veces_recetado": 31
+  },
+  {
+    "id": 137,
+    "nombre": "COMBIQUINE C",
+    "presentacion": "Comprimidos",
+    "detalle": null,
+    "veces_recetado": 30
+  },
+  {
+    "id": 138,
+    "nombre": "CEFALEXINA",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 30
+  },
+  {
+    "id": 139,
+    "nombre": "HS 10 DIAS CARDISPAN",
+    "presentacion": "Tabletas",
+    "detalle": "MASTICABLES",
+    "veces_recetado": 30
+  },
+  {
+    "id": 140,
+    "nombre": "ERGOTRATE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 29
+  },
+  {
+    "id": 141,
+    "nombre": "CAJAS CELESTONE SOLUSPAM",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 29
+  },
+  {
+    "id": 142,
+    "nombre": "LAS NOCHES 7 DIAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 29
+  },
+  {
+    "id": 143,
+    "nombre": "NITROFURANTOINA",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 28
+  },
+  {
+    "id": 144,
+    "nombre": "SEMANAS CARDISPAN",
+    "presentacion": "Tabletas",
+    "detalle": "MASTICABLES",
+    "veces_recetado": 28
+  },
+  {
+    "id": 145,
+    "nombre": "SUFREXAL",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 27
+  },
+  {
+    "id": 146,
+    "nombre": "PENTREXYL",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 27
+  },
+  {
+    "id": 147,
+    "nombre": "MATERNA",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 27
+  },
+  {
+    "id": 148,
+    "nombre": "OVESTIN",
+    "presentacion": "Crema",
+    "detalle": null,
+    "veces_recetado": 27
+  },
+  {
+    "id": 149,
+    "nombre": "MESES PREMARIN",
+    "presentacion": "Crema",
+    "detalle": "VAGINAL",
+    "veces_recetado": 27
+  },
+  {
+    "id": 150,
+    "nombre": "MACRODANTINA",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 27
+  },
+  {
+    "id": 151,
+    "nombre": "DIAS DESPUES CADA 3ER DIA PROESSE FORTE",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 27
+  },
+  {
+    "id": 152,
+    "nombre": "MEDIA",
+    "presentacion": "Tableta",
+    "detalle": "DIARIO MEFIROS PERLAS 200 MG",
+    "veces_recetado": 27
+  },
+  {
+    "id": 153,
+    "nombre": "HS 10 DIAS ERGOTRATE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 26
+  },
+  {
+    "id": 154,
+    "nombre": "SUFREXAL COMBI",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 26
+  },
+  {
+    "id": 155,
+    "nombre": "HS 7 DIAS CEFALEXINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 26
+  },
+  {
+    "id": 156,
+    "nombre": "ASPIRINA PROTEEC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 26
+  },
+  {
+    "id": 157,
+    "nombre": "ELEVIT",
+    "presentacion": "Tabletas",
+    "detalle": "TOAMRSE 1 DIARIO C TECH TABLETAS",
+    "veces_recetado": 26
+  },
+  {
+    "id": 158,
+    "nombre": "BIOPROTECT",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 26
+  },
+  {
+    "id": 159,
+    "nombre": "YAZMIN",
+    "presentacion": "Grageas",
+    "detalle": "INICIAR EL 2DO DIA SANGRADO MENSTRUAL",
+    "veces_recetado": 25
+  },
+  {
+    "id": 160,
+    "nombre": "HEMOSIN K",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 25
+  },
+  {
+    "id": 161,
+    "nombre": "LAS NOCHES 3 MESES FOLIVITAL",
+    "presentacion": "Tabletas",
+    "detalle": "4 MG",
+    "veces_recetado": 25
+  },
+  {
+    "id": 162,
+    "nombre": "MEDIA DIARIO CARDISPAN",
+    "presentacion": "Tabletas",
+    "detalle": "MASTICABLES",
+    "veces_recetado": 25
+  },
+  {
+    "id": 163,
+    "nombre": "BONADOXINA",
+    "presentacion": "Gotas",
+    "detalle": null,
+    "veces_recetado": 24
+  },
+  {
+    "id": 164,
+    "nombre": "DIANE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 24
+  },
+  {
+    "id": 165,
+    "nombre": "TIBOLONA",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 24
+  },
+  {
+    "id": 166,
+    "nombre": "HS 10 DIAS REDOXON",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 24
+  },
+  {
+    "id": 167,
+    "nombre": "MEDIA",
+    "presentacion": "Tableta",
+    "detalle": "DIARIO NITROFURANTOINA TABLETAS 100 MG",
+    "veces_recetado": 24
+  },
+  {
+    "id": 168,
+    "nombre": "HS GESTAGENO",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 24
+  },
+  {
+    "id": 169,
+    "nombre": "FCOS BETAMETAZONA",
+    "presentacion": "Amp.",
+    "detalle": "8 MG",
+    "veces_recetado": 24
+  },
+  {
+    "id": 170,
+    "nombre": "PREVITAMOM",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 24
+  },
+  {
+    "id": 171,
+    "nombre": "VIBRAMICINA",
+    "presentacion": "Capsulas",
+    "detalle": "100 MG",
+    "veces_recetado": 23
+  },
+  {
+    "id": 172,
+    "nombre": "MES AS-COR",
+    "presentacion": "Gotas",
+    "detalle": null,
+    "veces_recetado": 23
+  },
+  {
+    "id": 173,
+    "nombre": "TAMOXIFENO",
+    "presentacion": "Tabletas",
+    "detalle": "10 MG",
+    "veces_recetado": 23
+  },
+  {
+    "id": 174,
+    "nombre": "MES DACTIL OB",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 23
+  },
+  {
+    "id": 175,
+    "nombre": "LACTULAX",
+    "presentacion": "Jarabe",
+    "detalle": null,
+    "veces_recetado": 23
+  },
+  {
+    "id": 176,
+    "nombre": "OVESTIN",
+    "presentacion": "Gel",
+    "detalle": null,
+    "veces_recetado": 23
+  },
+  {
+    "id": 177,
+    "nombre": "TOLTERODINA",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 23
+  },
+  {
+    "id": 178,
+    "nombre": "FCOS. CELESTONE SOLUSPAN",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 23
+  },
+  {
+    "id": 179,
+    "nombre": "RIOPAN",
+    "presentacion": "Gel",
+    "detalle": null,
+    "veces_recetado": 22
+  },
+  {
+    "id": 180,
+    "nombre": "LAS NOCHES 10 DIAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 22
+  },
+  {
+    "id": 181,
+    "nombre": "MEDIA",
+    "presentacion": "Tableta",
+    "detalle": "DIARIO GESTAGENO PERLAS 200 MG",
+    "veces_recetado": 22
+  },
+  {
+    "id": 182,
+    "nombre": "CEFALEXINA 500 MG",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 22
+  },
+  {
+    "id": 183,
+    "nombre": "FCOS BETAMETASONA",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 22
+  },
+  {
+    "id": 184,
+    "nombre": "FITOESTIMULINA",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 21
+  },
+  {
+    "id": 185,
+    "nombre": "METFORMINA",
+    "presentacion": "Grageas",
+    "detalle": "850 MG",
+    "veces_recetado": 21
+  },
+  {
+    "id": 186,
+    "nombre": "ESPACIL COMPUESTO",
+    "presentacion": "Grageas",
+    "detalle": null,
+    "veces_recetado": 21
+  },
+  {
+    "id": 187,
+    "nombre": "PARACETAMOL",
+    "presentacion": "Tabletas",
+    "detalle": "500 MG",
+    "veces_recetado": 21
+  },
+  {
+    "id": 188,
+    "nombre": "DIANE",
+    "presentacion": "Tabletas",
+    "detalle": "INICIAR EL DIA SANGRADO MENSTRUAL",
+    "veces_recetado": 21
+  },
+  {
+    "id": 189,
+    "nombre": "DESPAMEN LSB",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 21
+  },
+  {
+    "id": 190,
+    "nombre": "TRANSVITAL D",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 21
+  },
+  {
+    "id": 191,
+    "nombre": "HORAS POR LAS MAÑANAS. 2.- CALTRON 600",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 21
+  },
+  {
+    "id": 192,
+    "nombre": "NOVIAL",
+    "presentacion": "Grageas",
+    "detalle": null,
+    "veces_recetado": 20
+  },
+  {
+    "id": 193,
+    "nombre": "FEMISAN 3D",
+    "presentacion": "Tabletas",
+    "detalle": "VAGINALES",
+    "veces_recetado": 20
+  },
+  {
+    "id": 194,
+    "nombre": "TRIVAFLUC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 20
+  },
+  {
+    "id": 195,
+    "nombre": "MES COMPLEJO B",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 20
+  },
+  {
+    "id": 196,
+    "nombre": "SEMANAS DACTIL OB",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 20
+  },
+  {
+    "id": 197,
+    "nombre": "CLAVULIN",
+    "presentacion": "Tabletas",
+    "detalle": "12H",
+    "veces_recetado": 20
+  },
+  {
+    "id": 198,
+    "nombre": "SENOCIDOS AB",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 20
+  },
+  {
+    "id": 199,
+    "nombre": "MES MACRODANTINA",
+    "presentacion": "Tabletas",
+    "detalle": "100 MG",
+    "veces_recetado": 20
+  },
+  {
+    "id": 200,
+    "nombre": "AUTRIN 600",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 20
+  },
+  {
+    "id": 201,
+    "nombre": "CAJAS TRIVAFLUC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 19
+  },
+  {
+    "id": 202,
+    "nombre": "SEMANAS MESULID",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 19
+  },
+  {
+    "id": 203,
+    "nombre": "HS 10 DIAS FEBRAX",
+    "presentacion": "Comprimidos",
+    "detalle": null,
+    "veces_recetado": 19
+  },
+  {
+    "id": 204,
+    "nombre": "PREVITA MOM",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 19
+  },
+  {
+    "id": 205,
+    "nombre": "RADIANCE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 19
+  },
+  {
+    "id": 206,
+    "nombre": "PIRIFUR",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 18
+  },
+  {
+    "id": 207,
+    "nombre": "DIAS 3 FRASCOS GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 18
+  },
+  {
+    "id": 208,
+    "nombre": "PREMARIN",
+    "presentacion": "Tabletas",
+    "detalle": "0.625 MG",
+    "veces_recetado": 18
+  },
+  {
+    "id": 209,
+    "nombre": "MATER DHA",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 18
+  },
+  {
+    "id": 210,
+    "nombre": "ACIDO FOLICO",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 211,
+    "nombre": "HS 10 DIAS BUSCAPINA COMPUESTA",
+    "presentacion": "Grageas",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 212,
+    "nombre": "PHARMATON MATRUELLE",
+    "presentacion": "Comprimidos",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 213,
+    "nombre": "INDOMETACINA",
+    "presentacion": "Supositorios",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 214,
+    "nombre": "ACLIMAFEL",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 215,
+    "nombre": "PHARMATHON MATRUELLE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 216,
+    "nombre": "MES UTROGESTAN",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 17
+  },
+  {
+    "id": 217,
+    "nombre": "MESES DESPAMEN",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 218,
+    "nombre": "MES 3 FCOS. GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 17
+  },
+  {
+    "id": 219,
+    "nombre": "HS 10 DIAS SENOCIDOS AB",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 220,
+    "nombre": "HS 7 DIAS ESPACIL COMPUESTO",
+    "presentacion": "Grageas",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 221,
+    "nombre": "SEMANAS 3 FCOS. GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 17
+  },
+  {
+    "id": 222,
+    "nombre": "GINORELLE 20",
+    "presentacion": "Tabletas",
+    "detalle": "INICIAR EL DIA SANGRADO MENSTRUAL",
+    "veces_recetado": 17
+  },
+  {
+    "id": 223,
+    "nombre": "METFORMINA 850 MG",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 17
+  },
+  {
+    "id": 224,
+    "nombre": "CARDISPAM",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 16
+  },
+  {
+    "id": 225,
+    "nombre": "METFORMINA",
+    "presentacion": "Tabletas",
+    "detalle": "850 MG",
+    "veces_recetado": 16
+  },
+  {
+    "id": 226,
+    "nombre": "HS 7 DIAS ERGOTRATE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 16
+  },
+  {
+    "id": 227,
+    "nombre": "GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": "250 MG",
+    "veces_recetado": 16
+  },
+  {
+    "id": 228,
+    "nombre": "HS 7 DIAS INDOCID",
+    "presentacion": "Supositorios",
+    "detalle": null,
+    "veces_recetado": 16
+  },
+  {
+    "id": 229,
+    "nombre": "OSTEOMIN D",
+    "presentacion": "Comprimidos",
+    "detalle": null,
+    "veces_recetado": 16
+  },
+  {
+    "id": 230,
+    "nombre": "ESTROGENOS CONJUGADOS",
+    "presentacion": "Gel",
+    "detalle": null,
+    "veces_recetado": 16
+  },
+  {
+    "id": 231,
+    "nombre": "MACMIROR COMPLEX",
+    "presentacion": "Gel",
+    "detalle": "VAGINAL",
+    "veces_recetado": 16
+  },
+  {
+    "id": 232,
+    "nombre": "AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 16
+  },
+  {
+    "id": 233,
+    "nombre": "GOSEROLINA",
+    "presentacion": "Amp.",
+    "detalle": "3.6 MG",
+    "veces_recetado": 16
+  },
+  {
+    "id": 234,
+    "nombre": "OESTRO",
+    "presentacion": "Gel",
+    "detalle": "SPRAY",
+    "veces_recetado": 16
+  },
+  {
+    "id": 235,
+    "nombre": "YAZMIN (21)",
+    "presentacion": "Grageas",
+    "detalle": "INICIAR HOY",
+    "veces_recetado": 16
+  },
+  {
+    "id": 236,
+    "nombre": "YAZMIN 21",
+    "presentacion": "Grageas",
+    "detalle": "INICIAR HOY",
+    "veces_recetado": 16
+  },
+  {
+    "id": 237,
+    "nombre": "LAS NOCHES 7 DIAS TRIVAFLUC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 238,
+    "nombre": "FRASCOS GRAVIDINONA",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 239,
+    "nombre": "HS 10 DIAS VAGITROL V",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 240,
+    "nombre": "LAS NOCHES 3 MESES DICYNONE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 241,
+    "nombre": "VIAGRA",
+    "presentacion": "Tabletas",
+    "detalle": "50 MG",
+    "veces_recetado": 15
+  },
+  {
+    "id": 242,
+    "nombre": "REDOXON",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 243,
+    "nombre": "HS 6 SEMANAS DICYNONE",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 244,
+    "nombre": "AMOXICILINA",
+    "presentacion": "Tabletas",
+    "detalle": "500 MG",
+    "veces_recetado": 15
+  },
+  {
+    "id": 245,
+    "nombre": "DIAS GESTAGENO",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 15
+  },
+  {
+    "id": 246,
+    "nombre": "GINORELLE 30",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 247,
+    "nombre": "HS 10 DIAS 2 FCOS CELESTONE SOLUSPAM",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 248,
+    "nombre": "BELLAFEM",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 249,
+    "nombre": "TROMODIL V",
+    "presentacion": "Crema",
+    "detalle": "VAGINAL",
+    "veces_recetado": 15
+  },
+  {
+    "id": 250,
+    "nombre": "PRECICOL",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 15
+  },
+  {
+    "id": 251,
+    "nombre": "MEDIA",
+    "presentacion": "Tableta",
+    "detalle": "DIARIO CEFALEXINA CAPSULAS 500 MG",
+    "veces_recetado": 15
+  },
+  {
+    "id": 252,
+    "nombre": "PENTREXYL",
+    "presentacion": "Comprimidos",
+    "detalle": "1 GR",
+    "veces_recetado": 14
+  },
+  {
+    "id": 253,
+    "nombre": "ELEVIT",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 14
+  },
+  {
+    "id": 254,
+    "nombre": "INDOCID",
+    "presentacion": "Supositorios",
+    "detalle": null,
+    "veces_recetado": 14
+  },
+  {
+    "id": 255,
+    "nombre": "AMBROXOL",
+    "presentacion": "Jarabe",
+    "detalle": null,
+    "veces_recetado": 14
+  },
+  {
+    "id": 256,
+    "nombre": "HS 10 DIAS GESTAGENO",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 14
+  },
+  {
+    "id": 257,
+    "nombre": "LAS NOCHES TERMINARSELOS 2 CAJAS TRIVAFLUC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 14
+  },
+  {
+    "id": 258,
+    "nombre": "MES NITROFURANTOINA",
+    "presentacion": "Tabletas",
+    "detalle": "100 MG",
+    "veces_recetado": 14
+  },
+  {
+    "id": 259,
+    "nombre": "MES 2 FRASCOS CELESTONE SOLUSPAN",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 14
+  },
+  {
+    "id": 260,
+    "nombre": "NOVIAL",
+    "presentacion": "Grageas",
+    "detalle": "INICIAR EL 2DO DIA SANGRADO MENSTRUAL",
+    "veces_recetado": 14
+  },
+  {
+    "id": 261,
+    "nombre": "ACICLOVIR",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 14
+  },
+  {
+    "id": 262,
+    "nombre": "DAIRIO CARDISPAN",
+    "presentacion": "Tabletas",
+    "detalle": "MASTICABLES",
+    "veces_recetado": 14
+  },
+  {
+    "id": 263,
+    "nombre": "FCOS BETAMETASONA",
+    "presentacion": "Amp.",
+    "detalle": "8 MG",
+    "veces_recetado": 14
+  },
+  {
+    "id": 264,
+    "nombre": "GINORELLE 30",
+    "presentacion": "Tabletas",
+    "detalle": "INICIAR HOY",
+    "veces_recetado": 14
+  },
+  {
+    "id": 265,
+    "nombre": "MESES TRANSVITAL E",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 14
+  },
+  {
+    "id": 266,
+    "nombre": "MIO INOSITOL",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 14
+  },
+  {
+    "id": 267,
+    "nombre": "HS 7 DIAS DACTIL OB",
+    "presentacion": "Capsulas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 268,
+    "nombre": "MES FOLIVITAL",
+    "presentacion": "Tabletas",
+    "detalle": "4 MG",
+    "veces_recetado": 13
+  },
+  {
+    "id": 269,
+    "nombre": "MEJORALITO JR",
+    "presentacion": "Tabletas",
+    "detalle": "80 MG",
+    "veces_recetado": 13
+  },
+  {
+    "id": 270,
+    "nombre": "MES BONADOXINA",
+    "presentacion": "Gotas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 271,
+    "nombre": "HS 10 DIAS MESULID",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 272,
+    "nombre": "ACICLOVIR",
+    "presentacion": "Capsulas",
+    "detalle": "400 MG",
+    "veces_recetado": 13
+  },
+  {
+    "id": 273,
+    "nombre": "HS 10 DIAS FOLIVITAL",
+    "presentacion": "Tabletas",
+    "detalle": "4 MG",
+    "veces_recetado": 13
+  },
+  {
+    "id": 274,
+    "nombre": "LAS NOCHES 12 DIAS 2 CAJAS TRIVAFLUC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 275,
+    "nombre": "DICETEL",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 276,
+    "nombre": "HS 7 DIAS INDOMETACINA",
+    "presentacion": "Supositorios",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 277,
+    "nombre": "MESES OVESTIN",
+    "presentacion": "Gel",
+    "detalle": "VAGINAL",
+    "veces_recetado": 13
+  },
+  {
+    "id": 278,
+    "nombre": "ELEVIT",
+    "presentacion": "Tableta",
+    "detalle": "QS",
+    "veces_recetado": 13
+  },
+  {
+    "id": 279,
+    "nombre": "FCOS. CELESTONE SOLUSPAM",
+    "presentacion": "Amp.",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 280,
+    "nombre": "HS 10 DIAS ASPIRINA PROTEC",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 281,
+    "nombre": "ZOELY",
+    "presentacion": "Grageas",
+    "detalle": "INICIAR EL DIA SANGRADO MENSTRUAL",
+    "veces_recetado": 13
+  },
+  {
+    "id": 282,
+    "nombre": "RADIANCE 20",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 283,
+    "nombre": "TROMODIL V",
+    "presentacion": "Gel",
+    "detalle": "VAGINAL",
+    "veces_recetado": 13
+  },
+  {
+    "id": 284,
+    "nombre": "HORAS POR LAS MAÑANAS. 2.- ASPIRINA PROTECT",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 285,
+    "nombre": "HS 2 DIAS ESPOSO IGUAL TRANSVITAL E",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 286,
+    "nombre": "CEFALEXINA 500 MG",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 13
+  },
+  {
+    "id": 287,
+    "nombre": "LAS NOCHES 3 MESES VAGITROL V",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 288,
+    "nombre": "LAS NOCHES 10 DIAS CEFALEXINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 12
+  },
+  {
+    "id": 289,
+    "nombre": "DAIRIO GESTAGENO",
+    "presentacion": "Perlas",
+    "detalle": "200 MG",
+    "veces_recetado": 12
+  },
+  {
+    "id": 290,
+    "nombre": "HS 10 DIAS MADECASSOL C",
+    "presentacion": "Ovulos",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 291,
+    "nombre": "FISIOFERR",
+    "presentacion": "Solucion",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 292,
+    "nombre": "LAS NOCHES 7 DIAS CEFALEXINA",
+    "presentacion": "Capsulas",
+    "detalle": "500 MG",
+    "veces_recetado": 12
+  },
+  {
+    "id": 293,
+    "nombre": "MESES TAFIL",
+    "presentacion": "Tabletas",
+    "detalle": "0.250 MG",
+    "veces_recetado": 12
+  },
+  {
+    "id": 294,
+    "nombre": "YAZMIN",
+    "presentacion": "Grageas",
+    "detalle": "INICIAR EL DIA SANGRADO",
+    "veces_recetado": 12
+  },
+  {
+    "id": 295,
+    "nombre": "DAIRIO CITRACAL D",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 296,
+    "nombre": "HS 10 DIAS MACMIROR COMPLEX",
+    "presentacion": "Crema",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 297,
+    "nombre": "HS 10 DIAS 2 CAJAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 298,
+    "nombre": "HS 10 DIAS ACICRAN MAX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 299,
+    "nombre": "LAS NOCHES 7 DIAS PREMARIN",
+    "presentacion": "Crema",
+    "detalle": "VAGINAL",
+    "veces_recetado": 12
+  },
+  {
+    "id": 300,
+    "nombre": "RIBOTRIPSIN",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 301,
+    "nombre": "SEMANAS NITROFURANTOINA",
+    "presentacion": "Tabletas",
+    "detalle": "100 MG",
+    "veces_recetado": 12
+  },
+  {
+    "id": 302,
+    "nombre": "C-TECH",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 303,
+    "nombre": "MENSIFEM",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 304,
+    "nombre": "ALS NOCHES 7 DIAS 2 CAJAS AFUMIX",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 305,
+    "nombre": "AUTRIN 600",
+    "presentacion": "Comprimidos",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 306,
+    "nombre": "HS 10 DIAS TRANSVITAL E",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 12
+  },
+  {
+    "id": 307,
+    "nombre": "INOFOLIC HP",
+    "presentacion": "Tabletas",
+    "detalle": null,
+    "veces_recetado": 12
+  }
+]

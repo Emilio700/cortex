@@ -1,0 +1,75 @@
+/*
+ * Centro de ayuda: panel lateral. En pantallas angostas ocupa todo el ancho
+ * para que se pueda leer sin hacer zoom.
+ *
+ * Se carga junto con el centro (React.lazy): hasta que no se abre, estas
+ * reglas no hacen falta.
+ */
+.offcanvas.gems-centro-ayuda {
+  --cui-offcanvas-width: 440px;
+}
+
+.gems-centro-ayuda .offcanvas-title:focus {
+  outline: none;
+}
+
+.gems-centro-ayuda .offcanvas-title:focus-visible {
+  outline: 2px solid var(--cui-primary, #1a66cc);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.gems-centro-lectura > li + li {
+  margin-top: 0.75rem;
+}
+
+.gems-centro-lectura ul {
+  padding-left: 1.1rem;
+  margin: 4px 0 0;
+}
+
+.gems-centro-paso-buscado {
+  background-color: var(--cui-warning-bg-subtle, #fff3cd);
+  color: var(--cui-warning-text-emphasis, inherit);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.gems-centro-etapas > li + li {
+  margin-top: 2px;
+}
+
+@media (max-width: 575.98px) {
+  .offcanvas.gems-centro-ayuda {
+    --cui-offcanvas-width: 100vw;
+  }
+}
+
+/* Novedades de la versión (plan 32): plegable, arriba del índice. */
+.gems-novedades__cabecera {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--cui-border-color);
+  border-left: 3px solid var(--cui-primary);
+  border-radius: 0.5rem;
+  background: var(--cui-tertiary-bg);
+  color: var(--cui-body-color);
+  text-align: left;
+}
+
+.gems-novedades__cabecera:focus-visible {
+  outline: 2px solid var(--cui-primary);
+  outline-offset: 2px;
+}
+
+.gems-novedades__insignia {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  background: #1a66cc;
+}

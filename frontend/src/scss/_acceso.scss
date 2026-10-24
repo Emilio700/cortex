@@ -1,0 +1,497 @@
+// ═══════════════════════════════════════════════════════════════
+// Acceso: login, «¿Olvidaste tu contraseña?» y «Restablecer» (plan 32, punto 1)
+//
+// La marca es el ícono de la app instalada: azul profundo con el degradado
+// azul→violeta del emblema. El mismo azul profundo es el color de arranque
+// del manifiesto, para que abrir la app en el teléfono y llegar al login se
+// vean como una sola pieza, sin un destello de otro color.
+//
+// Movimiento: la entrada del emblema dura ~2.5 s una vez por carga; en reposo
+// sólo hay ciclos lentos (electrocardiograma, partículas, brillo) que no
+// distraen al escribir. Con «reducir movimiento» todo queda quieto y completo.
+// ═══════════════════════════════════════════════════════════════
+
+:root {
+  --acceso-profundo: #0b1640;
+  --acceso-medio: #16296b;
+  --acceso-violeta: #3b2f8f;
+  --acceso-azul: #2558d6;
+  --acceso-violeta-claro: #6a4fe0;
+  --acceso-texto-claro: #e6ecff;
+  --acceso-texto-tenue: #b7c3ee;
+}
+
+// ── Emblema ──────────────────────────────────────────────────────
+.emblema-gems {
+  display: block;
+  overflow: visible;
+
+  &__hex-ext path,
+  &__hex-int,
+  &__cruz,
+  &__silueta {
+    transform-box: view-box;
+    transform-origin: 256px 256px;
+  }
+
+  &__brillo {
+    transform: translateX(0);
+    opacity: 0;
+  }
+}
+
+.emblema-gems--entrada {
+  .emblema-gems__hex-ext path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: emblema-traza 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.1s forwards;
+  }
+
+  .emblema-gems__hex-int {
+    opacity: 0;
+    animation: emblema-aparece 0.6s ease-out 0.7s forwards;
+  }
+
+  .emblema-gems__cruz {
+    transform: scale(0);
+    animation: emblema-crece 0.7s cubic-bezier(0.34, 1.4, 0.64, 1) 1s forwards;
+  }
+
+  .emblema-gems__silueta {
+    clip-path: inset(0 100% 0 0);
+    animation: emblema-barrido 0.9s cubic-bezier(0.65, 0, 0.35, 1) 1.45s forwards;
+  }
+
+  .emblema-gems__brillo {
+    animation: emblema-brillo 7s ease-in-out 2.4s infinite;
+  }
+}
+
+.emblema-gems--reposo .emblema-gems__brillo {
+  animation: emblema-brillo 7s ease-in-out 1s infinite;
+}
+
+@keyframes emblema-traza {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes emblema-aparece {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes emblema-crece {
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes emblema-barrido {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+// La luz cruza una vez (el primer 22 % del ciclo) y descansa el resto.
+@keyframes emblema-brillo {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  22% {
+    transform: translateX(760px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(760px);
+    opacity: 0;
+  }
+}
+
+// ── Página ───────────────────────────────────────────────────────
+.acceso {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1fr;
+  background:
+    radial-gradient(120% 80% at 15% 10%, rgba(82, 184, 246, 0.18) 0%, transparent 55%),
+    radial-gradient(90% 70% at 90% 95%, rgba(139, 111, 245, 0.28) 0%, transparent 60%),
+    linear-gradient(160deg, var(--acceso-profundo) 0%, var(--acceso-medio) 55%, var(--acceso-violeta) 100%);
+  color: var(--acceso-texto-claro);
+  overflow: hidden;
+
+  @media (min-width: 992px) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(420px, 0.9fr);
+  }
+}
+
+// Panel de marca: arriba en el teléfono (compacto), a la izquierda en la
+// computadora.
+.acceso-marca {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  padding: 2rem 1rem 1.25rem;
+  text-align: center;
+  isolation: isolate;
+
+  @media (min-width: 992px) {
+    padding: 3rem;
+    gap: 1.5rem;
+  }
+
+  &__emblema {
+    position: relative;
+    filter: drop-shadow(0 18px 40px rgba(8, 18, 60, 0.55));
+
+    // El halo detrás del emblema, del violeta del ícono.
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -18%;
+      z-index: -1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(106, 79, 224, 0.45) 0%, transparent 65%);
+    }
+  }
+
+  &__nombre {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    color: #fff;
+
+    @media (min-width: 992px) {
+      font-size: 2.6rem;
+    }
+  }
+
+  &__lema {
+    margin: 0;
+    font-size: 0.7rem;
+    // Más apretado en el teléfono: a 360 px tocaba los bordes.
+    letter-spacing: 0.08em;
+
+    @media (min-width: 576px) {
+      letter-spacing: 0.14em;
+    }
+
+    text-transform: uppercase;
+    color: var(--acceso-texto-tenue);
+
+    @media (min-width: 992px) {
+      font-size: 0.85rem;
+    }
+  }
+
+  &__frase {
+    display: none;
+    max-width: 26rem;
+    margin: 0.5rem 0 0;
+    color: var(--acceso-texto-tenue);
+    line-height: 1.5;
+
+    @media (min-width: 992px) {
+      display: block;
+    }
+  }
+
+  &__nombre,
+  &__lema,
+  &__frase {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: acceso-entra 0.5s ease-out forwards;
+  }
+
+  &__nombre {
+    animation-delay: 1.9s;
+  }
+
+  &__lema {
+    animation-delay: 2.1s;
+  }
+
+  &__frase {
+    animation-delay: 2.3s;
+  }
+}
+
+// El emblema cambia de tamaño con la pantalla: chico en el teléfono, para que
+// «Iniciar sesión» quede a la vista sin desplazarse.
+.acceso-marca__emblema .emblema-gems {
+  width: 76px;
+  height: 76px;
+
+  @media (min-width: 992px) {
+    width: 188px;
+    height: 188px;
+  }
+}
+
+// Electrocardiograma: late detrás del emblema, sólo en la computadora.
+.acceso-ecg {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: -1;
+  width: 100%;
+  height: 120px;
+  transform: translateY(-62%);
+  opacity: 0.55;
+
+  @media (min-width: 992px) {
+    display: block;
+  }
+
+  path {
+    fill: none;
+    stroke: url(#acceso-ecg-trazo);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 0.22 0.78;
+    stroke-dashoffset: 1;
+    animation: acceso-ecg 4.2s linear 2.4s infinite;
+  }
+
+  .acceso-ecg__base {
+    stroke: rgba(183, 195, 238, 0.18);
+    stroke-dasharray: none;
+    animation: none;
+  }
+}
+
+@keyframes acceso-ecg {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+// Partículas: células que suben despacio. Sólo en la computadora.
+.acceso-particulas {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+
+  @media (min-width: 992px) {
+    display: block;
+  }
+
+  span {
+    position: absolute;
+    bottom: -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.75), rgba(130, 170, 255, 0.15) 70%);
+    opacity: 0;
+    animation: acceso-particula linear infinite;
+  }
+}
+
+@keyframes acceso-particula {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.55;
+  }
+  85% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateY(-105vh) translateX(28px);
+    opacity: 0;
+  }
+}
+
+@keyframes acceso-entra {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ── Formulario ───────────────────────────────────────────────────
+.acceso-formulario {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 1rem 1.5rem;
+
+  @media (min-width: 992px) {
+    align-items: center;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.04);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+.acceso-tarjeta {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.5rem 1.25rem;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #1a1a2e;
+  box-shadow: 0 24px 60px rgba(5, 12, 45, 0.45), 0 2px 6px rgba(5, 12, 45, 0.2);
+  opacity: 0;
+  transform: translateY(14px);
+  animation: acceso-entra 0.5s ease-out 0.35s forwards;
+
+  @media (min-width: 576px) {
+    padding: 2rem;
+  }
+
+  &__acento {
+    width: 44px;
+    height: 4px;
+    margin-bottom: 1.1rem;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--acceso-azul), var(--acceso-violeta-claro));
+  }
+
+  &__titulo {
+    margin: 0 0 0.25rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: #10183a;
+  }
+
+  &__subtitulo {
+    margin: 0 0 1.4rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+  }
+
+  // Foco de los campos con el azul→violeta de la marca.
+  .form-control:focus,
+  .form-check-input:focus {
+    border-color: #6a6ff0;
+    box-shadow: 0 0 0 0.2rem rgba(106, 79, 224, 0.22);
+  }
+
+  .form-check-input:checked {
+    background-color: var(--acceso-azul);
+    border-color: var(--acceso-azul);
+  }
+}
+
+.acceso-boton {
+  padding: 0.65rem 0;
+  border: 0;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(120deg, var(--acceso-azul) 0%, var(--acceso-violeta-claro) 100%);
+  transition:
+    filter var(--gems-mov-rapido, 120ms) ease,
+    transform var(--gems-mov-rapido, 120ms) ease;
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    color: #fff;
+    filter: brightness(1.08);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    color: #fff;
+    opacity: 0.75;
+  }
+}
+
+.acceso-enlace {
+  font-size: 0.875rem;
+  color: #3f47b8;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+  }
+}
+
+.acceso-pie {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--acceso-texto-tenue);
+}
+
+// ── Movimiento reducido ──────────────────────────────────────────
+// La regla global ya acorta todo; aquí además los ciclos se quitan y cada
+// capa queda en su estado final, para que nada parpadee ni falte.
+@mixin acceso-quieto {
+  .emblema-gems__hex-ext path {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .emblema-gems__hex-int,
+  .acceso-marca__nombre,
+  .acceso-marca__lema,
+  .acceso-marca__frase,
+  .acceso-tarjeta {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .emblema-gems__cruz {
+    transform: none !important;
+  }
+
+  .emblema-gems__silueta {
+    clip-path: none !important;
+  }
+
+  .emblema-gems__brillo,
+  .acceso-particulas,
+  .acceso-ecg path:not(.acceso-ecg__base) {
+    display: none !important;
+  }
+
+  .emblema-gems *,
+  .acceso * {
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @include acceso-quieto;
+}
+
+.reduce-motion {
+  @include acceso-quieto;
+}
+
+// Enlaces del pie, sobre el azul profundo.
+.acceso-pie-enlace {
+  color: var(--acceso-texto-claro);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: #fff;
+    text-decoration: underline;
+  }
+}

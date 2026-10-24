@@ -1,0 +1,102 @@
+// ═══════════════════════════════════════════════════════════════
+// Movimiento (plan 29, T-7)
+// ═══════════════════════════════════════════════════════════════
+//
+// Dos cosas en un solo lugar:
+//
+// 1. Una regla GLOBAL de movimiento reducido. Antes se respetaba sólo en tres
+//    sitios; cualquier transición nueva la ignoraba. Con `prefers-reduced-
+//    motion` del sistema, o con la clase `.reduce-motion` en <html>, toda
+//    transición y animación se vuelve instantánea. Se usa 0.01 ms y no
+//    `none` para que los componentes que esperan el fin de una transición
+//    (modales, paneles) sigan recibiendo ese evento y no se queden a medias.
+//
+// 2. Microinteracciones sutiles y coherentes: realce al pasar sobre lo que se
+//    puede pulsar y entrada suave de paneles y menús, todo en 200 ms o menos.
+//    Nada se mueve solo, nada toca los campos de texto: no estorba al escribir.
+
+:root {
+  --gems-mov-rapido: 120ms;
+  --gems-mov: 180ms;
+  --gems-mov-curva: cubic-bezier(0.2, 0, 0, 1);
+}
+
+// ── Realce al pasar ─────────────────────────────────────────────
+// Sólo con un puntero que de verdad «pasa» (ratón); en el teléfono el realce
+// se quedaría pegado después del toque.
+@media (hover: hover) and (pointer: fine) {
+  .tarjeta-clicable,
+  .list-group-item-action,
+  .card[role='button'],
+  .hf-card[role='button'] {
+    transition:
+      box-shadow var(--gems-mov) var(--gems-mov-curva),
+      border-color var(--gems-mov) var(--gems-mov-curva),
+      background-color var(--gems-mov-rapido) ease;
+
+    &:hover {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      border-color: var(--cui-primary-border-subtle, rgba(26, 102, 204, 0.4));
+    }
+  }
+}
+
+// El foco del teclado se ve igual de claro que el realce del ratón.
+.tarjeta-clicable:focus-visible,
+.card[role='button']:focus-visible,
+.hf-card[role='button']:focus-visible {
+  outline: 2px solid var(--cui-primary, #1a66cc);
+  outline-offset: 2px;
+}
+
+// ── Entrada de paneles y menús ──────────────────────────────────
+// Bootstrap trae 300 ms en paneles laterales y modales; se acortan para que
+// la pantalla responda sin sentirse lenta.
+.offcanvas {
+  transition-duration: 200ms;
+}
+
+.modal.fade .modal-dialog {
+  transition-duration: 200ms;
+}
+
+.collapsing {
+  transition-duration: 180ms;
+}
+
+@keyframes gems-aparece {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.dropdown-menu.show {
+  animation: gems-aparece var(--gems-mov-rapido) var(--gems-mov-curva);
+}
+
+// ── Movimiento reducido, en todo ────────────────────────────────
+@mixin sin-movimiento {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @include sin-movimiento;
+}
+
+.reduce-motion {
+  @include sin-movimiento;
+}

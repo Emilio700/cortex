@@ -1,0 +1,188 @@
+// ═══════════════════════════════════════════════════════════════
+// BUSCADOR DE PACIENTES DEL ENCABEZADO (plan 28, Fase 4)
+// En el celular es una lupa que abre el campo encima, a todo el ancho: el
+// encabezado no tiene sitio para un campo fijo junto a la campana y el perfil.
+// ═══════════════════════════════════════════════════════════════
+
+.buscador {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 440px;
+}
+
+.buscador-lupa {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--cui-body-color);
+
+  &:hover { background: var(--cui-tertiary-bg); }
+}
+
+.buscador-campo {
+  position: relative;
+  display: none;
+  align-items: center;
+  width: 100%;
+
+  input {
+    width: 100%;
+    min-height: 40px;
+    padding: 0.4rem 4.25rem 0.4rem 2.25rem;
+    border: 1px solid var(--cui-border-color);
+    border-radius: 999px;
+    background: var(--cui-tertiary-bg);
+    color: var(--cui-body-color);
+    font-size: 0.9rem;
+    text-overflow: ellipsis;
+    transition: border-color 0.15s ease, background 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--cui-primary);
+      background: var(--cui-body-bg);
+      box-shadow: 0 0 0 3px rgba(var(--cui-primary-rgb), 0.2);
+    }
+
+    // La «x» propia del navegador se reemplaza por Esc y el botón de cerrar.
+    &::-webkit-search-cancel-button { display: none; }
+  }
+}
+
+.buscador-icono {
+  position: absolute;
+  left: 0.8rem;
+  width: 1rem;
+  height: 1rem;
+  color: var(--cui-secondary-color);
+  pointer-events: none;
+}
+
+.buscador-atajo {
+  position: absolute;
+  right: 0.75rem;
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--cui-border-color);
+  border-radius: 6px;
+  background: var(--cui-body-bg);
+  color: var(--cui-secondary-color);
+  font-size: 0.7rem;
+  font-family: inherit;
+  box-shadow: none;
+}
+
+.buscador-cerrar {
+  display: none;
+  position: absolute;
+  right: 0.25rem;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--cui-secondary-color);
+}
+
+.buscador-lista {
+  position: absolute;
+  top: calc(100% + 0.375rem);
+  left: 0;
+  right: 0;
+  z-index: 1060;
+  max-height: min(70vh, 420px);
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.375rem;
+  list-style: none;
+  background: var(--cui-body-bg);
+  border: 1px solid var(--cui-border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  animation: buscador-aparecer 0.15s ease-out;
+}
+
+@keyframes buscador-aparecer {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.buscador-opcion {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &.es-activa { background: var(--cui-primary-bg-subtle, #eff6ff); }
+}
+
+.buscador-opcion-nombre {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.buscador-opcion-datos {
+  font-size: 0.78rem;
+  color: var(--cui-secondary-color);
+}
+
+.buscador-nota {
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--cui-secondary-color);
+}
+
+.buscador-error { color: var(--cui-danger); }
+
+.buscador-enlace {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--cui-primary);
+  text-decoration: underline;
+  min-height: 44px;
+}
+
+// Escritorio: el campo a la vista, sin lupa.
+@media (min-width: 768px) {
+  .buscador-lupa { display: none; }
+  .buscador-campo { display: flex; }
+}
+
+// Celular: la lupa abre una capa con el campo a todo el ancho.
+@media (max-width: 767.98px) {
+  .buscador { flex: 0 0 auto; }
+
+  .buscador.es-abierto-movil .buscador-campo {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1060;
+    padding: 0.5rem 0.75rem;
+    background: var(--cui-body-bg);
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+
+    input { min-height: 44px; padding-right: 3rem; font-size: 1rem; }
+    .buscador-icono { left: 1.55rem; }
+    .buscador-atajo { display: none; }
+    .buscador-cerrar { display: inline-grid; place-items: center; right: 0.75rem; }
+    .buscador-lista { left: 0.75rem; right: 0.75rem; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .buscador-lista { animation: none; }
+  .buscador-campo input { transition: none; }
+}

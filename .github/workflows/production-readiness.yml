@@ -1,0 +1,30 @@
+name: Production readiness
+
+on:
+  pull_request:
+  push:
+    # Se gatea tambien develop, no solo main: asi un push con error de tipo o una
+    # prueba rota no aterriza en la rama de integracion (T-01). Los PR ya se
+    # gatean todos (pull_request sin filtro de rama).
+    branches: [main, develop]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11', cache: pip, cache-dependency-path: backend/requirements.txt }
+      - run: pip install -r backend/requirements.txt
+      - run: pytest -q
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          SECRET_KEY: test-secret-key-for-unit-tests
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - run: npm ci
+        working-directory: frontend
+      - run: npm run type-check && npm run test && npm run build && npm audit --omit=dev --audit-level=high
+        working-directory: frontend
+      - run: docker compose --env-file .env.prod.example -f docker-compose.prod.yml config --quiet

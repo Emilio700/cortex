@@ -1,0 +1,254 @@
+// ═══════════════════════════════════════════════════════════════
+// Pestañas abiertas (plan 32, punto 2 — diseño aprobado por Emilio)
+// Sin migas, la tira es la única ubicación: cada pestaña tiene un ancho
+// máximo, su ícono y la activa se distingue por algo más que el color.
+// ═══════════════════════════════════════════════════════════════
+
+.tabs-bar-marco {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+
+.tabs-bar-fila {
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--cui-border-color, #dbdfe6);
+}
+
+.tabs-bar {
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 2px;
+  padding-top: 4px;
+  overflow-x: auto;
+  // Sin barra de desplazamiento: para eso están las flechas.
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tabs-bar-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+  max-width: 13rem;
+  padding: 0.45rem 0.5rem 0.5rem 0.75rem;
+  border-radius: 0.6rem 0.6rem 0 0;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  color: var(--cui-secondary-color);
+  transition:
+    background-color var(--gems-mov-rapido, 120ms) var(--gems-mov-curva, ease),
+    color var(--gems-mov-rapido, 120ms) var(--gems-mov-curva, ease);
+
+  // La línea de abajo de la activa: crece desde el centro, 180 ms.
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: -1px;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: var(--cui-primary);
+    transform: scaleX(0);
+    transition: transform var(--gems-mov, 180ms) var(--gems-mov-curva, ease);
+  }
+
+  &:hover {
+    background: var(--cui-tertiary-bg, #f0f2f5);
+    color: var(--cui-body-color);
+  }
+}
+
+.tabs-bar-item-active {
+  background: var(--glass-bg, var(--cui-body-bg));
+  color: var(--cui-emphasis-color, var(--cui-body-color));
+  font-weight: 600;
+  box-shadow: 0 -1px 0 var(--cui-border-color) inset, 0 -2px 6px rgba(15, 40, 80, 0.06);
+
+  &::after {
+    transform: scaleX(1);
+  }
+
+  .tabs-bar-icono {
+    color: var(--cui-primary);
+  }
+}
+
+.tabs-bar-icono {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.tabs-bar-titulo {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.tabs-bar-sucia {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--cui-warning, #f9b115);
+  border: 1px solid var(--cui-warning-border-subtle, #b8860b);
+}
+
+// La «×»: siempre visible en la activa; en las demás aparece al pasar el
+// cursor o al llegarle con el teclado. Nunca se quita del árbol: con
+// `opacity` sigue siendo un botón enfocable para el lector y el teclado.
+.pestana-cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  opacity: 0;
+  transition: opacity var(--gems-mov-rapido, 120ms) var(--gems-mov-curva, ease),
+    background-color var(--gems-mov-rapido, 120ms) var(--gems-mov-curva, ease);
+
+  &:hover {
+    background: rgba(127, 127, 127, 0.18);
+  }
+
+  &:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--cui-primary);
+    outline-offset: 1px;
+  }
+}
+
+.tabs-bar-item:hover .pestana-cerrar,
+.tabs-bar-item-active .pestana-cerrar {
+  opacity: 1;
+}
+
+// En pantallas táctiles no hay «pasar el cursor»: la «×» se ve siempre.
+@media (hover: none) {
+  .pestana-cerrar {
+    opacity: 1;
+  }
+}
+
+.tabs-bar-flecha {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 2rem;
+  margin-bottom: 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--cui-secondary-color);
+
+  &:hover {
+    background: var(--cui-tertiary-bg, #f0f2f5);
+    color: var(--cui-body-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cui-primary);
+  }
+}
+
+.tabs-bar-menu {
+  position: fixed;
+  z-index: 1080;
+  min-width: 11rem;
+  padding: 0.3rem;
+  border-radius: 0.6rem;
+  background: var(--cui-body-bg);
+  border: 1px solid var(--cui-border-color);
+  box-shadow: var(--glass-shadow-strong, 0 8px 24px rgba(0, 0, 0, 0.18));
+  animation: tabs-menu-entra var(--gems-mov, 180ms) var(--gems-mov-curva, ease);
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 0.4rem 0.7rem;
+    border: 0;
+    border-radius: 0.4rem;
+    background: transparent;
+    color: var(--cui-body-color);
+    text-align: left;
+    font-size: 0.875rem;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      background: var(--cui-tertiary-bg);
+      outline: none;
+    }
+
+    &:disabled {
+      color: var(--cui-secondary-color);
+    }
+  }
+}
+
+@keyframes tabs-menu-entra {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.tabs-bar-aviso-region {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.35rem);
+  z-index: 1070;
+}
+
+.tabs-bar-aviso {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.4rem 0.4rem 0.85rem;
+  border-radius: 0.6rem;
+  font-size: 0.85rem;
+  background: var(--cui-body-bg);
+  color: var(--cui-body-color);
+  border: 1px solid var(--cui-border-color);
+  border-left: 3px solid var(--cui-primary);
+  box-shadow: var(--glass-shadow-strong, 0 8px 24px rgba(0, 0, 0, 0.18));
+  animation: tabs-menu-entra var(--gems-mov, 180ms) var(--gems-mov-curva, ease);
+}
+
+.tabs-bar-aviso-deshacer {
+  border: 0;
+  background: transparent;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.4rem;
+  font-weight: 600;
+  color: var(--cui-link-color, var(--cui-primary));
+
+  &:hover,
+  &:focus-visible {
+    background: var(--cui-tertiary-bg);
+  }
+}
+
+.tabs-bar-aviso-cerrar {
+  display: inline-flex;
+  border: 0;
+  background: transparent;
+  padding: 0.25rem;
+  border-radius: 50%;
+  color: var(--cui-secondary-color);
+}
