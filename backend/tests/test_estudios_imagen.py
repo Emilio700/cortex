@@ -98,6 +98,20 @@ def _dicom(
     return buffer.getvalue()
 
 
+def _directorio_del_cd() -> bytes:
+    """Un ``DICOMDIR``: DICOM de verdad, pero índice y sin cortes."""
+    meta = FileMetaDataset()
+    meta.MediaStorageSOPClassUID = "1.2.840.10008.1.3.10"
+    meta.MediaStorageSOPInstanceUID = "1.2.11.1"
+    meta.TransferSyntaxUID = ExplicitVRLittleEndian
+    ds = FileDataset(None, {}, file_meta=meta, preamble=b"\0" * 128)
+    ds.SOPClassUID = meta.MediaStorageSOPClassUID
+    ds.SOPInstanceUID = meta.MediaStorageSOPInstanceUID
+    buffer = BytesIO()
+    ds.save_as(buffer, write_like_original=False)
+    return buffer.getvalue()
+
+
 def _instancia(**kwargs) -> Instancia:
     return Instancia(
         sop_instance_uid=kwargs.get("sop", "1.2.3"),
@@ -301,6 +315,58 @@ def test_el_zip_con_el_estudio_entra_completo(client, db_session, escenario):
 
     assert respuesta.status_code == 201, respuesta.text
     assert respuesta.json()["creados"][0]["instance_count"] == 2
+
+
+def test_el_indice_del_cd_no_vuelve_incompleto_el_estudio(client, db_session, escenario):
+    """Un CD real trae DICOMDIR y a veces autorun: no son imágenes.
+
+    Contarlos como fallo marcaba «llegó incompleto» cualquier estudio real. Se
+    vio con un estudio de 90 cortes parejos a 2 mm y cero huecos.
+    """
+    cabeceras = _auth_headers(db_session, escenario["doctora"])
+    buffer = BytesIO()
+    with ZipFile(buffer, "w", ZIP_DEFLATED) as zip_file:
+        zip_file.writestr("DICOM/IM_0001", _dicom("1.2.9.1", instance_number=1, position=(0, 0, 0)))
+        zip_file.writestr("DICOM/IM_0002", _dicom("1.2.9.2", instance_number=2, position=(0, 0, 2)))
+        zip_file.writestr("DICOMDIR", _directorio_del_cd())
+        zip_file.writestr("AUTORUN.INF", b"[autorun]\r\nopen=visor.exe\r\n")
+
+    respuesta = client.post(
+        f"{PREFIX}/patients/{escenario['paciente'].id}/imaging/upload-archive",
+        headers=cabeceras,
+        files={"archivo": ("estudio.zip", buffer.getvalue(), "application/zip")},
+    )
+
+    assert respuesta.status_code == 201, respuesta.text
+    cuerpo = respuesta.json()
+    assert cuerpo["creados"][0]["instance_count"] == 2
+    assert cuerpo["creados"][0]["status"] == "ready"
+    assert cuerpo["creados"][0]["status_detail"] is None
+    assert cuerpo["archivos_ajenos"] == 2
+    assert cuerpo["archivos_descartados"] == 0
+
+
+def test_un_dicom_roto_si_deja_el_estudio_incompleto(client, db_session, escenario):
+    """Callar esto sí sería mentir: puede faltar un corte."""
+    cabeceras = _auth_headers(db_session, escenario["doctora"])
+    buffer = BytesIO()
+    with ZipFile(buffer, "w", ZIP_DEFLATED) as zip_file:
+        zip_file.writestr("DICOM/IM_0001", _dicom("1.2.10.1", instance_number=1, position=(0, 0, 0)))
+        zip_file.writestr("DICOM/IM_0002", _dicom("1.2.10.2", instance_number=2, position=(0, 0, 2)))
+        zip_file.writestr("DICOM/IM_0003", b"\0" * 128 + b"DICM" + b"basura" * 40)
+
+    respuesta = client.post(
+        f"{PREFIX}/patients/{escenario['paciente'].id}/imaging/upload-archive",
+        headers=cabeceras,
+        files={"archivo": ("estudio.zip", buffer.getvalue(), "application/zip")},
+    )
+
+    assert respuesta.status_code == 201, respuesta.text
+    cuerpo = respuesta.json()
+    assert cuerpo["creados"][0]["status"] == "partial"
+    assert "no se pudieron leer" in cuerpo["creados"][0]["status_detail"]
+    assert cuerpo["archivos_descartados"] == 1
+    assert cuerpo["archivos_ajenos"] == 0
 
 
 def test_una_medicion_se_guarda_y_solo_cuenta_al_confirmarla(client, db_session, escenario):

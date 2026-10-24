@@ -50,6 +50,12 @@ Todos los cambios notables de Cortex. Formato basado en
 - Puertos, contenedores y nombres de producción propios para convivir con GEMS.
 
 ### Corregido
+- Un CD de estudios ya no deja el estudio en «llegó incompleto» por traer su índice.
+  Los discos reales incluyen `DICOMDIR` y a veces `AUTORUN.INF` o un lector; se contaban
+  como archivos ilegibles y bastaba uno para marcar `partial` un estudio completo. Se
+  vio con un estudio de 90 cortes parejos a 2 mm y cero huecos. Ahora se distinguen los
+  archivos que no son imágenes —se informan y se ignoran— de un DICOM que sí parece
+  imagen y no se puede leer, que sigue marcando el estudio como incompleto.
 - El visor de estudios **ya decodifica en el navegador**. Faltaban tres piezas que
   sólo se ven al abrirlo de verdad: los códecs del cargador DICOM son CommonJS y
   Vite los servía sin `default`; `dicom-parser` perdía su `this` al servirse como

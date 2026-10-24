@@ -56,8 +56,8 @@ from app.services.imagen_medica.ingesta import (
     GrupoSerie,
     agrupar,
     comparabilidad,
+    es_archivo_ajeno,
     leer_instancia,
-    parece_dicom,
 )
 
 router = APIRouter(tags=["imagenes-medicas"])
@@ -173,8 +173,8 @@ def _ingerir(
                     "cargas; ninguna se pierde."
                 ),
             )
-        if not parece_dicom(datos):
-            result.archivos_descartados += 1
+        if es_archivo_ajeno(datos):
+            result.archivos_ajenos += 1
             continue
         instancia = leer_instancia(datos)
         if instancia is None:
@@ -197,7 +197,13 @@ def _ingerir(
 
     if result.archivos_descartados:
         result.mensajes.append(
-            f"{result.archivos_descartados} archivo(s) no se pudieron leer y no se guardaron."
+            f"{result.archivos_descartados} archivo(s) que sí parecen imágenes no se pudieron leer y no se guardaron."
+        )
+    if result.archivos_ajenos:
+        # No es un fallo ni vuelve el estudio «incompleto»: el CD trae índice y
+        # a veces un lector. Se dice para que nadie se pregunte dónde quedaron.
+        result.mensajes.append(
+            f"{result.archivos_ajenos} archivo(s) del disco no son imágenes (índice, autorun…) y se ignoraron."
         )
 
     for estudio in agrupar(instancias):
@@ -329,6 +335,7 @@ def _ingerir(
                 "creados": len(result.creados),
                 "ya_existentes": len(result.ya_existentes),
                 "descartados": result.archivos_descartados,
+                "ajenos": result.archivos_ajenos,
             },
         )
     return result

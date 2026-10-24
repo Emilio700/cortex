@@ -152,6 +152,32 @@ def parece_dicom(contenido: bytes) -> bool:
     return contenido[MAGIC_OFFSET : MAGIC_OFFSET + len(MAGIC)] == MAGIC
 
 
+UID_DIRECTORIO_DEL_CD = "1.2.840.10008.1.3.10"
+
+
+def es_archivo_ajeno(contenido: bytes) -> bool:
+    """¿Es un archivo del disco que **no** es una imagen?
+
+    Un CD de estudios trae, además de los cortes, el índice ``DICOMDIR`` y a
+    veces ``AUTORUN.INF``, un lector o un PDF. Antes cualquiera de ellos contaba
+    como «no se pudo leer» y dejaba el estudio en ``partial``: el aviso de «llegó
+    incompleto» salía en estudios perfectos. Se vio con un estudio real de 90
+    cortes parejos a 2 mm y cero huecos.
+
+    No se tapa un problema de verdad: un archivo que dice ser DICOM y no se deja
+    leer sigue contando como fallo, porque entonces sí puede faltar un corte.
+    """
+    if not parece_dicom(contenido):
+        return True
+    try:
+        ds = pydicom.dcmread(BytesIO(contenido), stop_before_pixels=True, force=False)
+    except Exception:  # noqa: BLE001 - si ni la cabecera se lee, es un fallo real
+        return False
+    meta = getattr(ds, "file_meta", None)
+    sop_class = str(getattr(meta, "MediaStorageSOPClassUID", "") or "")
+    return sop_class == UID_DIRECTORIO_DEL_CD
+
+
 def _texto(valor) -> Optional[str]:
     if valor is None:
         return None

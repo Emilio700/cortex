@@ -101,6 +101,9 @@ class ImagingUploadResult(BaseModel):
     ya_existentes: list[int] = []
     archivos_leidos: int = 0
     archivos_descartados: int = 0
+    # Archivos del disco que no son imágenes (DICOMDIR, autorun, un lector).
+    # Se informan, pero no vuelven el estudio «incompleto».
+    archivos_ajenos: int = 0
     mensajes: list[str] = []
 
 
