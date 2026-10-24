@@ -1,4 +1,4 @@
-# Guía de diseño de G.E.M.S
+# Guía de diseño de CORTEX
 
 Escrito para quien desarrolle en este repositorio, incluidos los agentes que
 trabajan por lotes. El objetivo es que dos personas distintas que toquen dos
@@ -7,6 +7,45 @@ pantallas distintas produzcan algo que se vea como el mismo sistema.
 Esta guía **describe lo que ya existe** y fija lo que se ha ido decidiendo con
 el consultorio. Cuando una decisión venga de una petición concreta del doctor o
 de la asistente, se anota: sirve para saber qué se puede cambiar y qué no.
+
+---
+
+## 0. La identidad de Cortex
+
+Cortex hereda los patrones de pantalla de GEMS (las secciones de abajo siguen
+vigentes) y les pone encima su propia identidad. Vive en dos lugares:
+
+- `frontend/src/scss/_cortex.scss`: se carga **al final** y redefine las
+  variables que leen las capas heredadas (`--cui-*`, `--glass-*`, `--hf-*`). Una
+  pantalla que usa esos tokens toma la marca sola.
+- `frontend/src/components/marca/`: `CortexMarca` (cerebro + palabra CORTEX con la
+  E de tres barras) y `RedNeuronal` (el fondo animado en canvas).
+
+**Paleta** (usa los `--cx-*`, no colores sueltos):
+
+```
+Marca        --cx-marino-900 #040a18 · --cx-marino-800 #071330 · --cx-marino-700 #0b1d45
+             --cx-azul #1e63e9 (5.2:1 con blanco) · --cx-azul-vivo #2f8cff
+             --cx-cian #38bdf8 · --cx-cian-claro #7dd3fc
+Superficies  --cx-fondo #eef3fa · --cx-superficie #fff · --cx-superficie-2 #f6f9fd
+Texto        --cx-texto #0d1b33 · --cx-texto-2 #4a5b78 · --cx-texto-3 #7b8aa5
+Radios       --cx-radio 14px · --cx-radio-lg 20px
+```
+
+**Reglas:**
+
+- El **marco** es marino (acceso, menú lateral, bandas de encabezado, banda del
+  inicio): ahí brilla el cerebro del logo, que sólo se ve bien sobre fondo oscuro.
+  El **contenido clínico** va sobre superficies claras, por legibilidad en
+  jornadas largas.
+- El azul eléctrico es para **acciones** (botón primario, foco, elemento activo).
+- Tipografía: Inter para la interfaz; Michroma sólo para la palabra CORTEX.
+- **Movimiento** con propósito y corto: entrada de pantallas ≤ 450 ms, cifras que
+  cuentan (`CifraAnimada`), señal en el menú activo, barrido lento en las bandas.
+  Todo se apaga con «reducir movimiento»; la red neuronal se pausa con la pestaña
+  oculta y no se pinta en las pruebas (jsdom).
+- Los recursos de marca se regeneran desde `docs/marca/logo-cortex.jpeg` con
+  `python frontend/scripts/generar-marca-cortex.py`.
 
 ---
 
