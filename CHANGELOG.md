@@ -50,6 +50,14 @@ Todos los cambios notables de Cortex. Formato basado en
 - Puertos, contenedores y nombres de producción propios para convivir con GEMS.
 
 ### Corregido
+- El visor de estudios **ya decodifica en el navegador**. Faltaban tres piezas que
+  sólo se ven al abrirlo de verdad: los códecs del cargador DICOM son CommonJS y
+  Vite los servía sin `default`; `dicom-parser` perdía su `this` al servirse como
+  módulo; y `events`, que necesita vtk.js detrás de Cornerstone, no estaba
+  instalado. Además Cornerstone 5 usa por omisión una ruta de metadatos que aquí no
+  se puebla, así que encontraba el archivo pero no los píxeles: se usa la ruta
+  clásica, que es la que decodifica comprimidos con los mismos workers.
+  Verificado en Chrome sobre un corte real: `DECODIFICADO 64x64 · 4096 valores`.
 - La barrera de error raíz envuelve también la sesión y el enrutador: un fallo al
   armar `AuthProvider` o `HashRouter` desmontaba toda la aplicación (React 19) y se
   veía en blanco, porque la barrera de `App` vive por dentro de ellos.

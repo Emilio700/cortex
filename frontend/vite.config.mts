@@ -62,6 +62,12 @@ export default defineConfig(() => {
     // Si Vite lo pre-empaqueta, la URL del worker se rompe y el visor no
     // decodifica nada: se excluye del optimizador y se dejan los workers en ESM.
     //
+    // Pero al excluirlo, sus códecs —`@cornerstonejs/codec-*` son CommonJS y el
+    // cargador los importa con `import factory from '.../decodewasmjs'`— también
+    // quedaban fuera: Vite los servía tal cual, sin `default`, y el visor moría
+    // con «does not provide an export named 'default'». Se pre-empaquetan sólo
+    // ellos, que es lo que los convierte a ESM con su export por omisión.
+    //
     // Solo para servir y compilar: dentro de vitest estas dos opciones no hacen
     // falta y volvían la suite tres veces más lenta (las pruebas de otras
     // pantallas empezaban a agotar su tiempo de espera).
@@ -70,6 +76,21 @@ export default defineConfig(() => {
       : {
           optimizeDeps: {
             exclude: ['@cornerstonejs/dicom-image-loader'],
+            // Los códecs, más los ayudantes CommonJS que también viajan detrás
+            // del cargador: al no pre-empaquetarlos, Vite los sirve crudos y
+            // mueren con «no exporta `default`» (los códecs) o con «no se puede
+            // leer `zlib` de undefined» (`dicom-parser`, un UMD que en modo
+            // módulo pierde `this`).
+            include: [
+              '@cornerstonejs/codec-charls/decodewasmjs',
+              '@cornerstonejs/codec-libjpeg-turbo-8bit/decodewasmjs',
+              '@cornerstonejs/codec-libjxl/decodewasmjs',
+              '@cornerstonejs/codec-openjpeg/decodewasmjs',
+              '@cornerstonejs/codec-openjph/wasmjs',
+              '@cornerstonejs/jpeg-lossless-decoder-js',
+              'dicom-parser',
+              'pako',
+            ],
           },
           worker: {
             format: 'es' as const,

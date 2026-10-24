@@ -38,6 +38,13 @@ export function leerToken(): string | null {
 async function iniciar(): Promise<void> {
   await iniciarCore()
   iniciarCargador({
+    // Cornerstone 5 estrena una ruta de metadatos «naturalizados» que depende de
+    // manejadores registrados aparte; sin ellos el cargador encuentra el archivo
+    // pero no los píxeles («no pixel data in NATURALIZED») y el visor se queda en
+    // negro. La ruta clásica —la que usan las versiones 3 y 4, y la que decodifica
+    // comprimidos con los mismos workers— sigue disponible y aquí es la que
+    // funciona. Se deja escrita para que se vea que fue decisión, no descuido.
+    useLegacyMetadataProvider: true,
     maxWebWorkers: Math.min(
       typeof navigator !== 'undefined' ? navigator.hardwareConcurrency || 2 : 2,
       4
