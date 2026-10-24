@@ -177,6 +177,18 @@ export function resumenDeEstudio(estudio: EstudioDicom): string {
   return partes.join(' · ')
 }
 
+/**
+ * Fecha del estudio en formato corto, sin reventar si viene vacía.
+ *
+ * La columna es obligatoria en la base, pero una pantalla que llama `.slice()` a
+ * un nulo deja el sitio en blanco: aquí se prefiere decir «sin fecha».
+ */
+export function fechaCorta(valor: string | null | undefined): string {
+  const texto = String(valor ?? '').trim()
+  if (!texto) return 'Sin fecha'
+  return texto.slice(0, 10)
+}
+
 export interface EstadoVisible {
   tono: 'ok' | 'aviso' | 'error'
   texto: string

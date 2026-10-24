@@ -4,6 +4,7 @@ import {
   corteEquivalente,
   emparejarSerie,
   estadoDeEstudio,
+  fechaCorta,
   formatearBytes,
   nombreDeSerie,
   ordenarSeries,
@@ -135,6 +136,19 @@ describe('formatearBytes', () => {
     expect(formatearBytes(512 * 1024)).toBe('512 KB')
     expect(formatearBytes(125 * 1024 * 1024)).toBe('125.0 MB')
     expect(formatearBytes(2 * 1024 * 1024 * 1024)).toBe('2.00 GB')
+  })
+})
+
+describe('fechaCorta', () => {
+  it('recorta la fecha ISO a día', () => {
+    expect(fechaCorta('2026-09-14T00:00:00')).toBe('2026-09-14')
+  })
+
+  it('no revienta cuando no hay fecha', () => {
+    // Una pantalla que llama .slice() a un nulo deja el sitio en blanco.
+    expect(fechaCorta(null)).toBe('Sin fecha')
+    expect(fechaCorta(undefined)).toBe('Sin fecha')
+    expect(fechaCorta('   ')).toBe('Sin fecha')
   })
 })
 

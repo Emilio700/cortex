@@ -39,6 +39,7 @@ import {
   corteEquivalente,
   emparejarSerie,
   estadoDeEstudio,
+  fechaCorta,
   nombreDeSerie,
   ordenarSeries,
   resumenDeEstudio,
@@ -433,10 +434,16 @@ export default function VisorEstudioPage() {
           <div className="visor-encabezado__meta">{resumenDeEstudio(estudio)}</div>
         </div>
         {estado && (
+          // Etiqueta corta: el detalle de qué falta va en el aviso de abajo. Si
+          // se repite el mismo texto dos veces, el médico deja de leerlo.
           <CBadge
             color={estado.tono === 'ok' ? 'success' : estado.tono === 'aviso' ? 'warning' : 'danger'}
           >
-            {estado.texto}
+            {estado.tono === 'ok'
+              ? 'Estudio completo'
+              : estado.tono === 'error'
+                ? 'No se pudo leer'
+                : 'Estudio incompleto'}
           </CBadge>
         )}
       </div>
@@ -503,13 +510,13 @@ export default function VisorEstudioPage() {
               <div className="visor-viewport__etiqueta">
                 {serieActiva ? nombreDeSerie(serieActiva) : 'Sin serie'}
                 <br />
-                {estudio.study_date.slice(0, 10)}
+                {fechaCorta(estudio.study_date)}
               </div>
             </div>
             {compararCon && (
               <div className="visor-viewport" ref={refDerecha}>
                 <div className="visor-viewport__etiqueta">
-                  {previo ? previo.study_date.slice(0, 10) : 'Estudio previo'}
+                  {previo ? fechaCorta(previo.study_date) : 'Estudio previo'}
                 </div>
               </div>
             )}

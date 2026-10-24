@@ -11,6 +11,7 @@ import './scss/style.scss'
 
 // Auth
 import { AuthProvider } from './shared/context/AuthContext'
+import BarreraDeError from './shared/components/BarreraDeError'
 
 // Tabs
 import { TabsProvider } from './shared/tabs/TabsContext'
@@ -58,33 +59,40 @@ const App = () => {
   return (
     <AuthProvider>
       <HashRouter>
-        <Suspense
-        fallback={
-          <div className="pt-3 text-center">
-            <CSpinner color="primary" variant="grow" />
-          </div>
-        }
-      >
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/force-change-password" element={<ForceChangePasswordPage />} />
-          <Route path="/403" element={<Page403 />} />
-          <Route path="/404" element={<Page404 />} />
-          <Route path="/500" element={<Page500 />} />
-          <Route
-            path="*"
-            element={
-              <ProtectedRoute>
-                <PestanasConInicio>
-                  <DefaultLayout />
-                </PestanasConInicio>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Suspense>
+        {/*
+          * Última barrera: si algo falla por encima de las pestañas (el armazón,
+          * el inicio de sesión, una descarga que no llega), se ve un mensaje con
+          * salida en vez de una página en blanco.
+          */}
+        <BarreraDeError>
+          <Suspense
+          fallback={
+            <div className="pt-3 text-center">
+              <CSpinner color="primary" variant="grow" />
+            </div>
+          }
+        >
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/force-change-password" element={<ForceChangePasswordPage />} />
+            <Route path="/403" element={<Page403 />} />
+            <Route path="/404" element={<Page404 />} />
+            <Route path="/500" element={<Page500 />} />
+            <Route
+              path="*"
+              element={
+                <ProtectedRoute>
+                  <PestanasConInicio>
+                    <DefaultLayout />
+                  </PestanasConInicio>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Suspense>
+        </BarreraDeError>
       </HashRouter>
     </AuthProvider>
   )

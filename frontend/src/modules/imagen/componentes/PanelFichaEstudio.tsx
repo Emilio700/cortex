@@ -1,4 +1,4 @@
-import { formatearBytes, resumenDeEstudio, type EstudioDicom } from '../dominio/tipos'
+import { formatearBytes, fechaCorta, resumenDeEstudio, type EstudioDicom } from '../dominio/tipos'
 
 /**
  * Ficha técnica del estudio, en lenguaje que sirve para diagnosticar problemas:
@@ -11,7 +11,7 @@ import { formatearBytes, resumenDeEstudio, type EstudioDicom } from '../dominio/
 export default function PanelFichaEstudio({ estudio }: { estudio: EstudioDicom }) {
   const filas: [string, string][] = [
     ['Modalidad', estudio.modality],
-    ['Fecha del estudio', estudio.study_date.slice(0, 16).replace('T', ' ')],
+    ['Fecha del estudio', fechaCorta(estudio.study_date)],
     ['Descripción', estudio.study_description ?? 'Sin descripción'],
     ['Institución', estudio.institution_name ?? 'No registrada'],
     ['Región', estudio.body_part ?? 'No registrada'],
