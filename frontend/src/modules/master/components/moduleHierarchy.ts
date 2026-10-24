@@ -56,7 +56,10 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
       { label: 'Preregistro (solo historial)', actions: ['preregistration.read', 'preregistration.create', 'preregistration.update', 'preregistration.convert'] },
       { label: 'Agenda', actions: ['appointments.read', 'appointments.create', 'appointments.update', 'appointments.cancel'] },
       { label: 'Pacientes', actions: ['patients.read', 'patients.create', 'patients.update', 'patients.delete'] },
-      { label: 'Triage', actions: ['triage.read', 'triage.create'] },
+      // Los signos vitales ya no tienen pantalla propia: se capturan desde la
+      // cita (Agenda) y desde la consulta. El permiso sigue aquí porque es el
+      // que habilita esa captura, sobre todo al médico.
+      { label: 'Signos vitales (triage)', actions: ['triage.read', 'triage.create'] },
       { label: 'Documentos', actions: ['documents.read', 'documents.upload', 'documents.update', 'documents.delete', 'documents.correct'] },
     ],
   },

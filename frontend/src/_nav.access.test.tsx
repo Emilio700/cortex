@@ -132,9 +132,11 @@ describe('filterNavByAccess', () => {
     },
   )
 
-  it('un médico con permisos de recepción ve triage y pagos', () => {
+  it('un médico al que le conceden cobros ve Cobros y no Triage', () => {
     // El caso que motiva el plan 20. Antes, conceder estos permisos desde la
     // pantalla de Master no cambiaba absolutamente nada en la interfaz.
+    // Triage ya no está: se retiró la pantalla y con ella la entrada del menú,
+    // aunque el permiso siga existiendo para capturar signos en la consulta.
     const conRecepcion = destinos({
       role: Role.DOCTOR,
       permissions: [
@@ -145,7 +147,7 @@ describe('filterNavByAccess', () => {
       ],
     })
 
-    expect(conRecepcion).toContain('/secretaria/triage')
+    expect(conRecepcion).not.toContain('/secretaria/triage')
     // El preregistro se quitó (plan 32): ni con su permiso vuelve al menú.
     expect(conRecepcion).not.toContain('/secretaria/preregistro')
     expect(conRecepcion).toContain('/finanzas/pagos')

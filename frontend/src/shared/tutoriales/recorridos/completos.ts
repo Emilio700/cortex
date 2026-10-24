@@ -35,7 +35,7 @@ export const RECORRIDOS_COMPLETOS: RecorridoCompleto[] = [
   },
   {
     id: 'completo-recepcion',
-    version: 4,
+    version: 5,
     titulo: 'Recorrido completo de recepción',
     resumen: 'De agendar la cita a cerrar la caja, en el orden en que llega un paciente.',
     roles: [Role.SECRETARIA],
@@ -48,7 +48,6 @@ export const RECORRIDOS_COMPLETOS: RecorridoCompleto[] = [
       { recorridoId: 'documentos', nombre: 'Documentos' },
       { recorridoId: 'recepcion-entrega', nombre: 'Entregar órdenes' },
       { recorridoId: 'recepcion-resultados', nombre: 'Subir resultados' },
-      { recorridoId: 'triage', nombre: 'Triage' },
       { recorridoId: 'signos-formulario', nombre: 'Signos vitales' },
       { recorridoId: 'pagos-recepcion', nombre: 'Cobros' },
       { recorridoId: 'pago-registrar', nombre: 'Registrar un pago' },

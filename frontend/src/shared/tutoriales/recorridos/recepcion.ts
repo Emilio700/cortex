@@ -219,11 +219,11 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
   },
   {
     id: 'signos-formulario',
-    version: 1,
+    version: 2,
     titulo: 'Tomar los signos vitales',
     resumen: 'Peso, talla, presión, temperatura y motivo de consulta.',
     grupo: 'Recepción',
-    // Sin ruta: el mismo formulario se abre desde la agenda, desde Triage y
+    // Sin ruta: el mismo formulario se abre desde la cita, en la Agenda, y
     // desde la consulta del médico.
     requiere: ['triage.create'],
     roles: [Role.SECRETARIA, Role.ADMIN, Role.MASTER],
@@ -231,7 +231,7 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
     // para tomar los signos en consulta cuando nadie lo hizo en sala.
     contexto: 'signos-formulario',
     comoLlegar:
-      'Abre el formulario de signos vitales: en recepción, desde <b>Triage</b> o la <b>Agenda</b>; en consulta, con <b>Registrar signos vitales</b>. Dentro, pulsa <b>¿Cómo se llena?</b>. Nada se guarda hasta que pulses <b>Guardar</b>.',
+      'Abre el formulario de signos vitales desde la cita, en la <b>Agenda</b>: <b>Registrar Triage</b>. En consulta es <b>Registrar signos vitales</b>. Dentro, pulsa <b>¿Cómo se llena?</b>. Nada se guarda hasta que pulses <b>Guardar</b>.',
     pasos: [
       {
         elemento: 'signos-peso-talla',
@@ -258,32 +258,6 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
           'Al guardar, el médico ya ve estos signos en su consulta. Si te equivocaste, vuelve a abrirlo y corrígelo.',
         lado: 'top',
         alinear: 'end',
-      },
-    ],
-  },
-  {
-    id: 'triage',
-    version: 3,
-    titulo: 'Triage del día',
-    resumen: 'Los pacientes de hoy que todavía no tienen signos vitales.',
-    grupo: 'Recepción',
-    ruta: '/secretaria/triage',
-    requiere: ['triage.create'],
-    roles: [Role.SECRETARIA, Role.ADMIN, Role.MASTER],
-    pasos: [
-      {
-        elemento: 'triage-lista',
-        titulo: 'Quién falta por signos vitales',
-        texto:
-          'Las citas de hoy confirmadas o en sala, por hora. Se actualiza sola cuando vuelves a esta ventana. Si ya le tomaste los signos, sigue en la lista: el botón abre lo que registraste para corregirlo. La que ya está <b>En consulta</b> no sale: está con el médico, que le toma los signos ahí si faltan.',
-        lado: 'top',
-      },
-      {
-        elemento: 'triage-signos',
-        titulo: 'Tomar los signos',
-        texto:
-          'Abre el formulario de ese paciente. Después, desde la <b>Agenda</b>, ya la puedes pasar a sala.',
-        lado: 'left',
       },
     ],
   },

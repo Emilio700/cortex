@@ -37,7 +37,6 @@ export const MENU_VIGENTE: Record<Role, string[]> = {
     '/admin/auditoria',
     '/secretaria/agenda',
     '/secretaria/pacientes',
-    '/secretaria/triage',
     '/finanzas',
     '/finanzas/pagos',
     '/doctor/appointments',
@@ -53,7 +52,6 @@ export const MENU_VIGENTE: Record<Role, string[]> = {
     '/admin/auditoria',
     '/secretaria/agenda',
     '/secretaria/pacientes',
-    '/secretaria/triage',
     '/finanzas',
     '/finanzas/pagos',
     // '/doctor/appointments' salió a propósito (revisión de flujos, 2026-10-04):
@@ -66,7 +64,6 @@ export const MENU_VIGENTE: Record<Role, string[]> = {
     '/',
     '/secretaria/agenda',
     '/secretaria/pacientes',
-    '/secretaria/triage',
     '/secretaria/resultados',
     '/finanzas/pagos',
   ],
@@ -98,11 +95,18 @@ describe('línea base del menú por rol', () => {
     expect(destinosPorRol(undefined)).toEqual(['/'])
   })
 
-  it('el médico no ve hoy triage ni pagos', () => {
+  it('los signos vitales ya no tienen pantalla: se toman desde la cita', () => {
+    // El módulo Triage se retiró: era una segunda puerta al mismo formulario, y
+    // la única que dejaba fuera al paciente que llegó sin confirmar. La captura
+    // vive en la Agenda (en la cita) y en la consulta del médico.
+    for (const role of Object.keys(MENU_VIGENTE) as Role[]) {
+      expect(destinosPorRol(role)).not.toContain('/secretaria/triage')
+    }
+  })
+
+  it('el médico no ve hoy pagos', () => {
     // Es justamente el defecto que motiva el plan 20: aunque se le concedan los
     // permisos desde Master, el menú filtra por rol y no se entera.
-    const doctora = destinosPorRol(Role.DOCTOR)
-    expect(doctora).not.toContain('/secretaria/triage')
-    expect(doctora).not.toContain('/finanzas/pagos')
+    expect(destinosPorRol(Role.DOCTOR)).not.toContain('/finanzas/pagos')
   })
 })

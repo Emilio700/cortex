@@ -24,7 +24,8 @@ describe('filterNavByRole', () => {
     expect(tos).toContain('/secretaria/pacientes')
     // Documentos salió del menú a propósito (plan 32, punto 6): vive en el expediente.
     expect(tos).not.toContain('/secretaria/documentos')
-    // But doctor does NOT see triage (secretaria-only); el preregistro ya no existe
+    // But doctor does NOT see the reception-only items; el preregistro ya no existe
+    // y Triage salió del menú (los signos se toman desde la cita).
     expect(tos).not.toContain('/secretaria/triage')
     expect(tos).not.toContain('/secretaria/preregistro')
     // Doctor does NOT see admin routes

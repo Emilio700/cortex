@@ -41,7 +41,6 @@ Desde ahí también puedes **Cambiar contraseña** cuando quieras.
 | **Preregistro** | Personas que pidieron cita por fuera y todavía no son pacientes. |
 | **Agenda** | El calendario de citas. **Tu pantalla principal.** |
 | **Pacientes** | Buscar, registrar y editar pacientes. |
-| **Triage** | Tomar peso, talla y presión antes de que pase con el doctor. |
 | **Documentos** | Subir y consultar archivos de cada paciente (estudios, INE, etc.). |
 
 > ⚠️ **Nota sobre "Dashboard Financiero":** hoy esa pantalla te muestra un aviso rojo en inglés porque tu usuario no tiene habilitado el corte de caja. **No está descompuesto y no hiciste nada mal.** Usa **Pagos** en su lugar. Si necesitas el corte del día, pídeselo al administrador.
@@ -131,22 +130,22 @@ El motivo queda guardado y se ve después dentro de la cita. Si te arrepientes a
 
 ---
 
-## 6. Preparar a la paciente para el doctor (Triage / pasar a sala)
+## 6. Preparar al paciente para el doctor (signos vitales y pasar a sala)
 
-Cuando la paciente llega al consultorio, el orden es: **Confirmar → Triage → Pasar a Sala.**
+Cuando el paciente llega al consultorio, el orden es: **Confirmar → Signos vitales → Pasar a Sala.**
 
-1. Menú **Agenda** → clic en la cita de la paciente.
+1. Menú **Agenda** → clic en la cita del paciente.
 2. Si todavía está en azul (*Agendada*), clic en **Confirmar**. La ventana se cierra.
 3. Vuelve a abrir la cita → hasta abajo dice **Triage: Pendiente** → clic en **Registrar Triage**.
 4. Llena lo que hayas tomado: **Peso (kg)**, **Talla (cm)**, **Presión Arterial** (sistólica / diastólica), **Temperatura**, **Motivo de Consulta** y **Observaciones**.
    *Ninguno es obligatorio, pero llena todo lo que puedas: es lo que el doctor va a leer.*
-5. **Guardar**. El triage queda como **Completado ✓**.
-6. Ya con el triage guardado, clic en **Pasar a Sala**.
-   → En ese momento le llega un aviso al doctor: *"Paciente en sala"*.
+5. **Guardar**. Los signos quedan como **Completado ✓**.
+6. Ya con los signos guardados, clic en **Pasar a Sala**.
+   → En ese momento le llega un aviso al médico: *"Paciente en sala"*.
 
-> El botón **Pasar a Sala** aparece gris ("Requiere triage") hasta que guardes el triage. Es a propósito.
+> El botón **Pasar a Sala** aparece gris ("Requiere triage") hasta que guardes los signos. Es a propósito.
 
-**Otra forma de hacerlo:** menú **Triage**. Ahí salen las citas **Confirmadas** y **En Sala** con un botón verde **Signos Vitales**. Ojo: en esa lista las citas que todavía están *Agendadas* no aparecen (primero hay que confirmarlas), y puede mostrarte citas de otros días además de las de hoy.
+**Todo se hace desde la Agenda.** No hay una pantalla aparte de Triage: la que había era una segunda puerta al mismo formulario y, además, no mostraba a los pacientes que llegaron sin confirmar. Si nadie alcanzó a tomar los signos, el médico los toma al abrir la consulta.
 
 ---
 
@@ -188,7 +187,7 @@ Si alguien pidió informes o cita y todavía no está en el sistema:
 |---|---|---|
 | Al abrir | Reviso las citas de **Hoy** | Agenda |
 | Llaman a confirmar | Abro la cita → **Confirmar** | Agenda |
-| Llega la paciente | Abro la cita → **Registrar Triage** → **Pasar a Sala** | Agenda |
+| Llega el paciente | Abro la cita → **Registrar Triage** → **Pasar a Sala** | Agenda |
 | Paciente nueva | **+ Nuevo Paciente** y luego su cita | Pacientes → Agenda |
 | Suena la campanita | Registro el cobro | Pagos |
 | Trae estudios | Los subo a su expediente | Documentos |
