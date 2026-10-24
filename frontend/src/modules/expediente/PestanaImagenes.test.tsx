@@ -6,9 +6,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const get = vi.hoisted(() => vi.fn())
 const rol = vi.hoisted(() => ({ actual: 'doctor' }))
+const permisos = vi.hoisted(() => ({ actual: ['clinical_images.read', 'clinical_images.upload'] }))
 vi.mock('../../shared/services/api', () => ({ apiClient: { get }, default: { get } }))
 vi.mock('../../shared/context/AuthContext', () => ({
-  useAuth: () => ({ user: { role: rol.actual }, can: () => true }),
+  useAuth: () => ({
+    user: { role: rol.actual },
+    can: (accion: string) => permisos.actual.includes(accion),
+  }),
 }))
 vi.mock('../doctor/components/ClinicalImagesPanel', () => ({
   default: () => <div>Agregar imagen clínica</div>,
@@ -116,11 +120,15 @@ describe('PestanaImagenes', () => {
     expect(screen.getByText('Estudios de imagen (DICOM)')).toBeInTheDocument()
   })
 
-  it('recepción no tiene el formulario de fotos clínicas', async () => {
+  it('recepción no tiene el formulario de fotos clínicas ni ve los estudios DICOM', async () => {
     rol.actual = 'secretaria'
+    permisos.actual = []
     montar()
     await screen.findByText('Lesión')
     expect(screen.queryByText('Agregar imagen clínica')).toBeNull()
+    // Sin permiso de imagen clínica no se pinta el panel: si se pintara, lo
+    // único que vería sería un error de permiso en medio del expediente.
+    expect(screen.queryByText('Estudios de imagen (DICOM)')).toBeNull()
   })
 
   it('si no se pudo leer, lo dice', async () => {
