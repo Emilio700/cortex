@@ -3,7 +3,9 @@
  * sucursal que se está viendo y cuándo se actualizó (plan 28, §4.1 y §4.3).
  *
  * Sin frase ni ilustración (D-6): en el celular empujaban la agenda hacia
- * abajo. Un refresco fallido se anuncia en una región `aria-live`; el exitoso
+ * abajo. En Cortex el encabezado es la banda marina de la marca, con la red
+ * neuronal viva de fondo y el cerebro a la derecha sólo en escritorio; su
+ * alto no crece en el celular. Un refresco fallido se anuncia en una región `aria-live`; el exitoso
  * no (sería ruido cada minuto).
  */
 import React, { useEffect, useState } from 'react'
@@ -11,6 +13,8 @@ import { CButton } from '@coreui/react-pro'
 
 import { formatearEnConsultorio } from '../../../../shared/utils/date'
 import { haceCuanto, horaEnConsultorio, saludoPorHora } from '../../utils/inicio'
+import RedNeuronal from '../../../../components/marca/RedNeuronal'
+import cerebro from '../../../../assets/images/cortex-cerebro-chico.png'
 
 interface Props {
   nombre: string
@@ -44,7 +48,9 @@ export const EncabezadoDelDia: React.FC<Props> = ({
   const fecha = formatearEnConsultorio(ahora, { weekday: 'long', day: 'numeric', month: 'long' })
 
   return (
-    <header className="inicio-encabezado inicio-aparece" data-tour="doctora-saludo">
+    <header className="inicio-encabezado inicio-encabezado--cortex inicio-aparece" data-tour="doctora-saludo">
+      <RedNeuronal className="inicio-encabezado-red" densidad={0.55} alcance={110} interactiva={false} />
+      <img className="inicio-encabezado-cerebro" src={cerebro} alt="" aria-hidden="true" draggable={false} />
       <div className="inicio-encabezado-texto">
         <h1 className="inicio-saludo">{nombre ? `${saludo}, ${nombre}` : saludo}</h1>
         <p className="inicio-encabezado-sub">

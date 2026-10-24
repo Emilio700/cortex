@@ -3,6 +3,10 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import { CSpinner, useColorModes } from '@coreui/react-pro'
 
+// Las tipografías de Cortex viajan en el build: el consultorio no depende de
+// un CDN para ver la interfaz completa.
+import '@fontsource-variable/inter'
+import '@fontsource/michroma/400.css'
 import './scss/style.scss'
 
 // Auth

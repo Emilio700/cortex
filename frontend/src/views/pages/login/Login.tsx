@@ -183,7 +183,7 @@ const Login = () => {
       subtitle="Ingresa tus credenciales para acceder al sistema"
       footer={
         <>
-          © 2026 G.E.M.S — Gynecology & Expert Management System
+          © 2026 CORTEX · Neurocirugía
         </>
       }
     >
@@ -191,7 +191,7 @@ const Login = () => {
       <CForm onSubmit={handleSubmit} noValidate>
         <div className="mb-3">
           <CInputGroup>
-            <CInputGroupText style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+            <CInputGroupText>
               <CIcon icon={cilEnvelopeClosed} />
             </CInputGroupText>
             <CFormInput
@@ -213,7 +213,7 @@ const Login = () => {
         </div>
         <div className="mb-3">
           <CInputGroup>
-            <CInputGroupText style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+            <CInputGroupText>
               <CIcon icon={cilLockLocked} />
             </CInputGroupText>
             <CFormInput
@@ -240,7 +240,7 @@ const Login = () => {
               aria-label={mostrarContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'}
               aria-pressed={mostrarContrasena}
               tabIndex={-1}
-              style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderLeft: 0 }}
+              style={{ borderLeft: 0 }}
             >
               <span className="small fw-semibold">{mostrarContrasena ? 'Ocultar' : 'Mostrar'}</span>
             </CButton>

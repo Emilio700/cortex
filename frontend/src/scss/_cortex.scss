@@ -1,0 +1,711 @@
+// ═══════════════════════════════════════════════════════════════
+// CORTEX · sistema visual
+//
+// Se carga al final, encima de las capas heredadas de GEMS (liquid-glass,
+// hyperframes-medical, inicio-doctora). En vez de reescribir cada pantalla,
+// redefine los tres juegos de variables que esas capas leen (--cui-*,
+// --glass-*, --hf-*) y da su forma a las piezas del armazón: menú lateral,
+// encabezado, tarjetas, botones, pestañas, tablas y calendario. Así todas las
+// pantallas heredan la marca sin tocar su lógica.
+//
+// Paleta: el azul marino profundo y el azul eléctrico del logo. El contenido
+// clínico vive sobre superficies claras (legibilidad en jornadas largas); el
+// marco (menú, acceso) es marino, donde el cerebro del logo brilla.
+// ═══════════════════════════════════════════════════════════════
+
+:root {
+  // ── Marca ──
+  --cx-marino-900: #040a18;
+  --cx-marino-800: #071330;
+  --cx-marino-700: #0b1d45;
+  --cx-marino-600: #12295c;
+  --cx-azul: #1e63e9;      // 5.2:1 con letra blanca (WCAG AA)
+  --cx-azul-vivo: #2f8cff;
+  --cx-cian: #38bdf8;
+  --cx-cian-claro: #7dd3fc;
+  --cx-plata: #c9d4e6;
+
+  --cx-degradado: linear-gradient(110deg, #1e63e9 0%, #2f8cff 55%, #38bdf8 100%);
+  --cx-degradado-marino: linear-gradient(180deg, #081633 0%, #050d22 100%);
+  --cx-resplandor: 0 0 0 1px rgba(47, 140, 255, 0.18), 0 8px 28px rgba(30, 99, 233, 0.22);
+
+  --cx-fuente: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --cx-fuente-marca: 'Michroma', 'Inter Variable', sans-serif;
+
+  --cx-radio: 14px;
+  --cx-radio-lg: 20px;
+  --cx-curva: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  // ── Superficies (claro) ──
+  --cx-fondo: #eef3fa;
+  --cx-superficie: #ffffff;
+  --cx-superficie-2: #f6f9fd;
+  --cx-borde: rgba(15, 40, 90, 0.09);
+  --cx-borde-fuerte: rgba(15, 40, 90, 0.16);
+  --cx-texto: #0d1b33;
+  --cx-texto-2: #4a5b78;
+  --cx-texto-3: #7b8aa5;
+  --cx-sombra: 0 1px 2px rgba(10, 30, 70, 0.05), 0 4px 16px rgba(10, 30, 70, 0.06);
+  --cx-sombra-alta: 0 2px 6px rgba(10, 30, 70, 0.06), 0 18px 48px rgba(10, 30, 70, 0.14);
+
+  // ── Puente a las capas heredadas ──
+  --cui-body-font-family: var(--cx-fuente);
+  --cui-body-color: var(--cx-texto);
+  --cui-emphasis-color: var(--cx-texto);
+  --cui-secondary-color: var(--cx-texto-2);
+  --cui-tertiary-bg: var(--cx-fondo);
+  --cui-border-color: var(--cx-borde);
+  --cui-link-color: var(--cx-azul);
+  --cui-link-color-rgb: 30, 99, 233;
+  --cui-link-hover-color: #154bb8;
+  --cui-card-border-color: var(--cx-borde);
+
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-bg-strong: rgba(255, 255, 255, 0.86);
+  --glass-border: var(--cx-borde);
+  --glass-border-highlight: rgba(255, 255, 255, 0.9);
+  --glass-shadow: var(--cx-sombra);
+  --glass-shadow-strong: var(--cx-sombra-alta);
+  --glass-radius: var(--cx-radio);
+  --glass-radius-lg: var(--cx-radio-lg);
+  --hero-gradient: var(--cx-degradado);
+  // Un fondo casi plano con dos luces muy suaves del azul de la marca.
+  --page-gradient:
+    radial-gradient(60% 50% at 100% 0%, rgba(47, 140, 255, 0.08) 0%, transparent 70%),
+    radial-gradient(50% 40% at 0% 100%, rgba(56, 189, 248, 0.06) 0%, transparent 70%),
+    linear-gradient(180deg, #f2f6fc 0%, #eaf0f8 100%);
+
+  --hf-bg: var(--cx-fondo);
+  --hf-surface: var(--cx-superficie);
+  --hf-surface-hover: var(--cx-superficie-2);
+  --hf-surface-alt: var(--cx-superficie-2);
+  --hf-border: var(--cx-borde);
+  --hf-border-light: rgba(15, 40, 90, 0.06);
+  --hf-border-hover: var(--cx-borde-fuerte);
+  --hf-text: var(--cx-texto);
+  --hf-text-secondary: var(--cx-texto-2);
+  --hf-text-tertiary: var(--cx-texto-3);
+  --hf-heading: var(--cx-texto);
+  --hf-blue: var(--cx-azul);
+  --hf-blue-light: #eaf2ff;
+  --hf-blue-border: #bcd5ff;
+  --hf-purple: #6d5bf0;
+  --hf-radius: 12px;
+  --hf-radius-lg: var(--cx-radio);
+  --hf-radius-xl: var(--cx-radio-lg);
+  --hf-shadow: var(--cx-sombra);
+  --hf-shadow-lg: var(--cx-sombra-alta);
+  --hf-page-bg: var(--page-gradient);
+}
+
+[data-coreui-theme='dark'] {
+  --cx-fondo: #050c1d;
+  --cx-superficie: #0b1730;
+  --cx-superficie-2: #0f1e3d;
+  --cx-borde: rgba(125, 211, 252, 0.1);
+  --cx-borde-fuerte: rgba(125, 211, 252, 0.2);
+  --cx-texto: #e4ecfb;
+  --cx-texto-2: #9fb2d6;
+  --cx-texto-3: #6f84a8;
+  --cx-sombra: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.35);
+  --cx-sombra-alta: 0 2px 8px rgba(0, 0, 0, 0.5), 0 24px 60px rgba(0, 0, 0, 0.55);
+
+  --cui-body-bg: var(--cx-fondo);
+  --cui-body-bg-rgb: 5, 12, 29;
+  --cui-tertiary-bg: var(--cx-fondo);
+  --cui-secondary-bg: var(--cx-superficie-2);
+  --cui-card-bg: var(--cx-superficie);
+  --cui-link-color: var(--cx-cian-claro);
+  --cui-link-hover-color: #fff;
+  --cui-dark-bg-subtle: var(--cx-fondo);
+
+  --glass-bg: rgba(11, 23, 48, 0.9);
+  --glass-bg-strong: rgba(9, 19, 41, 0.86);
+  --glass-border-highlight: rgba(125, 211, 252, 0.14);
+  --page-gradient:
+    radial-gradient(60% 50% at 100% 0%, rgba(47, 140, 255, 0.12) 0%, transparent 70%),
+    radial-gradient(50% 40% at 0% 100%, rgba(56, 189, 248, 0.07) 0%, transparent 70%),
+    linear-gradient(180deg, #060f24 0%, #040a18 100%);
+
+  --hf-blue: var(--cx-azul-vivo);
+  --hf-blue-light: rgba(47, 140, 255, 0.12);
+  --hf-blue-border: rgba(47, 140, 255, 0.35);
+  --hf-border-light: rgba(125, 211, 252, 0.06);
+}
+
+// ── Tipografía ───────────────────────────────────────────────────
+body {
+  font-family: var(--cx-fuente);
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  color: var(--cx-texto);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--cx-fuente);
+  letter-spacing: -0.015em;
+  color: var(--cx-texto);
+}
+
+body.hf-theme {
+  background: var(--page-gradient);
+  background-attachment: fixed;
+}
+
+// ── La palabra CORTEX ────────────────────────────────────────────
+.palabra-cortex {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--cx-fuente-marca);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.32em;
+  // El plateado del logo: claro arriba, más frío abajo.
+  background: linear-gradient(180deg, #ffffff 0%, #dfe7f3 45%, #9fb0c9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+
+  // Compensa el espaciado tras la última letra para que quede centrada.
+  margin-right: -0.32em;
+
+  &__e {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 0.78em;
+    height: 0.74em;
+    margin-right: 0.32em;
+
+    i {
+      display: block;
+      height: 0.13em;
+      border-radius: 1px;
+      background: linear-gradient(90deg, #2f8cff, #38bdf8);
+      box-shadow: 0 0 0.25em rgba(56, 189, 248, 0.75);
+    }
+  }
+}
+
+.cortex-marca {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+
+  &__cerebro {
+    flex: none;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(47, 140, 255, 0.55));
+  }
+
+  &__texto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  &__lema {
+    font-size: 0.6rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #7f95bd;
+  }
+
+  &--animada .cortex-marca__cerebro {
+    animation: cx-pulso-cerebro 4.5s ease-in-out infinite;
+  }
+}
+
+@keyframes cx-pulso-cerebro {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(47, 140, 255, 0.45)); }
+  50% { filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.85)); }
+}
+
+// ── Menú lateral ─────────────────────────────────────────────────
+.sidebar {
+  --cui-sidebar-bg: transparent;
+  --cui-sidebar-color: #9fb2d6;
+  --cui-sidebar-nav-link-color: #a9badb;
+  --cui-sidebar-nav-link-icon-color: #6f88b8;
+  --cui-sidebar-nav-link-hover-color: #ffffff;
+  --cui-sidebar-nav-link-hover-icon-color: var(--cx-cian-claro);
+  --cui-sidebar-nav-link-active-color: #ffffff;
+  --cui-sidebar-nav-link-active-icon-color: var(--cx-cian-claro);
+  --cui-sidebar-nav-title-color: #58709c;
+  --cui-sidebar-header-bg: transparent;
+  --cui-sidebar-brand-bg: transparent;
+
+  &.bg-dark-gradient,
+  & {
+    background: var(--cx-degradado-marino) !important;
+  }
+
+  border: 1px solid rgba(125, 211, 252, 0.08) !important;
+  box-shadow: 0 20px 50px rgba(4, 10, 24, 0.35) !important;
+  isolation: isolate;
+
+  // La red neuronal del logo, quieta y muy tenue, detrás del menú.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(80% 40% at 30% 0%, rgba(47, 140, 255, 0.22) 0%, transparent 70%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cg fill='none' stroke='%237dd3fc' stroke-opacity='.07'%3E%3Cpath d='M20 30L90 70L160 40L200 110L140 160L70 140L20 30M90 70L140 160M160 40L140 160M70 140L20 200L110 210L140 160'/%3E%3C/g%3E%3Cg fill='%237dd3fc' fill-opacity='.18'%3E%3Ccircle cx='20' cy='30' r='2'/%3E%3Ccircle cx='90' cy='70' r='2.5'/%3E%3Ccircle cx='160' cy='40' r='2'/%3E%3Ccircle cx='200' cy='110' r='2'/%3E%3Ccircle cx='140' cy='160' r='2.5'/%3E%3Ccircle cx='70' cy='140' r='2'/%3E%3Ccircle cx='20' cy='200' r='1.5'/%3E%3Ccircle cx='110' cy='210' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .sidebar-header {
+    min-height: 76px;
+    border-bottom: 1px solid rgba(125, 211, 252, 0.08) !important;
+  }
+
+  .sidebar-brand {
+    padding: 0.25rem 0;
+  }
+
+  .nav-title {
+    margin-top: 1.1rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+  }
+
+  .sidebar-nav {
+    padding: 0.5rem 0.65rem;
+  }
+
+  .sidebar-nav .nav-link {
+    position: relative;
+    margin: 2px 0;
+    border-radius: 12px;
+    font-weight: 500;
+    transition:
+      background-color var(--gems-mov, 180ms) var(--cx-curva),
+      color var(--gems-mov, 180ms) var(--cx-curva),
+      transform var(--gems-mov, 180ms) var(--cx-curva);
+
+    &:hover {
+      background: rgba(47, 140, 255, 0.08);
+      transform: translateX(2px);
+    }
+
+    &.active {
+      background: linear-gradient(90deg, rgba(47, 140, 255, 0.26) 0%, rgba(47, 140, 255, 0.06) 100%);
+      box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.14);
+
+      // La barra de luz a la izquierda del elemento activo, con un pulso
+      // lento que recuerda a una señal nerviosa.
+      &::before {
+        content: '';
+        position: absolute;
+        left: -0.65rem;
+        top: 22%;
+        bottom: 22%;
+        width: 3px;
+        border-radius: 0 3px 3px 0;
+        background: linear-gradient(180deg, var(--cx-cian), var(--cx-azul-vivo));
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
+        animation: cx-senal 2.8s ease-in-out infinite;
+      }
+
+      .nav-icon {
+        filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8));
+      }
+    }
+  }
+
+  .nav-group.show {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+  }
+
+  .badge {
+    box-shadow: 0 0 10px rgba(239, 55, 110, 0.5);
+  }
+
+  .sidebar-toggler {
+    filter: invert(0.6) sepia(1) hue-rotate(180deg);
+  }
+}
+
+@keyframes cx-senal {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; box-shadow: 0 0 18px rgba(56, 189, 248, 1); }
+}
+
+// ── Encabezado ───────────────────────────────────────────────────
+.header {
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-bottom: 1px solid var(--cx-borde) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 6px 20px rgba(10, 30, 70, 0.04) !important;
+}
+
+[data-coreui-theme='dark'] .header {
+  background: rgba(6, 14, 32, 0.78) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+// ── Tarjetas ─────────────────────────────────────────────────────
+.card {
+  border-color: var(--cx-borde);
+  border-radius: var(--cx-radio);
+  background-color: var(--cx-superficie);
+  box-shadow: var(--cx-sombra);
+
+  > .card-header {
+    border-bottom-color: var(--cx-borde);
+    background: transparent;
+    font-weight: 600;
+  }
+
+  > .card-footer {
+    border-top-color: var(--cx-borde);
+    background: var(--cx-superficie-2);
+  }
+}
+
+.card-header:first-child {
+  border-radius: var(--cx-radio) var(--cx-radio) 0 0;
+}
+
+// Indicadores del inicio y tarjetas de cifras: un chip de icono con el
+// degradado de la marca y su resplandor.
+.inicio-indicador,
+.kpi-tile,
+.hf-stat-card,
+.stat-card,
+.agenda-cifra {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--cx-radio) !important;
+  transition:
+    transform var(--gems-mov, 180ms) var(--cx-curva),
+    box-shadow var(--gems-mov, 180ms) var(--cx-curva);
+
+  // Una línea de luz en el borde superior que aparece al pasar el cursor.
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background: var(--cx-degradado);
+    opacity: 0;
+    transition: opacity var(--gems-mov, 180ms) ease;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .inicio-indicador:hover,
+  .kpi-tile:hover,
+  .hf-stat-card:hover,
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--cx-sombra-alta);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+// ── Botones ──────────────────────────────────────────────────────
+.btn {
+  border-radius: 10px;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+
+.btn-primary {
+  --cui-btn-bg: var(--cx-azul);
+  --cui-btn-border-color: var(--cx-azul);
+  --cui-btn-hover-bg: #1a56cc;
+  --cui-btn-hover-border-color: #1a56cc;
+  --cui-btn-active-bg: #164bb3;
+  --cui-btn-active-border-color: #164bb3;
+  background-image: linear-gradient(110deg, rgba(255, 255, 255, 0) 30%, rgba(56, 189, 248, 0.35) 100%);
+  box-shadow: 0 4px 14px rgba(30, 99, 233, 0.28);
+
+  &:hover {
+    box-shadow: 0 6px 20px rgba(30, 99, 233, 0.38);
+  }
+}
+
+.btn-outline-primary {
+  --cui-btn-color: var(--cx-azul);
+  --cui-btn-border-color: rgba(30, 99, 233, 0.45);
+  --cui-btn-hover-bg: var(--cx-azul);
+  --cui-btn-hover-border-color: var(--cx-azul);
+}
+
+[data-coreui-theme='dark'] .btn-outline-primary {
+  --cui-btn-color: var(--cx-cian-claro);
+  --cui-btn-border-color: rgba(125, 211, 252, 0.35);
+}
+
+// ── Formularios ──────────────────────────────────────────────────
+.form-control,
+.form-select {
+  border-color: var(--cx-borde-fuerte);
+  border-radius: 10px;
+
+  &:focus {
+    border-color: rgba(47, 140, 255, 0.7);
+    box-shadow: 0 0 0 0.22rem rgba(47, 140, 255, 0.16);
+  }
+}
+
+.input-group-text {
+  border-color: var(--cx-borde-fuerte);
+  background: var(--cx-superficie-2);
+}
+
+.form-check-input:checked {
+  background-color: var(--cx-azul);
+  border-color: var(--cx-azul);
+}
+
+// ── Tablas ───────────────────────────────────────────────────────
+.table {
+  --cui-table-border-color: var(--cx-borde);
+  --cui-table-hover-bg: rgba(47, 140, 255, 0.05);
+
+  > thead th {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cx-texto-3);
+    background: var(--cx-superficie-2);
+  }
+}
+
+// ── Insignias ────────────────────────────────────────────────────
+.badge {
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+// ── Pestañas de trabajo ──────────────────────────────────────────
+.nav-tabs .nav-link.active,
+.nav-underline .nav-link.active {
+  color: var(--cx-azul);
+}
+
+[data-coreui-theme='dark'] {
+  .nav-tabs .nav-link.active,
+  .nav-underline .nav-link.active {
+    color: var(--cx-cian-claro);
+  }
+}
+
+// ── Ventanas emergentes ──────────────────────────────────────────
+.modal-content {
+  border: 1px solid var(--cx-borde);
+  border-radius: var(--cx-radio-lg);
+  overflow: hidden;
+}
+
+.modal-header {
+  border-bottom-color: var(--cx-borde);
+  // El filo de luz de la marca en la parte superior de cada ventana.
+  box-shadow: inset 0 2px 0 var(--cx-azul-vivo);
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+  background: rgba(4, 10, 24, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.dropdown-menu {
+  border-radius: 12px;
+  padding: 0.4rem;
+
+  .dropdown-item {
+    border-radius: 8px;
+  }
+}
+
+[data-coreui-theme='dark'] .dropdown-menu {
+  background: var(--cx-superficie);
+}
+
+// ── Calendario (agenda) ──────────────────────────────────────────
+.fc {
+  --fc-border-color: var(--cx-borde);
+  --fc-today-bg-color: rgba(47, 140, 255, 0.06);
+  --fc-now-indicator-color: var(--cx-cian);
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background: var(--cx-azul) !important;
+  border-color: var(--cx-azul) !important;
+}
+
+.fc .fc-timegrid-now-indicator-line {
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.9);
+}
+
+// ── Desplazamiento ───────────────────────────────────────────────
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(30, 99, 233, 0.35) transparent;
+}
+
+::selection {
+  background: rgba(47, 140, 255, 0.25);
+}
+
+// ── Entrada de las pantallas ─────────────────────────────────────
+// Cada pantalla entra con un leve ascenso y sus bloques principales en
+// cascada. Corto (≤ 450 ms) para no hacer esperar a quien trabaja rápido.
+.body > .container-lg > * {
+  animation: cx-entra 0.42s var(--cx-curva) both;
+}
+
+.body .row > [class*='col'] {
+  animation: cx-entra 0.45s var(--cx-curva) both;
+
+  @for $i from 1 through 8 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 45}ms;
+    }
+  }
+}
+
+@keyframes cx-entra {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ── Cargando ─────────────────────────────────────────────────────
+// Los esqueletos brillan con el azul de la marca, no con gris.
+.placeholder,
+.hf-skeleton {
+  background-color: rgba(47, 140, 255, 0.1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-nav .nav-link.active::before,
+  .cortex-marca--animada .cortex-marca__cerebro {
+    animation: none !important;
+  }
+}
+
+// ── Banda de bienvenida del inicio ───────────────────────────────
+// La banda marina de la marca: red neuronal viva al fondo y el cerebro a la
+// derecha. Su alto no crece en el celular (decisión D-6 heredada de GEMS:
+// nada debe empujar la agenda hacia abajo).
+.inicio-encabezado--cortex {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  align-items: center;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(125, 211, 252, 0.12);
+  border-radius: var(--cx-radio-lg);
+  background:
+    radial-gradient(70% 140% at 85% 50%, rgba(47, 140, 255, 0.28) 0%, transparent 60%),
+    linear-gradient(120deg, #071330 0%, #0b1d45 60%, #0d2a5e 100%);
+  box-shadow: 0 18px 40px rgba(7, 19, 48, 0.25);
+  color: #e6eeff;
+
+  @media (min-width: 768px) {
+    min-height: 128px;
+    padding: 1.4rem 1.75rem;
+    padding-right: 13rem;
+  }
+
+  .inicio-saludo {
+    color: #fff;
+  }
+
+  .inicio-encabezado-sub,
+  .inicio-actualizado {
+    color: #9fb2d6;
+  }
+
+  .inicio-actualizado {
+    position: relative;
+    z-index: 2;
+  }
+
+  .inicio-actualizar,
+  .inicio-actualizar.btn-link {
+    color: var(--cx-cian-claro);
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  .inicio-actualizado-error {
+    color: #fca5a5;
+  }
+
+  .inicio-encabezado-texto {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.inicio-encabezado-red {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  // Se desvanece hacia el texto para no restarle contraste.
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25) 0%, #000 55%);
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25) 0%, #000 55%);
+}
+
+.inicio-encabezado-cerebro {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  right: 1.5rem;
+  top: 50%;
+  height: 112px;
+  width: auto;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 0 16px rgba(47, 140, 255, 0.6));
+  animation: cx-pulso-cerebro 4.5s ease-in-out infinite;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+
+// Los chips de icono de los indicadores, con el brillo de la marca.
+.inicio-indicador-icono {
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.inicio-indicador-valor {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.inicio-barra-relleno {
+  transition: width 0.9s var(--cx-curva);
+}

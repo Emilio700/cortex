@@ -10,6 +10,7 @@ import CIcon from '@coreui/icons-react'
 import { cilCalendarCheck, cilCheckCircle, cilPeople, cilTask, cilMedicalCross } from '@coreui/icons'
 
 import type { ConteoDelDia } from '../../utils/inicio'
+import CifraAnimada from '../../../../shared/components/CifraAnimada'
 
 const SIN_DATO = '—'
 
@@ -69,7 +70,7 @@ const Tarjeta: React.FC<TarjetaProps> = ({
       <CIcon icon={icono} />
     </span>
     <span className="inicio-indicador-valor" aria-hidden="true">
-      {cargando ? <span className="hf-skeleton inicio-esqueleto-numero" /> : valor}
+      {cargando ? <span className="hf-skeleton inicio-esqueleto-numero" /> : <CifraAnimada valor={valor} />}
     </span>
     <span className="inicio-indicador-etiqueta" aria-hidden="true">
       {etiqueta}
