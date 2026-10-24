@@ -187,7 +187,7 @@ export default function SubirArchivoModal({ visible, patientId, patientName, onC
         {puedeAdjuntar && (
           <fieldset className="mb-3" data-tour="subir-archivo-pregunta">
             <legend className="fs-6 fw-semibold">¿Es el resultado de un estudio que se le pidió?</legend>
-            <CFormCheck type="radio" name="es-resultado" id="es-resultado-si" label="Sí, de una orden de GEMS"
+            <CFormCheck type="radio" name="es-resultado" id="es-resultado-si" label="Sí, de una orden de Cortex"
               checked={esResultado === true} onChange={() => setEsResultado(true)} disabled={guardando} />
             <CFormCheck type="radio" name="es-resultado" id="es-resultado-no" label="No"
               checked={esResultado === false} onChange={() => setEsResultado(false)} disabled={guardando} />

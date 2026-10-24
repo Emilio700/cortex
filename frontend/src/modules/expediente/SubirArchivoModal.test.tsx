@@ -32,7 +32,7 @@ describe('SubirArchivoModal', () => {
     const user = userEvent.setup()
     post.mockResolvedValue({ data: { result_id: 1, order_id: 31 } })
     const { onSubido, onClose } = montar()
-    await user.click(screen.getByLabelText('Sí, de una orden de GEMS'))
+    await user.click(screen.getByLabelText('Sí, de una orden de Cortex'))
     await user.selectOptions(await screen.findByLabelText('Su orden pendiente'), '31')
     await user.upload(screen.getByLabelText(/Archivo/), pdf())
     await user.click(screen.getByRole('button', { name: 'Subir' }))

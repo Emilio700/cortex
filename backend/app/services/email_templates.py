@@ -15,7 +15,7 @@ from app.utils.tratamiento import nombre_con_tratamiento
 def get_clinic_info(db: Session, user_id: Optional[int] = None, tenant_id: Optional[int] = None) -> dict:
     """Build clinic dict from doctor profile, falling back to tenant info."""
     clinic = {
-        "name": "G.E.M.S",
+        "name": "CORTEX",
         "specialty": "",
         "address": "",
         "phone": "",
@@ -39,7 +39,7 @@ def get_clinic_info(db: Session, user_id: Optional[int] = None, tenant_id: Optio
     if tenant_id:
         tenant = db.query(Tenant).filter(Tenant.id == tenant_id).first()
         if tenant:
-            if clinic["name"] == "G.E.M.S":
+            if clinic["name"] == "CORTEX":
                 clinic["name"] = tenant.name or "Consultorio Médico"
             clinic["email"] = tenant.email or ""
             if not clinic["address"]:
@@ -130,11 +130,11 @@ def _base(clinic: dict, title: str, content: str, footer_note: str = "") -> str:
     </td>
   </tr>
 
-  <!-- ═══ G.E.M.S FOOTER ═══ -->
+  <!-- ═══ CORTEX FOOTER ═══ -->
   <tr>
     <td style="padding:16px 32px;text-align:center;">
       <span style="font-size:11px;color:#94a3b8;">
-        Enviado a través de <strong style="color:#64748b;">G.E.M.S</strong> — Sistema de Gestión Médica
+        Enviado a través de <strong style="color:#64748b;">CORTEX</strong> — Sistema clínico para neurocirugía
       </span>
     </td>
   </tr>

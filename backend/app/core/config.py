@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     # Se reactiva sin tocar codigo poniendo, por ejemplo,
     # MFA_REQUIRED_ROLES=master,admin,doctor en el entorno.
     MFA_REQUIRED_ROLES: str = ""
-    MFA_ISSUER: str = "G.E.M.S"
+    MFA_ISSUER: str = "CORTEX"
 
     # CORS
     CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000"
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     CLINIC_TIMEZONE: str = "America/Mazatlan"
 
     # Application
-    APP_NAME: str = "G.E.M.S"
+    APP_NAME: str = "CORTEX"
     API_V1_PREFIX: str = "/api/v1"
     ENVIRONMENT: str = "development"
     # Run APScheduler only in the dedicated scheduler process in production.
@@ -89,7 +89,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = ""
     SMTP_USE_TLS: bool = True
     EMAIL_FROM_ADDRESS: str = "no-reply@gems.local"
-    EMAIL_FROM_NAME: str = "G.E.M.S"
+    EMAIL_FROM_NAME: str = "CORTEX"
 
     # A deployment .env also contains Compose-only variables (POSTGRES_USER,
     # IMAGE_TAG, VITE_API_BASE_URL, etc.). They must not prevent the API from

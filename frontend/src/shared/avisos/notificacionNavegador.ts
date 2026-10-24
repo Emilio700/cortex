@@ -38,7 +38,7 @@ const TEXTOS: Record<string, [string, string]> = {
 }
 
 export function textoSinDatosDePaciente(aviso: Pick<Notification, 'type'>): [string, string] {
-  return TEXTOS[aviso.type] ?? ['Aviso de GEMS', 'Tienes un aviso por atender.']
+  return TEXTOS[aviso.type] ?? ['Aviso de Cortex', 'Tienes un aviso por atender.']
 }
 
 interface OpcionesNotificacion {

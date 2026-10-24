@@ -64,7 +64,7 @@ type ClavesNoInterruptor =
 export type ClaveInterruptorOrden = Exclude<keyof AjustesOrden, ClavesNoInterruptor>
 
 export const LEYENDA_ORDEN_POR_DEFECTO =
-  'G.E.M.S — Orden de estudio. Es una solicitud: no es un resultado ni un diagnóstico.'
+  'CORTEX — Orden de estudio. Es una solicitud: no es un resultado ni un diagnóstico.'
 
 export const LIMITE_LEYENDA_ORDEN = 150
 export const LIMITE_NOMBRE_ORDEN = 150

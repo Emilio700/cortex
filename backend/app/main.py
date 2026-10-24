@@ -217,7 +217,7 @@ app.include_router(imagenes.router, prefix=settings.API_V1_PREFIX)
 @app.get("/health")
 def health_check():
     """Health check endpoint"""
-    return {"status": "healthy", "service": "gems-backend"}
+    return {"status": "healthy", "service": "cortex-backend"}
 
 
 @app.get("/ready")
@@ -231,7 +231,7 @@ def readiness_check(db: Session = Depends(get_db)):
 def root():
     """Root endpoint"""
     return {
-        "message": "G.E.M.S API",
+        "message": "CORTEX API",
         "version": APP_VERSION,
         "docs": "/docs",
         "health": "/health",

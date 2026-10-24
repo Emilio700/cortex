@@ -33,7 +33,7 @@ import type { AvailablePermission } from '../../../shared/types'
 import { apiClient, URL_DE_SALUD } from '../../../shared/services/api'
 import { TablaResponsiva } from '../../../shared/components/TablaResponsiva'
 import { EncabezadoPantalla } from '../../../shared/components/EncabezadoPantalla'
-import { VERSION_GEMS } from '../../../shared/version'
+import { VERSION_CORTEX } from '../../../shared/version'
 
 const roleColor: Record<string, string> = {
   master: 'dark',
@@ -80,7 +80,7 @@ const MasterDashboard: React.FC = () => {
     <>
       <EncabezadoPantalla
         titulo="Panel de Desarrollador"
-        descripcion={`G.E.M.S v${VERSION_GEMS} — Gestión del sistema, monitoreo de API y configuración global.`}
+        descripcion={`CORTEX v${VERSION_CORTEX} — Gestión del sistema, monitoreo de API y configuración global.`}
         icono={cilCode}
       />
 

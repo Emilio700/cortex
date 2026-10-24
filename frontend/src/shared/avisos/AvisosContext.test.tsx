@@ -99,7 +99,7 @@ describe('AvisosProvider', () => {
         return { data: { unread_count: 0, abiertos_count: servidor.abiertos.length, items: [...servidor.abiertos] } }
       throw new Error(`url inesperada ${url}`)
     })
-    document.title = 'GEMS'
+    document.title = 'CORTEX'
   })
 
   it('al volver a la pestaña consulta en el acto, y sólo pide la lista si algo cambió', async () => {
@@ -118,7 +118,7 @@ describe('AvisosProvider', () => {
     volverALaPestana()
     await waitFor(() => expect(llamadasA('/notifications')).toBe(2))
     await waitFor(() => expect(ultimo?.emergentes).toHaveLength(1))
-    expect(document.title).toBe('(1) GEMS')
+    expect(document.title).toBe('(1) CORTEX')
   })
 
   it('si la consulta falla lo dice, en vez de dar lo viejo por vigente', async () => {

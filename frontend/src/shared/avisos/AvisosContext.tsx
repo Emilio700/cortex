@@ -48,7 +48,7 @@ export const VENTANA_RESUMEN_AL_ENTRAR_MS = 2 * 60 * 60 * 1000
 /** Si otra pestaña dijo «me están viendo» hace menos de esto, se sondea al ritmo de visible. */
 const VIGENCIA_DE_VISIBLE_REMOTO_MS = 25_000
 const LIMITE_POR_ATENDER = 200
-const TITULO_BASE = 'GEMS'
+const TITULO_BASE = 'CORTEX'
 
 export const pideAlgo = (aviso: Pick<Notification, 'priority'>): boolean =>
   aviso.priority === 'accionable' || aviso.priority === 'urgente'
@@ -230,7 +230,7 @@ export const AvisosProvider = ({ children }: { children: ReactNode }) => {
         const [titulo, texto] =
           nuevos.length === 1
             ? textoSinDatosDePaciente(masNuevo)
-            : ['Avisos de GEMS', `Tienes ${nuevos.length} avisos nuevos por atender.`]
+            : ['Avisos de Cortex', `Tienes ${nuevos.length} avisos nuevos por atender.`]
         mostrarNotificacion(titulo, texto, {
           etiqueta: `gems-aviso-${masNuevo.id}`,
           alHacerClic: () => setCentroAbierto(true),

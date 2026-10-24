@@ -85,7 +85,7 @@ export default function AvisoResultadosSinOrden({ patientId, onLigado }: { patie
         </CModalHeader>
         <CModalBody>
           <p className="small text-body-secondary">
-            Se subieron como documento antes de que GEMS los ligara a su estudio. Elige su orden pendiente o márcalo como
+            Se subieron como documento antes de que Cortex los ligara a su estudio. Elige su orden pendiente o márcalo como
             estudio de otro lugar. El archivo no se mueve.
           </p>
           {error && <CAlert color="danger" role="alert">{error}</CAlert>}

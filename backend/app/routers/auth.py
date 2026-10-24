@@ -505,7 +505,7 @@ def forgot_password(
         body_html = fp_template(clinic, reset_link, user.full_name)
         send_email(
             to_email=user.email,
-            subject="Restablecer tu contraseña — G.E.M.S",
+            subject="Restablecer tu contraseña — CORTEX",
             body_text=body_text,
             body_html=body_html,
         )

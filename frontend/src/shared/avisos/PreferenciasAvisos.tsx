@@ -95,7 +95,7 @@ const PreferenciasAvisos = () => {
 
       <CFormSwitch
         id="avisos-navegador"
-        label="Notificación del navegador si GEMS está en otra pestaña"
+        label="Notificación del navegador si Cortex está en otra pestaña"
         checked={preferencias.navegador && permiso === 'granted'}
         disabled={guardando || permiso === 'no-disponible'}
         onChange={(e) => void alCambiarNavegador(e.target.checked)}
@@ -103,7 +103,7 @@ const PreferenciasAvisos = () => {
       <div className="ms-4 mb-2 small text-body-secondary">
         {permiso === 'no-disponible' && 'Este navegador no ofrece notificaciones.'}
         {permiso === 'denied' &&
-          'El navegador las tiene bloqueadas para GEMS. Para activarlas, permite las notificaciones de este sitio en la configuración del navegador (el candado junto a la dirección).'}
+          'El navegador las tiene bloqueadas para Cortex. Para activarlas, permite las notificaciones de este sitio en la configuración del navegador (el candado junto a la dirección).'}
         {permiso !== 'no-disponible' && permiso !== 'denied' && 'No dicen el nombre del paciente; lo ves al abrir el aviso.'}
       </div>
 

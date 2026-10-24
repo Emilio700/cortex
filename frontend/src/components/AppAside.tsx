@@ -24,7 +24,7 @@ import CIcon from '@coreui/icons-react'
 import { cilBell, cilCalendar, cilSettings } from '@coreui/icons'
 
 import type { State } from './../store'
-import { VERSION_GEMS } from '../shared/version'
+import { VERSION_CORTEX } from '../shared/version'
 
 const AppAside = () => {
   const dispatch = useDispatch()
@@ -144,12 +144,12 @@ const AppAside = () => {
               cuando exista, se configura desde la campana. */}
 
           <hr />
-          <h6 className="mb-3">Acerca de G.E.M.S</h6>
+          <h6 className="mb-3">Acerca de CORTEX</h6>
           <div className="small text-body-secondary">
             <p>
-              <strong>G.E.M.S</strong> — Gynecology &amp; Expert Management System
+              <strong>CORTEX</strong> — Sistema clínico para neurocirugía
             </p>
-            <p>Versión {VERSION_GEMS}</p>
+            <p>Versión {VERSION_CORTEX}</p>
             <p className="mb-0">Sistema de gestión médica para consultorios y clínicas.</p>
           </div>
         </CTabPane>
