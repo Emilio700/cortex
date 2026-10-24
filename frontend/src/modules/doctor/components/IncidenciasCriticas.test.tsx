@@ -1,5 +1,5 @@
 /**
- * Resultados críticos en el inicio de la doctora (plan 26, D-3).
+ * Resultados críticos en el inicio del médico (plan 26, D-3).
  *
  * Lo que no puede pasar: que un fallo al consultar se lea como «no hay
  * críticos», o que la incidencia no lleve a revisarlos.

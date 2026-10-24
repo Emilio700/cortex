@@ -46,7 +46,7 @@ beforeEach(() => {
 })
 
 describe('PanelOrdenesPorEntregar (O-09)', () => {
-  it('junta en una tarjeta las órdenes de la misma paciente y le imprime un solo papel', async () => {
+  it('junta en una tarjeta las órdenes de la mismo paciente y le imprime un solo papel', async () => {
     const dos = unaOrden()
     dos.data.items.push({ ...dos.data.items[0], order_id: 58, study_name: 'Glucosa' })
     dos.data.total = 2
@@ -63,7 +63,7 @@ describe('PanelOrdenesPorEntregar (O-09)', () => {
     expect(vista.getAllByText('María López Pérez')).toHaveLength(1)
     await user.click(vista.getByRole('button', { name: 'Imprimir orden de hoy' }))
 
-    // Recepción no tiene perfil: se pide sin modo y decide el de la doctora.
+    // Recepción no tiene perfil: se pide sin modo y decide el del médico.
     await waitFor(() =>
       expect(get).toHaveBeenCalledWith('/clinical-tracking/patients/12/orders/pdf', {
         responseType: 'blob',
@@ -111,7 +111,7 @@ describe('PanelOrdenesPorEntregar (O-09)', () => {
     await user.click(await vista.findByRole('button', { name: 'Marcar entregada' }))
 
     expect(await vista.findByText(/ya estaba marcada como entregada/)).toBeInTheDocument()
-    expect(vista.queryByText(/marcada como entregada a la paciente/)).toBeNull()
+    expect(vista.queryByText(/marcada como entregada al paciente/)).toBeNull()
   })
 
   it('si el servidor rechaza la entrega, muestra su motivo', async () => {

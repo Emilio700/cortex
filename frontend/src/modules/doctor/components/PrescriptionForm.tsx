@@ -9,7 +9,7 @@
  * El contrato de datos no cambia: cada medicamento sigue siendo
  * { name, dosage, frequency, duration, intake_time, notes }.
  *
- * "Receta N": en produccion la Dra. Cintia emitio dos recetas identicas con un
+ * "Receta N": en produccion el Dr. Cintia emitio dos recetas identicas con un
  * minuto de diferencia porque el formulario nunca se entero de que ya habia
  * guardado. Ahora guardar SIEMPRE actualiza la receta abierta y el unico camino
  * para crear otra es el boton explicito "Agregar otra receta".
@@ -68,8 +68,10 @@ interface PrescriptionFormProps {
 const ATAJOS_DOSIS = ['1/2 tableta', '1 tableta', '2 tabletas']
 const ATAJOS_FRECUENCIA = ['Cada 6 h', 'Cada 8 h', 'Cada 12 h', 'Cada 24 h']
 const ATAJOS_DURACION = ['1 día', '3 días', '5 días', '7 días']
-const ATAJOS_VIA = ['Vía oral', 'Vía vaginal', 'Vía tópica', 'Vía intramuscular', 'Vía sublingual']
-const ATAJOS_PRESENTACION = ['Tabletas', 'Cápsulas', 'Óvulos', 'Solución', 'Crema', 'Gotas']
+// Las vías y presentaciones más comunes en neurocirugía (analgesia, anticomiciales,
+// esteroides, relajantes): en GEMS estaban las de ginecología (óvulos, vía vaginal).
+const ATAJOS_VIA = ['Vía oral', 'Vía intravenosa', 'Vía intramuscular', 'Vía subcutánea', 'Vía sublingual', 'Vía tópica']
+const ATAJOS_PRESENTACION = ['Tabletas', 'Cápsulas', 'Solución', 'Ampolletas', 'Gotas', 'Parche']
 const SUGERENCIAS_INDICACIONES = [
     'Tomar con alimentos',
     'No exceder la dosis recomendada',
@@ -113,7 +115,7 @@ const laMasReciente = (recetas?: Prescription[] | null): Prescription | null => 
 const etiquetaReceta = (ordinal: number, total: number) =>
     total > 1 ? `Receta ${ordinal} de ${total}` : `Receta ${ordinal}`
 
-/** El identificador que la doctora reconoce es el folio, nunca el id de base. */
+/** El identificador que el médico reconoce es el folio, nunca el id de base. */
 const textoFolio = (receta: Prescription) =>
     receta.folio_number ? `Folio ${receta.folio_number}` : 'Folio pendiente'
 
@@ -189,8 +191,8 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
     /**
      * Motivo de consulta impreso en la receta. Arranca APAGADO siempre, aunque
      * el triage ya traiga el motivo: es expediente clinico y la receta viaja a
-     * la farmacia, asi que lo decide la doctora para esta paciente. Al
-     * encenderlo se propone lo que dijo la paciente al llegar, y ella edita.
+     * la farmacia, asi que lo decide el médico para este paciente. Al
+     * encenderlo se propone lo que dijo el paciente al llegar, y ella edita.
      */
     const [diagnosis, setDiagnosis] = useState(
         () => laMasReciente(prescriptions)?.diagnosis ?? '',
@@ -245,7 +247,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
     /**
      * El padre carga las recetas despues del primer render, asi que sin esto no
      * se pintaban nunca. La sincronizacion se dispara por los ids del registro y
-     * no por la identidad del arreglo: en cada render le borraria a la doctora lo
+     * no por la identidad del arreglo: en cada render le borraria al médico lo
      * que esta escribiendo.
      */
     const idsDelPadre = (prescriptions ?? []).map((receta) => receta.id).join('-')
@@ -267,7 +269,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
     const anunciar = (texto: string, tono: 'success' | 'warning' = 'success') => {
         setMensaje({ texto, tono })
         // El aviso de exito se va solo; el de problema se queda hasta la siguiente
-        // accion, porque es justo lo que la doctora necesita leer con calma.
+        // accion, porque es justo lo que el médico necesita leer con calma.
         if (tono === 'success') setTimeout(() => setMensaje(null), 3000)
     }
 
@@ -298,7 +300,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
         setAviso(null)
     }
 
-    /** Propone en el motivo lo que la paciente dijo al llegar al triage. */
+    /** Propone en el motivo lo que el paciente dijo al llegar al triage. */
     const motivoSugerido = (triage?.chief_complaint || '').toUpperCase()
 
     const cambiarIncluirMotivo = (incluir: boolean) => {
@@ -1025,8 +1027,8 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
 
                             {/* Motivo de consulta. Arranca apagado a proposito: la
                                 receta se entrega impresa y viaja a la farmacia, asi que
-                                el expediente no va en ella salvo que la doctora lo pida
-                                para esta paciente. */}
+                                el expediente no va en ella salvo que el médico lo pida
+                                para este paciente. */}
                             <div className="mb-3" data-tour="receta-motivo">
                                 <CFormSwitch
                                     id="incluir-motivo"
@@ -1035,7 +1037,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                                     onChange={(e) => cambiarIncluirMotivo(e.target.checked)}
                                 />
                                 <div className="small text-muted ms-4">
-                                    Se imprime bajo los datos de la paciente. Lo decides tú,
+                                    Se imprime bajo los datos del paciente. Lo decides tú,
                                     y solo para esta receta.
                                 </div>
                                 {incluirMotivo && (
@@ -1064,7 +1066,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                                                     variant="outline"
                                                     onClick={() => setDiagnosis(motivoSugerido)}
                                                 >
-                                                    Usar lo que dijo la paciente en el triage
+                                                    Usar lo que dijo el paciente en el triage
                                                 </CButton>
                                             )}
                                         </div>

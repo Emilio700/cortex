@@ -2,7 +2,7 @@
  * Agrupa por paciente las órdenes de una página (plan 26, fase 4).
  *
  * Las listas de recepción siguen paginando por orden (así lo da el servidor);
- * aquí solo se juntan las de la misma paciente que vinieron en la página, en
+ * aquí solo se juntan las de la mismo paciente que vinieron en la página, en
  * el orden en que apareció cada una, para que el mostrador vea una tarjeta por
  * paciente y pueda imprimirle un solo papel.
  */

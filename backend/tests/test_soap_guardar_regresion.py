@@ -77,7 +77,7 @@ def _auth_headers(db, user: User) -> dict[str, str]:
 
 @pytest.fixture
 def consulta(db_session):
-    """Una doctora con su paciente y una cita suya, lista para documentar."""
+    """Un médico con su paciente y una cita suya, lista para documentar."""
     tenant = Tenant(name="Clínica de prueba", is_active=True)
     db_session.add(tenant)
     db_session.commit()
@@ -86,7 +86,7 @@ def consulta(db_session):
     doctora = User(
         email="doctora@gems.com",
         hashed_password="no-usado-en-estas-pruebas",
-        full_name="Doctora de prueba",
+        full_name="Médico de prueba",
         role=Role.DOCTOR,
         tenant_id=tenant.id,
         is_active=True,
@@ -155,7 +155,7 @@ def test_guardar_la_nota_la_persiste_de_verdad(client, db_session, consulta):
 
 
 def test_guardar_una_nota_a_medias_tambien_persiste(client, db_session, consulta):
-    """La doctora documenta sólo el plan y guarda: las secciones son opcionales."""
+    """El médico documenta sólo el plan y guarda: las secciones son opcionales."""
     headers = _auth_headers(db_session, consulta["doctora"])
 
     respuesta = client.post(

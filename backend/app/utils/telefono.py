@@ -2,7 +2,7 @@
 
 En el expediente los teléfonos se guardan como se capturaron: «669 111 2233»,
 «(669)111-22-33», «+52 1 669 111 2233». Comparar el texto tal cual no
-encuentra a la misma paciente capturada dos veces, que es justo lo que busca
+encuentra a la mismo paciente capturada dos veces, que es justo lo que busca
 la advertencia de duplicados (B-06 / S-06). Aquí se reducen a los 10 dígitos
 del número nacional.
 """
@@ -31,7 +31,7 @@ def normalizar_telefono_mx(valor: str | None) -> str | None:
 
 
 def enmascarar_telefono(valor: str | None) -> str | None:
-    """Sólo los últimos cuatro dígitos: bastan para que la paciente diga «sí, ése es mío»."""
+    """Sólo los últimos cuatro dígitos: bastan para que el paciente diga «sí, ése es mío»."""
     digitos = normalizar_telefono_mx(valor) or re.sub(r"\D", "", valor or "")
     if len(digitos) < 4:
         return None

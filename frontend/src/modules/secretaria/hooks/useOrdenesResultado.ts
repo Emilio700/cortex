@@ -4,7 +4,7 @@
  * Recepción encuentra la orden con `GET /clinical-tracking/orders/awaiting-result`
  * (sólo paciente, estudio, fecha, folio y estado; nada de indicación ni
  * interpretación). La subida (`POST /orders/{id}/result-attachment`) vive en
- * `doctor/utils/anexarResultado.ts`, la misma que usa la doctora.
+ * `doctor/utils/anexarResultado.ts`, la misma que usa el médico.
  * La lectura y la subida piden el permiso `clinical_tracking.attach_result`.
  */
 import { useCallback, useState } from 'react'
@@ -20,7 +20,7 @@ export interface OrdenPendienteResultado {
   study_name: string
   requested_on: string
   status: string
-  /** Doctora autora: un papel lleva la firma de una sola (M5). */
+  /** Médico autora: un papel lleva la firma de una sola (M5). */
   doctor_id?: number | null
   doctor_name?: string | null
   priority?: string | null

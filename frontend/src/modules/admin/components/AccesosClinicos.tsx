@@ -1,7 +1,7 @@
 /**
  * Accesos a expedientes (plan 32, punto 7; NOM-024): quién abrió qué sección
  * clínica de quién y cuándo. El servidor ya lo agrupa por sesión: cada renglón
- * es una visita de una persona al expediente de una paciente, con las
+ * es una visita de una persona al expediente de un paciente, con las
  * secciones que abrió en ella.
  */
 import { useEffect, useState } from 'react'
@@ -72,7 +72,7 @@ export default function AccesosClinicos() {
 
   return <>
     <p className="text-body-secondary small">
-      Una fila por visita: la persona, la paciente y las secciones clínicas que abrió en esa sesión. Abrir varias veces lo mismo suma, no repite el renglón.
+      Una fila por visita: la persona, el paciente y las secciones clínicas que abrió en esa sesión. Abrir varias veces lo mismo suma, no repite el renglón.
     </p>
     {error && <CAlert color="danger" className="d-flex flex-wrap align-items-center gap-2" role="alert">
       <span className="flex-grow-1">{error} Esto no quiere decir que no haya accesos.</span>

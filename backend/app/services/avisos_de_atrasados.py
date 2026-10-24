@@ -1,6 +1,6 @@
 """El aviso diario de estudios atrasados (plan 32, punto 3).
 
-A la doctora que pidió los estudios, **uno solo por día y agrupado**: «Tienes
+Al médico que pidió los estudios, **uno solo por día y agrupado**: «Tienes
 5 estudios atrasados». Uno por estudio llenaría la campana y se dejaría de
 leer, que es justo lo que este aviso viene a evitar.
 

@@ -36,9 +36,9 @@ def create_soap_note(
     if not appointment:
         raise HTTPException(status_code=404, detail="No se encontró la cita. Puede que la hayan eliminado; vuelve a la agenda y actualízala.")
 
-    # El acceso se deriva de la relación con la paciente, no de quién agendó la
-    # cita. Antes esto exigía ser la doctora asignada, y como leer la nota sí
-    # usaba la regla de la paciente, quedaba un hueco absurdo: la doctora que
+    # El acceso se deriva de la relación con el paciente, no de quién agendó la
+    # cita. Antes esto exigía ser el médico asignado, y como leer la nota sí
+    # usaba la regla del paciente, quedaba un hueco absurdo: el médico que
     # cubre a otra podía abrir el expediente y emitir la receta, pero se topaba
     # con un 403 justo al escribir la nota de lo que acababa de atender.
     exigir_relacion_asistencial(db, appointment.patient_id, current_user)
@@ -77,7 +77,7 @@ def create_soap_note(
 
     # Fuera del try a propósito: la nota ya quedó guardada, y si la bitácora
     # cayera dentro, su fallo se reportaría como «no se pudo guardar la nota»
-    # y la doctora la volvería a escribir sobre una que sí existe.
+    # y el médico la volvería a escribir sobre una que sí existe.
     log_action(
         db,
         action="soap_note.created",
@@ -117,7 +117,7 @@ def get_soap_note(
     response_model=SOAPNoteResponse,
     responses={
         204: {"description": "La cita existe y hay acceso, pero todavía no tiene nota de consulta"},
-        403: {"description": "Sin relación asistencial activa con la paciente de la cita"},
+        403: {"description": "Sin relación asistencial activa con el paciente de la cita"},
         404: {"description": "No se encontró la cita"},
     },
 )

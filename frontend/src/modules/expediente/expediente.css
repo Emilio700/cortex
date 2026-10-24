@@ -57,6 +57,8 @@
 button.expediente-senal { cursor: pointer; }
 button.expediente-senal:focus-visible { outline: 3px solid var(--cui-primary, #2563eb); outline-offset: 2px; }
 .expediente-senal--alergia { background: #fef2f2; border-color: #fecaca; color: #991b1b; font-weight: 600; }
+.expediente-senal--implante { background: #eef4ff; border-color: #9cc0ff; color: #1e3a8a; font-weight: 600; }
+.expediente-senal--anticoagulante { background: #fff7ed; border-color: #fdba74; color: #9a3412; font-weight: 600; }
 .expediente-senal--embarazo { background: #fdf2f8; border-color: #fbcfe8; color: #9d174d; }
 .expediente-senal--critico { background: #fee2e2; border-color: #dc2626; color: #991b1b; font-weight: 700; }
 .expediente-senal--atrasado { background: #fff7ed; border: 1px dashed #b45309; color: #92400e; font-weight: 600; }

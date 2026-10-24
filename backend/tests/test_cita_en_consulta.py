@@ -1,8 +1,8 @@
 """Estado «en consulta» automático (plan 28, D-3).
 
-Decisión de Emilio (2026-10-04): la cita pasa a «en consulta» cuando la doctora
+Decisión de Emilio (2026-10-04): la cita pasa a «en consulta» cuando el médico
 abre la consulta y a «atendida» cuando la cierra; nadie lo marca a mano. Reglas
-de la coordinación: solo la doctora de la cita, solo hoy (Mazatlán), solo desde
+de la coordinación: solo el médico de la cita, solo hoy (Mazatlán), solo desde
 agendada, confirmada o en sala; idempotente; de ahí se sale a sala, atendida o
 cancelada, y siempre queda rastro.
 """
@@ -100,7 +100,7 @@ def test_es_idempotente_y_no_repite_la_bitacora(client, db_session, e):
 
 
 def test_abrir_la_consulta_cierra_el_aviso_de_paciente_en_sala(client, db_session, e):
-    """Plan 27 + 28: la doctora ya tiene a la paciente enfrente; la campana no
+    """Plan 27 + 28: el médico ya tiene al paciente enfrente; la campana no
     puede seguir pidiéndole que la atienda."""
     from app.services.notification_service import notify
 
@@ -195,7 +195,7 @@ def test_releer_una_consulta_cerrada_o_cancelada_no_cambia_nada(client, db_sessi
 
 @pytest.mark.parametrize("cuando", [datetime(2026, 10, 3, 23, 30), datetime(2026, 10, 5, 0, 15)])
 def test_solo_cuenta_la_cita_de_hoy_en_mazatlan(client, db_session, e, cuando):
-    """La de anoche a las 23:30 o la de mañana temprano no es «la paciente que tengo enfrente»."""
+    """La de anoche a las 23:30 o la de mañana temprano no es «el paciente que tengo enfrente»."""
     c = _cita(db_session, e, AppointmentStatus.CONFIRMADA, cuando=cuando)
 
     r = _iniciar(client, db_session, e["doctora"], c.id)
@@ -235,7 +235,7 @@ def test_desde_en_consulta_no_se_regresa_a_agendada_ni_confirmada(client, db_ses
 
 
 def test_regresar_a_sala_no_pide_triage_ni_avisa_llegada_y_deja_rastro(client, db_session, e):
-    """La doctora abrió la consulta sin signos y la regresa a sala para que se los tomen."""
+    """El médico abrió la consulta sin signos y la regresa a sala para que se los tomen."""
     c = _cita(db_session, e, AppointmentStatus.EN_CONSULTA)
 
     r = _estado(client, db_session, e["doctora"], c.id, "en_sala")
@@ -310,7 +310,7 @@ def test_en_consulta_ya_se_puede_cobrar(db_session, e):
 # ---------------------------------------------------------------------------
 
 def test_abrir_una_agendada_y_salir_la_regresa_a_agendada_y_la_llegada_sigue_normal(client, db_session, e):
-    """El caso que motivó la columna: la doctora abre a las 8:00 una cita que
+    """El caso que motivó la columna: el médico abre a las 8:00 una cita que
     todavía no llega (para prepararla) y sale. Antes «Regresar a sala» la ponía
     en sala sin triage y la llegada real ya no avisaba a nadie.
     """
@@ -319,7 +319,7 @@ def test_abrir_una_agendada_y_salir_la_regresa_a_agendada_y_la_llegada_sigue_nor
     db_session.refresh(c)
     assert c.estado_antes_de_consulta == "agendada"
 
-    # A sala no: la paciente no ha llegado.
+    # A sala no: el paciente no ha llegado.
     assert _estado(client, db_session, e["doctora"], c.id, "en_sala").status_code == 400
     r = _estado(client, db_session, e["doctora"], c.id, "agendada")
     assert r.status_code == 200, r.text
@@ -334,7 +334,7 @@ def test_abrir_una_agendada_y_salir_la_regresa_a_agendada_y_la_llegada_sigue_nor
     db_session.expire_all()
     r = _estado(client, db_session, e["recepcion"], c.id, "en_sala")
     assert r.status_code == 200, r.text
-    # Y la doctora recibe «Paciente en sala».
+    # Y el médico recibe «Paciente en sala».
     avisos = db_session.query(Notification).filter(Notification.type == "patient_arrived").all()
     assert [a.user_id for a in avisos] == [e["doctora"].id]
 
@@ -383,7 +383,7 @@ def test_al_finalizar_se_limpia_el_estado_guardado(client, db_session, e):
 
 def test_reabrir_y_volver_a_entrar_guarda_en_sala(client, db_session, e):
     """Reabrir lleva a sala (regla de siempre) y la pantalla vuelve a pedir consulta:
-    si la doctora sale otra vez sin cerrar, regresa a sala, que es donde quedó."""
+    si el médico sale otra vez sin cerrar, regresa a sala, que es donde quedó."""
     c = _cita(db_session, e, AppointmentStatus.ATENDIDA)
     assert _estado(client, db_session, e["doctora"], c.id, "en_sala").status_code == 200
 

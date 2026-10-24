@@ -93,7 +93,7 @@ beforeEach(() => {
 const rellenarObligatorios = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.click(screen.getByLabelText(/Paciente/))
   await user.click(await screen.findByText('ANA LÓPEZ'))
-  await user.selectOptions(screen.getByLabelText(/Doctor/), '7')
+  await user.selectOptions(screen.getByLabelText(/Médico/), '7')
 }
 
 const guardar = (user: ReturnType<typeof userEvent.setup>) =>
@@ -132,8 +132,8 @@ describe('AppointmentModal · errores junto al campo', () => {
     renderModal()
     await guardar(user)
 
-    expect(await screen.findByText('Elige a la paciente.')).toBeInTheDocument()
-    expect(screen.getByText('Elige a la doctora.')).toBeInTheDocument()
+    expect(await screen.findByText('Elige al paciente.')).toBeInTheDocument()
+    expect(screen.getByText('Elige al médico.')).toBeInTheDocument()
     expect(createAppointment).not.toHaveBeenCalled()
   })
 
@@ -141,11 +141,11 @@ describe('AppointmentModal · errores junto al campo', () => {
     const user = userEvent.setup()
     renderModal()
     await guardar(user)
-    expect(await screen.findByText('Elige a la doctora.')).toBeInTheDocument()
+    expect(await screen.findByText('Elige al médico.')).toBeInTheDocument()
 
-    await user.selectOptions(screen.getByLabelText(/Doctor/), '7')
+    await user.selectOptions(screen.getByLabelText(/Médico/), '7')
 
-    expect(screen.queryByText('Elige a la doctora.')).not.toBeInTheDocument()
-    expect(screen.getByText('Elige a la paciente.')).toBeInTheDocument()
+    expect(screen.queryByText('Elige al médico.')).not.toBeInTheDocument()
+    expect(screen.getByText('Elige al paciente.')).toBeInTheDocument()
   })
 })

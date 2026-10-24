@@ -14,10 +14,10 @@ import type { DoctorAppointmentFilters } from '../types'
  * encontró la cita o no tienes permisos"— para tres situaciones distintas, y
  * ante un 500 afirmaba que la cita no existía. Una cita que sí existe y que no
  * pudimos leer no es una cita que no existe: la primera se reintenta, la
- * segunda manda a la doctora a buscar en la agenda algo que está ahí.
+ * segunda manda al médico a buscar en la agenda algo que está ahí.
  *
  * `no-encontrada` cubre dos casos a propósito: el backend responde 404 tanto
- * si la cita no existe como si es de otra doctora, para no confirmar la
+ * si la cita no existe como si es de otro médico, para no confirmar la
  * existencia de citas ajenas. Esa ambigüedad es del servidor y el mensaje la
  * dice tal cual, en lugar de inventar certeza.
  */
@@ -32,7 +32,7 @@ export type CitaCargada =
  * porque el fallo más común al agendar no es un error del sistema: es que el
  * horario se acaba de ocupar, y eso el backend lo explica con un 400 cuyo
  * texto hay que mostrar tal cual. Confundir "esa hora ya no está libre" con
- * "falló el sistema" manda a la doctora a reintentar lo que nunca va a pasar.
+ * "falló el sistema" manda al médico a reintentar lo que nunca va a pasar.
  */
 export type CitaAgendada =
   | { estado: 'ok'; dato: Appointment }
@@ -97,7 +97,7 @@ export const useDoctorAppointments = () => {
   }
 
   /**
-   * Agenda una cita. La doctora sólo puede agendar en su propia agenda: el
+   * Agenda una cita. El médico sólo puede agendar en su propia agenda: el
    * backend lo verifica (403), así que aquí no se disimula el error.
    */
   const createAppointment = async (data: AppointmentCreate): Promise<CitaAgendada> => {

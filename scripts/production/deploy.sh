@@ -82,7 +82,7 @@ ensure_clamav() {
   esac
   wait_healthy clamav "$CLAMAV_TIMEOUT" && { log "clamav sano"; return 0; }
   "${COMPOSE[@]}" logs --tail 30 clamav >&2 || true
-  fail "clamav no quedó sano. No se recreó ningún contenedor: la versión ${PREVIOUS_TAG:-anterior} sigue sirviendo. Revisa 'docker logs gems_clamav_prod' y vuelve a correr deploy.sh."
+  fail "clamav no quedó sano. No se recreó ningún contenedor: la versión ${PREVIOUS_TAG:-anterior} sigue sirviendo. Revisa 'docker logs cortex_clamav_prod' y vuelve a correr deploy.sh."
 }
 
 # Paso 2. Si up -d o la verificación fallan, se vuelve a la versión anterior

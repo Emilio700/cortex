@@ -4,10 +4,10 @@
  * Además del desglose por método trae dos más (plan 23, "Dinero físico"):
  * por doctora —de quién es el ingreso— y por quién lo recibió —quién tiene el
  * efectivo—. Sin el segundo, el corte de recepción no cuadra con la caja cuando
- * la doctora cobró en efectivo en su consultorio.
+ * el médico cobró en efectivo en su consultorio.
  *
- * La doctora ve sólo su corte (lo limita el servidor), así que no se le ofrece
- * elegir doctora. La secretaria con permiso de corte ve el de las doctoras que
+ * El médico ve sólo su corte (lo limita el servidor), así que no se le ofrece
+ * elegir doctora. La secretaria con permiso de corte ve el de los médicos que
  * apoya (plan 23, ajustes del 2026-09-28): el selector se arma con las que el
  * servidor dice que son suyas, no con el directorio, y si no tiene ninguna se
  * le dice en vez de pintar un día en ceros que parecería sin cobros.
@@ -261,7 +261,7 @@ const FinanzasDashboard: React.FC = () => {
           esDoctora
             ? 'Lo que ingresó a tu nombre y quién lo recibió.'
             : acotadaASusDoctoras
-              ? 'El corte de las doctoras que apoyas: por método, por doctora y por quién recibió el dinero.'
+              ? 'El corte de los médicos que apoyas: por método, por doctora y por quién recibió el dinero.'
               : 'Corte de caja por método, por doctora y por quién recibió el dinero.'
         }
         icono={cilCash}
@@ -284,10 +284,10 @@ const FinanzasDashboard: React.FC = () => {
             {!esDoctora && !sinAsignadas && (
               <CCol xs={12} md={3} data-tour="finanzas-selector-doctora">
                 <CFormLabel htmlFor="corte-doctora" className="small mb-0">
-                  Doctora
+                  Médico
                 </CFormLabel>
                 <CFormSelect id="corte-doctora" size="sm" value={doctorId} onChange={(e) => setDoctorId(e.target.value)}>
-                  <option value="">{acotadaASusDoctoras ? 'Todas mis doctoras' : 'Todas las doctoras'}</option>
+                  <option value="">{acotadaASusDoctoras ? 'Todas mis doctoras' : 'Todos los médicos'}</option>
                   {doctorasDelSelector.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.full_name}
@@ -387,7 +387,7 @@ const FinanzasDashboard: React.FC = () => {
               tour="finanzas-por-doctora"
               titulo="Por doctora (de quién es el ingreso)"
               icono={cilUser}
-              columna="Doctora"
+              columna="Médico"
               filas={porDoctora}
               corte={cashCut}
             />

@@ -1,11 +1,11 @@
-"""El historial de estudios de la paciente para el expediente (O-08, parte API).
+"""El historial de estudios del paciente para el expediente (O-08, parte API).
 
 «¿Ya me hice el ultrasonido?» no se respondía desde el expediente: la consulta
 sólo enseñaba las últimas tres órdenes y la bandeja sólo las pendientes.
 ``GET /clinical-tracking/patient/{id}/orders`` ya existía; aquí se comprueba
 que sirve para el expediente: todas las órdenes, con estado, fechas,
 resultados y el enlace a su archivo, paginado, con el mismo número de
-consultas sin importar cuántos estudios tenga la paciente, y con la misma
+consultas sin importar cuántos estudios tenga el paciente, y con la misma
 regla de acceso que el resto del seguimiento.
 """
 from datetime import date, timedelta

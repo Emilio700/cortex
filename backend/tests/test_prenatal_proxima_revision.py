@@ -74,7 +74,7 @@ def _auth_headers(db, user: User) -> dict[str, str]:
 
 @pytest.fixture
 def escenario(db_session):
-    """Un embarazo activo bajo seguimiento de su doctora."""
+    """Un embarazo activo bajo seguimiento de su médico."""
     tenant = Tenant(name="Clínica de prueba", is_active=True)
     db_session.add(tenant)
     db_session.commit()
@@ -84,7 +84,7 @@ def escenario(db_session):
         user = User(
             email=email,
             hashed_password="no-usado-en-estas-pruebas",
-            full_name="Doctora de prueba",
+            full_name="Médico de prueba",
             role=Role.DOCTOR,
             tenant_id=tenant.id,
             is_active=True,
@@ -148,7 +148,7 @@ def test_aceptar_la_sugerencia_no_deja_marca_de_ajuste(client, db_session, escen
 
 
 def test_mover_la_fecha_registra_quien_la_movio(client, db_session, escenario):
-    """La sugerencia orienta, no manda: si la doctora la corrige, se anota."""
+    """La sugerencia orienta, no manda: si el médico la corrige, se anota."""
     ajustada = SUGERIDA + timedelta(days=3)
     respuesta = _patch(
         client,

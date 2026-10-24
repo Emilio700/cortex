@@ -1,12 +1,12 @@
 /**
- * Modo de impresión de órdenes que la doctora fijó en su perfil (plan 26, D-7).
+ * Modo de impresión de órdenes que el médico fijó en su perfil (plan 26, D-7).
  *
- * Solo la doctora tiene perfil: para recepción se devuelve `null` y el PDF se
- * pide sin `modo`, así el servidor usa el de la doctora autora de la orden. Se
+ * Solo el médico tiene perfil: para recepción se devuelve `null` y el PDF se
+ * pide sin `modo`, así el servidor usa el del médico autora de la orden. Se
  * guarda en memoria para no pedir el perfil cada vez que se abre una vista
  * previa; al guardar el perfil se actualiza. La memoria es **de una usuaria**:
  * al cerrar sesión o entrar otra (la misma computadora del consultorio) se
- * descarta, para no imprimir con la preferencia de otra doctora (M4).
+ * descarta, para no imprimir con la preferencia de otro médico (M4).
  */
 import { useEffect, useState } from 'react'
 import { apiClient } from '../../../shared/services/api'

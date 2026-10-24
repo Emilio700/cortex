@@ -1,7 +1,7 @@
 /**
  * Cuando dos avisos llegaban en la misma vuelta del sondeo sólo se veía el
  * último: el proveedor guardaba un solo mensaje y React juntaba los cambios
- * (plan 27, F-2). Recepción pasaba a dos pacientes a sala y la doctora se
+ * (plan 27, F-2). Recepción pasaba a dos pacientes a sala y el médico se
  * enteraba de una.
  */
 import { act, render, screen } from '@testing-library/react'

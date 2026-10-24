@@ -51,10 +51,10 @@ def _require_manager(patient, current_user: User) -> None:
 # El equipo tratante es el único mecanismo por el que alguien que no es la
 # dueña del expediente puede abrirlo, y su diseño original es el apoyo
 # administrativo de la titular: recepción adjuntando estudios o capturando
-# documentos de la paciente, con un permiso que la doctora concede, revoca y
+# documentos del paciente, con un permiso que el médico concede, revoca y
 # que vence solo.
 #
-# Durante unos días se amplió para registrar "la Dra. A cubre a la Dra. B", y
+# Durante unos días se amplió para registrar "el Dr. A cubre a el Dr. B", y
 # Emilio lo cerró: no se estaba usando y multiplicaba las formas de entrar a un
 # expediente. Se cierra el **expediente**, no la agenda: el calendario
 # compartido entre doctoras no pasa por aquí (``alcance_operativo_acotado``).
@@ -74,7 +74,7 @@ _CAPACIDAD_MINIMA: dict[CareTeamAccessRole, str] = {
 # La cobertura clínica entre doctoras se cerró: el mensaje tiene que decir qué
 # sí quedó abierto, o la respuesta se lee como un defecto y alguien la reporta.
 MOTIVO_DOCTORA_NO_SE_ASIGNA = (
-    "El expediente completo de una paciente solo lo abre su médica responsable. "
+    "El expediente completo de un paciente solo lo abre su médica responsable. "
     "Compartir la agenda entre doctoras no requiere este permiso."
 )
 
@@ -103,7 +103,7 @@ def _validate_member_capability(db: Session, member: User, access_role: CareTeam
 
     if member.role == Role.DOCTOR:
         # Se rechaza en el alta y no sólo al leer el expediente para que la
-        # negativa llegue cuando la doctora la puede entender —al intentar
+        # negativa llegue cuando el médico la puede entender —al intentar
         # concederla— y no como un 403 sin contexto tres días después.
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,

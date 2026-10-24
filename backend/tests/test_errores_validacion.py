@@ -140,9 +140,9 @@ def test_un_validador_propio_conserva_el_mensaje_que_escribio_el_schema():
     error = {
         "type": "value_error",
         "loc": ("body", "notes"),
-        "msg": "Value error, La consulta no corresponde a la paciente",
+        "msg": "Value error, La consulta no corresponde al paciente",
     }
-    assert mensaje_de_error(error) == "La consulta no corresponde a la paciente"
+    assert mensaje_de_error(error) == "La consulta no corresponde al paciente"
 
 
 # --- El contrato con el frontend -------------------------------------------

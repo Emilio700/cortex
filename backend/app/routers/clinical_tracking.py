@@ -143,11 +143,11 @@ def _validate_context(
     if pregnancy_id:
         pregnancy = _pregnancy(db, pregnancy_id, user)
         if pregnancy.patient_id != patient.id:
-            raise HTTPException(status_code=422, detail="El embarazo no corresponde a la paciente")
+            raise HTTPException(status_code=422, detail="El embarazo no corresponde al paciente")
     if appointment_id:
         appointment = scoped_query(db.query(Appointment), Appointment, user).filter(Appointment.id == appointment_id).first()
         if not appointment or appointment.patient_id != patient.id:
-            raise HTTPException(status_code=422, detail="La cita no corresponde a la paciente")
+            raise HTTPException(status_code=422, detail="La cita no corresponde al paciente")
         exigir_autoria_clinica(appointment.doctor_id, user, detalle="Solo puedes vincular citas asignadas a ti")
 
 
@@ -290,7 +290,7 @@ def create_monitoring_plan(exposure_id: int, data: MedicationMonitoringPlanCreat
 
 # Una sola definición de incidencia crítica abierta (plan 26, D-8), la misma
 # para el dashboard (/critical-results) y para el filtro «críticos» de la
-# bandeja: crítico y sin cerrar. Se cierra al comunicarlo a la paciente o al
+# bandeja: crítico y sin cerrar. Se cierra al comunicarlo al paciente o al
 # revisarlo en una consulta suya; revisarlo desde la bandeja no la cierra.
 # Un resultado anulado (plan 29, lote 9) no tiene incidencia: no cuenta.
 INCIDENCIA_ABIERTA = (
@@ -301,7 +301,7 @@ INCIDENCIA_ABIERTA = (
 def _cerrar_incidencias(db: Session, order: DiagnosticOrder, user: User, *, por: str) -> None:
     """Cierra las incidencias críticas abiertas de TODA la orden.
 
-    La doctora revisa o comunica la orden de una vez, aunque traiga varios
+    El médico revisa o comunica la orden de una vez, aunque traiga varios
     archivos; si sólo se cerrara el resultado que tocó, un crítico de un
     archivo anterior se quedaría abierto sin manera de cerrarlo desde la
     pantalla. Se anota cómo y quién la cerró.
@@ -323,17 +323,17 @@ def _cita_de_revision(
 
     Devuelve ``(cita, cierre)``. La revisión se guarda SIEMPRE: la cita sólo
     decide si cierra la incidencia crítica. Antes una cita que no era de hoy
-    daba 422 y la doctora no podía guardar nada en una consulta de ayer que
+    daba 422 y el médico no podía guardar nada en una consulta de ayer que
     seguía abierta, en una reabierta, o en la de las 23:30 revisada a las
     00:05 (tercera revisión del plan 26).
 
-    - Cita de otra paciente, de otra doctora, cancelada o inexistente: 422,
+    - Cita de otro paciente, de otro médico, cancelada o inexistente: 422,
       porque eso sí es un error de la pantalla.
     - De hoy (Mazatlán), o de ayer y todavía en sala: cierra (``"aplicada"``).
       Puede ser otra que la de la orden: el estudio de hace un mes se revisa
       en la consulta de hoy.
     - De cualquier otro día: guarda sin cerrar (``"cita_de_otro_dia"``). Una
-      cita de hace meses o futura no prueba que la paciente esté enfrente.
+      cita de hace meses o futura no prueba que el paciente esté enfrente.
     - Sin revisión (sólo valoración, o «recibido»), la cita se ignora.
     """
     if not appointment_id or not hay_revision:
@@ -347,7 +347,7 @@ def _cita_de_revision(
     if not cita or cita.patient_id != order.patient_id or cita.doctor_id != user.id or estado == AppointmentStatus.CANCELADA.value:
         raise HTTPException(
             status_code=422,
-            detail="La consulta indicada no es una cita vigente tuya con esta paciente. Actualiza la consulta.",
+            detail="La consulta indicada no es una cita vigente tuya con este paciente. Actualiza la consulta.",
         )
     # ``scheduled_at`` se guarda en hora local del consultorio.
     hoy = hoy_local()
@@ -406,7 +406,7 @@ def orders_inbox(
     query = filtrar_por_autoria_clinica(query, DiagnosticOrder.doctor_id, user)
     if status_filter:
         # Un filtro con un estado que no existe devolvería una bandeja vacía y
-        # la doctora creería que no tiene pendientes: mejor decirlo.
+        # el médico creería que no tiene pendientes: mejor decirlo.
         if status_filter not in ESTADOS_DE_ORDEN:
             raise HTTPException(status_code=422, detail=f"Estado desconocido: {status_filter}")
         query = query.filter(DiagnosticOrder.status == status_filter)
@@ -442,7 +442,7 @@ def _resultados_por_orden(db: Session, user: User, order_ids: list[int]) -> dict
     """Todos los resultados de esas órdenes con su archivo, en UNA consulta.
 
     Los anulados (plan 29, lote 9) solo los ve la administración, con su
-    motivo; para la doctora y recepción ya no existen.
+    motivo; para el médico y recepción ya no existen.
     """
     por_orden: dict[int, list[ResultadoEnHistorial]] = {order_id: [] for order_id in order_ids}
     if not order_ids:
@@ -543,11 +543,11 @@ def orders_inbox_by_patient(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=50),
 ):
-    """La bandeja de la doctora agrupada por paciente (plan 26, B-1).
+    """La bandeja del médico agrupada por paciente (plan 26, B-1).
 
-    Pagina PACIENTES, no órdenes: con la paginación por orden una paciente
+    Pagina PACIENTES, no órdenes: con la paginación por orden un paciente
     quedaba partida entre páginas, y agruparla en la pantalla no lo arregla.
-    Las pacientes con un resultado crítico sin comunicar van primero (D-3);
+    Los pacientes con un resultado crítico sin comunicar van primero (D-3);
     luego la prioridad más alta y la solicitud más antigua.
 
     Son cinco consultas por página sin importar cuántas órdenes haya: el
@@ -567,7 +567,7 @@ def orders_inbox_by_patient(
     from sqlalchemy import and_, select
 
     if filtro not in FILTROS_DE_BANDEJA:
-        # Un filtro mal escrito daría una bandeja vacía y la doctora creería
+        # Un filtro mal escrito daría una bandeja vacía y el médico creería
         # que no tiene pendientes: mejor decirlo.
         raise HTTPException(status_code=422, detail=f"Filtro desconocido: {filtro}. Usa uno de: {', '.join(FILTROS_DE_BANDEJA)}.")
 
@@ -741,20 +741,20 @@ def list_orders(
     db: Annotated[Session, Depends(get_db)],
     user: Annotated[User, Depends(require_permission("clinical_tracking.read"))],
     appointment_id: int | None = Query(default=None, gt=0),
-    por_atender: bool = Query(False, description="Sólo lo que la doctora tiene que atender: resultado recibido o incidencia crítica abierta"),
+    por_atender: bool = Query(False, description="Sólo lo que el médico tiene que atender: resultado recibido o incidencia crítica abierta"),
     skip: int = Query(0, ge=0),
     limit: int = Query(25, ge=1, le=100),
 ):
-    """Historial de estudios de la paciente para el expediente (O-08).
+    """Historial de estudios del paciente para el expediente (O-08).
 
     Cada orden viene con todos sus resultados y el enlace a su archivo. Son
     tres consultas por página sin importar cuántas órdenes o resultados haya
     (el conteo, la página y todos los resultados de la página de una vez):
-    una paciente con años de control prenatal no debe volver lenta la ficha.
+    un paciente con años de control prenatal no debe volver lenta la ficha.
     El total va en ``X-Total-Count``, como en recetas y certificados.
 
     Con ``por_atender`` (N3 del plan 26) es lo que la consulta tiene que
-    revisar con la paciente enfrente, de cualquier cita: órdenes de la doctora
+    revisar con el paciente enfrente, de cualquier cita: órdenes del médico
     con el resultado recibido o con una incidencia crítica abierta. Primero las
     incidencias, luego la prioridad y luego lo más antiguo.
     """
@@ -789,13 +789,13 @@ def patient_valoraciones(
     db: Annotated[Session, Depends(get_db)],
     user: Annotated[User, Depends(require_permission("clinical_tracking.read"))],
 ):
-    """Las valoraciones de los resultados de la paciente en el tiempo (plan 26, D-9).
+    """Las valoraciones de los resultados del paciente en el tiempo (plan 26, D-9).
 
     Es la serie de la gráfica de progreso del expediente: una fila por
     resultado valorado, de la más antigua a la más reciente. La fecha es la
     del resultado y, si no la tiene, la del día (en hora de Mazatlán) en que se
     registró. Se agrupa por estudio en la pantalla. Misma regla de acceso que
-    el historial de estudios de la paciente.
+    el historial de estudios del paciente.
     """
     from app.core.hora_local import utc_a_local
 
@@ -829,7 +829,7 @@ def patient_valoraciones(
 # Semilla en código (como el catálogo de estudios), de sólo lectura: la pregunta
 # 2.3 —quién administra las plantillas— sigue abierta, así que hoy no se editan
 # desde la interfaz. Precargan estudios en el formulario de la orden agrupada
-# (O-02); la doctora revisa y confirma. Nada se crea sin esa confirmación.
+# (O-02); el médico revisa y confirma. Nada se crea sin esa confirmación.
 RUTA_PLANTILLAS = Path(__file__).resolve().parent.parent / "data" / "plantillas_orden.json"
 
 
@@ -863,7 +863,7 @@ def list_order_templates(user: Annotated[User, Depends(require_permission("clini
 def get_order_template(clave: str, user: Annotated[User, Depends(require_permission("clinical_tracking.create"))]):
     """Una plantilla con sus estudios, para precargar la orden agrupada (O-03).
 
-    El frontend copia estos estudios al formulario de O-02; la doctora los revisa
+    El frontend copia estos estudios al formulario de O-02; el médico los revisa
     y confirma con ``POST /order-groups``. La plantilla no crea nada.
     """
     datos = _cargar_plantillas()
@@ -904,22 +904,22 @@ ETIQUETAS_DE_ESTADO = {
 
 
 # Una orden cancelada, rechazada o en borrador no se imprime: el papel es lo
-# que la paciente lleva al laboratorio, y un papel de un estudio que la doctora
+# que el paciente lleva al laboratorio, y un papel de un estudio que el médico
 # ya no quiere es un estudio que alguien termina haciéndose (y pagando).
 ESTADOS_DE_ORDEN_NO_IMPRIMIBLES = {"draft", "cancelled", "rejected"}
 
 
 def _perfil_para_orden(db: Session, doctor_id: int):
-    """El membrete de la doctora que pidió el estudio, sin escribir nada en la base.
+    """El membrete del médico que pidió el estudio, sin escribir nada en la base.
 
-    La receta crea un perfil de relleno cuando la doctora no tiene uno; aquí no,
+    La receta crea un perfil de relleno cuando el médico no tiene uno; aquí no,
     porque la orden la reimprime también recepción y una reimpresión no debe
-    dejar filas nuevas a nombre de la doctora. Sin perfil sale su nombre con
+    dejar filas nuevas a nombre del médico. Sin perfil sale su nombre con
     su tratamiento y el resto del membrete en blanco.
 
     El sustituto lleva TODOS los campos que lee el membrete de la receta
     (plan 24): sin ellos se perdían las credenciales, el nombre impreso y los
-    colores que la doctora configuró (plan 26, P-3).
+    colores que el médico configuró (plan 26, P-3).
     """
     from types import SimpleNamespace
 
@@ -950,7 +950,7 @@ def diagnostic_order_pdf(
 ):
     """PDF de la orden de estudio para imprimirla o descargarla (O-01).
 
-    Quién la saca: la doctora con relación asistencial con la paciente (la
+    Quién la saca: el médico con relación asistencial con el paciente (la
     misma regla que la receta) y recepción o administración de la sucursal,
     que la reimprimen. Recepción no necesita ``clinical_tracking.read``: el
     permiso es sólo el de imprimir.
@@ -972,7 +972,7 @@ def diagnostic_order_pdf(
     if order.status in ESTADOS_DE_ORDEN_NO_IMPRIMIBLES:
         raise HTTPException(
             status_code=409,
-            detail="Esta orden está cancelada o no se ha emitido, así que no se imprime. Si la paciente sí necesita el estudio, crea una orden nueva.",
+            detail="Esta orden está cancelada o no se ha emitido, así que no se imprime. Si el paciente sí necesita el estudio, crea una orden nueva.",
         )
 
     tenant = db.query(Tenant).filter(Tenant.id == order.tenant_id).first()
@@ -984,7 +984,7 @@ def diagnostic_order_pdf(
         actor_user_id=user.id, tenant_id=order.tenant_id, patient_id=order.patient_id,
         details={"patient_id": order.patient_id},
     )
-    # Sin el nombre de la paciente en el archivo: una descarga se queda en la
+    # Sin el nombre del paciente en el archivo: una descarga se queda en la
     # carpeta de la computadora de recepción, y el id basta para encontrarla.
     headers = {"Content-Disposition": f'attachment; filename="Orden_de_estudio_{order.id}.pdf"'}
     return StreamingResponse(BytesIO(pdf.read()), media_type="application/pdf", headers=headers)
@@ -1044,7 +1044,7 @@ def create_order_group(
     """Varios estudios bajo un mismo papel, en una sola llamada (O-02).
 
     Todo o nada: si un estudio no se puede guardar no queda ninguno, porque un
-    lote a medias es un papel al que le falta un estudio que la doctora sí
+    lote a medias es un papel al que le falta un estudio que el médico sí
     pidió. Cada estudio es una orden normal (con su estado y sus resultados) y
     las mismas reglas que ``POST /orders``: dueña del expediente, cita suya.
     """
@@ -1116,16 +1116,16 @@ def get_order_group(
     db: Annotated[Session, Depends(get_db)],
     user: Annotated[User, Depends(require_permission("clinical_tracking.read"))],
 ):
-    """El lote con cada estudio y su estado. Misma regla que listar las órdenes de la paciente."""
+    """El lote con cada estudio y su estado. Misma regla que listar las órdenes del paciente."""
     group = _lote_del_alcance(db, group_id, user)
     _patient(db, group.patient_id, user)
     return group
 
 
 # Cómo se imprime un papel con varios estudios (plan 26, D-2). Sin valor,
-# manda el que la doctora autora dejó en su perfil.
+# manda el que el médico autora dejó en su perfil.
 ModoDeImpresion = Literal["separado", "una_hoja"]
-DESCRIPCION_MODO = "«separado»: una hoja por destino (laboratorio, imagen, otros); «una_hoja»: todo junto. Sin valor, el del perfil de la doctora."
+DESCRIPCION_MODO = "«separado»: una hoja por destino (laboratorio, imagen, otros); «una_hoja»: todo junto. Sin valor, el del perfil del médico."
 
 
 @router.get("/order-groups/{group_id}/pdf")
@@ -1154,7 +1154,7 @@ def diagnostic_order_group_pdf(
     if not imprimibles:
         raise HTTPException(
             status_code=409,
-            detail="Todos los estudios de esta orden están cancelados o sin emitir, así que no se imprime. Si la paciente sí necesita algún estudio, crea una orden nueva.",
+            detail="Todos los estudios de esta orden están cancelados o sin emitir, así que no se imprime. Si el paciente sí necesita algún estudio, crea una orden nueva.",
         )
 
     from app.utils.orden_config import resolver_modo
@@ -1192,12 +1192,12 @@ def _papel_consolidado(
     entity_type: str,
     entity_id: int,
 ):
-    """Arma y registra el papel de varias órdenes de una paciente (plan 26, D-2 y D-5).
+    """Arma y registra el papel de varias órdenes de un paciente (plan 26, D-2 y D-5).
 
     Mismas reglas que el papel del lote: no salen los estudios cancelados,
     rechazados o en borrador, y si no queda ninguno es 409. Además, el papel
     lleva UNA firma: si las órdenes son de doctoras distintas no se imprime
-    junto, porque una doctora estaría firmando estudios que no pidió.
+    junto, porque un médico estaría firmando estudios que no pidió.
     """
     from io import BytesIO
 
@@ -1211,13 +1211,13 @@ def _papel_consolidado(
     if not imprimibles:
         raise HTTPException(
             status_code=409,
-            detail="No hay estudios para imprimir: los que hay están cancelados o sin emitir. Si la paciente sí necesita algún estudio, crea una orden nueva.",
+            detail="No hay estudios para imprimir: los que hay están cancelados o sin emitir. Si el paciente sí necesita algún estudio, crea una orden nueva.",
         )
     doctoras = {orden.doctor_id for orden in imprimibles}
     if len(doctoras) > 1:
         raise HTTPException(
             status_code=409,
-            detail="Estos estudios los pidieron doctoras distintas y el papel lleva una sola firma. Imprime la orden de cada doctora por separado.",
+            detail="Estos estudios los pidieron doctoras distintas y el papel lleva una sola firma. Imprime la orden de cada médico por separado.",
         )
 
     # Si todo es de un mismo lote, su indicación común se imprime una vez.
@@ -1267,7 +1267,7 @@ def appointment_orders_pdf(
 
     El que se imprimió antes de la 1.2.0 conserva su ``C-{cita}``.
 
-    Junta las órdenes sueltas y los lotes de esa cita: la doctora imprime una
+    Junta las órdenes sueltas y los lotes de esa cita: el médico imprime una
     vez por consulta y no hoja por estudio (plan 26, C-4). Mismo permiso y
     alcance que reimprimir una orden.
     """
@@ -1310,11 +1310,11 @@ def patient_orders_pdf(
     db: Annotated[Session, Depends(get_db)],
     user: Annotated[User, Depends(require_permission("clinical_tracking.print_order"))],
     order_ids: str | None = Query(None, max_length=1000, description="Números de orden separados por coma"),
-    pendientes: bool = Query(False, description="Todas las órdenes pendientes de la paciente con esa doctora"),
-    doctor_id: int | None = Query(None, gt=0, description="La doctora de las órdenes pendientes (obligatorio con pendientes)"),
+    pendientes: bool = Query(False, description="Todas las órdenes pendientes del paciente con esa doctora"),
+    doctor_id: int | None = Query(None, gt=0, description="El médico de las órdenes pendientes (obligatorio con pendientes)"),
     modo: ModoDeImpresion | None = Query(None, description=DESCRIPCION_MODO),
 ):
-    """Un papel con varias órdenes de una paciente, aunque no tengan cita.
+    """Un papel con varias órdenes de un paciente, aunque no tengan cita.
 
     Dos formas de decir cuáles:
 
@@ -1350,7 +1350,7 @@ def patient_orders_pdf(
             .all()
         )
         if not ordenes:
-            raise HTTPException(status_code=409, detail="Esta paciente no tiene estudios pendientes con esa doctora.")
+            raise HTTPException(status_code=409, detail="Este paciente no tiene estudios pendientes con esa doctora.")
     else:
         ids = _ids_de_orden(order_ids)
         ordenes = (
@@ -1362,7 +1362,7 @@ def patient_orders_pdf(
         if len(ordenes) != len(ids) or any(orden.patient_id != patient.id for orden in ordenes):
             raise HTTPException(
                 status_code=422,
-                detail="Alguna de las órdenes no existe o no es de esta paciente. Actualiza la lista de estudios.",
+                detail="Alguna de las órdenes no existe o no es de este paciente. Actualiza la lista de estudios.",
             )
     imprimibles = [orden for orden in ordenes if orden.status not in ESTADOS_DE_ORDEN_NO_IMPRIMIBLES]
     grupos = {orden.order_group_id for orden in imprimibles}
@@ -1415,7 +1415,7 @@ def change_order_status(
 
     Las transiciones válidas son las de ``TRANSICIONES_DE_ORDEN``; cualquier
     otra es 409 con el estado actual, para que la pantalla que quedó vieja lo
-    diga en vez de fingir que cambió. La misma regla que editar: la doctora
+    diga en vez de fingir que cambió. La misma regla que editar: el médico
     que pidió la orden, dueña del expediente.
     """
     item = scoped_query(db.query(DiagnosticOrder), DiagnosticOrder, user).filter(DiagnosticOrder.id == order_id).first()
@@ -1468,12 +1468,12 @@ def create_result(order_id: int, data: DiagnosticResultCreate, db: Annotated[Ses
     if order.status in ESTADOS_DE_ORDEN_NO_IMPRIMIBLES:
         raise HTTPException(
             status_code=409,
-            detail="Esta orden está cancelada o no se ha emitido, así que no se le registra un resultado. Si la paciente sí se hizo el estudio, crea una orden nueva.",
+            detail="Esta orden está cancelada o no se ha emitido, así que no se le registra un resultado. Si el paciente sí se hizo el estudio, crea una orden nueva.",
         )
     if data.patient_document_id:
         document = scoped_query(db.query(PatientDocument), PatientDocument, user).filter(PatientDocument.id == data.patient_document_id).first()
         if not document or document.patient_id != order.patient_id:
-            raise HTTPException(status_code=422, detail="El documento no corresponde a la paciente de la orden")
+            raise HTTPException(status_code=422, detail="El documento no corresponde al paciente de la orden")
     cita, cierre = _cita_de_revision(db, user, order, data.appointment_id, hay_revision=data.review_status != "received")
     item = DiagnosticResult(tenant_id=order.tenant_id, diagnostic_order_id=order.id, recorded_by_user_id=user.id, **data.model_dump(exclude={"appointment_id"}))
     if data.review_status in {"reviewed", "requires_action", "communicated"}:
@@ -1510,12 +1510,15 @@ def create_result(order_id: int, data: DiagnosticResultCreate, db: Annotated[Ses
 ESTADOS_POR_RECIBIR_RESULTADO = ("ordered", "accepted", "scheduled", "collected", "in_process", "result_received")
 
 # El expediente separa laboratorio de imagen; se decide por la categoría de la
-# orden para que el archivo aparezca donde la doctora lo buscaría.
+# orden para que el archivo aparezca donde el médico lo buscaría.
 TIPO_DE_DOCUMENTO_POR_CATEGORIA = {
     "laboratory": DocumentType.LAB_RESULT,
     "gynecology": DocumentType.LAB_RESULT,
     "breast": DocumentType.IMAGING_STUDY,
     "obstetric": DocumentType.IMAGING_STUDY,
+    # Cortex: la neuroimagen y la neurofisiología (EEG, EMG) son de gabinete.
+    "imaging": DocumentType.IMAGING_STUDY,
+    "neurophysiology": DocumentType.IMAGING_STUDY,
 }
 
 
@@ -1543,7 +1546,7 @@ def orders_awaiting_result(
 
     Devuelve sólo con qué reconocer la orden: paciente, estudio, fecha y folio.
     La búsqueda acepta el folio (número de la orden) porque es lo que viene
-    impreso en el papel que la paciente trae de regreso.
+    impreso en el papel que el paciente trae de regreso.
     """
     from sqlalchemy import func
 
@@ -1579,7 +1582,7 @@ def orders_awaiting_result(
         query = query.filter(or_(*condiciones))
 
     total = query.count()
-    # Lo urgente primero (plan 26, D-10): la resonancia que la doctora marcó
+    # Lo urgente primero (plan 26, D-10): la resonancia que el médico marcó
     # urgente no puede quedar en la página 2 detrás de las rutinarias.
     filas = query.order_by(RANGO_DE_PRIORIDAD, DiagnosticOrder.requested_on.desc(), DiagnosticOrder.id.desc()).offset(skip).limit(limit).all()
     # Los archivos de toda la página en una sola consulta: recepción tiene que
@@ -1638,7 +1641,7 @@ def rastro_de_la_orden(
 ):
     """La línea de tiempo del estudio, con fecha y autor de cada paso (plan 32, punto 3).
 
-    Mismo alcance que el historial de estudios de la paciente, y queda en la
+    Mismo alcance que el historial de estudios del paciente, y queda en la
     bitácora de accesos como lectura de «estudios» (plan 32, punto 7).
     """
     order = scoped_query(db.query(DiagnosticOrder), DiagnosticOrder, user).filter(DiagnosticOrder.id == order_id).first()
@@ -1699,7 +1702,7 @@ def create_follow_up(
 ):
     """Registra por qué el estudio sigue sin resultado y cuándo volver a revisarlo.
 
-    Hasta esa fecha sale de «Atrasados». Lo registra la doctora o recepción
+    Hasta esa fecha sale de «Atrasados». Lo registra el médico o recepción
     (decisión de Emilio, 2026-10-05). Solo para estudios que siguen esperando
     resultado: a uno que ya lo tiene no le falta nada.
     """
@@ -1767,7 +1770,7 @@ def orders_to_deliver(
         DiagnosticOrder.requested_on == dia,
         DiagnosticOrder.status.notin_(tuple(ESTADOS_DE_ORDEN_NO_IMPRIMIBLES)),
     )
-    # La doctora que tiene el permiso sólo ve las órdenes que ella pidió; recepción
+    # El médico que tiene el permiso sólo ve las órdenes que ella pidió; recepción
     # y administración, todas las de su sucursal (el filtro no las acota).
     query = filtrar_por_autoria_clinica(query, DiagnosticOrder.doctor_id, user)
     if not include_delivered:
@@ -1801,7 +1804,7 @@ def mark_order_delivered(
     db: Annotated[Session, Depends(get_db)],
     user: Annotated[User, Depends(require_permission("clinical_tracking.deliver_order"))],
 ):
-    """Marca que la orden ya se le entregó a la paciente en el mostrador (O-09).
+    """Marca que la orden ya se le entregó al paciente en el mostrador (O-09).
 
     Es contabilidad de recepción, no cambia el ciclo clínico de la orden. Es
     idempotente: si otra persona ya la marcó, se responde con la entrega que ya
@@ -1811,13 +1814,13 @@ def mark_order_delivered(
     order = scoped_query(db.query(DiagnosticOrder), DiagnosticOrder, user).filter(DiagnosticOrder.id == order_id).first()
     if not order:
         raise HTTPException(status_code=404, detail="No se encontró la orden de estudio. Puede que la hayan eliminado; actualiza la lista de estudios.")
-    # La doctora sólo entrega las órdenes que ella pidió; recepción y
+    # El médico sólo entrega las órdenes que ella pidió; recepción y
     # administración, cualquiera de su sucursal.
     exigir_autoria_clinica(order.doctor_id, user, detalle="No se encontró la orden de estudio. Puede que la hayan eliminado; actualiza la lista de estudios.")
     if order.status in ESTADOS_DE_ORDEN_NO_IMPRIMIBLES:
         raise HTTPException(
             status_code=409,
-            detail="Esta orden está cancelada o no se ha emitido, así que no se entrega. Si la paciente sí necesita el estudio, pídele a la doctora una orden nueva.",
+            detail="Esta orden está cancelada o no se ha emitido, así que no se entrega. Si el paciente sí necesita el estudio, pídele al médico una orden nueva.",
         )
 
     if order.delivered_at is not None:
@@ -1854,10 +1857,10 @@ async def attach_result_file(
 ):
     """Sube el PDF o la foto del resultado y lo liga a su orden (O-04).
 
-    Decisión de Emilio: recepción lo sube, la doctora lo interpreta y lo marca
+    Decisión de Emilio: recepción lo sube, el médico lo interpreta y lo marca
     revisado. Por eso aquí nace un resultado en ``received``, sin texto ni
     interpretación, y la orden pasa a ``result_received`` para que aparezca en
-    la bandeja de la doctora. No se sobrescribe nada: un segundo archivo es un
+    la bandeja del médico. No se sobrescribe nada: un segundo archivo es un
     resultado nuevo (plan 14 §10, los originales no se sobrescriben), y si la
     orden ya estaba revisada vuelve a la bandeja, porque hay algo que no ha visto.
 
@@ -1871,7 +1874,7 @@ async def attach_result_file(
     if order.status in ESTADOS_DE_ORDEN_NO_IMPRIMIBLES:
         raise HTTPException(
             status_code=409,
-            detail="Esta orden está cancelada o no se ha emitido, así que no se le liga un resultado. Súbelo como documento de la paciente o pregúntale a la doctora.",
+            detail="Esta orden está cancelada o no se ha emitido, así que no se le liga un resultado. Súbelo como documento del paciente o pregúntale al médico.",
         )
 
     content, detected_mime = await read_and_validate_upload(
@@ -1940,7 +1943,7 @@ def _cerrar_recibidos_de_la_orden(db: Session, order: DiagnosticOrder, user: Use
     """Al revisar la orden, sus otros archivos todavía «recibidos» quedan revisados.
 
     Una orden puede traer varios archivos (el PDF del reporte y las imágenes,
-    plan 26 D-2), cada uno con su resultado. La doctora los revisa juntos en
+    plan 26 D-2), cada uno con su resultado. El médico los revisa juntos en
     el visor y deja UNA interpretación; si los demás se quedaran en
     «recibido», la orden diría «revisada» mientras un crítico de un archivo
     anterior seguiría abierto en su dashboard, sin manera de cerrarlo desde
@@ -1990,7 +1993,7 @@ def update_result(result_id: int, data: DiagnosticResultUpdate, db: Annotated[Se
     if cambios.get("is_critical") is None:
         cambios.pop("is_critical", None)
     # Un resultado que vuelve a ser crítico después de cerrada su incidencia
-    # la reabre: es un hallazgo nuevo que nadie le ha comunicado a la paciente.
+    # la reabre: es un hallazgo nuevo que nadie le ha comunicado al paciente.
     # Re-mandar «crítico» a uno que ya lo era no la reabre (la pantalla
     # reenvía la valoración en cada guardado).
     reabre = bool(cambios.get("is_critical")) and not result.is_critical and result.incidencia_cerrada_at is not None
@@ -2017,7 +2020,7 @@ def update_result(result_id: int, data: DiagnosticResultUpdate, db: Annotated[Se
         result.communicated_at = utcnow(); result.communicated_by_user_id = user.id
     if cita:
         result.reviewed_in_appointment_id = cita.id
-    # Revisar desde la bandeja, sin la paciente, no cierra la incidencia (D-8).
+    # Revisar desde la bandeja, sin el paciente, no cierra la incidencia (D-8).
     if data.review_status == "communicated":
         _cerrar_incidencias(db, order, user, por="comunicacion")
     elif cierre == "aplicada":
@@ -2049,7 +2052,7 @@ def anular_resultado_de_orden(
 ):
     """Anula un resultado subido por error, con su archivo (plan 29, lote 9).
 
-    Solo la doctora que pidió el estudio o la administración. Las reglas de
+    Solo el médico que pidió el estudio o la administración. Las reglas de
     estado e incidencia están en ``app.services.anular_resultado``.
     """
     from app.schemas.clinical_tracking import ESTADO_VISIBLE_DE_ORDEN
@@ -2077,16 +2080,16 @@ def critical_results(
     user: Annotated[User, Depends(require_permission("clinical_tracking.read"))],
     limit: int = Query(50, ge=1, le=100),
 ):
-    """Resultados críticos que la doctora autora todavía no revisa (plan 26, D-3).
+    """Resultados críticos que el médico autora todavía no revisa (plan 26, D-3).
 
     Marcar «crítico» no hacía nada más que pintar un badge, aunque la casilla
     prometía atención prioritaria (B-6). Ahora es una incidencia en el
-    dashboard de la doctora que pidió el estudio, y se queda ahí hasta que
+    dashboard del médico que pidió el estudio, y se queda ahí hasta que
     ella lo revisa. Recepción no recibe aviso (decisión de Emilio).
 
     Abierta = crítico y sin cerrar (``INCIDENCIA_ABIERTA``, la misma regla
     del filtro «críticos» de la bandeja). Se cierra al documentar la
-    comunicación a la paciente con su medio o al revisarlo en una consulta
+    comunicación al paciente con su medio o al revisarlo en una consulta
     suya (D-8); revisarlo desde la bandeja no la cierra. La más antigua
     primero: es la que lleva más tiempo esperando.
     """
@@ -2106,7 +2109,7 @@ def critical_results(
         .outerjoin(PatientDocument, PatientDocument.id == DiagnosticResult.patient_document_id)
         .filter(*INCIDENCIA_ABIERTA, DiagnosticOrder.status.notin_(tuple(ESTADOS_DE_ORDEN_NO_IMPRIMIBLES)))
     )
-    # Sólo las de la doctora autora: es ella quien tiene que revisarlo.
+    # Sólo las del médico autora: es ella quien tiene que revisarlo.
     query = filtrar_por_autoria_clinica(query, DiagnosticOrder.doctor_id, user)
     total = query.count()
     filas = query.order_by(DiagnosticResult.created_at.asc(), DiagnosticResult.id.asc()).limit(limit).all()
@@ -2199,13 +2202,13 @@ def prenatal_review_board(
 
     Es lo que Emilio aprobó de la Fase 7 junto con el recordatorio, y lo que
     deliberadamente NO es: no agenda nada, no elige hora ni sala y no le manda
-    un aviso a la doctora. Es una lista que se consulta. La regla de Emilio:
+    un aviso al médico. Es una lista que se consulta. La regla de Emilio:
     una notificación significa "haz algo"; si significa "entérate", va en una
     lista.
 
     Comparte con el trabajo de recordatorio la definición de "ya está citada"
     (``scripts.aviso_proxima_revision._tiene_cita``) y eso es a propósito: si
-    las dos divergieran, la doctora vería aquí pacientes de las que recepción
+    las dos divergieran, el médico vería aquí pacientes de las que recepción
     nunca supo, o al revés, y no habría manera de saber cuál de las dos miente.
 
     El ``atraso_maximo`` acota hacia atrás porque un embarazo que quedó activo
@@ -2228,7 +2231,7 @@ def prenatal_review_board(
 
     embarazos = query.order_by(Pregnancy.next_review_on.asc()).limit(200).all()
     # Dos consultas fijas para todo el lote, en vez de 2–3 por embarazo (B-07):
-    # quiénes ya tienen cita, y las pacientes en un solo IN.
+    # quiénes ya tienen cita, y los pacientes en un solo IN.
     citados = _embarazos_ya_citados(db, embarazos, hoy)
     ids_paciente = {e.patient_id for e in embarazos if e.id not in citados}
     pacientes = {

@@ -1,6 +1,6 @@
 /**
  * La tarjeta de recordatorios del perfil dice lo que de verdad controla: el
- * correo a las pacientes. El aviso para la doctora se gobierna en el centro de
+ * correo a los pacientes. El aviso para el médico se gobierna en el centro de
  * avisos; antes la tarjeta prometía «correo y notificación in-app» y el de
  * 24 h ya no existe (plan 29, punto 10).
  */
@@ -49,7 +49,7 @@ vi.mock('../../../shared/context/AuthContext', () => ({ useAuth: () => ({ user: 
 import DoctorProfilePage from './DoctorProfilePage'
 
 describe('DoctorProfilePage · recordatorios', () => {
-  it('habla del correo a las pacientes, no de avisos en la campana, y lleva al centro de avisos', async () => {
+  it('habla del correo a los pacientes, no de avisos en la campana, y lleva al centro de avisos', async () => {
     const usuario = userEvent.setup()
     render(<DoctorProfilePage />)
 

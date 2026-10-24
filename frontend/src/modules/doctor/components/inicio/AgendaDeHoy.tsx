@@ -62,7 +62,7 @@ interface Props {
   onReintentar: () => void
   pestana: PestanaAgenda
   onPestana: (pestana: PestanaAgenda) => void
-  /** Nombre de la sucursal activa, para el vacío cuando la doctora tiene más de una. */
+  /** Nombre de la sucursal activa, para el vacío cuando el médico tiene más de una. */
   sucursalDelVacio: string | null
   /** Destino de «Ver agenda completa». */
   onVerAgenda: () => void

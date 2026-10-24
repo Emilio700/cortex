@@ -227,7 +227,7 @@ def test_una_cita_cancelada_libera_la_sala(client, db_session, escenario):
     cancelar = client.patch(
         f"{PREFIX}/appointments/{cita['id']}/status",
         headers=headers,
-        json={"status": "cancelada", "cancellation_reason": "La paciente reprogramó"},
+        json={"status": "cancelada", "cancellation_reason": "El paciente reprogramó"},
     )
     assert cancelar.status_code == 200, cancelar.text
 

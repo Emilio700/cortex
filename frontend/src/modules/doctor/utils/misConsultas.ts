@@ -134,7 +134,7 @@ export const accionPrincipal = (cita: Pick<Appointment, 'status' | 'scheduled_at
 export const iniciales = (nombre?: string, apellidos?: string): string =>
   `${(nombre ?? '').trim()[0] ?? ''}${(apellidos ?? '').trim()[0] ?? ''}`.toUpperCase() || '·'
 
-/** Seis tonos con texto AA; el mismo para la misma paciente en cualquier pantalla. */
+/** Seis tonos con texto AA; el mismo para la mismo paciente en cualquier pantalla. */
 export const TONOS_AVATAR = ['azul', 'morado', 'verde', 'ambar', 'rosa', 'cian'] as const
 export const tonoDeAvatar = (patientId: number): (typeof TONOS_AVATAR)[number] =>
   TONOS_AVATAR[Math.abs(patientId) % TONOS_AVATAR.length]

@@ -80,7 +80,7 @@ export const RECORRIDOS_ADMINISTRACION: Recorrido[] = [
     id: 'usuario-formulario',
     version: 1,
     titulo: 'Alta y edición de un usuario',
-    resumen: 'El tratamiento Dr./Dra., las doctoras que apoya recepción y el permiso de ver su corte.',
+    resumen: 'El tratamiento Dr./Dra., los médicos que apoya recepción y el permiso de ver su corte.',
     grupo: 'Administración',
     ruta: '/admin/usuarios',
     requiere: ['users.read'],
@@ -99,14 +99,14 @@ export const RECORRIDOS_ADMINISTRACION: Recorrido[] = [
         elemento: 'usuario-tratamiento',
         titulo: 'Tratamiento',
         texto:
-          '<b>Dra.</b>, <b>Dr.</b> o <b>Sin tratamiento</b>: es como aparece la doctora en la agenda, los cobros, las recetas y los avisos.',
+          '<b>Dra.</b>, <b>Dr.</b> o <b>Sin tratamiento</b>: es como aparece el médico en la agenda, los cobros, las recetas y los avisos.',
         lado: 'bottom',
       },
       {
         elemento: 'usuario-doctoras-que-apoya',
-        titulo: 'Doctoras que apoya',
+        titulo: 'Médicos que apoya',
         texto:
-          'Las doctoras con las que trabaja esta secretaria. Decide de quién puede ver el corte de caja si se lo concedes abajo.',
+          'Los médicos con las que trabaja esta secretaria. Decide de quién puede ver el corte de caja si se lo concedes abajo.',
         lado: 'top',
       },
       {
@@ -164,7 +164,7 @@ export const RECORRIDOS_ADMINISTRACION: Recorrido[] = [
     id: 'reportes',
     version: 1,
     titulo: 'Reportes',
-    resumen: 'Citas, pacientes atendidas y servicios más solicitados en un periodo.',
+    resumen: 'Citas, pacientes atendidos y servicios más solicitados en un periodo.',
     grupo: 'Administración',
     ruta: '/admin/reportes',
     requiere: ['reports.read'],
@@ -179,7 +179,7 @@ export const RECORRIDOS_ADMINISTRACION: Recorrido[] = [
       {
         elemento: 'reportes-indicadores',
         titulo: 'Los totales',
-        texto: 'Citas del periodo y pacientes atendidas (cada paciente cuenta una vez).',
+        texto: 'Citas del periodo y pacientes atendidos (cada paciente cuenta una vez).',
         lado: 'bottom',
       },
       {
@@ -209,7 +209,7 @@ export const RECORRIDOS_ADMINISTRACION: Recorrido[] = [
       {
         titulo: 'Para qué sirve',
         texto:
-          'Aquí queda registro de los accesos y cambios sensibles a la información de las pacientes: quién, cuándo y desde dónde. Sirve para aclarar cualquier duda sobre qué pasó.',
+          'Aquí queda registro de los accesos y cambios sensibles a la información de los pacientes: quién, cuándo y desde dónde. Sirve para aclarar cualquier duda sobre qué pasó.',
       },
       {
         elemento: 'auditoria-vistas',

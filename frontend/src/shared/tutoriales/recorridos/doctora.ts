@@ -1,9 +1,9 @@
 /**
- * Recorridos del trabajo clínico: el día de la doctora, la consulta y el expediente.
+ * Recorridos del trabajo clínico: el día del médico, la consulta y el expediente.
  *
- * Ninguno arranca solo: al abrir una consulta suele haber una paciente
+ * Ninguno arranca solo: al abrir una consulta suele haber un paciente
  * enfrente, y un recuadro que tapa la pantalla en ese momento estorba más de lo
- * que enseña. Se ven desde el centro de ayuda cuando la doctora lo pide.
+ * que enseña. Se ven desde el centro de ayuda cuando el médico lo pide.
  */
 import { Role } from '../../types'
 import type { Recorrido } from '../tipos'
@@ -13,7 +13,7 @@ const CLINICO = [Role.DOCTOR, Role.ADMIN, Role.MASTER]
 export const RECORRIDOS_DOCTORA: Recorrido[] = [
   {
     id: 'doctora-dashboard',
-    version: 6,
+    version: 7,
     titulo: 'Tu inicio',
     resumen:
       'Tu día de un vistazo: citas de hoy, quién espera en sala, resultados y pendientes, y las acciones de siempre.',
@@ -34,7 +34,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'doctora-criticos',
         titulo: 'Resultados críticos sin cerrar',
         texto:
-          'Si valoraste un resultado como <b>Crítico</b>, aparece aquí hasta que se cierra: al documentar que se lo comunicaste o entregaste a la paciente (en mano, llamada, WhatsApp o correo), o al revisarlo dentro de una consulta suya de hoy. Revisarlo desde la bandeja <b>no</b> lo cierra.',
+          'Si valoraste un resultado como <b>Crítico</b>, aparece aquí hasta que se cierra: al documentar que se lo comunicaste o entregaste al paciente (en mano, llamada, WhatsApp o correo), o al revisarlo dentro de una consulta suya de hoy. Revisarlo desde la bandeja <b>no</b> lo cierra.',
         lado: 'bottom',
       },
       {
@@ -48,7 +48,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'doctora-citas-hoy',
         titulo: 'Tu agenda de hoy',
         texto:
-          'En orden de hora, con la edad y, si está embarazada, sus semanas de gestación. Las pestañas filtran: <b>Por atender</b>, <b>En sala</b>, <b>En consulta</b> y <b>Atendidas</b>. Cada cita dice su estado en palabras y avisa si está en sala <b>Sin signos</b>.',
+          'En orden de hora y con la edad de cada paciente. Las pestañas filtran: <b>Por atender</b>, <b>En sala</b>, <b>En consulta</b> y <b>Atendidas</b>. Cada cita dice su estado en palabras y avisa si está en sala <b>Sin signos</b>.',
         lado: 'top',
       },
       {
@@ -62,7 +62,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'doctora-pendientes',
         titulo: 'Pendientes y seguimiento',
         texto:
-          'Resultados críticos y sin revisar, controles prenatales que nadie agendó y partos próximos, cada uno con su número. Cuando están en cero lo dicen («al día»); si no se pudieron consultar, también, con <b>Reintentar</b>.',
+          'Resultados críticos y sin revisar, y las cirugías programadas de las próximas dos semanas, cada uno con su número. Cuando están en cero lo dicen («al día»); si no se pudieron consultar, también, con <b>Reintentar</b>.',
         lado: 'left',
       },
       {
@@ -118,7 +118,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
       },
       {
         elemento: 'consultas-buscar',
-        titulo: 'Busca a la paciente',
+        titulo: 'Busca al paciente',
         texto: 'Escribe parte del nombre, su <b>número de expediente</b> o su <b>teléfono</b>. Busca en todo el periodo, no solo en la página que ves.',
         lado: 'bottom',
       },
@@ -131,14 +131,14 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
       {
         elemento: 'consultas-lista',
         titulo: 'Tus consultas',
-        texto: 'Cada renglón trae fecha y hora, la paciente con su expediente y teléfono, el estado y el motivo en una línea (<b>ver más</b> lo abre). La carpeta abre su expediente y el menú <b>⋯</b> lleva al día en la agenda.',
+        texto: 'Cada renglón trae fecha y hora, el paciente con su expediente y teléfono, el estado y el motivo en una línea (<b>ver más</b> lo abre). La carpeta abre su expediente y el menú <b>⋯</b> lleva al día en la agenda.',
         lado: 'top',
       },
       {
         elemento: 'agenda-insignia-express',
         titulo: 'Consultas express',
         texto:
-          '<b>«Express · registrada al cobrar»</b> quiere decir que la paciente llegó sin cita y la consulta se registró al cobrarla, en recepción o tú misma desde <b>Cobros → Registrar pago → Cobro suelto</b>. Cuenta como una consulta atendida más.',
+          '<b>«Express · registrada al cobrar»</b> quiere decir que el paciente llegó sin cita y la consulta se registró al cobrarla, en recepción o tú misma desde <b>Cobros → Registrar pago → Cobro suelto</b>. Cuenta como una consulta atendida más.',
         lado: 'top',
       },
       {
@@ -158,7 +158,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
   },
   {
     id: 'doctora-consulta',
-    version: 14,
+    version: 15,
     titulo: 'La consulta, paso a paso',
     resumen: 'Signos vitales, nota, receta, plan, certificado y cómo finalizar sin perder nada.',
     grupo: 'Consulta médica',
@@ -166,31 +166,31 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
     requiere: ['doctor.appointments.read'],
     roles: CLINICO,
     comoLlegar:
-      'Se ve dentro de una consulta. Ábrela desde tu <b>Inicio</b> o desde <b>Mis consultas</b>. Para practicar sin tocar nada, usa <b>Ver consulta</b> en una ya finalizada: se abre en modo lectura. <b>Iniciar consulta</b>, en cambio, sí empieza la atención de esa paciente: si la cita es de hoy, pasa a <b>En consulta</b> en la agenda de recepción. Úsalo sólo cuando la vayas a atender.',
+      'Se ve dentro de una consulta. Ábrela desde tu <b>Inicio</b> o desde <b>Mis consultas</b>. Para practicar sin tocar nada, usa <b>Ver consulta</b> en una ya finalizada: se abre en modo lectura. <b>Iniciar consulta</b>, en cambio, sí empieza la atención de ese paciente: si la cita es de hoy, pasa a <b>En consulta</b> en la agenda de recepción. Úsalo sólo cuando la vayas a atender.',
     irA: { ruta: '/doctor/appointments', nombre: 'Mis consultas' },
     pasos: [
       {
         titulo: 'La consulta en una sola pantalla',
         texto:
-          'Todo lo de esta paciente está aquí, de arriba hacia abajo en el orden en que se atiende. Este recorrido sólo señala: <b>no guarda, no cambia ni finaliza nada</b>.',
+          'Todo lo de este paciente está aquí, de arriba hacia abajo en el orden en que se atiende. Este recorrido sólo señala: <b>no guarda, no cambia ni finaliza nada</b>.',
       },
       {
         elemento: 'consulta-estado',
         titulo: 'En consulta',
         texto:
-          'Al abrir la consulta de hoy, la cita pasa sola a <b>En consulta</b>: recepción y la agenda saben que la paciente está contigo. Si sale sin que termines (a un estudio, a que le tomen los signos), usa <b>Regresar a sala</b>; si la abriste antes de que llegara, <b>Salir sin atender</b> la deja como estaba. Al finalizar queda <b>Atendida</b>.',
+          'Al abrir la consulta de hoy, la cita pasa sola a <b>En consulta</b>: recepción y la agenda saben que el paciente está contigo. Si sale sin que termines (a un estudio, a que le tomen los signos), usa <b>Regresar a sala</b>; si la abriste antes de que llegara, <b>Salir sin atender</b> la deja como estaba. Al finalizar queda <b>Atendida</b>.',
         lado: 'left',
       },
       {
         elemento: 'consulta-pestanas',
-        titulo: 'Pestañas de la paciente',
+        titulo: 'Pestañas del paciente',
         texto:
-          '<b>Consulta</b> es la atención de hoy. <b>Expediente</b> es el mismo expediente de la paciente, con sus secciones (Resumen, Consultas, Estudios, Documentos, Imágenes, Embarazo…), y se consulta sin salir: lo que llevas escrito en la nota no se pierde al cambiar de pestaña. En su sección <b>Estudios</b> está la gráfica de cómo han ido las valoraciones de sus resultados.',
+          '<b>Consulta</b> es la atención de hoy. <b>Expediente</b> es el mismo expediente del paciente, con sus secciones (Resumen, Consultas, Estudios, Documentos, Imágenes, Consentimientos…), y se consulta sin salir: lo que llevas escrito en la nota no se pierde al cambiar de pestaña. En su sección <b>Estudios</b> está la gráfica de cómo han ido las valoraciones de sus resultados.',
         lado: 'bottom',
       },
       {
         elemento: 'consulta-paciente',
-        titulo: 'La paciente',
+        titulo: 'El paciente',
         texto: 'Nombre, edad, teléfono y, si tiene, sus <b>alergias</b> resaltadas en amarillo. Si a su ficha le falta la fecha de nacimiento, abajo aparece una línea gris, «Completa sus datos»: se llena con el lápiz junto a su edad, o se oculta con la ×. No detiene la consulta.',
         lado: 'bottom',
       },
@@ -212,7 +212,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'consulta-signos-boton',
         titulo: 'Registrar o corregir los signos',
         texto:
-          'Si no hubo quien pasara a la paciente por triage, tómalos tú con <b>Registrar signos vitales</b>. Si hay un dato mal capturado, <b>Corregir signos vitales</b>. Es el mismo formulario que usa recepción.',
+          'Si no hubo quien pasara al paciente por triage, tómalos tú con <b>Registrar signos vitales</b>. Si hay un dato mal capturado, <b>Corregir signos vitales</b>. Es el mismo formulario que usa recepción.',
         lado: 'left',
       },
       {
@@ -233,7 +233,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'consulta-seccion-plan-clinico',
         titulo: '3. Plan clínico',
         texto:
-          'Órdenes de estudios, vacunas y seguimiento de medicamentos. Viene cerrado para no alargar la pantalla: ábrelo con el interruptor <b>Mostrar</b>. Adentro, <b>Estudios de esta consulta</b> enseña todos los que pediste hoy, agrupados por destino (laboratorio, imagen, otros), y el número del título es el de la lista. <b>Nueva orden</b> abre el formulario: agrega varios estudios con <b>Agregar otro estudio</b> o precárgalos con <b>Usar una plantilla</b>; cada uno puede llevar su propia prioridad (si no, toma la de la orden). Al crearla sale un solo botón, <b>Imprimir orden</b>. <b>Imprimir todo</b> junta en un papel los estudios de la consulta; antes de imprimir ves el PDF y eliges <b>Separado por destino</b> o <b>Todo en una hoja</b>. En cada estudio, <b>Ver resultado</b> abre sus archivos y <b>Anexar resultado</b> sube el que te mandó la paciente; en el menú <b>⋯</b> están <b>Reimprimir solo este estudio</b> y cancelar. <b>Vacunas y medicamentos</b> va abajo, en su propio bloque plegable.',
+          'Órdenes de estudios, vacunas y seguimiento de medicamentos. Viene cerrado para no alargar la pantalla: ábrelo con el interruptor <b>Mostrar</b>. Adentro, <b>Estudios de esta consulta</b> enseña todos los que pediste hoy, agrupados por destino (laboratorio, imagen, otros), y el número del título es el de la lista. <b>Nueva orden</b> abre el formulario: agrega varios estudios con <b>Agregar otro estudio</b> o precárgalos con <b>Usar una plantilla</b>; cada uno puede llevar su propia prioridad (si no, toma la de la orden). Al crearla sale un solo botón, <b>Imprimir orden</b>. <b>Imprimir todo</b> junta en un papel los estudios de la consulta; antes de imprimir ves el PDF y eliges <b>Separado por destino</b> o <b>Todo en una hoja</b>. En cada estudio, <b>Ver resultado</b> abre sus archivos y <b>Anexar resultado</b> sube el que te mandó el paciente; en el menú <b>⋯</b> están <b>Reimprimir solo este estudio</b> y cancelar. <b>Vacunas y medicamentos</b> va abajo, en su propio bloque plegable.',
         lado: 'top',
       },
       {
@@ -241,7 +241,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'consulta-imprimir-todo',
         titulo: 'Imprimir todo',
         texto:
-          'Un papel con todos los estudios de esta consulta. Primero ves el PDF real: ahí eliges <b>Separado por destino</b> (una hoja para cada lugar al que va la paciente) o <b>Todo en una hoja</b>, y desde ahí imprimes o descargas. En el celular, en vez de <b>Imprimir</b> sale <b>Abrir / Compartir</b>, que lo manda a la impresora o al WhatsApp del teléfono.',
+          'Un papel con todos los estudios de esta consulta. Primero ves el PDF real: ahí eliges <b>Separado por destino</b> (una hoja para cada lugar al que va el paciente) o <b>Todo en una hoja</b>, y desde ahí imprimes o descargas. En el celular, en vez de <b>Imprimir</b> sale <b>Abrir / Compartir</b>, que lo manda a la impresora o al WhatsApp del teléfono.',
         lado: 'bottom',
       },
       {
@@ -250,16 +250,16 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
           'consulta-revisar-resultado',
           'consulta-ver-resultado',
         ],
-        titulo: 'Revisar el resultado con la paciente',
+        titulo: 'Revisar el resultado con el paciente',
         texto:
-          'Arriba, <b>Resultados pendientes de la paciente</b> junta los resultados de consultas anteriores que siguen sin revisar o con un crítico abierto; <b>Revisar</b> los abre con la consulta de hoy. En los estudios de esta consulta, <b>Revisar resultado</b> abre el archivo y el formulario. Revisarlo aquí, con la paciente y en la consulta de hoy, cierra la incidencia si era <b>Crítico</b>. <b>Ver resultado</b> abre el PDF y las fotos en un carrusel. En el menú <b>⋯</b> puedes anexar un archivo (también a una ya revisada), registrar una nota rápida sin archivo o documentar que se lo comunicaste.',
+          'Arriba, <b>Resultados pendientes del paciente</b> junta los resultados de consultas anteriores que siguen sin revisar o con un crítico abierto; <b>Revisar</b> los abre con la consulta de hoy. En los estudios de esta consulta, <b>Revisar resultado</b> abre el archivo y el formulario. Revisarlo aquí, con el paciente y en la consulta de hoy, cierra la incidencia si era <b>Crítico</b>. <b>Ver resultado</b> abre el PDF y las fotos en un carrusel. En el menú <b>⋯</b> puedes anexar un archivo (también a una ya revisada), registrar una nota rápida sin archivo o documentar que se lo comunicaste.',
         lado: 'left',
       },
       {
         elemento: 'consulta-seccion-consentimiento-informado',
         titulo: '4. Consentimiento informado',
         texto:
-          'Para procedimientos: lo preparas aquí y la paciente lo revisa y firma en la misma pantalla.',
+          'Para procedimientos: lo preparas aquí y el paciente lo revisa y firma en la misma pantalla.',
         lado: 'top',
       },
       {
@@ -299,13 +299,13 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
     requiere: ['doctor.appointments.read'],
     roles: CLINICO,
     comoLlegar:
-      'Se ve dentro de una consulta en curso, que es donde está el formulario de la nota (en una ya finalizada sólo se lee). Ábrela desde tu <b>Inicio</b> o <b>Mis consultas</b> cuando vayas a atender a la paciente.',
+      'Se ve dentro de una consulta en curso, que es donde está el formulario de la nota (en una ya finalizada sólo se lee). Ábrela desde tu <b>Inicio</b> o <b>Mis consultas</b> cuando vayas a atender al paciente.',
     irA: { ruta: '/doctor/appointments', nombre: 'Mis consultas' },
     pasos: [
       {
         elemento: 'nota-sintomas',
         titulo: 'S · Síntomas',
-        texto: 'Lo que refiere la paciente: qué siente, desde cuándo y cómo.',
+        texto: 'Lo que refiere el paciente: qué siente, desde cuándo y cómo.',
         lado: 'top',
       },
       {
@@ -345,14 +345,14 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
     requiere: ['doctor.appointments.read'],
     roles: CLINICO,
     comoLlegar:
-      'Se ve dentro de una consulta en curso, que es donde está el formulario de la receta (en una ya finalizada sólo se lee). Ábrela desde tu <b>Inicio</b> o <b>Mis consultas</b> cuando vayas a atender a la paciente.',
+      'Se ve dentro de una consulta en curso, que es donde está el formulario de la receta (en una ya finalizada sólo se lee). Ábrela desde tu <b>Inicio</b> o <b>Mis consultas</b> cuando vayas a atender al paciente.',
     irA: { ruta: '/doctor/appointments', nombre: 'Mis consultas' },
     pasos: [
       {
         elemento: 'receta-alergias',
         titulo: 'Primero, las alergias',
         texto:
-          'Arriba de la receta se repiten las alergias registradas de la paciente. Si dice que <b>no se pudieron leer</b>, no des por hecho que no tiene: pulsa <b>Reintentar</b> o pregúntale antes de recetar. «Sin alergias registradas» quiere decir que nadie las capturó, no que no tenga.',
+          'Arriba de la receta se repiten las alergias registradas del paciente. Si dice que <b>no se pudieron leer</b>, no des por hecho que no tiene: pulsa <b>Reintentar</b> o pregúntale antes de recetar. «Sin alergias registradas» quiere decir que nadie las capturó, no que no tenga.',
         lado: 'bottom',
       },
       {
@@ -386,7 +386,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'receta-motivo',
         titulo: '¿Imprimir el motivo de la consulta?',
         texto:
-          'Viene apagado a propósito: la receta viaja a la farmacia y cualquiera la puede leer. Enciéndelo sólo cuando convenga para esta paciente; propone lo que dijo en el triage y lo puedes corregir.',
+          'Viene apagado a propósito: la receta viaja a la farmacia y cualquiera la puede leer. Enciéndelo sólo cuando convenga para este paciente; propone lo que dijo en el triage y lo puedes corregir.',
         lado: 'top',
       },
       {
@@ -438,22 +438,22 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
   },
   {
     id: 'doctora-expediente',
-    version: 7,
-    titulo: 'El expediente de una paciente',
-    resumen: 'Todo lo de una paciente en un solo lugar: resumen, consultas, estudios, documentos, imágenes y embarazo.',
+    version: 8,
+    titulo: 'El expediente de un paciente',
+    resumen: 'Todo lo de un paciente en un solo lugar: resumen, consultas, estudios, documentos, imágenes y consentimientos.',
     grupo: 'Consulta médica',
     ruta: '/pacientes/:patientId/expediente',
     requiere: ['patients.read'],
     roles: [Role.DOCTOR, Role.SECRETARIA, Role.ADMIN, Role.MASTER],
     comoLlegar:
-      'Se ve en el expediente de una paciente. En <b>Pacientes</b> (o con el buscador de arriba), busca a la paciente y abre su <b>Expediente</b>.',
+      'Se ve en el expediente de un paciente. En <b>Pacientes</b> (o con el buscador de arriba), busca al paciente y abre su <b>Expediente</b>.',
     irA: { ruta: '/secretaria/pacientes', nombre: 'Pacientes' },
     pasos: [
       {
         elemento: 'expediente-encabezado',
         titulo: 'Quién es',
         texto:
-          'Su nombre, edad, número de expediente y teléfono, y sus <b>alergias</b>: «sin registro» quiere decir que nadie las capturó, no que no tenga. Quien lleva lo clínico ve además el embarazo con sus semanas y los críticos o atrasados; tócalos para ir a sus estudios. Un punto junto al nombre avisa que a su ficha le falta la fecha de nacimiento.',
+          'Su nombre, edad, número de expediente y teléfono, y sus <b>alergias</b>: «sin registro» quiere decir que nadie las capturó, no que no tenga. Quien lleva lo clínico ve además los resultados críticos o atrasados; tócalos para ir a sus estudios. Un punto junto al nombre avisa que a su ficha le falta la fecha de nacimiento.',
         lado: 'bottom',
       },
       {
@@ -464,18 +464,18 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         lado: 'left',
       },
       {
-        // Solo la doctora lo ve; para los demás este paso se salta.
+        // Solo el médico lo ve; para los demás este paso se salta.
         elemento: 'expediente-resumen',
         titulo: 'Resumen clínico en PDF',
         texto:
-          'Para referir a la paciente o entregarlo a una aseguradora. Eliges qué incluir, lo revisas en la vista previa y solo entonces se emite con su folio. Lo que no esté capturado sale como «Sin registro».',
+          'Para referir al paciente o entregarlo a una aseguradora. Eliges qué incluir, lo revisas en la vista previa y solo entonces se emite con su folio. Lo que no esté capturado sale como «Sin registro».',
         lado: 'left',
       },
       {
         elemento: 'expediente-pestanas',
         titulo: 'Sus secciones',
         texto:
-          '<b>Resumen</b>, <b>Consultas</b> (cada cita con su nota, receta y certificado), <b>Estudios</b>, <b>Documentos</b>, <b>Imágenes</b>, <b>Embarazo</b>, <b>Consentimientos</b> y <b>Equipo</b>. Cada quien ve las que le tocan: recepción ve la ficha, las citas, los documentos de referencia y si sus estudios ya tienen resultado, sin lo clínico. Cada sección se carga al abrirla, y el expediente recuerda cuál dejaste abierta.',
+          '<b>Resumen</b>, <b>Consultas</b> (cada cita con su nota, receta y certificado), <b>Estudios</b>, <b>Documentos</b>, <b>Imágenes</b>, <b>Consentimientos</b> y <b>Equipo</b>. Cada quien ve las que le tocan: recepción ve la ficha, las citas, los documentos de referencia y si sus estudios ya tienen resultado, sin lo clínico. Cada sección se carga al abrirla, y el expediente recuerda cuál dejaste abierta.',
         lado: 'bottom',
       },
       {
@@ -494,7 +494,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
       {
         elemento: 'expediente-episodios',
         titulo: 'Episodios y seguimiento',
-        texto: 'Un episodio agrupa un motivo de seguimiento (un embarazo, un tratamiento) a lo largo de varias consultas.',
+        texto: 'Un episodio agrupa un motivo de seguimiento (una hernia de disco, un tumor en vigilancia) a lo largo de varias consultas.',
         lado: 'top',
       },
     ],
@@ -502,20 +502,20 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
   {
     id: 'historial-paciente',
     version: 3,
-    titulo: 'Las consultas de una paciente',
+    titulo: 'Las consultas de un paciente',
     resumen: 'Sus citas anteriores y lo que se hizo en cada una.',
     grupo: 'Consulta médica',
     ruta: '/pacientes/:patientId/expediente',
     requiere: ['patients.read'],
     roles: [Role.DOCTOR, Role.SECRETARIA, Role.ADMIN, Role.MASTER],
     comoLlegar:
-      'En el expediente de la paciente, abre la pestaña <b>Consultas</b>. Desde <b>Pacientes</b> o el buscador de arriba se abre su expediente.',
+      'En el expediente del paciente, abre la pestaña <b>Consultas</b>. Desde <b>Pacientes</b> o el buscador de arriba se abre su expediente.',
     irA: { ruta: '/secretaria/pacientes', nombre: 'Pacientes' },
     pasos: [
       {
         elemento: 'historial-resumen',
         titulo: 'Resumen',
-        texto: 'Datos de la paciente y cuántas citas lleva.',
+        texto: 'Datos del paciente y cuántas citas lleva.',
         lado: 'bottom',
       },
       {
@@ -554,7 +554,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'perfil-datos',
         titulo: 'Datos profesionales',
         texto:
-          'Especialidad, cédula profesional y de especialidad, R.G.P., SSA y consejo, y cómo te contacta la paciente: teléfono del consultorio, <b>celular/WhatsApp</b> y <b>correo de contacto</b>. En la receta, el celular y el correo salen solo si los enciendes; en la orden salen de fábrica (puedes apagarlos en <b>Mi orden de estudio</b>). No olvides <b>Guardar cambios</b> al final del bloque.',
+          'Especialidad, cédula profesional y de especialidad, R.G.P., SSA y consejo, y cómo te contacta el paciente: teléfono del consultorio, <b>celular/WhatsApp</b> y <b>correo de contacto</b>. En la receta, el celular y el correo salen solo si los enciendes; en la orden salen de fábrica (puedes apagarlos en <b>Mi orden de estudio</b>). No olvides <b>Guardar cambios</b> al final del bloque.',
         lado: 'right',
       },
       {
@@ -629,14 +629,14 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'perfil-orden-vista-previa',
         titulo: 'Vista previa de la orden',
         texto:
-          'Es la orden real con una paciente de ejemplo, con lo que tienes en pantalla aunque no lo hayas guardado. Nada cambia hasta que pulsas <b>Guardar configuración de la orden</b>.',
+          'Es la orden real con un paciente de ejemplo, con lo que tienes en pantalla aunque no lo hayas guardado. Nada cambia hasta que pulsas <b>Guardar configuración de la orden</b>.',
         lado: 'left',
       },
       {
         elemento: 'perfil-recordatorios',
         titulo: 'Recordatorios',
         texto:
-          'Con cuánta anticipación le llega a la paciente el <b>correo</b> que le recuerda su cita. El aviso para ti, una hora antes, se activa en la campana, en <b>Preferencias</b>.',
+          'Con cuánta anticipación le llega al paciente el <b>correo</b> que le recuerda su cita. El aviso para ti, una hora antes, se activa en la campana, en <b>Preferencias</b>.',
         lado: 'right',
       },
       {
@@ -674,7 +674,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
       {
         elemento: 'bandeja-buscar',
         titulo: 'Buscar',
-        texto: 'Escribe el nombre de la paciente, el estudio o el número de orden.',
+        texto: 'Escribe el nombre del paciente, el estudio o el número de orden.',
         lado: 'bottom',
       },
       {
@@ -688,7 +688,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'bandeja-paciente',
         titulo: 'Una tarjeta por paciente',
         texto:
-          'Cerrada es un solo renglón: su nombre, cuántos estudios tiene, cuántos siguen pendientes y cuántos esperan tu revisión. Tócala para abrirla o cerrarla. Una paciente con un resultado <b>Crítico</b> sube al principio de la bandeja con su marca en rojo y se abre sola.',
+          'Cerrada es un solo renglón: su nombre, cuántos estudios tiene, cuántos siguen pendientes y cuántos esperan tu revisión. Tócala para abrirla o cerrarla. Un paciente con un resultado <b>Crítico</b> sube al principio de la bandeja con su marca en rojo y se abre sola.',
         lado: 'top',
       },
       {
@@ -729,14 +729,14 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'orden-mas-acciones',
         titulo: 'Más acciones',
         texto:
-          'En el menú <b>⋯</b>: <b>Ver resultado</b>, <b>Anexar archivo</b> (el estudio que la paciente te mandó por WhatsApp o correo, aunque ya esté revisada), <b>Registrar seguimiento</b> (por qué sigue sin resultado y cuándo volver a revisarlo), <b>Imprimir solo este estudio</b>, y cancelar o rechazar la orden con su motivo. Un estudio <b>Atrasado</b> lo dice en su fila, con los días que lleva sin resultado.',
+          'En el menú <b>⋯</b>: <b>Ver resultado</b>, <b>Anexar archivo</b> (el estudio que el paciente te mandó por WhatsApp o correo, aunque ya esté revisada), <b>Registrar seguimiento</b> (por qué sigue sin resultado y cuándo volver a revisarlo), <b>Imprimir solo este estudio</b>, y cancelar o rechazar la orden con su motivo. Un estudio <b>Atrasado</b> lo dice en su fila, con los días que lleva sin resultado.',
         lado: 'left',
       },
       {
         elemento: 'bandeja-imprimir-paciente',
         titulo: 'Imprimir sus pendientes',
         texto:
-          '<b>Imprimir pendientes de la paciente</b> junta en un papel sólo los estudios que siguen sin resultado; lo que ya tiene resultado no se vuelve a mandar. Antes de imprimir ves el PDF y eliges <b>Separado por destino</b> o <b>Todo en una hoja</b>. Un estudio suelto se imprime desde el menú <b>⋯</b>.',
+          '<b>Imprimir pendientes del paciente</b> junta en un papel sólo los estudios que siguen sin resultado; lo que ya tiene resultado no se vuelve a mandar. Antes de imprimir ves el PDF y eliges <b>Separado por destino</b> o <b>Todo en una hoja</b>. Un estudio suelto se imprime desde el menú <b>⋯</b>.',
         lado: 'top',
       },
       {
@@ -770,14 +770,14 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'resultado-anexar',
         titulo: 'Anexar un archivo',
         texto:
-          'Si la paciente te mandó el estudio por WhatsApp o correo, súbelo aquí: PDF o fotos, uno o varios.',
+          'Si el paciente te mandó el estudio por WhatsApp o correo, súbelo aquí: PDF o fotos, uno o varios.',
         lado: 'top',
       },
       {
         elemento: 'resultado-incidencia',
         titulo: 'Cuándo se cierra un crítico',
         texto:
-          'Un resultado valorado <b>Crítico</b> queda abierto en tu inicio hasta que documentes que se lo comunicaste o entregaste a la paciente, o lo revises dentro de una consulta suya de hoy. Desde la bandeja, <b>Marcar revisada</b> no lo cierra. La revisión siempre se guarda; al guardar, el aviso te dice si la incidencia quedó cerrada o sigue abierta.',
+          'Un resultado valorado <b>Crítico</b> queda abierto en tu inicio hasta que documentes que se lo comunicaste o entregaste al paciente, o lo revises dentro de una consulta suya de hoy. Desde la bandeja, <b>Marcar revisada</b> no lo cierra. La revisión siempre se guarda; al guardar, el aviso te dice si la incidencia quedó cerrada o sigue abierta.',
         lado: 'left',
       },
       {
@@ -791,14 +791,14 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'resultado-anular',
         titulo: 'Un archivo equivocado',
         texto:
-          'Si el archivo es de otra paciente o de otro estudio, pulsa <b>Anular resultado…</b> debajo de ese resultado y escribe el motivo. El resultado y su archivo dejan de contar en la bandeja y en la gráfica, pero no se borran. El aviso te dice cómo quedó la orden y si la incidencia crítica se cerró o sigue abierta. Después sube el correcto. Solo lo puede hacer quien pidió el estudio o la administración.',
+          'Si el archivo es de otro paciente o de otro estudio, pulsa <b>Anular resultado…</b> debajo de ese resultado y escribe el motivo. El resultado y su archivo dejan de contar en la bandeja y en la gráfica, pero no se borran. El aviso te dice cómo quedó la orden y si la incidencia crítica se cerró o sigue abierta. Después sube el correcto. Solo lo puede hacer quien pidió el estudio o la administración.',
         lado: 'top',
       },
       {
         elemento: 'resultado-guardar',
         titulo: 'Guardar',
         texto:
-          'Cada resultado lleva su <b>valoración</b>, opcional: Excelente, Bien, Regular, Malo o Crítico; también puedes cambiar la de un resultado anterior. Sin archivo, basta una nota rápida. <b>Marcar revisada</b> cierra la revisión y <b>Documentar comunicación</b> deja constancia de que la paciente ya lo sabe.',
+          'Cada resultado lleva su <b>valoración</b>, opcional: Excelente, Bien, Regular, Malo o Crítico; también puedes cambiar la de un resultado anterior. Sin archivo, basta una nota rápida. <b>Marcar revisada</b> cierra la revisión y <b>Documentar comunicación</b> deja constancia de que el paciente ya lo sabe.',
         lado: 'top',
       },
     ],
@@ -807,7 +807,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
     id: 'resultado-anexar',
     version: 1,
     titulo: 'Anexar el resultado de un estudio',
-    resumen: 'Subir el PDF o las fotos que trajo o mandó la paciente.',
+    resumen: 'Subir el PDF o las fotos que trajo o mandó el paciente.',
     grupo: 'Consulta médica',
     requiere: ['clinical_tracking.attach_result'],
     roles: [...CLINICO, Role.SECRETARIA],
@@ -839,19 +839,19 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
     grupo: 'Consulta médica',
     ruta: '/pacientes/:patientId/expediente',
     // El permiso de la pantalla (el expediente); el botón además pide
-    // soap_notes.read, y solo lo ve la doctora.
+    // soap_notes.read, y solo lo ve el médico.
     requiere: ['patients.read'],
     roles: [Role.DOCTOR],
     contexto: 'resumen-formulario',
     comoLlegar:
-      'En el expediente de una paciente, botón <b>Resumen clínico</b> arriba a la derecha. Abrirlo no emite nada: el folio solo se asigna con <b>Emitir con folio</b>.',
+      'En el expediente de un paciente, botón <b>Resumen clínico</b> arriba a la derecha. Abrirlo no emite nada: el folio solo se asigna con <b>Emitir con folio</b>.',
     irA: { ruta: '/secretaria/pacientes', nombre: 'Pacientes' },
     pasos: [
       {
         elemento: 'resumen-secciones',
         titulo: 'Qué incluir',
         texto:
-          'Marca las secciones y cuántas consultas. Los datos de la paciente, la firma, la fecha y el folio van siempre. La medicación sale como <b>Última receta</b>: GEMS no sabe cuándo termina un tratamiento.',
+          'Marca las secciones y cuántas consultas. Los datos del paciente, la firma, la fecha y el folio van siempre. La medicación sale como <b>Última receta</b>: GEMS no sabe cuándo termina un tratamiento.',
         lado: 'bottom',
       },
       {
@@ -885,7 +885,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'seguimiento-motivo',
         titulo: 'Por qué sigue sin resultado',
         texto:
-          'La paciente no se lo ha hecho, está en proceso en el laboratorio, se reagendó, no se localiza a la paciente u otro. Con <b>Otro</b>, escribe en la nota qué pasó.',
+          'El paciente no se lo ha hecho, está en proceso en el laboratorio, se reagendó, no se localiza al paciente u otro. Con <b>Otro</b>, escribe en la nota qué pasó.',
         lado: 'bottom',
       },
       {
@@ -907,27 +907,27 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
   {
     id: 'subir-archivo',
     version: 1,
-    titulo: 'Subir un archivo de la paciente',
+    titulo: 'Subir un archivo del paciente',
     resumen: 'Un resultado de su orden, un estudio de otro lugar, una referencia u otro archivo, desde un solo botón.',
     grupo: 'Consulta médica',
     requiere: ['documents.upload', 'clinical_tracking.attach_result'],
     roles: [...CLINICO, Role.SECRETARIA],
     contexto: 'subir-archivo-formulario',
     comoLlegar:
-      'En el expediente de la paciente, pestaña <b>Estudios</b> o <b>Documentos</b>, botón <b>Subir archivo</b>; dentro, <b>¿Cómo se llena?</b>. Abrirlo no sube nada.',
+      'En el expediente del paciente, pestaña <b>Estudios</b> o <b>Documentos</b>, botón <b>Subir archivo</b>; dentro, <b>¿Cómo se llena?</b>. Abrirlo no sube nada.',
     pasos: [
       {
         elemento: 'subir-archivo-pregunta',
         titulo: 'La pregunta clave',
         texto:
-          '<b>¿Es el resultado de un estudio que se le pidió?</b> Si sí, eliges su orden pendiente y el archivo se adjunta a ella: a la doctora le llega como resultado por revisar.',
+          '<b>¿Es el resultado de un estudio que se le pidió?</b> Si sí, eliges su orden pendiente y el archivo se adjunta a ella: al médico le llega como resultado por revisar.',
         lado: 'bottom',
       },
       {
         elemento: 'subir-archivo-que',
         titulo: 'Si no es de una orden',
         texto:
-          '<b>Estudio de otro lugar</b> va a Estudios (del catálogo o escrito a mano) y se revisa igual que uno propio. Una <b>referencia de otro médico</b> va a Documentos. <b>Otro archivo</b> lo guarda solo la doctora.',
+          '<b>Estudio de otro lugar</b> va a Estudios (del catálogo o escrito a mano) y se revisa igual que uno propio. Una <b>referencia de otro médico</b> va a Documentos. <b>Otro archivo</b> lo guarda solo el médico.',
         lado: 'bottom',
       },
       {

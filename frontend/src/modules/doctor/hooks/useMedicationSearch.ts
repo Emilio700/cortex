@@ -27,7 +27,7 @@ export function useMedicationSearch() {
   const [results, setResults] = useState<MedicationSearchItem[]>([])
   const [loading, setLoading] = useState(false)
   const [searching, setSearching] = useState(false)
-  // Un fallo se veía como «sin resultados» (plan 29, T-1): la doctora creía que
+  // Un fallo se veía como «sin resultados» (plan 29, T-1): el médico creía que
   // el medicamento no estaba en el catálogo.
   const [error, setError] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)

@@ -1,8 +1,8 @@
 /**
- * Completar el expediente de la paciente SIN salir de la consulta.
+ * Completar el expediente del paciente SIN salir de la consulta.
  *
  * Hasta ahora, para capturar una fecha de nacimiento o un teléfono que faltaba,
- * la doctora tenía que irse al perfil de la paciente, editarlo y volver: al
+ * el médico tenía que irse al perfil del paciente, editarlo y volver: al
  * salir de la pestaña perdía la nota que llevaba escrita. Es exactamente la
  * pérdida de trabajo que ya nos costó caro, sólo que por otra puerta.
  *
@@ -11,13 +11,13 @@
  *
  * Qué se puede tocar aquí y qué no:
  *
- * - SÍ: lo que la doctora levanta en el interrogatorio (contacto, alergias,
+ * - SÍ: lo que el médico levanta en el interrogatorio (contacto, alergias,
  *   tipo de sangre, antecedentes y la historia gineco-obstétrica).
  * - NO el nombre ni los apellidos: es identidad, se corrige en recepción con
  *   una identificación en la mano.
  * - NO la dirección ni el doctor dueño: son administrativos.
  * - NO `patient_type`. No es un dato, es un interruptor que nadie apaga: el
- *   97% de las pacientes marcadas como obstétricas no tienen ningún embarazo
+ *   97% de los pacientes marcadas como obstétricas no tienen ningún embarazo
  *   activo. Ya no se edita en ninguna pantalla.
  * - NO la FUR ni la fecha probable de parto: son del embarazo, no del
  *   expediente. Se capturan en el control prenatal, junto con el método de
@@ -59,8 +59,8 @@ import { enMayusculas } from '../../../shared/utils/mayusculas'
 import { CORREO, esCorreo } from '../../../shared/utils/validacion'
 import type { Patient } from '../../secretaria/types'
 
-/** Etiqueta del registro de cambios sin guardar, tal como la lee la doctora. */
-export const ETIQUETA_CAMBIOS = 'Datos de la paciente'
+/** Etiqueta del registro de cambios sin guardar, tal como la lee el médico. */
+export const ETIQUETA_CAMBIOS = 'Datos del paciente'
 
 /** Lo único que este formulario puede escribir. La lista es la salvaguarda. */
 const CAMPOS = [
@@ -72,36 +72,22 @@ const CAMPOS = [
     'blood_type',
     'personal_history',
     'family_history',
-    'gynecological_history',
-    'menarca_age',
-    'menstrual_rhythm',
-    'ivsa_age',
-    'birth_control',
-    'gestas',
-    'paras',
-    'cesareas',
-    'abortos',
+    'dominant_hand',
+    'neurological_history',
+    'implanted_devices',
+    'anticoagulants',
 ] as const
 
 type CampoEditable = (typeof CAMPOS)[number]
 
 /** Van como número o como null; nunca como cadena. */
-const CAMPOS_NUMERICOS: CampoEditable[] = [
-    'menarca_age',
-    'ivsa_age',
-    'gestas',
-    'paras',
-    'cesareas',
-    'abortos',
-]
+// Hoy no queda ninguno: los de G/P/C/A eran de GEMS. La conversión a número
+// se conserva para el siguiente campo numérico que se agregue.
+const CAMPOS_NUMERICOS: CampoEditable[] = []
 
 type Formulario = Record<CampoEditable, string>
 
 const TIPOS_DE_SANGRE = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
-
-/** Número guardado a texto de formulario, distinguiendo el 0 del "sin dato". */
-const numeroATexto = (valor?: number | null): string =>
-    valor === null || valor === undefined ? '' : String(valor)
 
 /**
  * Estado inicial del formulario a partir del expediente guardado.
@@ -124,21 +110,16 @@ const aFormulario = (paciente: Patient): Formulario => ({
     blood_type: paciente.blood_type ?? '',
     personal_history: paciente.personal_history ?? '',
     family_history: paciente.family_history ?? '',
-    gynecological_history: paciente.gynecological_history ?? '',
-    menarca_age: numeroATexto(paciente.menarca_age),
-    menstrual_rhythm: paciente.menstrual_rhythm ?? '',
-    ivsa_age: numeroATexto(paciente.ivsa_age),
-    birth_control: paciente.birth_control ?? '',
-    gestas: numeroATexto(paciente.gestas),
-    paras: numeroATexto(paciente.paras),
-    cesareas: numeroATexto(paciente.cesareas),
-    abortos: numeroATexto(paciente.abortos),
+    dominant_hand: paciente.dominant_hand ?? '',
+    neurological_history: paciente.neurological_history ?? '',
+    implanted_devices: paciente.implanted_devices ?? '',
+    anticoagulants: paciente.anticoagulants ?? '',
 })
 
 interface DatosPacienteEditablesProps {
     /** Expediente ya cargado. Sin él no se edita: ver el comentario de abajo. */
     paciente: Patient | null
-    /** Recibe a la paciente tal como quedó guardada en el servidor. */
+    /** Recibe al paciente tal como quedó guardada en el servidor. */
     onGuardado: (paciente: Patient) => void
     /** Consulta cerrada: se mira, no se escribe. */
     readOnly?: boolean
@@ -180,7 +161,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
     /**
      * Sin expediente cargado no se ofrece editar.
      *
-     * Si la lectura de la paciente falló, no sabemos qué hay guardado: un
+     * Si la lectura del paciente falló, no sabemos qué hay guardado: un
      * formulario en blanco invitaría a escribir encima de datos que sí existen.
      */
     if (!paciente || readOnly) return null
@@ -239,7 +220,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
         }
         setErrores({})
 
-        // Sólo los campos que la doctora tocó. Lo que no viaja, el backend no lo
+        // Sólo los campos que el médico tocó. Lo que no viaja, el backend no lo
         // toca: es lo que hace segura una edición parcial desde un formulario
         // corto como éste.
         const cuerpo: Record<string, string | number | null> = {}
@@ -287,17 +268,9 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
         disabled: guardando,
     })
 
-    const numero = (campo: CampoEditable) => ({
-        type: 'number' as const,
-        min: 0,
-        value: valores?.[campo] ?? '',
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => cambiar(campo)(e.target.value),
-        disabled: guardando,
-    })
-
     // El lápiz se vuelve un botón con texto cuando falta justo lo que se nota en
     // el encabezado —la edad en guion o un expediente sin ningún teléfono—,
-    // porque ése es el hueco que manda a la doctora a salirse de la consulta.
+    // porque ése es el hueco que manda al médico a salirse de la consulta.
     const faltanDatosClave =
         getAge(paciente.date_of_birth) === null || (!paciente.phone && !paciente.cell_phone)
 
@@ -309,7 +282,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
                     size="sm"
                     variant="outline"
                     className="d-inline-flex align-items-center gap-1 py-0 px-2"
-                    aria-label="Completar datos de la paciente"
+                    aria-label="Completar datos del paciente"
                     data-tour="consulta-datos-paciente"
                     onClick={abrir}
                 >
@@ -322,8 +295,8 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
                     size="sm"
                     className="p-0 text-decoration-none"
                     data-tour="consulta-datos-paciente"
-                    aria-label="Completar datos de la paciente"
-                    title="Completar datos de la paciente"
+                    aria-label="Completar datos del paciente"
+                    title="Completar datos del paciente"
                     onClick={abrir}
                 >
                     <CIcon icon={cilPencil} size="sm" />
@@ -338,7 +311,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
 
             <CModal visible={abierto} onClose={intentarCerrar} size="lg" scrollable>
                 <CModalHeader closeButton={false}>
-                    <CModalTitle>Datos de la paciente</CModalTitle>
+                    <CModalTitle>Datos del paciente</CModalTitle>
                     <CButton
                         color="link"
                         className="ms-auto p-0 text-decoration-none fs-4 lh-1 text-body"
@@ -355,7 +328,7 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
                             consulta a mitad de la nota. */}
                         <p className="text-body-secondary small">
                             Completa lo que levantaste en el interrogatorio sin salir de la consulta.
-                            El nombre y la dirección se cambian desde el perfil de la paciente, en
+                            El nombre y la dirección se cambian desde el perfil del paciente, en
                             recepción. Las fechas del embarazo (FUR y fecha probable de parto) se
                             capturan en el control prenatal.
                         </p>
@@ -478,61 +451,48 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
                                 />
                             </CCol>
                             <CCol md={4}>
-                                <CFormLabel htmlFor="dpe-gynecological_history">
-                                    Gineco-obstétricos
-                                </CFormLabel>
+                                <CFormLabel htmlFor="dpe-neurological_history">Neurológicos</CFormLabel>
                                 <CFormTextarea
-                                    id="dpe-gynecological_history"
+                                    id="dpe-neurological_history"
                                     rows={3}
-                                    {...texto('gynecological_history')}
+                                    {...texto('neurological_history')}
                                 />
                             </CCol>
                         </CRow>
 
                         <hr />
-                        <h6 className="mb-3">Historia gineco-obstétrica</h6>
+                        <h6 className="mb-3">Antes de operar o de pedir resonancia</h6>
                         <CRow className="g-3">
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-menarca_age">Menarca (edad)</CFormLabel>
-                                <CFormInput id="dpe-menarca_age" {...numero('menarca_age')} />
+                            <CCol md={4}>
+                                <CFormLabel htmlFor="dpe-dominant_hand">Lateralidad</CFormLabel>
+                                <CFormSelect
+                                    id="dpe-dominant_hand"
+                                    value={valores?.dominant_hand ?? ''}
+                                    onChange={(e) => cambiar('dominant_hand')(e.target.value)}
+                                    disabled={guardando}
+                                >
+                                    <option value="">Sin registrar</option>
+                                    <option value="DIESTRO">Diestro</option>
+                                    <option value="ZURDO">Zurdo</option>
+                                    <option value="AMBIDIESTRO">Ambidiestro</option>
+                                </CFormSelect>
                             </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-menstrual_rhythm">Ritmo menstrual</CFormLabel>
+                            <CCol md={8}>
+                                <CFormLabel htmlFor="dpe-anticoagulants">Anticoagulantes / antiagregantes</CFormLabel>
                                 <CFormInput
-                                    id="dpe-menstrual_rhythm"
-                                    placeholder="28X4"
-                                    {...texto('menstrual_rhythm')}
+                                    id="dpe-anticoagulants"
+                                    placeholder="ASPIRINA, CLOPIDOGREL, WARFARINA…"
+                                    {...texto('anticoagulants')}
                                 />
                             </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-ivsa_age">IVSA (edad)</CFormLabel>
-                                <CFormInput id="dpe-ivsa_age" {...numero('ivsa_age')} />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-birth_control">
-                                    Método anticonceptivo
-                                </CFormLabel>
-                                <CFormInput
-                                    id="dpe-birth_control"
-                                    placeholder="DIU, OTB, HORMONAL..."
-                                    {...texto('birth_control')}
+                            <CCol xs={12}>
+                                <CFormLabel htmlFor="dpe-implanted_devices">Implantes y dispositivos</CFormLabel>
+                                <CFormTextarea
+                                    id="dpe-implanted_devices"
+                                    rows={2}
+                                    placeholder="VÁLVULA DE DERIVACIÓN, MARCAPASOS, NEUROESTIMULADOR, MATERIAL METÁLICO…"
+                                    {...texto('implanted_devices')}
                                 />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-gestas">Gestas</CFormLabel>
-                                <CFormInput id="dpe-gestas" {...numero('gestas')} />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-paras">Paras</CFormLabel>
-                                <CFormInput id="dpe-paras" {...numero('paras')} />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-cesareas">Cesáreas</CFormLabel>
-                                <CFormInput id="dpe-cesareas" {...numero('cesareas')} />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-abortos">Abortos</CFormLabel>
-                                <CFormInput id="dpe-abortos" {...numero('abortos')} />
                             </CCol>
                         </CRow>
                     </CModalBody>

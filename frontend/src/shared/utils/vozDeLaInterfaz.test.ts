@@ -35,9 +35,14 @@ describe('voz de la interfaz', () => {
     expect(buscar(usted)).toEqual([])
   })
 
-  it('a quien atiende la llama doctora, no doctor ni médico', () => {
+  // En Cortex a quien atiende se le llama «médico» (en GEMS era «doctora»).
+  it('a quien atiende lo llama médico, no doctor ni doctora', () => {
     const doctor =
-      /Todos los doctores|lista de doctores|Seleccionar doctor|Doctor Dueño|Nota doctor|Nota del doctor|para el doctor|el doctor (desea|para)|Este doctor|Médico colaborador|Dashboard del Doctor|Buenos días, Doctor/
+      /Todos los doctores|lista de doctores|Seleccionar doctor|Doctor Dueño|Nota doctor|Nota del doctor|para el doctor|el doctor (desea|para)|Este doctor|Dashboard del Doctor|Buenos días, Doctor|[Ll]as? doctoras?|Doctoras?/
     expect(buscar(doctor)).toEqual([])
+  })
+
+  it('al paciente lo nombra en masculino genérico, no en femenino', () => {
+    expect(buscar(/[Ll]as? pacientes?|[Uu]na paciente/)).toEqual([])
   })
 })

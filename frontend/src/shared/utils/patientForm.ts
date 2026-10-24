@@ -70,7 +70,7 @@ export const calcularFpp = (fur: string | null | undefined): string => {
 
 // Aquí vivían `normalizarTipoPaciente`, `esPacienteObstetrica` y
 // `esPacienteGinecologica`. Se fueron con el selector de tipo de paciente:
-// una paciente no *es* obstétrica, *está* embarazada, y eso lo dice su
+// un paciente no *es* obstétrica, *está* embarazada, y eso lo dice su
 // registro de embarazo activo, no una bandera del expediente que nadie apaga.
 
 /** Campos del formulario de pacientes que se capturan en MAYÚSCULAS. */
@@ -86,6 +86,9 @@ export const CAMPOS_EN_MAYUSCULAS = [
     'blood_type',
     'menstrual_rhythm',
     'birth_control',
+    'neurological_history',
+    'implanted_devices',
+    'anticoagulants',
 ] as const
 
 export type CampoEnMayusculas = (typeof CAMPOS_EN_MAYUSCULAS)[number]

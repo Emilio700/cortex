@@ -1,7 +1,7 @@
 /**
  * Plantillas de orden que precargan estudios (O-03).
  *
- * Son de sólo lectura y genéricas (no tocan ningún expediente). La doctora
+ * Son de sólo lectura y genéricas (no tocan ningún expediente). El médico
  * elige una, se copian sus estudios al formulario de la orden agrupada (O-02) y
  * ella revisa, edita y confirma. La plantilla no crea nada por sí sola.
  */
@@ -45,7 +45,7 @@ export const usePlantillasOrden = (habilitado: boolean) => {
         if (vigente) setPlantillas(resp.data.plantillas || [])
       })
       .catch(() => {
-        // Sin plantillas la doctora sigue armando la orden a mano.
+        // Sin plantillas el médico sigue armando la orden a mano.
         if (vigente) setPlantillas([])
       })
     return () => {

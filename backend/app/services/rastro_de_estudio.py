@@ -154,7 +154,7 @@ def eventos_de_orden(db: Session, orden: DiagnosticOrder, *, incluir_anulados: b
                    orden.status_changed_by_user_id, detalle=orden.status_reason)
         )
     if orden.delivered_at:
-        eventos.append(Evento("entregada", "Entregada a la paciente", orden.delivered_at, orden.delivered_by_user_id))
+        eventos.append(Evento("entregada", "Entregada al paciente", orden.delivered_at, orden.delivered_by_user_id))
 
     eventos.sort(key=lambda e: (e.cuando or datetime.min))
     return eventos

@@ -12,7 +12,7 @@
  * - al pasar de 8 se cierra la usada hace más tiempo, con «Deshacer».
  *
  * Marca con un punto las pestañas que tienen trabajo sin guardar. Sin esa
- * marca la doctora sólo se entera de lo que dejó a medias cuando intenta
+ * marca el médico sólo se entera de lo que dejó a medias cuando intenta
  * cerrar la pestaña, que es tarde y a destiempo.
  */
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'

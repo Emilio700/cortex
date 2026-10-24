@@ -34,7 +34,7 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
 /**
  * Las pestañas, con el inicio del rol como la que queda al cerrar todas: antes
- * quedaba «/dashboard», la página genérica, y la doctora perdía su tablero.
+ * quedaba «/dashboard», la página genérica, y el médico perdía su tablero.
  */
 const PestanasConInicio = ({ children }: { children: React.ReactNode }) => {
   const { user, permissions } = useAuth()

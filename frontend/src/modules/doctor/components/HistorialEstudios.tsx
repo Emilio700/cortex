@@ -1,7 +1,7 @@
 /**
  * Historial de estudios del expediente clínico (O-08).
  *
- * Lista todas las órdenes de la paciente, en cualquier estado, con sus fechas,
+ * Lista todas las órdenes del paciente, en cualquier estado, con sus fechas,
  * su estado en español y sus resultados; los archivos de cada orden se ven en
  * el visor compartido, todos juntos en un carrusel (plan 26, D-2). La primera
  * página viene de la fuente compartida de la consulta (sin una petición nueva
@@ -35,7 +35,7 @@ const REVISION: Record<string, string> = {
   received: 'Recibido',
   reviewed: 'Revisado',
   requires_action: 'Requiere acción',
-  communicated: 'Comunicado a la paciente',
+  communicated: 'Comunicado al paciente',
 }
 
 const HistorialEstudios = ({ patientId }: Props) => {
@@ -131,7 +131,7 @@ const HistorialEstudios = ({ patientId }: Props) => {
   }
 
   if (ordenes.length === 0) {
-    return <CAlert color="info">Esta paciente no tiene órdenes de estudios registradas.</CAlert>
+    return <CAlert color="info">Este paciente no tiene órdenes de estudios registradas.</CAlert>
   }
 
   return (

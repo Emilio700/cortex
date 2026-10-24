@@ -1,5 +1,5 @@
 /**
- * Cuentas del inicio de la doctora (plan 28, Fase 2).
+ * Cuentas del inicio del médico (plan 28, Fase 2).
  *
  * Todas las cifras de la pantalla salen de la misma lista de citas y se
  * calculan aquí, con prueba. El boceto mostraba números que no cuadraban entre
@@ -12,7 +12,7 @@ import { horaDelConsultorio, ZONA_CONSULTORIO } from '../../../shared/utils/date
 // Conteos del día
 // ---------------------------------------------------------------------------
 
-/** Estados que todavía esperan a la doctora: no llegaron, o esperan en sala. */
+/** Estados que todavía esperan al médico: no llegaron, o esperan en sala. */
 const POR_ATENDER = new Set(['agendada', 'confirmada', 'en_sala'])
 
 export interface ConteoDelDia {
@@ -129,7 +129,7 @@ export interface SiguientePaciente {
 /**
  * A quién abrir con «Siguiente paciente».
  *
- * Primero la consulta que la doctora dejó abierta (continuarla), luego la
+ * Primero la consulta que el médico dejó abierta (continuarla), luego la
  * primera que espera en sala y, si nadie ha llegado, la siguiente por hora.
  * No existe consulta sin cita: si no hay nadie, `null`.
  */
@@ -149,7 +149,7 @@ export const siguientePaciente = (citas: Appointment[]): SiguientePaciente | nul
 
 /**
  * Las últimas `n` pacientes distintas que atendió, de la más reciente a la más
- * antigua. Una paciente que vino tres veces sale una sola, con su última cita.
+ * antigua. Un paciente que vino tres veces sale una sola, con su última cita.
  */
 export const recientesDistintas = (citas: Appointment[], n = 5): Appointment[] => {
   const vistas = new Set<number>()

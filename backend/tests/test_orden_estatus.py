@@ -67,15 +67,15 @@ def test_la_respuesta_dice_a_que_estados_se_puede_pasar(client, db_session, esce
 def test_cancelar_con_motivo_lo_guarda_en_la_orden_y_en_la_bitacora(client, db_session, escenario):
     orden = escenario["orden"]
 
-    respuesta = _cambiar(client, db_session, orden, escenario["doctora"], "cancelled", "La paciente ya se lo hizo en otro lado")
+    respuesta = _cambiar(client, db_session, orden, escenario["doctora"], "cancelled", "El paciente ya se lo hizo en otro lado")
 
     assert respuesta.status_code == 200
-    assert respuesta.json()["status_reason"] == "La paciente ya se lo hizo en otro lado"
+    assert respuesta.json()["status_reason"] == "El paciente ya se lo hizo en otro lado"
     assert respuesta.json()["allowed_transitions"] == []
     db_session.refresh(orden)
     assert orden.status == "cancelled"
     (registro,) = _cambios_en_bitacora(db_session)
-    assert registro.reason == "La paciente ya se lo hizo en otro lado"
+    assert registro.reason == "El paciente ya se lo hizo en otro lado"
     assert registro.details["to"] == "cancelled"
 
 
@@ -241,7 +241,7 @@ def test_un_lote_no_acepta_prioridades_fuera_de_la_lista(client, db_session, esc
 
 
 def test_una_fila_vieja_con_valores_raros_se_sigue_leyendo(client, db_session, escenario):
-    """Validar al escribir no puede dejar sin lista a la paciente por un dato viejo."""
+    """Validar al escribir no puede dejar sin lista al paciente por un dato viejo."""
     rara = _orden(
         db_session, escenario["tenant"], escenario["paciente"], escenario["doctora"],
         status="pendiente_legacy", priority="ALTA",

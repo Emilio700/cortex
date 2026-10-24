@@ -1,6 +1,6 @@
 /**
  * Al cerrar la última pestaña queda el inicio del rol (plan 26, D-6), no la
- * página genérica: la doctora no debe perder su tablero por cerrar pestañas.
+ * página genérica: el médico no debe perder su tablero por cerrar pestañas.
  */
 import { act, render } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -21,7 +21,7 @@ beforeEach(() => {
 describe('TabsContext · inicio al cerrar todo', () => {
   it('queda la pestaña del inicio que se le pasa', () => {
     render(
-      <TabsProvider inicio={{ path: '/doctor/dashboard', title: 'Dashboard de la doctora' }}>
+      <TabsProvider inicio={{ path: '/doctor/dashboard', title: 'Dashboard del médico' }}>
         <Espia />
       </TabsProvider>,
     )
@@ -35,7 +35,7 @@ describe('TabsContext · inicio al cerrar todo', () => {
     act(() => pestanas!.closeTab('/doctor/appointments'))
 
     expect(pestanas!.tabs).toEqual([
-      { key: '/doctor/dashboard', path: '/doctor/dashboard', title: 'Dashboard de la doctora' },
+      { key: '/doctor/dashboard', path: '/doctor/dashboard', title: 'Dashboard del médico' },
     ])
     expect(pestanas!.activeTabKey).toBe('/doctor/dashboard')
   })

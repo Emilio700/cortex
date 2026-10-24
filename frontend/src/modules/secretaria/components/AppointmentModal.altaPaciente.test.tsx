@@ -78,10 +78,10 @@ const renderModal = (puede = true) =>
   )
 
 /** El modal del alta, para no confundir sus campos con los de la cita. */
-const modalDeAlta = () => within(screen.getByText('Nueva paciente').closest('.modal') as HTMLElement)
+const modalDeAlta = () => within(screen.getByText('Nuevo paciente').closest('.modal') as HTMLElement)
 
 const llenarAlta = async (user: ReturnType<typeof userEvent.setup>) => {
-  await user.click(screen.getByRole('button', { name: '+ Registrar paciente nueva' }))
+  await user.click(screen.getByRole('button', { name: '+ Registrar paciente nuevo' }))
   const alta = modalDeAlta()
   await user.type(alta.getByLabelText(/Nombre/), 'ana')
   await user.type(alta.getByLabelText(/Apellidos/), 'lópez')
@@ -96,19 +96,19 @@ beforeEach(() => {
 })
 
 describe('AppointmentModal · alta de paciente desde la cita', () => {
-  it('la paciente creada queda elegida y la cita se guarda con ella, sin perder lo capturado', async () => {
+  it('el paciente creado queda elegido y la cita se guarda con ella, sin perder lo capturado', async () => {
     createPatient.mockResolvedValue({ id: 41, first_name: 'ANA', last_name: 'LÓPEZ', phone: '5512345678' })
     const user = userEvent.setup()
     renderModal()
     // Algo capturado de la cita antes del alta.
-    await user.selectOptions(screen.getByLabelText(/Doctor/), '7')
+    await user.selectOptions(screen.getByLabelText(/Médico/), '7')
 
     await llenarAlta(user)
 
-    await waitFor(() => expect(screen.queryByText('Nueva paciente')).not.toBeInTheDocument())
+    await waitFor(() => expect(screen.queryByText('Nuevo paciente')).not.toBeInTheDocument())
     expect(createPatient).toHaveBeenCalledWith(expect.objectContaining({ first_name: 'ANA', last_name: 'LÓPEZ' }))
     expect(showSuccess).toHaveBeenCalledWith('Paciente ANA LÓPEZ registrada y elegida para esta cita.')
-    expect(screen.getByLabelText(/Doctor/)).toHaveValue('7')
+    expect(screen.getByLabelText(/Médico/)).toHaveValue('7')
     // Guardar el alta no guarda la cita: sólo el botón de la cita lo hace.
     expect(createAppointment).not.toHaveBeenCalled()
 
@@ -118,13 +118,13 @@ describe('AppointmentModal · alta de paciente desde la cita', () => {
   })
 
   it('si el servidor rechaza el alta, el formulario sigue abierto con el motivo y no se elige a nadie', async () => {
-    createPatient.mockRejectedValue(new Error('Ya existe una paciente con ese celular.'))
+    createPatient.mockRejectedValue(new Error('Ya existe un paciente con ese celular.'))
     const user = userEvent.setup()
     renderModal()
 
     await llenarAlta(user)
 
-    expect(await modalDeAlta().findByText('Ya existe una paciente con ese celular.')).toBeInTheDocument()
+    expect(await modalDeAlta().findByText('Ya existe un paciente con ese celular.')).toBeInTheDocument()
     expect(showSuccess).not.toHaveBeenCalled()
     expect(createAppointment).not.toHaveBeenCalled()
   })
@@ -132,23 +132,23 @@ describe('AppointmentModal · alta de paciente desde la cita', () => {
   it('cancelar el alta no borra lo capturado de la cita', async () => {
     const user = userEvent.setup()
     renderModal()
-    await user.selectOptions(screen.getByLabelText(/Doctor/), '7')
+    await user.selectOptions(screen.getByLabelText(/Médico/), '7')
 
-    await user.click(screen.getByRole('button', { name: '+ Registrar paciente nueva' }))
+    await user.click(screen.getByRole('button', { name: '+ Registrar paciente nuevo' }))
     await user.click(modalDeAlta().getByRole('button', { name: 'Cancelar' }))
 
-    await waitFor(() => expect(screen.queryByText('Nueva paciente')).not.toBeInTheDocument())
-    expect(screen.getByLabelText(/Doctor/)).toHaveValue('7')
+    await waitFor(() => expect(screen.queryByText('Nuevo paciente')).not.toBeInTheDocument())
+    expect(screen.getByLabelText(/Médico/)).toHaveValue('7')
     expect(createPatient).not.toHaveBeenCalled()
   })
 
   it('sin permiso de alta de pacientes no se ofrece registrar', () => {
     renderModal(false)
-    expect(screen.queryByRole('button', { name: '+ Registrar paciente nueva' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '+ Registrar paciente nuevo' })).not.toBeInTheDocument()
   })
 })
 
-describe('AppointmentModal · la doctora sin recepción (plan 32, punto 5)', () => {
+describe('AppointmentModal · el médico sin recepción (plan 32, punto 5)', () => {
   const OTRA: User = { ...DOCTORES[0], id: 8, email: 'otra@gems.mx', full_name: 'Otra' }
 
   it('da de alta con correo y motivo, y la cita nace en su propia agenda', async () => {
@@ -167,18 +167,18 @@ describe('AppointmentModal · la doctora sin recepción (plan 32, punto 5)', () 
     )
 
     // Sólo se ofrece ella, ya elegida: la agenda de una colega daría error al guardar.
-    const select = screen.getByLabelText(/Doctor/)
+    const select = screen.getByLabelText(/Médico/)
     expect(select).toHaveValue('7')
     expect(within(select).queryByRole('option', { name: /Otra/ })).toBeNull()
 
-    await user.click(screen.getByRole('button', { name: '+ Registrar paciente nueva' }))
+    await user.click(screen.getByRole('button', { name: '+ Registrar paciente nuevo' }))
     const alta = modalDeAlta()
     await user.type(alta.getByLabelText(/Nombre/), 'ana')
     await user.type(alta.getByLabelText(/Apellidos/), 'lópez')
     await user.type(alta.getByLabelText(/Celular/), '5512345678')
     await user.type(alta.getByLabelText('Correo (opcional)'), 'ana@example.com')
     await user.click(alta.getByRole('button', { name: 'Guardar' }))
-    await waitFor(() => expect(screen.queryByText('Nueva paciente')).not.toBeInTheDocument())
+    await waitFor(() => expect(screen.queryByText('Nuevo paciente')).not.toBeInTheDocument())
     expect(createPatient).toHaveBeenCalledWith(expect.objectContaining({ email: 'ana@example.com' }))
 
     await user.type(screen.getByLabelText('Motivo (opcional)'), 'primera vez')
@@ -191,6 +191,6 @@ describe('AppointmentModal · la doctora sin recepción (plan 32, punto 5)', () 
 
   it('sin el permiso de alta no se le ofrece registrar paciente', () => {
     renderModal(false)
-    expect(screen.queryByRole('button', { name: '+ Registrar paciente nueva' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '+ Registrar paciente nuevo' })).toBeNull()
   })
 })

@@ -1,7 +1,7 @@
 """Un aviso de lo que uno mismo acaba de hacer no informa de nada.
 
 En una semana de uso real la campanita llegó a acumular decenas de avisos sin
-leer, y parte de ese volumen era la doctora enterándose de sus propios actos.
+leer, y parte de ese volumen era el médico enterándose de sus propios actos.
 Un canal que avisa de lo obvio enseña a no mirarlo, y el día que llegue el
 aviso que sí importaba ya nadie lo estará leyendo.
 """

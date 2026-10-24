@@ -1,7 +1,7 @@
 /**
  * Registrar un pago: el de una cita atendida o un cobro suelto.
  *
- * El caso que lo motivó (plan 23): la doctora cobraba en consultorio y la
+ * El caso que lo motivó (plan 23): el médico cobraba en consultorio y la
  * secretaria, sin saberlo, volvía a cobrar la misma cita. Aquí cada cita
  * atendida dice si ya se cobró, quién y cuánto, y la cobrada queda bloqueada.
  * Cobrarla otra vez (un estudio agregado) es una acción aparte y confirmada.
@@ -92,7 +92,7 @@ interface Props {
    * sólo lo menciona si el pago trae su cita (el servidor la creó).
    */
   onRegistrado: (pago: Payment, detalle?: { express: boolean }) => void
-  /** La doctora cobra a su nombre: el servidor le fuerza la doctora, no se le pregunta. */
+  /** El médico cobra a su nombre: el servidor le fuerza el médico, no se le pregunta. */
   esDoctora: boolean
   doctoras: User[]
   /**
@@ -137,7 +137,7 @@ export const ordenarPorCobrar = <T extends { id: number; scheduled_at: string; e
 const nombreDe = (p?: { first_name: string; last_name: string }) =>
   p ? `${p.first_name} ${p.last_name}` : ''
 
-/** La nota que la doctora dejó al cerrar ("💬 cobrar sólo $500") llega en `notes`. */
+/** La nota que el médico dejó al cerrar ("💬 cobrar sólo $500") llega en `notes`. */
 const notaDeDoctora = (cita: CitaDeHoy): string =>
   cita.notes?.includes('💬') ? cita.notes.split('💬')[1]?.trim() || '' : ''
 
@@ -184,7 +184,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
   }>({})
   const limpiarError = (campo: keyof typeof errores) =>
     setErrores((prev) => (prev[campo] ? { ...prev, [campo]: undefined } : prev))
-  // Con algo capturado (monto, concepto, paciente elegida), la X, Cancelar y
+  // Con algo capturado (monto, concepto, paciente elegido), la X, Cancelar y
   // Esc preguntan antes de descartar (plan 29, lote 8).
   const cobroSucio =
     visible && (JSON.stringify(form) !== JSON.stringify(FORMULARIO_VACIO) || (paciente !== null && pestana !== 'cita'))
@@ -203,7 +203,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
       // En sala Y atendidas: recepción muchas veces cobra antes de la consulta
       // (plan 23, cobro anticipado). Si la cita en sala no estuviera aquí, el
       // único camino era registrar "otra consulta" y la cita real quedaba
-      // pendiente: cuando la doctora la cerrara, se volvía a cobrar.
+      // pendiente: cuando el médico la cerrara, se volvía a cobrar.
       // «En consulta» también: el servidor ya la acepta para cobro (plan 28).
       const [enSala, enConsulta, atendidas] = await Promise.all(
         (['en_sala', 'en_consulta', 'atendida'] as const).map((status) =>
@@ -309,7 +309,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
       setPacientes(Array.isArray(data) ? data : [])
     } catch {
       setPacientes([])
-      setError('No se pudo buscar a la paciente. Inténtalo de nuevo.')
+      setError('No se pudo buscar al paciente. Inténtalo de nuevo.')
     }
   }
 
@@ -320,13 +320,13 @@ export const RegistrarPagoModal: React.FC<Props> = ({
     const faltas: typeof errores = {}
     if (!pacienteId) {
       if (pestana === 'cita') faltas.cita = 'Elige la cita que vas a cobrar.'
-      else faltas.paciente = 'Busca y elige a la paciente.'
+      else faltas.paciente = 'Busca y elige al paciente.'
     }
     const monto = Number(form.amount)
     if (!form.amount || !Number.isFinite(monto) || monto <= 0) faltas.monto = 'Escribe el monto (mayor a cero).'
     if (pestana === 'suelto') {
       if (!queSeCobra) faltas.queSeCobra = 'Contesta primero qué se cobra: consulta sin cita o otro concepto.'
-      if (!esDoctora && !doctorId) faltas.doctora = 'Elige la doctora a la que pertenece el ingreso.'
+      if (!esDoctora && !doctorId) faltas.doctora = 'Elige el médico a la que pertenece el ingreso.'
       if (queSeCobra === 'otro' && !form.serviceId && !form.description.trim())
         faltas.concepto = 'Elige un servicio o escribe el concepto.'
     }
@@ -498,7 +498,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
                 {cita.status === 'en_consulta' && (
                   <CBadge color="dark" className="ms-2">En consulta</CBadge>
                 )}
-                {notaDeDoctora(cita) && <span className="badge bg-warning text-dark ms-2">💬 Nota de la doctora</span>}
+                {notaDeDoctora(cita) && <span className="badge bg-warning text-dark ms-2">💬 Nota del médico</span>}
                 {estado === 'cobrada' && (
                   <div className="small mt-1" data-tour="pago-cita-cobrada">
                     {cobros.length > 0 ? cobros.map((c) => <div key={c.id}>{describirCobro(c)}</div>) : 'Ya cobrada.'}
@@ -506,7 +506,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
                 )}
                 {estado === 'sin_cargo' && (
                   <div className="small mt-1">
-                    La doctora la marcó sin cargo{cita.cobro_sin_cargo_motivo ? `: ${cita.cobro_sin_cargo_motivo}` : ''}.
+                    El médico la marcó sin cargo{cita.cobro_sin_cargo_motivo ? `: ${cita.cobro_sin_cargo_motivo}` : ''}.
                   </div>
                 )}
               </button>
@@ -517,7 +517,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
                       <div className="small mb-2">
                         {estado === 'cobrada'
                           ? '¿Registrar un cobro ADICIONAL a esta cita (servicio extra, estudio agregado)? No es para volver a cobrar la consulta.'
-                          : 'La doctora dijo que no tiene cargo. ¿Cobrarla de todos modos?'}
+                          : 'El médico dijo que no tiene cargo. ¿Cobrarla de todos modos?'}
                       </div>
                       <CButton
                         color="warning"
@@ -625,7 +625,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
           <CInputGroup size="sm" className="mb-1">
             <CFormInput
               id="suelto-busqueda"
-              placeholder="Nombre de la paciente"
+              placeholder="Nombre del paciente"
               value={busqueda}
               invalid={Boolean(errores.paciente)}
               aria-invalid={Boolean(errores.paciente) || undefined}
@@ -666,7 +666,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
       {!esDoctora && (
         <>
           <CFormLabel htmlFor="suelto-doctora" className="small">
-            Doctora a la que pertenece el ingreso <span className="text-danger">*</span>
+            Médico a la que pertenece el ingreso <span className="text-danger">*</span>
           </CFormLabel>
           <CFormSelect
             id="suelto-doctora"
@@ -680,7 +680,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
               limpiarError('doctora')
             }}
           >
-            <option value="">— Elige la doctora —</option>
+            <option value="">— Elige el médico —</option>
             {doctoras.map((d) => (
               <option key={d.id} value={d.id}>
                 {nombreConTratamiento(d)}
@@ -850,7 +850,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
             </CFormLabel>
             <CFormInput
               id="pago-notas"
-              placeholder="Nota de la doctora o descuento..."
+              placeholder="Nota del médico o descuento..."
               value={form.notes}
               onChange={enMayusculas((v) => campo({ notes: v }))}
             />
@@ -897,7 +897,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
             ? 'Registrando...'
             : adicional
               ? // También la sin cargo que se cobra de todos modos: es un cobro
-                // aparte de lo que decidió la doctora, y el botón lo dice.
+                // aparte de lo que decidió el médico, y el botón lo dice.
                 'Registrar cobro adicional'
               : pestana === 'suelto' && queSeCobra === 'express'
                 ? 'Registrar consulta y pago'

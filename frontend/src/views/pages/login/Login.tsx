@@ -22,7 +22,7 @@ import { CONTRASENA, CORREO, estaVacio, esCorreo } from '../../../shared/utils/v
 
 
 // «Recordar mi correo» (plan 32, punto 1): sólo el correo, nunca la
-// contraseña, y sólo en este equipo. Las doctoras entran varias veces al día
+// contraseña, y sólo en este equipo. Los médicos entran varias veces al día
 // desde el teléfono. El almacenamiento puede no existir (navegación privada):
 // entonces simplemente no se recuerda.
 const CLAVE_CORREO = 'gems_correo_recordado'

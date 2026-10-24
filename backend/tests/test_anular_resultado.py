@@ -25,7 +25,7 @@ from test_resultados_criticos import (
 )
 
 BASE = f"{PREFIX}/clinical-tracking"
-MOTIVO = "Era de otra paciente"
+MOTIVO = "Era de otro paciente"
 
 
 def _anular(client, db_session, quien, resultado, motivo=MOTIVO, codigo=200):
@@ -149,7 +149,7 @@ def test_el_anulado_no_cuenta_y_la_administracion_lo_ve_con_su_motivo(client, db
     assert _resultados_del_historial(client, db_session, escenario, escenario["doctora"]) == []
     del_admin = _resultados_del_historial(client, db_session, escenario, escenario["admin"])
     assert [(r["id"], r["anulado_motivo"]) for r in del_admin] == [(malo["id"], MOTIVO)]
-    # «Resultados pendientes de la paciente» en la consulta: ya no está por atender.
+    # «Resultados pendientes del paciente» en la consulta: ya no está por atender.
     assert _historial(client, db_session, escenario, escenario["doctora"], por_atender=True) == []
 
 

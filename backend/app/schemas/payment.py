@@ -37,7 +37,7 @@ class PaymentCreate(PaymentBase):
     """Alta de un pago.
 
     ``doctor_id`` sólo se lee en un cobro suelto (sin cita) hecho por recepción:
-    con cita, el ingreso es de quien atendió; si cobra una doctora, es suyo.
+    con cita, el ingreso es de quien atendió; si cobra un médico, es suyo.
     ``cobro_adicional`` es la única forma de cobrar otra vez una cita que ya
     tiene pago vigente, y la pantalla lo pide confirmar aparte.
     """
@@ -59,9 +59,9 @@ class ConsultaExpressCreate(BaseModel):
 
     El servidor crea la cita (``origen = express``, ya ``atendida``) y el pago
     ligado en una sola transacción. ``doctor_id`` sólo lo lee si cobra
-    recepción; si cobra una doctora, la consulta es suya.
+    recepción; si cobra un médico, la consulta es suya.
 
-    ``confirmar_otra_consulta``: la paciente ya tiene una consulta hoy con esa
+    ``confirmar_otra_consulta``: el paciente ya tiene una consulta hoy con esa
     doctora y quien cobra confirmó que ésta es otra. Sin eso, 409.
     """
 
@@ -160,7 +160,7 @@ class CashCutDoctorBreakdown(BaseModel):
 class CashCutReceivedByBreakdown(BaseModel):
     """Quién recibió el dinero.
 
-    Sin esto el corte de recepción no cuadra con la caja: si la doctora cobró en
+    Sin esto el corte de recepción no cuadra con la caja: si el médico cobró en
     efectivo, el dinero está con ella y no en el cajón.
     """
 
@@ -174,7 +174,7 @@ class CajaDeQuienRecibe(BaseModel):
     """Lo que recibió una persona en el periodo, de cualquier doctora: su arqueo.
 
     Existe para la secretaria (plan 23, revisión de flujos): ella cobra para
-    toda la sucursal, pero su corte se acota a las doctoras que apoya. Si su
+    toda la sucursal, pero su corte se acota a los médicos que apoya. Si su
     caja saliera de ese corte acotado, no cuadraría con el cajón: faltaría lo
     que cobró para las demás. No abre nada nuevo: la lista de cobros de la
     sucursal ya la ve completa.
@@ -188,7 +188,7 @@ class CajaDeQuienRecibe(BaseModel):
 
 
 class DoctoraDelCorte(BaseModel):
-    """Una doctora que la secretaria apoya: lo que necesita el selector del corte."""
+    """Un médico que la secretaria apoya: lo que necesita el selector del corte."""
 
     doctor_id: int
     doctor_name: str
@@ -198,8 +198,8 @@ class CashCutReport(BaseModel):
     """Corte de caja sobre un periodo; las fechas van en hora local del consultorio.
 
     ``alcance`` dice qué abarca el total, para que la pantalla lo pueda decir:
-    ``sucursal`` (administración), ``propio`` (la doctora) o ``asignadas`` (la
-    secretaria, sólo las doctoras que apoya; ``doctoras_del_alcance`` las
+    ``sucursal`` (administración), ``propio`` (el médico) o ``asignadas`` (la
+    secretaria, sólo los médicos que apoya; ``doctoras_del_alcance`` las
     lista). Una secretaria sin asignaciones recibe ``asignadas`` con la lista
     vacía: la pantalla tiene que decirle eso y no un "no hubo cobros".
     """

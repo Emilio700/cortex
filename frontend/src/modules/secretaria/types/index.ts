@@ -10,7 +10,7 @@ export enum AppointmentStatus {
   CONFIRMADA = 'confirmada',
   EN_SALA = 'en_sala',
   /**
-   * La doctora abrió la consulta (plan 28, D-3). Nadie lo elige: lo pone el
+   * El médico abrió la consulta (plan 28, D-3). Nadie lo elige: lo pone el
    * servidor al abrir la consulta y se sale a sala, atendida o cancelada.
    */
   EN_CONSULTA = 'en_consulta',
@@ -26,7 +26,7 @@ export interface Patient {
   tenant_id: number
   first_name: string
   last_name: string
-  // Nullable a propósito: el alta express de recepción registra a la paciente
+  // Nullable a propósito: el alta express de recepción registra al paciente
   // sin fecha de nacimiento, y el backend la declara opcional. Mientras este
   // campo mintió diciendo `string`, TypeScript no podía avisar de los cálculos
   // de edad sobre un null — de ahí salió el fantasma de "56 años".
@@ -40,6 +40,10 @@ export interface Patient {
   address?: string
   allergies?: string | null
   notas_referencia?: string | null
+  dominant_hand?: string | null
+  neurological_history?: string | null
+  implanted_devices?: string | null
+  anticoagulants?: string | null
   personal_history?: string | null
   family_history?: string | null
   gynecological_history?: string | null
@@ -83,6 +87,10 @@ export interface PatientCreate {
   address?: string
   allergies?: string
   notas_referencia?: string
+  dominant_hand?: string
+  neurological_history?: string
+  implanted_devices?: string
+  anticoagulants?: string
   personal_history?: string
   family_history?: string
   gynecological_history?: string
@@ -175,7 +183,7 @@ export interface Appointment {
   /** Nombre de la sala, tal como lo devuelve el backend junto a la cita. */
   room_name?: string | null
   /**
-   * Edad gestacional al día de la cita (plan 28, D-4): solo si la paciente
+   * Edad gestacional al día de la cita (plan 28, D-4): solo si el paciente
    * tiene un embarazo activo y la sesión puede leerlo. Nulas si no aplica;
    * nunca 0 por falta de dato.
    */

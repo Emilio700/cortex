@@ -47,8 +47,8 @@ const ORDEN_GRUPOS: GrupoRecorrido[] = [
 const dondeSeVe = (r: Recorrido): string | null => {
   if (r.contexto) return 'Se ve con su formulario abierto.'
   if (r.ruta?.startsWith('/doctor/consultation')) return 'Se ve dentro de una consulta.'
-  if (r.ruta?.includes('/record')) return 'Se ve en el expediente de una paciente.'
-  if (r.ruta?.includes('/historial')) return 'Se ve en el historial de una paciente.'
+  if (r.ruta?.includes('/record')) return 'Se ve en el expediente de un paciente.'
+  if (r.ruta?.includes('/historial')) return 'Se ve en el historial de un paciente.'
   return null
 }
 

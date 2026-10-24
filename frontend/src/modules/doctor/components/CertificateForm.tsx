@@ -119,7 +119,7 @@ export const CertificateForm: React.FC<CertificateFormProps> = ({
     /**
      * El certificado llega después del primer render, así que sin esto no se
      * pintaba nunca. Se dispara por el id del registro y no por la identidad del
-     * objeto —en cada render le borraría a la doctora lo que está escribiendo— y
+     * objeto —en cada render le borraría al médico lo que está escribiendo— y
      * por lo mismo respeta una captura ya empezada.
      */
     useEffect(() => {

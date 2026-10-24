@@ -60,7 +60,7 @@ describe('CertificateForm · certificado que llega tarde', () => {
         expect(screen.getByText(/CER-2-2026-0012/)).toBeInTheDocument()
     })
 
-    it('NO pisa lo que la doctora ya esta escribiendo', async () => {
+    it('NO pisa lo que el médico ya esta escribiendo', async () => {
         const usuario = userEvent.setup()
         const { rerender } = render(<CertificateForm appointmentId={1} patientId={2} />)
         await usuario.type(diagnostico(), 'lo mio')

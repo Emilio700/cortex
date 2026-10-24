@@ -217,7 +217,7 @@ class MedicationMonitoringPlanResponse(MedicationMonitoringPlanCreate):
 # texto libre y los valores válidos sólo los conocía el frontend
 # (``clinicalTracking.ts``); ahora el servidor los valida al escribir. Al leer
 # NO se validan: una fila vieja con un valor raro se tiene que seguir viendo,
-# no reventar la lista de la paciente.
+# no reventar la lista del paciente.
 ESTADOS_DE_ORDEN = (
     "draft", "ordered", "accepted", "scheduled", "collected", "in_process",
     "result_received", "reviewed", "cancelled", "rejected",
@@ -423,7 +423,7 @@ class ResultadoEnHistorial(BaseModel):
     patient_document_id: int | None = None
     document_file_name: str | None = None
     document_mime_type: str | None = None
-    # Quién lo subió y si ya se le comunicó a la paciente: la bandeja por
+    # Quién lo subió y si ya se le comunicó al paciente: la bandeja por
     # paciente distingue «revisada» de «revisada y comunicada» (plan 26, B-7).
     recorded_by_user_id: int | None = None
     communicated_at: datetime | None = None
@@ -452,7 +452,7 @@ class ResultadoEnHistorial(BaseModel):
     @computed_field
     @property
     def incidencia_abierta(self) -> bool:
-        """Crítico y sin cerrar (D-8): sigue en el dashboard de la doctora."""
+        """Crítico y sin cerrar (D-8): sigue en el dashboard del médico."""
         return bool(self.is_critical and self.incidencia_cerrada_at is None)
 
 
@@ -493,7 +493,7 @@ class DiagnosticOrderGroupStudy(BaseModel):
 
 
 class DiagnosticOrderGroupCreate(BaseModel):
-    """Varios estudios de una paciente pedidos juntos, en una sola llamada (O-02)."""
+    """Varios estudios de un paciente pedidos juntos, en una sola llamada (O-02)."""
 
     patient_id: int = Field(gt=0)
     pregnancy_id: int | None = Field(default=None, gt=0)
@@ -548,12 +548,12 @@ class DiagnosticOrderGroupResponse(BaseModel):
 
 
 # Escala de la valoración del resultado (plan 26, D-9). «critico» es lo que
-# abre la incidencia en el dashboard de la doctora.
+# abre la incidencia en el dashboard del médico.
 VALORACIONES = ("excelente", "bien", "regular", "malo", "critico")
 Valoracion = Literal["excelente", "bien", "regular", "malo", "critico"]
 
 
-# Medios con los que se le hace llegar el resultado a la paciente (D-8).
+# Medios con los que se le hace llegar el resultado al paciente (D-8).
 CanalDeComunicacion = Literal["en_mano", "llamada", "whatsapp", "correo"]
 MENSAJE_SIN_CANAL = "Indica cómo se le hizo llegar el resultado: en mano, llamada, WhatsApp o correo"
 
@@ -586,7 +586,7 @@ class DiagnosticResultCreate(BaseModel):
     communication_note: str | None = Field(default=None, max_length=4000)
     communication_channel: CanalDeComunicacion | None = None
     next_action: str | None = Field(default=None, max_length=4000)
-    # La cita de la paciente en la que se revisa: cierra la incidencia (D-8).
+    # La cita del paciente en la que se revisa: cierra la incidencia (D-8).
     appointment_id: int | None = Field(default=None, gt=0, exclude=True)
 
     @field_validator("report_text", "clinician_interpretation", "next_action", "communication_note")
@@ -676,7 +676,7 @@ class DiagnosticResultUpdate(BaseModel):
     # ``null`` explícito la quita; omitirla no la cambia.
     valoracion: Valoracion | None = None
     communication_channel: CanalDeComunicacion | None = None
-    # La cita de la paciente en la que se revisa: cierra la incidencia (D-8).
+    # La cita del paciente en la que se revisa: cierra la incidencia (D-8).
     appointment_id: int | None = Field(default=None, gt=0)
 
     @field_validator("clinician_interpretation", "next_action", "communication_note")
@@ -780,12 +780,12 @@ class OrdenPorRecibirItem(BaseModel):
     # Y cuáles son, para abrirlos y detectar el sobre equivocado o repetido.
     adjuntos: list[AdjuntoDeOrden] = []
     # La prioridad ordena la lista (D-10): no es expediente, es qué atender
-    # primero. La doctora, para imprimir el papel de cada una por separado (M5).
+    # primero. El médico, para imprimir el papel de cada una por separado (M5).
     priority: str = "routine"
     doctor_id: int | None = None
     doctor_name: str | None = None
     # Atrasado y su último seguimiento (plan 32, punto 3): recepción suele ser
-    # quien llama a la paciente o al laboratorio. Es operativo, no clínico.
+    # quien llama al paciente o al laboratorio. Es operativo, no clínico.
     atrasada: bool = False
     dias_sin_resultado: int | None = None
     ultimo_seguimiento: "SeguimientoDeOrden | None" = None
@@ -836,7 +836,7 @@ class PlantillaOrdenEstudio(BaseModel):
     """Un estudio precargado por una plantilla clínica (O-03).
 
     Tiene la misma forma que ``DiagnosticOrderGroupStudy`` (O-02) para que el
-    frontend lo copie tal cual al formulario de la orden agrupada; ahí la doctora
+    frontend lo copie tal cual al formulario de la orden agrupada; ahí el médico
     lo revisa, lo cambia si quiere y confirma. La plantilla no crea nada.
     """
 
@@ -862,7 +862,7 @@ class PlantillaOrdenDetalle(BaseModel):
     clave: str
     nombre: str
     descripcion: str
-    # Texto sugerido para la indicación clínica del lote; la doctora lo confirma
+    # Texto sugerido para la indicación clínica del lote; el médico lo confirma
     # o lo cambia. El alta de O-02 exige indicación, así que ayuda tenerla.
     indicacion_sugerida: str | None = None
     estudios: list[PlantillaOrdenEstudio]
@@ -877,7 +877,7 @@ class PlantillasOrdenPage(BaseModel):
 
 
 class EntregaOrdenResponse(BaseModel):
-    """Resultado de marcar una orden como entregada a la paciente (O-09)."""
+    """Resultado de marcar una orden como entregada al paciente (O-09)."""
 
     order_id: int
     delivered: bool
@@ -987,10 +987,10 @@ class RastroDeEstudio(BaseModel):
 class OrdenEnBandeja(OrdenEnHistorial):
     """Una orden en la bandeja por paciente, con todos sus resultados."""
 
-    # Algún resultado ya se le comunicó a la paciente.
+    # Algún resultado ya se le comunicó al paciente.
     comunicada: bool = False
     # Algún resultado crítico con la incidencia abierta (D-8): ni comunicado a
-    # la paciente ni revisado en una consulta suya. Se conserva el nombre de
+    # el paciente ni revisado en una consulta suya. Se conserva el nombre de
     # la primera ronda; ``incidencia_abierta`` dice lo mismo.
     critico_sin_comunicar: bool = False
     incidencia_abierta: bool = False
@@ -1000,7 +1000,7 @@ class OrdenEnBandeja(OrdenEnHistorial):
     # abrirla es releerla y no empezarla.
     cita_fecha: datetime | None = None
     cita_estado: str | None = None
-    # Atrasado con el plazo de su doctora, y el último seguimiento (plan 32, punto 3).
+    # Atrasado con el plazo de su médico, y el último seguimiento (plan 32, punto 3).
     atrasada: bool = False
     dias_sin_resultado: int | None = None
     ultimo_seguimiento: SeguimientoDeOrden | None = None
@@ -1010,7 +1010,7 @@ class OrdenEnBandeja(OrdenEnHistorial):
 
 
 class PacienteEnBandeja(BaseModel):
-    """Una tarjeta de la bandeja: la paciente con sus órdenes (plan 26, B-1)."""
+    """Una tarjeta de la bandeja: el paciente con sus órdenes (plan 26, B-1)."""
 
     patient_id: int
     patient_name: str
@@ -1023,7 +1023,7 @@ class PacienteEnBandeja(BaseModel):
 
 
 class BandejaPorPacientePage(BaseModel):
-    """Página de pacientes, no de órdenes: una paciente nunca queda partida."""
+    """Página de pacientes, no de órdenes: un paciente nunca queda partida."""
 
     items: list[PacienteEnBandeja]
     total: int
@@ -1032,7 +1032,7 @@ class BandejaPorPacientePage(BaseModel):
 
 
 class IncidenciaCritica(BaseModel):
-    """Un resultado crítico que la doctora autora todavía no revisa (plan 26, D-3).
+    """Un resultado crítico que el médico autora todavía no revisa (plan 26, D-3).
 
     Sale en su dashboard y se queda ahí hasta que lo revisa
     (``PATCH /results/{id}`` con ``review_status`` distinto de ``received``).
@@ -1120,11 +1120,11 @@ class ObstetricDashboardItem(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     pregnancy_id: int
     patient_id: int
-    # El nombre, no «Embarazo #123»: la doctora reconoce a la paciente, no al
+    # El nombre, no «Embarazo #123»: el médico reconoce al paciente, no al
     # número del registro (plan 28).
     patient_full_name: str | None = None
     estimated_delivery_date: date
-    # La FPP ya pasó (hasta ``dias_vencida`` días atrás): la paciente sigue
+    # La FPP ya pasó (hasta ``dias_vencida`` días atrás): el paciente sigue
     # embarazada después de su fecha probable, o el parto no se registró.
     vencida: bool = False
     dating_status: str
@@ -1132,9 +1132,9 @@ class ObstetricDashboardItem(BaseModel):
 
 
 class PrenatalReviewBoardItem(BaseModel):
-    """Una paciente que debía volver a control y no está citada.
+    """Un paciente que debía volver a control y no está citada.
 
-    Es una lista que se consulta, no un aviso: la doctora ya acumula avisos sin
+    Es una lista que se consulta, no un aviso: el médico ya acumula avisos sin
     leer y enterarse no es una acción. Lo que sí es una acción —llamar a la
     paciente— le llega a recepción por notificación, y sale de la misma regla
     que arma esta lista.
@@ -1153,7 +1153,7 @@ class PrenatalReviewBoardItem(BaseModel):
     vencida: bool
     estimated_delivery_date: date | None = None
     # Si a recepción ya se le avisó de esta fecha. Sirve para distinguir "nadie
-    # sabe" de "ya está en manos de recepción", que es lo primero que la doctora
+    # sabe" de "ya está en manos de recepción", que es lo primero que el médico
     # pregunta antes de ponerse a llamar ella.
     avisado_a_recepcion: bool
 

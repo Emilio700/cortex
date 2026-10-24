@@ -3,8 +3,8 @@
 Un estudio sin resultado está atrasado si ya pasó su «realizar a más tardar»
 (``desired_on``) o, si no lo tiene, cuando desde que se pidió pasaron más días
 que el plazo de su prioridad. Los de fábrica los fijó Emilio (2026-10-05):
-urgente 7, preferente 15, rutinaria 30; cada doctora los cambia en su perfil
-y se miden con los de la doctora que pidió el estudio.
+urgente 7, preferente 15, rutinaria 30; cada médico los cambia en su perfil
+y se miden con los del médico que pidió el estudio.
 
 Un seguimiento con «volver a revisar el …» lo saca de atrasados hasta esa
 fecha: alguien ya está sobre él. Al llegar la fecha vuelve a contar.
@@ -26,10 +26,10 @@ PLAZO_MINIMO, PLAZO_MAXIMO = 1, 365
 ESTADOS_SIN_RESULTADO = ("ordered", "accepted", "scheduled", "collected", "in_process")
 
 MOTIVOS_DE_SEGUIMIENTO = {
-    "no_se_lo_ha_hecho": "La paciente no se lo ha hecho",
+    "no_se_lo_ha_hecho": "El paciente no se lo ha hecho",
     "en_proceso_laboratorio": "Está en proceso en el laboratorio",
     "reagendado": "Se reagendó",
-    "no_se_localiza": "No se localiza a la paciente",
+    "no_se_localiza": "No se localiza al paciente",
     "otro": "Otro",
 }
 
@@ -46,7 +46,7 @@ def normalizar_plazos(datos) -> dict[str, int]:
 
 
 def plazos_por_doctora(db: Session, tenant_id: int | None = None) -> dict[int, dict[str, int]]:
-    """Los plazos de las doctoras que los cambiaron; las demás usan los de fábrica."""
+    """Los plazos de los médicos que los cambiaron; las demás usan los de fábrica."""
     query = db.query(DoctorProfile.user_id, DoctorProfile.plazos_atrasado).filter(
         DoctorProfile.plazos_atrasado.isnot(None)
     )
@@ -93,7 +93,7 @@ def condicion_atrasado(hoy: date | None = None, plazos: dict[int, dict[str, int]
     """La condición SQL de «atrasado», para filtrar o contar en el servidor.
 
     ``plazos`` es el de ``plazos_por_doctora``: cada orden se mide con los de
-    su doctora, y la que no los cambió, con los de fábrica.
+    su médico, y la que no los cambió, con los de fábrica.
     """
     hoy = hoy or hoy_local()
     plazos = plazos or {}

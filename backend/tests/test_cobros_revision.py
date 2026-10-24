@@ -88,7 +88,7 @@ def _express(client, db, quien, e):
 def _anular(client, db, quien, pago_id, **extra):
     return client.post(
         f"{PREFIX}/payments/{pago_id}/anular",
-        json={"motivo": "PACIENTE EQUIVOCADA", **extra},
+        json={"motivo": "PACIENTE EQUIVOCADO", **extra},
         headers=headers(db, quien),
     )
 
@@ -112,7 +112,7 @@ def test_anular_la_express_puede_cancelar_su_consulta_en_la_misma_operacion(clie
     db_session.expire_all()
     consulta = db_session.get(Appointment, pago_express["appointment_id"])
     assert consulta.status == AppointmentStatus.CANCELADA
-    assert consulta.cancellation_reason == "PACIENTE EQUIVOCADA"
+    assert consulta.cancellation_reason == "PACIENTE EQUIVOCADO"
     assert consulta.cancelled_by_user_id == e["jhoany"].id
     assert (
         db_session.query(AuditLog)
@@ -182,7 +182,7 @@ def test_una_express_ya_documentada_no_se_cancela(client, db_session, e):
 
 
 def test_sin_permiso_de_cancelar_citas_no_la_cancela(client, db_session, e):
-    """La doctora no cancela citas: anula el cobro y recepción cancela la consulta."""
+    """El médico no cancela citas: anula el cobro y recepción cancela la consulta."""
     from app.models.payment import Payment, PaymentStatus
 
     r = client.post(

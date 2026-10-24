@@ -1,5 +1,5 @@
 /**
- * Única fuente de órdenes de la paciente dentro de una consulta.
+ * Única fuente de órdenes del paciente dentro de una consulta.
  *
  * Tres paneles pedían los mismos datos por separado (y uno pedía el historial
  * entero con `limit: 1` sólo para leer el total): la lista de «Estudios de
@@ -222,7 +222,7 @@ const cargarPorAtender = async (e: Entrada, cita: number | null) => {
     e.totalPorAtender = null
     e.errorPorAtender = mensajeDeError(
       err,
-      'No se pudieron cargar los resultados pendientes de la paciente.',
+      'No se pudieron cargar los resultados pendientes del paciente.',
     )
   } finally {
     if (!vigente(e)) return
@@ -310,7 +310,7 @@ export const useHistorialDeOrdenes = (patientId: number) => {
   }
 }
 
-/** «Resultados pendientes de la paciente», de la fuente compartida. */
+/** «Resultados pendientes del paciente», de la fuente compartida. */
 export const useResultadosPorAtender = (patientId: number, appointmentId: number) => {
   const vista = usarVista(patientId)
 

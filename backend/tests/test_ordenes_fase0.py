@@ -3,7 +3,7 @@
 - B-5: la bandeja ordenaba la prioridad como texto y una preferente quedaba
   detrás de todas las rutinarias, en otra página.
 - B-8: la búsqueda no separaba palabras y «KENIA PERAZA» no encontraba a nadie.
-- B-10: registrar un resultado no exigía ser la doctora que pidió el estudio.
+- B-10: registrar un resultado no exigía ser el médico que pidió el estudio.
 - F-1: la fecha de la orden la calculaba el navegador en UTC; ahora, si no
   viene, la pone el servidor con la hora del consultorio.
 """
@@ -50,7 +50,7 @@ def test_la_busqueda_separa_palabras(client, db_session, escenario):
     respuesta = client.get(BANDEJA, params={"search": "KENIA PERAZA"}, headers=_auth_headers(db_session, d))
 
     assert [item["order"]["id"] for item in respuesta.json()["items"]] == [orden.id]
-    # Una palabra de la paciente y otra del estudio también la encuentran.
+    # Una palabra del paciente y otra del estudio también la encuentran.
     respuesta = client.get(BANDEJA, params={"search": "peraza vdrl"}, headers=_auth_headers(db_session, d))
     assert respuesta.json()["total"] == 1
     # Y el número de orden impreso en el papel.

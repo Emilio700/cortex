@@ -1,5 +1,5 @@
 /**
- * El inicio de la doctora (plan 28): lo que necesita saber al entrar, con
+ * El inicio del médico (plan 28): lo que necesita saber al entrar, con
  * datos reales, para llegar rápido y encontrar las opciones sin batallar.
  *
  * Esta página solo compone; cada sección vive en `components/inicio/` y sus
@@ -35,7 +35,7 @@ import { contarDelDia, type PestanaAgenda } from '../utils/inicio'
 import { pedirFiltroBandeja } from '../utils/filtroBandeja'
 
 /**
- * La sucursal que se está viendo y si la doctora atiende en más de una. Si no
+ * La sucursal que se está viendo y si el médico atiende en más de una. Si no
  * se pudo saber, no se dice nada: mejor sin nombre que con uno inventado.
  */
 const useSucursalActiva = () => {
@@ -80,7 +80,7 @@ export const DoctorDashboard: React.FC = () => {
   const esMaster = user?.role === Role.MASTER
   const sucursal = useSucursalActiva()
   const inicio = useInicioDoctora()
-  const { citasHoy, recientes, resultados, criticos, prenatales, partos, veCitas, veSeguimiento } = inicio
+  const { citasHoy, recientes, resultados, criticos, cirugias, veCitas, veSeguimiento } = inicio
 
   const [pestana, setPestana] = useState<PestanaAgenda>('todas')
   const agendaRef = useRef<HTMLDivElement>(null)
@@ -172,8 +172,7 @@ export const DoctorDashboard: React.FC = () => {
               <PendientesYSeguimiento
                 criticos={criticos}
                 resultados={resultados}
-                prenatales={prenatales}
-                partos={partos}
+                cirugias={cirugias}
               />
             </div>
           )}

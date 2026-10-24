@@ -1,4 +1,4 @@
-"""La bitácora trae el nombre de la paciente, solo de la propia sucursal (plan 29, lote 5)."""
+"""La bitácora trae el nombre del paciente, solo de la propia sucursal (plan 29, lote 5)."""
 from app.models.audit_log import AuditLog
 from app.models.tenant import Tenant
 from app.models.user import Role
@@ -17,7 +17,7 @@ def test_trae_el_nombre_de_la_paciente_de_su_sucursal(client, db_session):
     ajena = paciente(db_session, otra, doctora, "Berta")
     db_session.add_all([
         AuditLog(tenant_id=centro.id, actor_user_id=doctora.id, action="soap_note.created", entity_type="soap_note", patient_id=ana.id),
-        # Un evento de la sucursal con una paciente de otra: no se revela el nombre.
+        # Un evento de la sucursal con un paciente de otra: no se revela el nombre.
         AuditLog(tenant_id=centro.id, actor_user_id=doctora.id, action="patient.updated", entity_type="patient", patient_id=ajena.id),
     ])
     db_session.commit()

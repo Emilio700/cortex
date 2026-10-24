@@ -73,8 +73,8 @@ export interface CashCutReport {
   by_doctor?: CashCutDoctorBreakdown[]
   by_received_by?: CashCutReceivedByBreakdown[]
   /**
-   * Qué abarca el corte: la sucursal (administración), lo propio (la doctora)
-   * o las doctoras que apoya (la secretaria). Opcional: un backend anterior a
+   * Qué abarca el corte: la sucursal (administración), lo propio (el médico)
+   * o los médicos que apoya (la secretaria). Opcional: un backend anterior a
    * los ajustes del 2026-09-28 no lo manda.
    */
   alcance?: 'sucursal' | 'propio' | 'asignadas'
@@ -99,7 +99,7 @@ export interface PaymentCreate {
   patient_id: number
   appointment_id?: number | null
   service_id?: number | null
-  /** Secretaria/admin lo mandan en el cobro suelto; a la doctora el servidor se lo fuerza. */
+  /** Secretaria/admin lo mandan en el cobro suelto; al médico el servidor se lo fuerza. */
   doctor_id?: number | null
   amount: string
   method: PaymentMethod
@@ -119,7 +119,7 @@ export interface PaymentCreate {
  */
 export interface ConsultaExpressCreate {
   patient_id: number
-  /** Recepción lo manda; a la doctora el servidor se lo fuerza. */
+  /** Recepción lo manda; al médico el servidor se lo fuerza. */
   doctor_id?: number | null
   service_id?: number | null
   amount: string
@@ -128,7 +128,7 @@ export interface ConsultaExpressCreate {
   notes?: string
   referencia?: string
   client_request_id?: string
-  /** La paciente ya tuvo consulta hoy con esa doctora y se confirmó que ésta es otra. */
+  /** El paciente ya tuvo consulta hoy con esa doctora y se confirmó que ésta es otra. */
   confirmar_otra_consulta?: boolean
 }
 

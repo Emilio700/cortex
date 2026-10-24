@@ -195,7 +195,7 @@ def test_si_la_cita_de_hoy_no_esta_en_cobro_de_cita_no_manda_ahi_sin_mas(client,
     detalle = r.json()["detail"]
     assert "pásala a sala" in detalle
     assert "confirmada" in detalle
-    assert not detalle.startswith("Esta paciente ya tiene una consulta hoy")
+    assert not detalle.startswith("Este paciente ya tiene una consulta hoy")
 
 
 def test_una_express_ya_cobrada_hoy_se_reporta_con_el_cobro(client, db_session, e):

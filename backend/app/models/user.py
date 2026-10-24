@@ -26,7 +26,7 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     full_name = Column(String(200), nullable=False)
     # "Dr.", "Dra." o nada. Vacío = sin prefijo, a propósito: un "Dr." puesto
-    # por defecto a una doctora es peor que no poner tratamiento. Nunca se
+    # por defecto a un médico es peor que no poner tratamiento. Nunca se
     # deduce del nombre; lo captura administración (plan 23, ajustes).
     tratamiento = Column(String(10), nullable=True)
     role = Column(Enum(Role, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
@@ -41,7 +41,7 @@ class User(Base):
     mfa_enrolled_at = Column(DateTime, nullable=True)
     # Contador que sube cada vez que cambian los permisos de esta cuenta.
     # Existe para que el frontend note que los suyos quedaron viejos y los
-    # recargue solo. Deliberadamente NO cierra la sesión: echar a una doctora
+    # recargue solo. Deliberadamente NO cierra la sesión: echar a un médico
     # a media nota para que "tome" un permiso nuevo perdería lo capturado, que
     # es peor que el problema que se quiere resolver.
     permissions_version = Column(Integer, default=1, server_default="1", nullable=False)

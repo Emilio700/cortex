@@ -1,6 +1,6 @@
 """El backend no debe convertir un reenvío en un segundo documento clínico.
 
-En producción la Dra. Cintia emitió dos recetas idénticas con un minuto de
+En producción el Dr. Cintia emitió dos recetas idénticas con un minuto de
 diferencia: el formulario guardaba al oprimir "Guardar" y volvía a guardar al
 confirmar la impresión. El formulario ya no hace eso, pero el backend aceptaba
 el duplicado sin chistar, así que cualquier doble clic o reintento tras un
@@ -8,7 +8,7 @@ error de red lo reproducía.
 
 Lo que se bloquea es SÓLO el duplicado exacto. Dos recetas distintas en la
 misma consulta son clínicamente válidas y la interfaz ya las rotula "Receta 1
-de 2": un falso positivo aquí le negaría a la doctora una receta legítima a
+de 2": un falso positivo aquí le negaría al médico una receta legítima a
 media consulta, que es peor que el duplicado que se quiere evitar.
 
 Fase 3 del plan ``docs/plans/22_plan_maestro_consolidado.md`` (A13 incluido).
@@ -174,14 +174,14 @@ def test_reenviar_la_misma_receta_no_crea_una_segunda(client, db_session, consul
     assert primera.status_code == 201, primera.text
     assert segunda.status_code == 201, segunda.text
     # Se devuelve la que ya existe: mismo registro y, sobre todo, mismo folio,
-    # que es lo que la doctora tiene impreso en la mano.
+    # que es lo que el médico tiene impreso en la mano.
     assert segunda.json()["id"] == primera.json()["id"]
     assert segunda.json()["folio_number"] == primera.json()["folio_number"]
     assert db_session.query(Prescription).count() == 1
 
 
 def test_dos_recetas_distintas_en_la_misma_consulta_siguen_emitiendose(client, db_session, consulta):
-    """La prueba que protege a la doctora: un tratamiento aparte no es un duplicado.
+    """La prueba que protege al médico: un tratamiento aparte no es un duplicado.
 
     Si esta prueba se rompe, la idempotencia se volvió una restricción única
     encubierta y la segunda receta legítima se pierde a media consulta.
@@ -227,7 +227,7 @@ def test_cambiar_solo_el_motivo_tambien_es_una_receta_nueva(client, db_session, 
     Si el motivo no entrara en la huella, reenviar el alta con el motivo
     encendido devolvería la receta anterior —sin motivo— y la pantalla diría
     que sí se guardó. Es justo el "la interfaz dice que sí y el sistema no hizo
-    nada" que ya mandó a una doctora a duplicar una receta.
+    nada" que ya mandó a un médico a duplicar una receta.
     """
     headers = _auth_headers(db_session, consulta["doctora"])
     sin_motivo = _cuerpo_receta(consulta, [PARACETAMOL])
@@ -293,9 +293,9 @@ def test_el_mismo_contenido_con_otro_formato_se_reconoce_como_reenvio(client, db
 
 
 def test_una_receta_vieja_no_bloquea_una_identica_de_hoy(client, db_session, consulta):
-    """Fuera de la ventana ya no es un reenvío: es una decisión de la doctora.
+    """Fuera de la ventana ya no es un reenvío: es una decisión del médico.
 
-    Si la paciente vuelve y necesita exactamente el mismo tratamiento, el
+    Si el paciente vuelve y necesita exactamente el mismo tratamiento, el
     sistema no puede negárselo porque hace horas emitió uno igual.
     """
     headers = _auth_headers(db_session, consulta["doctora"])
@@ -360,7 +360,7 @@ def test_si_dos_guardados_se_ganan_el_mismo_folio_el_segundo_toma_el_siguiente(d
     """A16: el folio se leía y se le sumaba uno, sin nada que impidiera el empate.
 
     Se simula el empate devolviendo a propósito un folio que ya está ocupado:
-    antes eso era un 500 en la cara de la doctora al cerrar la consulta, porque
+    antes eso era un 500 en la cara del médico al cerrar la consulta, porque
     ``folio_number`` es único. Ahora el guardado se reintenta con el siguiente
     número. En Postgres además hay un candado por serie que evita llegar aquí;
     el reintento es la red para cuando el candado no aplica.

@@ -1,5 +1,5 @@
 /**
- * Configuración de la orden de estudio en el perfil de la doctora (plan 26,
+ * Configuración de la orden de estudio en el perfil del médico (plan 26,
  * D-7 y D-11).
  *
  * Desde la segunda ronda la orden tiene su **propio** membrete, tan editable
@@ -64,7 +64,7 @@ type ClavesNoInterruptor =
 export type ClaveInterruptorOrden = Exclude<keyof AjustesOrden, ClavesNoInterruptor>
 
 export const LEYENDA_ORDEN_POR_DEFECTO =
-  'G.E.M.S — Orden de estudio. Es una solicitud: no es un resultado ni un diagnóstico.'
+  'CORTEX — Orden de estudio. Es una solicitud: no es un resultado ni un diagnóstico.'
 
 export const LIMITE_LEYENDA_ORDEN = 150
 export const LIMITE_NOMBRE_ORDEN = 150
@@ -137,7 +137,7 @@ export const GRUPOS_ORDEN: ReadonlyArray<GrupoOrden> = [
     ],
   },
   {
-    titulo: 'Datos de la paciente',
+    titulo: 'Datos del paciente',
     descripcion: 'Su nombre sale siempre.',
     opciones: [
       { clave: 'mostrar_fecha_nacimiento', etiqueta: 'Fecha de nacimiento' },

@@ -2,7 +2,7 @@
  * Corte de caja por doctora y por quién recibió (plan 23).
  *
  * Sin el desglose por quién recibió, el corte de recepción no cuadra con la
- * caja el día que la doctora cobra en efectivo en su consultorio.
+ * caja el día que el médico cobra en efectivo en su consultorio.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
@@ -73,17 +73,17 @@ describe('FinanzasDashboard', () => {
     expect(getCashCut.mock.calls[0][0]).toEqual({})
 
     await screen.findByRole('option', { name: 'KARLA PÉREZ' })
-    await user.selectOptions(screen.getByLabelText('Doctora'), '8')
+    await user.selectOptions(screen.getByLabelText('Médico'), '8')
 
     await waitFor(() => expect(getCashCut).toHaveBeenLastCalledWith({ doctor_id: 8 }))
   })
 
-  it('la doctora ve su corte sin selector ni desglose por doctora', async () => {
+  it('el médico ve su corte sin selector ni desglose por doctora', async () => {
     sesion.user = { id: 7, role: Role.DOCTOR }
     render(<FinanzasDashboard />)
 
     expect(await screen.findByText('Mi corte de caja')).toBeInTheDocument()
-    expect(screen.queryByLabelText('Doctora')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Médico')).not.toBeInTheDocument()
     expect(screen.queryByText('Por doctora (de quién es el ingreso)')).not.toBeInTheDocument()
     expect(apiGet).not.toHaveBeenCalled()
   })
@@ -107,7 +107,7 @@ describe('FinanzasDashboard', () => {
     expect(await screen.findAllByText('Este desglose todavía no está disponible.')).toHaveLength(2)
   })
 
-  it('la secretaria elige sólo entre las doctoras que apoya, no el directorio', async () => {
+  it('la secretaria elige sólo entre los médicos que apoya, no el directorio', async () => {
     sesion.user = { id: 20, role: Role.SECRETARIA }
     getCashCut.mockResolvedValue({
       ...CORTE,
@@ -140,7 +140,7 @@ describe('FinanzasDashboard', () => {
       await screen.findByText(/No tienes doctoras asignadas; pídele a administración que te asigne/),
     ).toBeInTheDocument()
     expect(screen.queryByText('Total del día')).not.toBeInTheDocument()
-    expect(screen.queryByLabelText('Doctora')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Médico')).not.toBeInTheDocument()
   })
   it('la secretaria ve su caja completa aparte del corte de sus doctoras, sin dos cifras para ella', async () => {
     sesion.user = { id: 20, role: Role.SECRETARIA }

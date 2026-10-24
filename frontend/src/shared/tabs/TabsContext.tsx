@@ -188,7 +188,7 @@ export const TabsProvider: React.FC<{
         const pendientes = etiquetasSinGuardar(key)
         if (pendientes.length > 0) {
             const cerrada = actuales[idx]
-            // Nombrar lo pendiente, no un genérico "hay cambios": la doctora
+            // Nombrar lo pendiente, no un genérico "hay cambios": el médico
             // tiene ocho pestañas y necesita saber qué es lo que va a perder.
             const aceptó = confirmarPerdida(
                 `«${cerrada.title}» tiene cambios sin guardar: ${enumerar(pendientes)}.\n\n` +

@@ -3,7 +3,7 @@ import { format, differenceInYears, isValid, parseISO } from 'date-fns'
 /**
  * Relleno que dejó la migración del sistema anterior cuando el expediente en
  * papel no traía fecha de nacimiento. No es una fecha real: tratarla como tal
- * pone "126 años" en el expediente de una paciente de treinta.
+ * pone "126 años" en el expediente de un paciente de treinta.
  */
 export const FECHA_NACIMIENTO_RELLENO_LEGACY = '1900-01-01'
 
@@ -15,7 +15,7 @@ export const EDAD_SIN_DATO = '—'
  * utilizable.
  *
  * Existe por una trampa de JavaScript que nos costó cara: `new Date(null)` no
- * es una fecha inválida, es el 1 de enero de 1970. Una paciente sin fecha de
+ * es una fecha inválida, es el 1 de enero de 1970. Un paciente sin fecha de
  * nacimiento capturada aparecía así con la edad que hoy tendría alguien nacido
  * ese día — un número inventado que nadie podía distinguir de un dato real.
  *

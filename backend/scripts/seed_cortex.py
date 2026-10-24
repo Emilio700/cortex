@@ -61,27 +61,37 @@ PACIENTES = [
     dict(first_name="Jorge Alberto", last_name="Castañeda Lugo", date_of_birth=date(1968, 4, 12), gender="Masculino",
          phone="5551102030", allergies="Ninguna conocida", blood_type="O+",
          personal_history="Hipertensión arterial sistémica en tratamiento. Lumbalgia crónica de 3 años con irradiación a miembro pélvico izquierdo.",
-         family_history="Padre: EVC isquémico a los 70 años."),
+         family_history="Padre: EVC isquémico a los 70 años.", dominant_hand="DIESTRO",
+         anticoagulants="ÁCIDO ACETILSALICÍLICO 100 MG AL DÍA",
+         neurological_history="Radiculopatía L5 izquierda. Sin cirugías previas de columna."),
     dict(first_name="Mariana", last_name="Ochoa Villaseñor", date_of_birth=date(1985, 9, 3), gender="Femenino",
          phone="5552203040", allergies="Penicilina", blood_type="A+",
          personal_history="Cefalea crónica. RM con meningioma parasagital derecho de 2.1 cm, en vigilancia.",
-         family_history="Sin antecedentes relevantes."),
+         family_history="Sin antecedentes relevantes.", dominant_hand="DIESTRO",
+         neurological_history="Meningioma parasagital derecho en vigilancia con RM anual."),
     dict(first_name="Luis Fernando", last_name="Prado Esquivel", date_of_birth=date(1979, 1, 27), gender="Masculino",
          phone="5553304050", allergies="AINEs", blood_type="B+",
          personal_history="Hernia discal C5-C6 con radiculopatía. Postoperado de discectomía y artrodesis cervical anterior.",
-         family_history="Madre: diabetes tipo 2."),
+         family_history="Madre: diabetes tipo 2.", dominant_hand="ZURDO",
+         implanted_devices="PLACA Y CAJA INTERSOMÁTICA C5-C6 (TITANIO)",
+         neurological_history="Discectomía y artrodesis cervical anterior C5-C6."),
     dict(first_name="Valeria", last_name="Robles Anaya", date_of_birth=date(2001, 6, 18), gender="Femenino",
          phone="5554405060", allergies="Ninguna conocida", blood_type="O-",
          personal_history="Epilepsia focal desde los 14 años, en tratamiento con levetiracetam. Crisis ocasionales.",
-         family_history="Tío materno con epilepsia."),
+         family_history="Tío materno con epilepsia.", dominant_hand="DIESTRO",
+         neurological_history="Epilepsia focal. Última crisis hace 3 meses."),
     dict(first_name="Ernesto", last_name="Galindo Treviño", date_of_birth=date(1956, 11, 2), gender="Masculino",
          phone="5555506070", allergies="Látex", blood_type="AB+",
          personal_history="Hidrocefalia normotensa con derivación ventrículo-peritoneal (2024). Marcha inestable.",
-         family_history="Sin antecedentes relevantes."),
+         family_history="Sin antecedentes relevantes.", dominant_hand="DIESTRO",
+         implanted_devices="VÁLVULA VENTRÍCULO-PERITONEAL PROGRAMABLE (REVISAR AJUSTE TRAS RM)",
+         anticoagulants="CLOPIDOGREL 75 MG AL DÍA",
+         neurological_history="Hidrocefalia normotensa. Derivación ventrículo-peritoneal en 2024."),
     dict(first_name="Daniela", last_name="Cervantes Mora", date_of_birth=date(1992, 2, 9), gender="Femenino",
          phone="5556607080", allergies="Ninguna conocida", blood_type="A-",
          personal_history="Síndrome de túnel del carpo bilateral. Parestesias nocturnas. EMG pendiente.",
-         family_history="Madre: hipotiroidismo."),
+         family_history="Madre: hipotiroidismo.", dominant_hand="DIESTRO",
+         neurological_history="Síndrome de túnel del carpo bilateral."),
 ]
 
 
@@ -159,12 +169,17 @@ def sembrar():
 
         pacientes = []
         for datos in PACIENTES:
-            paciente, _ = _obtener_o_crear(
+            paciente, creado = _obtener_o_crear(
                 db, Patient,
                 {"tenant_id": consultorio.id, "first_name": datos["first_name"], "last_name": datos["last_name"]},
                 {k: v for k, v in datos.items() if k not in ("first_name", "last_name")}
                 | {"is_active": True, "owner_doctor_id": doctor.id},
             )
+            if not creado:
+                # Completa sólo lo que falte; nunca pisa lo capturado a mano.
+                for campo, valor in datos.items():
+                    if getattr(paciente, campo, None) in (None, ""):
+                        setattr(paciente, campo, valor)
             pacientes.append(paciente)
 
         if not db.query(Appointment).filter_by(tenant_id=consultorio.id).first():

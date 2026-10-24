@@ -50,7 +50,7 @@ def doctora(db_session) -> User:
     usuaria = User(
         email="doctora@gems.com",
         hashed_password="no-usado-en-estas-pruebas",
-        full_name="Doctora de prueba",
+        full_name="Médico de prueba",
         role=Role.DOCTOR,
         tenant_id=tenant.id,
         is_active=True,
@@ -91,7 +91,7 @@ def _embarazo(db_session, paciente: Patient, doctora: User, estado: str) -> Preg
 
 
 def test_el_consentimiento_toma_las_fechas_del_embarazo_activo(db_session, doctora):
-    """Manda el dato que la doctora sí mantiene, aunque el expediente diga otro."""
+    """Manda el dato que el médico sí mantiene, aunque el expediente diga otro."""
     paciente = _paciente(
         db_session,
         doctora,
@@ -108,7 +108,7 @@ def test_el_consentimiento_toma_las_fechas_del_embarazo_activo(db_session, docto
 
 
 def test_sin_embarazo_activo_el_consentimiento_sale_sin_esas_fechas(db_session, doctora):
-    """Una paciente que ya no está embarazada no arrastra su FPP a otro trámite."""
+    """Un paciente que ya no está embarazada no arrastra su FPP a otro trámite."""
     paciente = _paciente(
         db_session,
         doctora,
@@ -140,7 +140,7 @@ def test_la_fecha_y_la_edad_del_consentimiento_son_las_del_consultorio(
     """A las 23:30 del 3 de octubre en Mazatlán el contenedor ya va en el día 4.
 
     Con ``date.today()`` el consentimiento firmado esa noche salía fechado al
-    día siguiente y, si la paciente cumplía años el 4, con un año de más.
+    día siguiente y, si el paciente cumplía años el 4, con un año de más.
     """
     import app.routers.clinical_consents as clinical_consents
     from _reloj import servidor_en_utc

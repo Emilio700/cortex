@@ -21,7 +21,7 @@ import { buscarAncla, contextoPresente, puedeVerRecorrido, rutaCoincide } from '
  * - `aqui`: se puede ver en la pantalla abierta.
  * - `navegar`: vive en otra pantalla sin datos concretos; basta ir ahí.
  * - `necesita`: hace falta algo que el sistema no puede elegir por la
- *   persona: una paciente o consulta concreta (`datos`) o un formulario
+ *   persona: un paciente o consulta concreta (`datos`) o un formulario
  *   abierto (`formulario`). Abrirlo por ella sería actuar, y un tutorial nunca
  *   actúa; se explica cómo llegar.
  */

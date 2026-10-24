@@ -17,10 +17,22 @@ VALID_PNG = base64.b64decode(
 
 
 def test_all_received_consent_categories_have_a_versioned_template():
-    templates = list_templates()
-    assert len(templates) == len(ConsentType)
+    # Toda categoría, incluso las de GEMS, conserva su plantilla: un
+    # consentimiento firmado tiene que poder abrirse siempre.
+    for tipo in ConsentType:
+        assert get_template(tipo).consent_type == tipo
     assert get_template(ConsentType.CESAREAN).allows_transfusion_choice is True
     assert get_template(ConsentType.CONDYLOMAS_OFFICE).allows_photos is True
+
+
+def test_cortex_solo_ofrece_consentimientos_de_neurocirugia():
+    ofrecidos = {t.consent_type for t in list_templates()}
+    assert ConsentType.CRANIOTOMY in ofrecidos
+    assert ConsentType.SPINE_SURGERY in ofrecidos
+    assert ConsentType.CESAREAN not in ofrecidos
+    assert ConsentType.CONTRACEPTIVE_METHOD not in ofrecidos
+    assert not any(t.requires_pregnancy_test for t in list_templates())
+    assert get_template(ConsentType.CRANIOTOMY).allows_transfusion_choice is True
 
 
 def test_signature_accepts_only_a_real_png_data_url():

@@ -33,6 +33,9 @@ export interface EncabezadoExpediente {
   phone?: string | null
   cell_phone?: string | null
   allergies?: string | null
+  /** Solo llegan a quien tiene la vista clínica. */
+  implanted_devices?: string | null
+  anticoagulants?: string | null
   owner_doctor_id?: number | null
   /** Las pestañas que esta sesión puede abrir: las decide el servidor. */
   pestanas: PestanaExpediente[]

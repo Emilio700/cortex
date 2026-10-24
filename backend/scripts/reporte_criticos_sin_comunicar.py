@@ -5,14 +5,14 @@ Por qué hace falta
 Marcar un resultado como «crítico» no cerraba nada hasta el plan 26 (D-8): no
 existía la incidencia ni el paso de documentar que se le comunicó a la
 paciente. El día del despliegue, esos resultados que llevan meses sin
-constancia de comunicación aparecerán de golpe en el inicio de su doctora,
+constancia de comunicación aparecerán de golpe en el inicio de su médico,
 porque el tablero de críticos las reúne. Nadie falló —el sistema antes no lo
 pedía—, así que conviene avisarles con número antes de ese día: este reporte
 es ese número.
 
-Regla (la MISMA del tablero de la doctora, ``GET /clinical-tracking/
+Regla (la MISMA del tablero del médico, ``GET /clinical-tracking/
 critical-results``): crítico, sin incidencia cerrada y vigente (no anulado);
-se excluyen las órdenes que la doctora ya no quiere imprimir (borrador,
+se excluyen las órdenes que el médico ya no quiere imprimir (borrador,
 cancelada, rechazada). Si esa regla cambia en ``app/routers/
 clinical_tracking.py``, esta tiene que cambiar igual.
 
@@ -35,7 +35,7 @@ from app.models.user import User
 from app.services.anular_resultado import VIGENTE
 
 # Mismo conjunto que ESTADOS_DE_ORDEN_NO_IMPRIMIBLES del router: una orden que
-# la doctora canceló o rechazó no aparece en su tablero de críticos.
+# el médico canceló o rechazó no aparece en su tablero de críticos.
 NO_IMPRIMIBLES = ("draft", "cancelled", "rejected")
 
 
@@ -84,7 +84,7 @@ def main() -> None:
     finally:
         db.close()
 
-    print("Resultados críticos sin comunicar (sólo lectura; misma regla del tablero de la doctora)")
+    print("Resultados críticos sin comunicar (sólo lectura; misma regla del tablero del médico)")
     print()
 
     if not filas:
@@ -112,7 +112,7 @@ def main() -> None:
             if datos["mas_antiguo"] is None or fecha < datos["mas_antiguo"]:
                 datos["mas_antiguo"] = fecha
 
-    print(f"  {'Doctora':<40} | {'Sucursal':<24} | {'Abiertos':>8} | {'Pacientes':>9} | Más antigua")
+    print(f"  {'Médico':<40} | {'Sucursal':<24} | {'Abiertos':>8} | {'Pacientes':>9} | Más antigua")
     print(f"  {'-' * 40}-+-{'-' * 24}-+-{'-' * 8}-+-{'-' * 9}-+------------")
     for (doc_id, doc_nom, suc), datos in sorted(
         por_doctora.items(), key=lambda kv: (-kv[1]["total"], kv[0][1])

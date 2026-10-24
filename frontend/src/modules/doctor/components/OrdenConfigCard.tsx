@@ -1,16 +1,16 @@
 /**
- * «Mi orden de estudio» en el perfil de la doctora (plan 26, D-7 y D-11).
+ * «Mi orden de estudio» en el perfil del médico (plan 26, D-7 y D-11).
  *
  * Va junto a «Mi Receta» y es igual de editable, pero con su **propia**
  * configuración: nombre impreso, qué datos salen, color, letra y estilo de la
  * firma, leyenda y cómo se reparte el papel. Al desplegar la segunda ronda la
- * migración copió la configuración de la receta de cada doctora a su orden:
+ * migración copió la configuración de la receta de cada médico a su orden:
  * lo que se ve aquí ya es lo que imprime. «Copiar de mi receta» se queda para
  * volver a copiar después de cambiar la receta (no guarda solo).
  *
  * Lo que se cambia no se aplica hasta guardarlo, y la vista previa es **el PDF
  * de verdad**, generado por el servidor (`POST /doctor-profile/me/order-preview`)
- * con una paciente de ejemplo y los ajustes aún sin guardar.
+ * con un paciente de ejemplo y los ajustes aún sin guardar.
  */
 import { useEffect, useMemo, useState } from 'react'
 import {
@@ -417,7 +417,7 @@ const OrdenConfigCard = ({
               <div>
                 <div className="fw-semibold">Vista previa</div>
                 <div className="text-body-secondary small">
-                  Es la orden real, con una paciente de ejemplo.
+                  Es la orden real, con un paciente de ejemplo.
                 </div>
               </div>
               <CButton

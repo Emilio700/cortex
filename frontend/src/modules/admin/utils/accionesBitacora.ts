@@ -36,7 +36,7 @@ const ACCIONES: Record<string, string> = {
   'diagnostic_result.critical_reopened': 'Reabrió un resultado crítico',
   'care_team.member_granted': 'Dio acceso al equipo tratante',
   'care_team.member_revoked': 'Quitó acceso al equipo tratante',
-  'user.doctoras_que_apoya.updated': 'Cambió las doctoras que apoya',
+  'user.doctoras_que_apoya.updated': 'Cambió los médicos que apoya',
   'permissions.updated': 'Cambió permisos',
   'tenant.switch': 'Cambió de sucursal',
   'notification.dismissed': 'Descartó un aviso',
@@ -46,7 +46,7 @@ const ACCIONES: Record<string, string> = {
 
 const ENTIDADES: Record<string, string> = {
   appointment: 'la cita',
-  patient: 'la paciente',
+  patient: 'el paciente',
   soap_note: 'la nota de consulta',
   prescription: 'la receta',
   medical_certificate: 'el certificado',

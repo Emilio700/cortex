@@ -4,7 +4,7 @@
  * Y tiene que decir la verdad sobre su propio estado: mientras no se haya
  * guardado, la pantalla no puede dar a entender que sí; y guardarla no es
  * agendar la cita. La regla salió de un caso real en que un mensaje de éxito
- * que mentía hizo que una doctora duplicara una receta.
+ * que mentía hizo que un médico duplicara una receta.
  */
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -119,7 +119,7 @@ describe('ProximaRevisionEditable', () => {
         render(<ProximaRevisionEditable pregnancy={p} resumen={resumenDe(p)} />)
 
         expect(
-            screen.getByText(/no agenda la cita ni avisa a la paciente/),
+            screen.getByText(/no agenda la cita ni avisa al paciente/),
         ).toBeInTheDocument()
     })
 })

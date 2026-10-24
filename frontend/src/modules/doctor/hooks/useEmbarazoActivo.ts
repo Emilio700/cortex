@@ -1,9 +1,9 @@
 /**
- * Embarazo activo de una paciente, resumido para mostrarlo en la consulta.
+ * Embarazo activo de un paciente, resumido para mostrarlo en la consulta.
  *
  * «No tiene embarazo activo» y «no se pudo consultar» no son lo mismo (plan
  * 29, C-2): antes un fallo dejaba `embarazo` en null y la consulta se veía
- * igual que la de una paciente no embarazada, sin semanas de gestación ni
+ * igual que la de un paciente no embarazada, sin semanas de gestación ni
  * sugerencia de próxima revisión. Ahora el fallo queda en `error` y la
  * pantalla lo dice. Un 403 (rol sin lectura prenatal) no es un fallo: no le
  * toca ver ese dato y no se le dice nada.
@@ -16,7 +16,7 @@ import type { Pregnancy, PregnancyCollection } from '../types/prenatal'
 import { resumirEmbarazo, type ResumenEmbarazo } from '../utils/embarazo'
 
 interface EstadoEmbarazoActivo {
-  /** Embarazo activo de la paciente, si lo hay. */
+  /** Embarazo activo del paciente, si lo hay. */
   embarazo: Pregnancy | null
   /** Edad gestacional y próxima revisión sugerida; null si no hay datación. */
   resumen: ResumenEmbarazo | null
@@ -51,7 +51,7 @@ export const useEmbarazoActivo = (patientId?: number): EstadoEmbarazoActivo => {
       setError(
         err?.response?.status === 403
           ? null
-          : mensajeDeError(err, 'No se pudo consultar si la paciente tiene un embarazo activo.'),
+          : mensajeDeError(err, 'No se pudo consultar si el paciente tiene un embarazo activo.'),
       )
     } finally {
       setCargando(false)

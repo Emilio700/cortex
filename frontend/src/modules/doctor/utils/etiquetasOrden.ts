@@ -2,7 +2,7 @@
  * Etiquetas en español del estado y la prioridad de una orden de estudio.
  *
  * El API guarda y devuelve los valores en inglés (`ordered`, `routine`…), que
- * es lo que la doctora y recepción veían crudo en pantalla. Aquí se traducen en
+ * es lo que el médico y recepción veían crudo en pantalla. Aquí se traducen en
  * un solo lugar para que la bandeja, la lista de recepción y el expediente
  * digan lo mismo. Un valor que no se conozca se muestra tal cual, sin romper la
  * pantalla.
@@ -97,22 +97,29 @@ export const pesoPrioridad = (priority: string): number =>
  */
 export const TIPOS_DE_ESTUDIO: ReadonlyArray<{ valor: string; etiqueta: string }> = [
   { valor: 'laboratory', etiqueta: 'Laboratorio' },
-  { valor: 'gynecology', etiqueta: 'Ginecología / Pap / VPH' },
-  { valor: 'breast', etiqueta: 'Imagen de mama' },
-  { valor: 'obstetric', etiqueta: 'Obstetricia' },
+  { valor: 'imaging', etiqueta: 'Neuroimagen (RM, TAC, angiografía, Rx)' },
+  { valor: 'neurophysiology', etiqueta: 'Neurofisiología (EEG, EMG, potenciales)' },
   { valor: 'procedure', etiqueta: 'Procedimiento' },
   { valor: 'referral', etiqueta: 'Interconsulta' },
   { valor: 'other', etiqueta: 'Otro' },
 ]
 
+// Los tipos de GEMS ya no se ofrecen, pero una orden vieja debe seguir
+// mostrando su nombre y no la clave en inglés.
+const TIPOS_HEREDADOS: ReadonlyArray<{ valor: string; etiqueta: string }> = [
+  { valor: 'gynecology', etiqueta: 'Ginecología / Pap / VPH' },
+  { valor: 'breast', etiqueta: 'Imagen de mama' },
+  { valor: 'obstetric', etiqueta: 'Obstetricia' },
+]
+
 const TIPOS: Record<string, string> = Object.fromEntries(
-  TIPOS_DE_ESTUDIO.map(({ valor, etiqueta }) => [valor, etiqueta]),
+  [...TIPOS_DE_ESTUDIO, ...TIPOS_HEREDADOS].map(({ valor, etiqueta }) => [valor, etiqueta]),
 )
 
 export const etiquetaTipoEstudio = (category: string): string => TIPOS[category] ?? category
 
 /**
- * Destino físico de un estudio: a dónde lleva la paciente esa hoja (plan 26,
+ * Destino físico de un estudio: a dónde lleva el paciente esa hoja (plan 26,
  * §3.2). Es la misma agrupación que usa el papel «Separado por destino», para
  * que la pantalla y el papel junten igual los estudios.
  */
@@ -123,6 +130,8 @@ const DESTINOS: Record<string, DestinoFisico> = {
   gynecology: 'laboratorio',
   breast: 'imagen',
   obstetric: 'imagen',
+  imaging: 'imagen',
+  neurophysiology: 'imagen',
 }
 
 export const DESTINOS_FISICOS: ReadonlyArray<{ valor: DestinoFisico; etiqueta: string }> = [

@@ -81,7 +81,7 @@ def test_separado_por_destino_da_una_hoja_por_grupo_y_firma_en_cada_una(client, 
     for orden in ordenes:
         assert f"Orden n.º {orden.id}" in texto
     assert texto.count("| Firma |") == 3
-    # La paciente va en cada hoja: cada una se entrega en un lugar distinto.
+    # El paciente va en cada hoja: cada una se entrega en un lugar distinto.
     assert texto.count("María López Pérez") == 3
     # La indicación común se imprime una vez por hoja, no una por estudio.
     assert texto.count("Perfil prenatal") == 3
@@ -302,7 +302,7 @@ def test_cada_estudio_del_lote_lleva_su_prioridad_y_se_imprime(client, db_sessio
     for etiqueta in ("Urgente", "Preferente", "Rutinaria"):
         assert etiqueta in texto, etiqueta
 
-    # Y ordena la bandeja de la doctora.
+    # Y ordena la bandeja del médico.
     bandeja = client.get(f"{PREFIX}/clinical-tracking/orders/inbox-by-patient", headers=headers).json()
     nombres = [o["study_name"] for o in bandeja["items"][0]["orders"] if o["order_group_id"] == creado.json()["id"]]
     assert nombres == ["Resonancia pélvica", "Biometría hemática", "Examen general de orina"]
@@ -389,7 +389,7 @@ def test_registro_de_impresion_respeta_el_alcance(client, db_session, escenario,
 
 
 # ---------------------------------------------------------------------------
-# Todas las pendientes de la paciente con una doctora (M5)
+# Todas las pendientes del paciente con un médico (M5)
 # ---------------------------------------------------------------------------
 
 def test_recepcion_imprime_todas_las_pendientes_de_una_doctora(client, db_session, escenario):

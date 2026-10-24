@@ -1,14 +1,14 @@
 """Datos clínicos que acompañan a una cita en la agenda (plan 28, D-4).
 
-Decisión de Emilio (2026-10-04): cada cita de una paciente con embarazo activo
-muestra sus semanas de gestación, calculadas **al día de la cita**. La doctora
+Decisión de Emilio (2026-10-04): cada cita de un paciente con embarazo activo
+muestra sus semanas de gestación, calculadas **al día de la cita**. El médico
 lee «Control prenatal · 28.3 SDG» en su agenda sin abrir el expediente.
 
 Se calcula con la misma regla que el expediente
 (``frontend/src/modules/doctor/utils/embarazo.ts``, ``resumirEmbarazo``): la
 FUR registrada y, si no hay, la implícita en la FPP (FPP − 280 días). Si la
-agenda y el expediente contaran distinto, la doctora vería dos edades
-gestacionales para la misma paciente.
+agenda y el expediente contaran distinto, el médico vería dos edades
+gestacionales para la mismo paciente.
 
 Las semanas son dato clínico: solo las recibe quien puede leer embarazos
 (``prenatal.read``) y, si es doctora, de los embarazos que lleva ella, como el
@@ -65,7 +65,7 @@ def semanas_por_cita(
         Pregnancy.status == PregnancyStatus.ACTIVE.value,
     )
     consulta = filtrar_por_autoria_clinica(consulta, Pregnancy.doctor_id, user)
-    # Si una paciente tuviera dos embarazos activos (no debería), manda el más
+    # Si un paciente tuviera dos embarazos activos (no debería), manda el más
     # reciente: es el que el expediente muestra arriba.
     activo: dict[int, Pregnancy] = {}
     for embarazo in consulta.order_by(Pregnancy.created_at.asc(), Pregnancy.id.asc()).all():

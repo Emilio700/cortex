@@ -2,7 +2,7 @@
  * «Anular resultado» desde la orden (plan 29, lote 9).
  *
  * El archivo equivocado ligado a una orden no se borra: se anula con motivo,
- * junto con su documento, y después se sube el correcto. Solo la doctora que
+ * junto con su documento, y después se sube el correcto. Solo el médico que
  * pidió el estudio o la administración; el servidor lo decide y aquí solo se
  * dice su respuesta.
  *
@@ -130,7 +130,7 @@ const AnularResultado = ({ orden, resultado, deshabilitado, onAnulado }: Props) 
         Anular este resultado
       </div>
       <p className="mb-2">
-        Úsalo si el archivo es de otra paciente o de otro estudio. El resultado y su archivo dejan
+        Úsalo si el archivo es de otro paciente o de otro estudio. El resultado y su archivo dejan
         de contar en la bandeja y en la gráfica; no se borran. Después sube el correcto.
       </p>
       {error && (

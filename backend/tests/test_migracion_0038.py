@@ -92,7 +92,7 @@ def _verificar(salida):
     # Un documento existente queda vigente y sin movimientos.
     assert salida["fila"] == [[5, 10, "Ultrasonido", None, None]]
     assert salida["abajo"] == salida["antes"]
-    # Bajar no borra el documento (se queda con la paciente a la que se movió).
+    # Bajar no borra el documento (se queda con el paciente a la que se movió).
     assert salida["fila_abajo"] == [[5, 11, "Ultrasonido"]]
     assert salida["de_nuevo"] == salida["arriba"]
 

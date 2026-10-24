@@ -1,183 +1,144 @@
-# GEMS — instrucciones para Claude
+# CORTEX — instrucciones para Claude
 
-## Git: nunca trabajar directo en `main`
+Cortex es el sistema clínico de un consultorio de neurocirugía: agenda, triage,
+consulta, expediente, recetas, órdenes de estudio, consentimientos y cobros. Nació
+como copia de GEMS v1.2.0 (ginecología, commit `987df76`) y se adaptó a
+neurocirugía con una identidad visual propia. Lo que sigue de GEMS (lógica,
+pruebas, decisiones de diseño) se respeta; lo ginecológico se ocultó o se
+reemplazó, sin borrar datos ni romper la cadena de migraciones.
 
-**Antes de escribir una sola línea, crea una rama.** Aplica a todas las sesiones y a
-todos los agentes, sin excepción. `main` debe quedar siempre en el mismo commit que
-`origin/main`.
+## Buenas prácticas Integra TI
 
-Convención de nombres, la que ya usa el repo:
+Cortex sigue la guía común (`Guia-Buenas-Practicas-Repositorios.md`).
 
-- `fix/<descripcion-corta>` — corrección de un defecto
-- `feat/<descripcion-corta>` — funcionalidad nueva
-- `docs/<descripcion-corta>` — sólo documentación
-- `fase-<n>-<descripcion>` — lotes grandes de trabajo planeado
+### Ramas
+- `main` = producción. `develop` = integración. No hay otras ramas permanentes.
+- Todo cambio va en su propia rama **desde `develop` actualizado**, con prefijo obligatorio:
+  `feat/`, `fix/`, `refactor/`, `chore/`, `docs/`. El resto del nombre es libre,
+  en minúsculas y con guiones. No lleva número de tarea.
+- Urgencias en producción: `hotfix/` desde `main`; regresa a `main` y a `develop` el mismo día.
+- Nunca commit directo en `develop` ni en `main`. Nunca `--force` sobre ellas.
+- Integración a `develop`: `git merge --no-ff`, autorizado por Emilio. Siempre probado
+  antes: compila, pasan las pruebas y se vio funcionar.
 
-Una rama por unidad de trabajo entendible por sí sola, no una por sesión.
+### Commits y CHANGELOG
+- Commits en español: `tipo(área): qué se logró`. El cuerpo explica por qué.
+  Evita acentos en el asunto.
+- Título del merge request en lenguaje de negocio. Su descripción lleva `Tarea: #<id>` cuando la tarea
+  ya existe; la rama y el commit no llevan el número.
+- Cada rama agrega su línea en `[Sin publicar]` del `CHANGELOG.md`, en el mismo merge.
+- Un commit por cambio coherente. No mezcles corrección de defectos con refactor.
+- Para mensajes de varias líneas usa heredoc en Bash (`git commit -F - <<'EOF'`), no
+  here-strings de PowerShell.
 
-## Flujo: rama → `develop` → `main`
+### Versiones
+- `vMAYOR.MENOR.PARCHE` (semver). PARCHE = corrección; MENOR = funcionalidad nueva;
+  MAYOR = cambio estructural. La versión vive en `frontend/package.json` y en
+  `backend/app/core/version.py` (una prueba exige que coincidan; el pie de la
+  interfaz y las novedades la leen de ahí).
+- Liberar: subir versión y cerrar el CHANGELOG en `chore/version-X.Y.Z` → integrar a `develop`
+  → `git merge --ff-only develop` en `main` → etiqueta anotada `vX.Y.Z` **sobre `main`** →
+  Release en GitHub → desplegar. Libera Emilio.
+- Las etiquetas solo existen sobre `main`, una por versión desplegada. No se mueven ni se borran.
 
-Decisión de Emilio al publicar la versión 1.0.0 (2026-09-29):
+### Reglas para Claude en este repo
+- Antes de tocar código, revisar la rama (`git branch --show-current`). Si es `main` o `develop`,
+  crear una rama con prefijo desde `develop` actualizado antes de cambiar nada.
+- No hacer `push`, merge a `develop` o `main`, ni crear etiquetas sin confirmación explícita.
+- Si el directorio de trabajo tiene cambios sin relación con la tarea, avisar antes de commitear.
+- **Nunca `git add .`**: agrega por ruta y revisa `git diff --cached --stat` antes de commitear.
+- No proponer integrar un cambio que no se haya probado.
+- Nunca etiquetar `develop` ni una rama de trabajo.
+- *Worktrees*: uno por tarea, cada uno con su rama nueva desde `origin/develop`; se quita al integrar.
 
-- **`main` es lo que está en producción**, y nada más. Solo recibe `develop` cuando ya se
-  probó, y cada despliegue lleva su etiqueta de versión (`vX.Y.Z`, versionado semántico)
-  en el commit que quedó desplegado.
-- **`develop` es la integración.** Toda rama nace del tip vigente de `develop` y se fusiona
-  de vuelta a `develop` con `--no-ff`. Ahí se juntan los cambios de las distintas sesiones
-  y se verifica que funcionen juntos antes de pasar a `main`.
-- Nunca fusiones una rama de trabajo directo a `main`, ni `git push --force` a `main` o
-  `develop`. Las ramas fusionadas se conservan para trazabilidad.
-- Pasar `develop` a `main`, etiquetar y desplegar lo autoriza Emilio, igual que el push.
+### Especificaciones (OpenSpec)
+- Especificaciones del sistema: `openspec/` en este repo (por crear con el primer cambio grande).
+- Funcionalidad nueva, o cambios que tocan datos, integraciones o permisos:
+  primero un cambio de OpenSpec (propuesta + tareas), después el código.
+- Nombre del cambio: `<qué se logra>`. La rama lleva el mismo nombre con su prefijo de tipo.
 
-## Un solo working tree compartido
+### Documentación
+- **Antes de crear una pantalla o un módulo, leer `docs/DESIGN.md`** y seguir sus componentes,
+  patrones y la identidad de Cortex. No inventar estilos ni componentes nuevos si ya existe uno.
+- Si el cambio agrega un patrón nuevo o el código ya no coincide con `DESIGN.md`, actualizarlo en el
+  mismo cambio. Si no coinciden, manda el código.
+- Planes de versión, decisiones, despliegue y manual: `docs/` (fuente oficial).
+- Documentación interna de cada desarrollador: `docs/usuarios/<nombre>/`.
+- Nada de datos personales ni secretos en `docs/`.
 
-Varias sesiones de Claude trabajan sobre **el mismo checkout al mismo tiempo**. Eso
-tiene dos consecuencias que no son obvias:
+### Datos del repo
+- Responsable: Emilio Cornejo · Versión actual: v0.1.0 (sin liberar)
+- Producción: por definir (correrá `main`) · Pruebas: no hay
+- Excepciones a estas prácticas: ninguna.
 
-**Ramificar no basta.** La rama es del directorio, no de tu sesión: otra sesión pudo
-haberla cambiado debajo de ti entre que empezaste y que vas a commitear. Verifica con
-`git branch --show-current` **justo antes de commitear**, no sólo al empezar. Y no
-cambies de rama mientras otra sesión esté escribiendo.
+## Ambiente local
 
-**Nunca `git add .`.** Se traga trabajo ajeno a medio hacer y produce commits
-imposibles de revisar o revertir. Siempre `git add` por ruta explícita, listando cada
-archivo, y antes de commitear verifica con `git diff --cached --stat` que sólo esté
-lo tuyo.
+Cortex corre junto a GEMS en la misma máquina, así que usa sus propios puertos:
 
-Si de verdad hacen falta dos ramas a la vez, la herramienta correcta es
-`git worktree`, no otra sesión sobre el mismo directorio.
+| Pieza | Puerto | Cómo |
+|---|---|---|
+| PostgreSQL | 5442 | `docker compose up -d postgres` |
+| API (FastAPI) | 8010 | `backend/.venv/Scripts/uvicorn app.main:app --port 8010 --reload` |
+| Web (Vite) | 3010 | `cd frontend && npm run dev` |
 
-## Se trabaja en el checkout principal, rama por rama
-
-Decisión de Emilio (2026-10-05): lo normal es trabajar **en el checkout principal**,
-cambiando a la rama de cada trabajo (`git switch`). Así VS Code muestra la rama real y
-el ambiente local (`localhost:3000`, que corre desde esta carpeta) enseña exactamente
-lo que se está cambiando, para ir verificando cada paso antes de llegar a `develop`.
-
-- Una tanda de cambios tiene su rama de integración (p. ej. `integracion/v1.1.1`), que
-  nace del tip de `develop`. Cada cambio nace de esa integración en su propia rama
-  (`fix/...`, `feat/...`), se verifica ahí (pruebas y en el navegador) y se fusiona de
-  vuelta a la integración con `--no-ff`. Al final, la integración pasa a `develop`.
-- Antes de cambiar de rama, `git status` limpio (salvo `.claude/settings.local.json`):
-  no se lleva trabajo a medias de una rama a otra.
-- Los `git worktree` quedan **solo** para cuando varios agentes trabajan en paralelo y
-  de verdad no pueden compartir carpeta. Con un solo trabajo a la vez no se usan: lo
-  que se ve tiene que ser lo que se cambia.
-
-## Commits
-
-- Mensaje en español. Evita acentos en el asunto (el resto del repo lo hace así).
-- El cuerpo explica **por qué**, no qué archivos cambiaron — eso ya lo dice el diff.
-- Si el trabajo viene de un plan en `docs/plans/`, cítalo.
-- Un commit por cambio coherente. No mezcles corrección de defectos con refactor:
-  cuando algo falle después, hay que poder saber cuál de los dos lo rompió.
-
-Para mensajes de varias líneas usa heredoc con la herramienta de Bash:
-
-```sh
-git commit -F - <<'EOF'
-asunto
-EOF
-```
-
-No uses here-strings de PowerShell (`@'...'@`) ahí: la shell de Bash no los entiende
-y se cuelan literales en el asunto del commit.
-
-## No subas sin que te lo pidan
-
-`git push`, abrir un PR y desplegar a producción los autoriza Emilio, cada vez.
-Commitear en la rama local no requiere permiso; publicar sí.
+Base nueva: `alembic upgrade head` y luego `python -m scripts.seed_cortex` (desde
+`backend/`). El seed es idempotente, crea un consultorio de neurocirugía ficticio
+y muestra las contraseñas una sola vez (o usa `CORTEX_SEED_PASSWORD`). No uses
+`seed.py` ni los `create_demo_*`: son de GEMS, con ids fijos.
 
 ## Verificación antes de reportar
 
-Desde `frontend/`:
-
 ```
-npm test          # vitest run
-npx tsc --noEmit
+cd frontend && npx tsc --noEmit && npm test
+cd backend  && pytest
 ```
 
-Desde `backend/`:
+`scripts/verificar_todo.ps1` corre las tres. Si algo falla y no es tuyo, dilo en
+el reporte en vez de arreglarlo.
 
-```
-pytest
-```
+## Idioma y voz
 
-Si algo falla y no es tuyo, dilo en el reporte en vez de arreglarlo: puede ser de
-otra sesión trabajando en paralelo.
+- Comentarios, nombres de pruebas y mensajes de interfaz en **español con acentos**.
+  Los comentarios explican **por qué**, no qué hace la línea.
+- El identificador en inglés se respeta donde ya existe (`doctor_id`, anclas
+  `data-tour="doctora-*"`): no se traduce código que funciona.
+- **Voz de Cortex:** al paciente y al médico en masculino genérico («el paciente»,
+  «el médico»), con su concordancia. GEMS hablaba de «la paciente» y «la doctora»;
+  `vozDeLaInterfaz.test.ts` falla si se cuela de nuevo en un texto visible.
+- Se le habla de tú a quien usa el sistema.
 
-## Idioma del código
+## Identidad visual
 
-Comentarios, nombres de pruebas y mensajes de interfaz en **español con acentos**.
-Los comentarios explican **por qué** se tomó una decisión, no qué hace la línea
-siguiente. El identificador en inglés se respeta donde ya existe; no se traduce
-código que ya funciona sólo por consistencia.
+La marca vive en `frontend/src/scss/_cortex.scss` (cargada al final) y en
+`frontend/src/components/marca/`. Redefine las variables que leen las capas
+heredadas (`--cui-*`, `--glass-*`, `--hf-*`), así que una pantalla nueva hereda
+la marca si usa esos tokens. No pongas colores sueltos: usa `--cx-*`. Todo
+movimiento respeta «reducir movimiento». Detalle en `docs/DESIGN.md`.
 
-## Trabajo en paralelo entre sesiones
+## Lo ginecológico que quedó de GEMS
 
-Cuando varias sesiones trabajan a la vez, antes de empezar se acuerda **qué archivos
-toca cada quien** y no se cruza esa línea. Si necesitas un archivo del dominio de
-otra sesión, avísale por `SendMessage` en vez de editarlo.
+Se conserva en la base y en el código para no perder datos ni romper la cadena
+de migraciones, pero **no se ofrece**: embarazos y control prenatal, campos
+gineco-obstétricos de la ficha, tipos de consentimiento, episodio y estudio de
+ginecología. Al tocar esas áreas, no los vuelvas a exponer en la interfaz.
 
 ## Cambios en el frontend: revisa los tutoriales
 
 Cualquier cambio en el frontend obliga a revisar los recorridos guiados (driver.js)
-de las pantallas afectadas. Un `data-tour` renombrado o un paso que describe un
-botón que ya no existe deja al personal con un tutorial que miente, y nadie se
-entera: el paso que no encuentra su elemento se salta en silencio.
-
-Viven en `frontend/src/shared/tutoriales/`; los pasos, en `recorridos/`.
+de las pantallas afectadas, en `frontend/src/shared/tutoriales/recorridos/`.
 
 - Si tocas o quitas un `data-tour`, busca qué recorrido lo usa y corrígelo.
 - Relee los textos de los pasos de esa pantalla: que el botón se llame como dice,
-  que esté donde dice y que haga lo que dice. Los nombres del menú cuentan.
+  que esté donde dice y que haga lo que dice.
 - Si cambia el contenido de un recorrido (pasos, textos, ids), sube su `version`.
-  Así vuelve a salir como «Nuevo» para quien ya lo vio, y el progreso a medias
-  de la versión anterior se descarta.
+- **Nada arranca solo**: ningún recorrido se abre sin que la persona lo pida.
+- `anclas.test.ts` falla si un recorrido usa un `data-tour` que no existe.
 
-**Nada arranca solo.** Decisión de Emilio: la ayuda es un menú de apoyo para
-cuando hay una duda. Ningún recorrido se abre sin que la persona lo pida desde el
-«?» del encabezado (el centro de ayuda), desde un botón «¿Cómo se llena?» de un
-formulario o desde el recorrido completo que ella empezó. Lo único que aparece sin
-pedirlo es la franja de una línea en el encabezado, una sola vez por usuaria, que
-dice dónde está la ayuda y no abre nada. No agregues invitaciones ni arranques
-automáticos.
+## Este es un sistema clínico
 
-Cómo se agrega un recorrido:
+Antes de cambiar cómo se guarda, se muestra o se borra información clínica,
+considera qué pasa si tu cambio falla a media consulta.
 
-- **Al índice y a la búsqueda:** basta declararlo en `recorridos/` (y en el
-  `CATALOGO` de `recorridos/index.ts`). Quién lo ve lo deciden `requiere` y
-  `roles`, con el mismo permiso que abre la pantalla en `routes.tsx` (hay prueba);
-  `grupo` decide en qué tema del índice sale. La búsqueda recorre solos títulos,
-  resúmenes y el texto de cada paso.
-- **Si necesita datos concretos** (una ruta con `:param`, como la consulta) **o un
-  formulario abierto** (`contexto`), escribe `comoLlegar`: el centro lo muestra en
-  vez de elegir una paciente o abrir el formulario por ella, junto con los pasos
-  para leerlos ahí mismo. `irA` agrega un botón para ir a la pantalla sin datos
-  desde donde se llega (p. ej. «Mis consultas»). Una prueba exige `comoLlegar`.
-- **Al recorrido completo:** agrega una etapa `{ recorridoId, nombre }` en
-  `recorridos/completos.ts`, en el orden en que se aprende el trabajo, y sube la
-  `version` de ese completo si cambian sus etapas. La etapa que un usuario no
-  puede ver por permisos se salta sola y el centro lo dice.
-- Un formulario en un modal lleva su `BotonAyudaContextual`: con el modal abierto,
-  el «?» del encabezado queda tapado.
-
-Todo lo que toca driver.js pasa por `motor.ts`, que nunca debe dejar la pantalla
-inservible: ante un error cierra el recorrido y barre el fondo oscurecido, y si lo
-señalado desaparece salta al siguiente paso o cierra guardando el avance. Si
-cambias el motor, conserva esas pruebas.
-
-`anclas.test.ts` falla si un recorrido usa un `data-tour` que no aparece en ningún
-`.tsx`. Detecta el id renombrado, no el texto desactualizado: eso sigue siendo
-tu revisión. Si escribes pasos para un id que otra rama todavía no agrega, anótalo
-en `PENDIENTES_DE_OTRA_RAMA` y quítalo al unir las ramas (la prueba te lo pide).
-
-## Este es un sistema clínico en producción
-
-G.E.M.S. lo usan doctoras reales con pacientes reales. Antes de cambiar cómo se
-guarda, se muestra o se borra información clínica, considera qué pasa si tu cambio
-falla a media consulta.
-
-Regla que salió de un caso real: **si el sistema no hizo algo, la interfaz no puede
-decir que sí.** Un mensaje de éxito que miente hizo que una doctora duplicara una
-receta. Ver `docs/plans/22_plan_maestro_consolidado.md`.
+Regla heredada de un caso real en GEMS: **si el sistema no hizo algo, la interfaz
+no puede decir que sí.** Un mensaje de éxito que miente hizo que una doctora
+duplicara una receta.

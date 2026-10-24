@@ -38,7 +38,7 @@ router = APIRouter(prefix="/patients", tags=["Patients"])
 def ve_antecedentes(db: Session, user: User) -> bool:
     """¿Puede ver y capturar lo clínico de la ficha? (opción C, plan 32).
 
-    Es el permiso del expediente clínico: la doctora y administración lo
+    Es el permiso del expediente clínico: el médico y administración lo
     traen; recepción no. MASTER lo tiene todo.
     """
     return user.role == Role.MASTER or "medical_history.read" in get_user_permissions(user, db)
@@ -59,7 +59,7 @@ def _sin_lo_clinico(datos: dict, db: Session, user: User) -> dict:
     """Lo que recepción manda de lo clínico se ignora: ni lo borra ni lo pisa.
 
     Su formulario ya no lo muestra, pero un cliente viejo o un error podría
-    mandarlo vacío y borrar los antecedentes que capturó la doctora.
+    mandarlo vacío y borrar los antecedentes que capturó el médico.
     """
     if ve_antecedentes(db, user):
         return datos
@@ -116,7 +116,7 @@ def list_patients(
     query = scoped_query(db.query(Patient), Patient, current_user).filter(Patient.is_active.is_(True))
     query = _owned_by_doctor(query, current_user)
 
-    # Fichas incompletas (plan 32, punto 5): el alta expres deja a la paciente
+    # Fichas incompletas (plan 32, punto 5): el alta expres deja al paciente
     # sin fecha de nacimiento, y de ella dependen la edad, las semanas de
     # embarazo y los PDF. Es solo un filtro: no cambia el orden ni la
     # paginacion de la lista.
@@ -191,12 +191,12 @@ def create_patient(
         existing = scoped_query(db.query(Patient), Patient, current_user).filter(Patient.email == patient_data.email).first()
 
         if existing:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Ese correo ya está registrado en el expediente de otra paciente.")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Ese correo ya está registrado en el expediente de otro paciente.")
 
     # Create patient
     owner_id = patient_data.owner_doctor_id
     if alcance_clinico_acotado(current_user):
-        # Una doctora acotada sólo puede dar de alta expedientes dentro de su
+        # Un médico acotada sólo puede dar de alta expedientes dentro de su
         # propio alcance: si pudiera nombrar titular a otra, crearía un
         # expediente que ella misma no podría volver a abrir.
         owner_id = current_user.id
@@ -209,7 +209,7 @@ def create_patient(
         **patient_data.model_dump(exclude={"owner_doctor_id"}),
     )
     # Recepción no captura lo clínico (opción C, plan 32): si su alta lo trae,
-    # no se guarda. Es una paciente nueva, así que no hay nada que pisar.
+    # no se guarda. Es un paciente nuevo, así que no hay nada que pisar.
     if not ve_antecedentes(db, current_user):
         for campo in CAMPOS_CLINICOS_DE_FICHA:
             setattr(new_patient, campo, None)
@@ -278,7 +278,7 @@ def possible_duplicates(
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[User, Depends(require_permission("patients.read"))],
 ):
-    """¿La paciente que se está capturando ya tiene expediente? (B-06 / S-06).
+    """¿El paciente que se está capturando ya tiene expediente? (B-06 / S-06).
 
     Decisión de Emilio (3.5): **sólo advertir**. No bloquea el alta, no hay
     índice único nuevo y no se fusiona nada; la pantalla enseña los candidatos
@@ -286,8 +286,8 @@ def possible_duplicates(
     nombre, el teléfono y la fecha de nacimiento no queden en las bitácoras de
     acceso del servidor.
 
-    Compara con las pacientes activas del alcance de quien pregunta (la
-    sucursal; la doctora, las suyas), por teléfono o celular normalizado a 10
+    Compara con los pacientes activas del alcance de quien pregunta (la
+    sucursal; el médico, las suyas), por teléfono o celular normalizado a 10
     dígitos, por correo, por nombre y apellido sin acentos y por apellido con
     fecha de nacimiento. Devuelve lo mínimo para reconocerla: nombre, fecha de
     nacimiento y los últimos cuatro dígitos del teléfono.
@@ -316,7 +316,7 @@ def possible_duplicates(
 
     # Teléfono: en la base el número está escrito de mil formas, así que se
     # compara sin separadores y por los últimos 10 dígitos (cubre +52, 1, 044),
-    # y luego se confirma ya normalizado. Esto recorre las pacientes de la
+    # y luego se confirma ya normalizado. Esto recorre los pacientes de la
     # sucursal: el índice de trigramas de B-05 no sirve para una expresión, y
     # con los volúmenes de producción son milisegundos (medido, ver bitácora).
     if buscados:
@@ -384,7 +384,7 @@ def get_patient(
     ).filter(Patient.id == patient_id).first()
 
     if not patient:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró la paciente.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró el paciente.")
 
     return ficha_para(db, current_user, patient)
 
@@ -402,7 +402,7 @@ def update_patient(
     ).filter(Patient.id == patient_id).first()
 
     if not patient:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró la paciente.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró el paciente.")
 
     # Check email uniqueness if changing email
     update_data = _sin_lo_clinico(patient_data.model_dump(exclude_unset=True), db, current_user)
@@ -415,7 +415,7 @@ def update_patient(
         if alcance_clinico_acotado(current_user) and requested_owner != current_user.id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Un doctor no puede reasignar el expediente de una paciente",
+                detail="Un doctor no puede reasignar el expediente de un paciente",
             )
         if requested_owner is not None and not alcance_clinico_acotado(current_user):
             _doctor_in_current_tenant(db, requested_owner, current_user)
@@ -428,7 +428,7 @@ def update_patient(
         )
 
         if existing:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Ese correo ya está registrado en el expediente de otra paciente.")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Ese correo ya está registrado en el expediente de otro paciente.")
 
     # Update fields
     for field, value in update_data.items():
@@ -464,12 +464,12 @@ def deactivate_patient(
     ).filter(Patient.id == patient_id).first()
 
     if not patient:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró la paciente.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró el paciente.")
 
     patient.is_active = False
     db.commit()
     db.refresh(patient)
-    # Desactivar saca a la paciente de la búsqueda del mostrador; sin este
+    # Desactivar saca al paciente de la búsqueda del mostrador; sin este
     # registro, un expediente «desaparecido» no tendría a quién preguntarle.
     log_action(
         db,
@@ -490,7 +490,7 @@ def get_patient_history(
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[User, Depends(require_permission("patients.read"))],
 ):
-    """Historial de citas de la paciente; lo clínico, solo a quien puede leerlo.
+    """Historial de citas del paciente; lo clínico, solo a quien puede leerlo.
 
     Plan 32, punto 7 (C1): esta ruta pide ``patients.read`` y recepción lo
     tiene, así que devolvía la nota SOAP, el triage y las recetas de cada cita
@@ -510,7 +510,7 @@ def get_patient_history(
         scoped_query(db.query(Patient), Patient, current_user), current_user
     ).filter(Patient.id == patient_id).first()
     if not patient:
-        raise HTTPException(status_code=404, detail="No se encontró la paciente.")
+        raise HTTPException(status_code=404, detail="No se encontró el paciente.")
 
     # Appointments with triage, SOAP, prescriptions.
     # Use scoped_query so the appointment filter matches the patient scope:
@@ -594,17 +594,17 @@ def reassign_patient_owner(
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[User, Depends(require_permission("patients.reassign_owner"))],
 ):
-    """Reasigna la paciente a otra doctora.
+    """Reasigna el paciente a otro médico.
 
     Antes esto se decidia por rol dentro del cuerpo, asi que la pantalla de Master
     no podia abrirlo ni cerrarlo para nadie. Ahora lo gobierna un permiso propio,
     que por defecto tienen secretaria y administracion —los mismos de antes— y la
     doctora no, para que ``patients.update`` no le sirva para quedarse con el
-    expediente de una paciente ajena.
+    expediente de un paciente ajena.
     """
     patient = scoped_query(db.query(Patient), Patient, current_user).filter(Patient.id == patient_id).first()
     if not patient:
-        raise HTTPException(status_code=404, detail="No se encontró la paciente.")
+        raise HTTPException(status_code=404, detail="No se encontró el paciente.")
 
     # Validate that the target user is a doctor
     _doctor_in_current_tenant(db, owner_data.owner_doctor_id, current_user)

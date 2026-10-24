@@ -5,7 +5,7 @@ if [[ $# -ne 1 ]]; then echo "Uso: $0 <directorio-backup>" >&2; exit 2; fi
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 ENV_FILE="${ENV_FILE:-$ROOT_DIR/.env.production}"
 BACKUP_DIR="$(cd "$1" && pwd)"
-TEST_DB="gems_restore_verify_$(date -u +%s)"
+TEST_DB="cortex_restore_verify_$(date -u +%s)"
 COMPOSE=(docker compose --env-file "$ENV_FILE" -f "$ROOT_DIR/docker-compose.prod.yml")
 
 (cd "$BACKUP_DIR" && sha256sum -c SHA256SUMS)

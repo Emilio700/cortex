@@ -2,7 +2,7 @@
  * Órdenes de estudio en el mostrador de recepción.
  *
  * Dos tareas del mostrador, en pestañas:
- *  - «Por entregar» (O-09): dar a la paciente el papel de la orden y marcar la
+ *  - «Por entregar» (O-09): dar al paciente el papel de la orden y marcar la
  *    entrega, sin tocar el estado clínico.
  *  - «Subir resultado» (O-04): adjuntar el PDF o la foto del resultado.
  *
@@ -35,7 +35,7 @@ const SubirResultadosPage = () => {
     <>
       <EncabezadoPantalla
         titulo="Órdenes y resultados"
-        descripcion="Entrega las órdenes a la paciente y sube los resultados que trae."
+        descripcion="Entrega las órdenes al paciente y sube los resultados que trae."
         icono={cilCloudUpload}
       />
 

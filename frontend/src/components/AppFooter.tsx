@@ -5,7 +5,7 @@ import { cilMedicalCross } from '@coreui/icons'
 
 import { useAuth } from '../shared/context/AuthContext'
 import { formatearEnConsultorio } from '../shared/utils/date'
-import { VERSION_GEMS } from '../shared/version'
+import { VERSION_CORTEX } from '../shared/version'
 
 const roleLabels: Record<string, string> = {
   admin: 'Administrador',
@@ -33,9 +33,9 @@ const AppFooter = () => {
     <CFooter role="contentinfo" className="px-4 small">
       <div className="d-flex align-items-center gap-2">
         <CIcon icon={cilMedicalCross} size="sm" className="text-primary" />
-        <span className="fw-semibold">G.E.M.S</span>
+        <span className="fw-semibold" style={{ letterSpacing: '0.18em' }}>CORTEX</span>
         <span className="text-secondary">|</span>
-        <span className="text-secondary">v{VERSION_GEMS}</span>
+        <span className="text-secondary">v{VERSION_CORTEX}</span>
         <span className="text-secondary d-none d-sm-inline">|</span>
         <span className="text-secondary d-none d-sm-inline">
           {dateStr} — {timeStr}
@@ -54,7 +54,7 @@ const AppFooter = () => {
         )}
         <span className="text-secondary d-none d-md-inline">|</span>
         <span className="text-secondary d-none d-md-inline">
-          &copy; {year} G.E.M.S. Todos los derechos reservados.
+          &copy; {year} CORTEX. Todos los derechos reservados.
         </span>
       </div>
     </CFooter>

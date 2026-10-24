@@ -1,7 +1,7 @@
 """Convertir un preregistro en paciente sin fecha de nacimiento (plan 29, lote 5).
 
 El alta exprés de recepción ya la permite vacía; convertir la exigía y
-bloqueaba el alta cuando la paciente no la dio por teléfono.
+bloqueaba el alta cuando el paciente no la dio por teléfono.
 
 Desde el plan 32 (punto 5) el preregistro salió de la interfaz y convertir ya
 no viene en los roles por omisión: el endpoint sigue para quien tenga el

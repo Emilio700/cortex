@@ -68,7 +68,9 @@
   --glass-shadow-strong: var(--cx-sombra-alta);
   --glass-radius: var(--cx-radio);
   --glass-radius-lg: var(--cx-radio-lg);
-  --hero-gradient: var(--cx-degradado);
+  // La banda de cada pantalla es marina, como el logo; el azul eléctrico se
+  // reserva para las acciones.
+  --hero-gradient: linear-gradient(120deg, #071330 0%, #0b1d45 55%, #12306e 100%);
   // Un fondo casi plano con dos luces muy suaves del azul de la marca.
   --page-gradient:
     radial-gradient(60% 50% at 100% 0%, rgba(47, 140, 255, 0.08) 0%, transparent 70%),
@@ -708,4 +710,99 @@ body.hf-theme {
 
 .inicio-barra-relleno {
   transition: width 0.9s var(--cx-curva);
+}
+
+// Un renglón de pendientes con dos líneas: el nombre y, debajo, el detalle.
+.inicio-subitem--pila {
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.1rem;
+}
+
+// ── Banda de encabezado de cada pantalla ─────────────────────────
+// Marina con la red neuronal del logo como textura, un resplandor azul a la
+// derecha y un filo de luz que cruza despacio. Es la misma familia que la
+// banda del inicio, para que todas las pantallas se sientan de Cortex.
+.hero-banner,
+.hf-hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(125, 211, 252, 0.12);
+  background: var(--hero-gradient) !important;
+  box-shadow: 0 18px 40px rgba(7, 19, 48, 0.22) !important;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 140% at 92% 50%, rgba(47, 140, 255, 0.35) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='140'%3E%3Cg fill='none' stroke='%237dd3fc' stroke-opacity='.10'%3E%3Cpath d='M10 20L70 50L130 18L190 60L250 30M70 50L60 120L130 100L190 60L230 125M130 18L130 100'/%3E%3C/g%3E%3Cg fill='%237dd3fc' fill-opacity='.25'%3E%3Ccircle cx='70' cy='50' r='2'/%3E%3Ccircle cx='130' cy='18' r='1.6'/%3E%3Ccircle cx='190' cy='60' r='2.2'/%3E%3Ccircle cx='130' cy='100' r='1.8'/%3E%3Ccircle cx='60' cy='120' r='1.4'/%3E%3Ccircle cx='250' cy='30' r='1.4'/%3E%3C/g%3E%3C/svg%3E") right center / 260px 140px repeat;
+    -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0%, #000 70%);
+    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0%, #000 70%);
+  }
+
+  // El filo de luz: cruza la banda cada pocos segundos, como un pulso.
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -30%;
+    z-index: -1;
+    width: 30%;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(125, 211, 252, 0.12), transparent);
+    animation: cx-barrido 9s ease-in-out 1s infinite;
+  }
+
+  .encabezado-pantalla__icono,
+  .kpi-icon {
+    background: rgba(47, 140, 255, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.25), 0 0 18px rgba(47, 140, 255, 0.35);
+  }
+
+  .encabezado-pantalla__descripcion {
+    color: #a9badb;
+  }
+
+  // Los botones claros sobre la banda (Nueva cita, Exportar…).
+  .btn-light,
+  .btn-outline-light {
+    border-color: rgba(125, 211, 252, 0.35);
+  }
+}
+
+@keyframes cx-barrido {
+  0% { left: -30%; }
+  45%, 100% { left: 110%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-banner::after,
+  .hf-hero::after {
+    animation: none;
+    display: none;
+  }
+}
+
+// Botones con contorno sobre la banda marina: el azul de la marca se perdía
+// contra el fondo; ahí van en claro.
+.hero-banner,
+.hf-hero {
+  .btn-outline-primary,
+  .btn-outline-secondary,
+  .btn-outline-info {
+    --cui-btn-color: #dbe7ff;
+    --cui-btn-border-color: rgba(125, 211, 252, 0.4);
+    --cui-btn-hover-color: #fff;
+    --cui-btn-hover-bg: rgba(47, 140, 255, 0.25);
+    --cui-btn-hover-border-color: rgba(125, 211, 252, 0.7);
+    --cui-btn-active-bg: rgba(47, 140, 255, 0.35);
+    --cui-btn-disabled-color: rgba(219, 231, 255, 0.5);
+    --cui-btn-disabled-border-color: rgba(125, 211, 252, 0.2);
+  }
 }

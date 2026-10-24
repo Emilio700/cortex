@@ -1,7 +1,7 @@
 """La nota postoperatoria no viaja con la agenda (plan 32, revisión del punto 7).
 
 ``appointments.read`` lo tiene recepción y devolvía la nota postoperatoria de
-la cirugía, que escribe la doctora. Ahora solo la recibe quien puede leer
+la cirugía, que escribe el médico. Ahora solo la recibe quien puede leer
 notas clínicas. Lo que recepción captura (motivo, notas, preoperatorias) sigue
 igual, y editar la cirugía no borra la postoperatoria.
 """

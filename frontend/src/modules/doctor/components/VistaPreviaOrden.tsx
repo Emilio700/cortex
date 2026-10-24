@@ -4,7 +4,7 @@
  * Imprimir ya no manda el PDF a la impresora a ciegas: se abre el PDF real en
  * el visor y desde ahí se imprime o se descarga. Cuando el papel junta varios
  * estudios se elige cómo repartirlo («Separado por destino» o «Todo en una
- * hoja»); arranca con el que la doctora fijó en su perfil. Al cambiarlo se
+ * hoja»); arranca con el que el médico fijó en su perfil. Al cambiarlo se
  * vuelve a pedir el PDF: lo que se imprime es exactamente lo que se ve.
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -24,7 +24,7 @@ interface Props {
   titulo: string
   nombreArchivo: string
   /**
-   * Pide el PDF; `modo` llega vacío cuando debe decidir el perfil de la doctora
+   * Pide el PDF; `modo` llega vacío cuando debe decidir el perfil del médico
    * autora. Si el servidor dice qué órdenes imprimió, se devuelven con el PDF y
    * son las que se anotan en la bitácora.
    */
@@ -101,7 +101,7 @@ const VistaPreviaOrden = ({
         value={modo ?? ''}
         onChange={(e) => setElegido((e.target.value || null) as ModoImpresion | null)}
       >
-        {modo === null && <option value="">Como lo configuró la doctora</option>}
+        {modo === null && <option value="">Como lo configuró el médico</option>}
         {MODOS_DE_IMPRESION.map(({ valor, etiqueta }) => (
           <option key={valor} value={valor}>
             {etiqueta}

@@ -21,7 +21,7 @@ UNA_HORA = 60
 
 
 def avisar_cita_en_una_hora(db: Session, appointment: Appointment) -> None:
-    """Aviso en la campana a la doctora, una hora antes de su cita (plan 27, D-1).
+    """Aviso en la campana al médico, una hora antes de su cita (plan 27, D-1).
 
     Sólo si lo pidió en sus preferencias de avisos (``recordatorio_una_hora``),
     que es el único lugar donde se gobierna; no depende del correo a la
@@ -32,7 +32,7 @@ def avisar_cita_en_una_hora(db: Session, appointment: Appointment) -> None:
     if not _quiere_recordatorio_de_una_hora(db, appointment.doctor_id):
         return
     patient = db.query(Patient).filter(Patient.id == appointment.patient_id).first()
-    nombre = f"{patient.first_name} {patient.last_name}" if patient else "una paciente"
+    nombre = f"{patient.first_name} {patient.last_name}" if patient else "un paciente"
     notify(
         db,
         tenant_id=appointment.tenant_id,
@@ -48,12 +48,12 @@ def avisar_cita_en_una_hora(db: Session, appointment: Appointment) -> None:
 
 def send_appointment_reminder(db: Session, appointment: Appointment, minutes_before: int) -> bool:
     """
-    Manda el recordatorio por correo a la paciente (si tiene correo).
+    Manda el recordatorio por correo al paciente (si tiene correo).
     Returns True if sent successfully, False otherwise.
 
     Es lo que gobierna la tarjeta «Recordatorios por correo a tus pacientes»
     del perfil (``reminder_times``). Antes también mandaba el aviso en la
-    campana a la doctora, así que el de una hora dependía de que tuviera
+    campana al médico, así que el de una hora dependía de que tuviera
     encendido el correo a pacientes con «1 hora antes»: el interruptor del
     centro de avisos no hacía lo que decía (plan 29).
 
@@ -83,7 +83,7 @@ def send_appointment_reminder(db: Session, appointment: Appointment, minutes_bef
         appointment_id=appointment.id,
         reminder_minutes_before=minutes_before,
         sent_at=datetime.utcnow(),
-        # Sólo correo: el aviso en la campana a la doctora va aparte
+        # Sólo correo: el aviso en la campana al médico va aparte
         # (``avisar_cita_en_una_hora``) y no depende de esta preferencia.
         channel="email" if patient.email else "sin_correo",
     )

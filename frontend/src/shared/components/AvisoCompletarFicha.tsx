@@ -1,7 +1,7 @@
 /**
  * La línea gris de la consulta: «Completa sus datos» (plan 32, punto 5).
  *
- * Una sola línea, descartable, que no es modal ni aviso de color: la doctora
+ * Una sola línea, descartable, que no es modal ni aviso de color: el médico
  * está atendiendo y esto puede esperar. Se descarta por paciente y por sesión
  * del navegador; si mañana la ficha sigue incompleta, vuelve a decirlo.
  */

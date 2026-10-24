@@ -5,7 +5,7 @@ Dos peticiones del consultorio:
 1. Yara y Cintia agendan a sus propias pacientes, pero ``GET /appointments``
    acota a cada doctor a SUS citas: no veian que Adolfo ya tenia tomada la
    Sala 1. Para repartirse dos salas entre cuatro doctores hace falta ver la
-   ocupacion ajena, sin ver a las pacientes ajenas.
+   ocupacion ajena, sin ver a los pacientes ajenos.
 2. Las horas pasadas se ofrecian como ocupadas, pero a veces hay que dejar
    constancia de una consulta que ya ocurrio esa manana.
 """

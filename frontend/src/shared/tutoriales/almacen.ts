@@ -7,7 +7,7 @@
  * va envuelta en try/catch y nunca debe romper la pantalla.
  *
  * Además se lleva una copia en memoria: si localStorage falla, que el recorrido
- * no vuelva a saltar cada vez que la doctora cambia de pestaña en la misma sesión.
+ * no vuelva a saltar cada vez que el médico cambia de pestaña en la misma sesión.
  */
 
 const PREFIJO = 'gems.tutoriales.vistos.'

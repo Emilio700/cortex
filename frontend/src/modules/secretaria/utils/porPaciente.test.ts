@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { agruparPorPaciente } from './porPaciente'
 
 describe('agruparPorPaciente', () => {
-  it('junta las órdenes de la misma paciente y respeta el orden de llegada', () => {
+  it('junta las órdenes de la mismo paciente y respeta el orden de llegada', () => {
     const grupos = agruparPorPaciente([
       { patient_id: 2, patient_name: 'BEA', order_id: 10 },
       { patient_id: 1, patient_name: 'ANA', order_id: 11 },

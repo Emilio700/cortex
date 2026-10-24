@@ -11,12 +11,12 @@ vi.mock('../shared/context/AuthContext', () => ({
 }))
 
 import AppFooter from './AppFooter'
-import { VERSION_GEMS } from '../shared/version'
+import { VERSION_CORTEX } from '../shared/version'
 
 describe('AppFooter', () => {
   it('la versión del pie es la de package.json', () => {
     render(<AppFooter />)
-    expect(VERSION_GEMS).toBe(paquete.version)
+    expect(VERSION_CORTEX).toBe(paquete.version)
     expect(screen.getByText(`v${paquete.version}`)).toBeInTheDocument()
   })
 

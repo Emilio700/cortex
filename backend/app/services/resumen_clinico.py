@@ -1,14 +1,14 @@
-"""Resumen clínico de una paciente (plan 32, punto 8).
+"""Resumen clínico de un paciente (plan 32, punto 8).
 
-Sirve para referir a la paciente con otro médico o entregarlo a una
+Sirve para referir al paciente con otro médico o entregarlo a una
 aseguradora o a ella misma (NOM-004: el expediente se integra y se entrega).
 
 Reglas que vienen del plan y no se negocian aquí:
 
 - **No inventa.** Lo que falta dice «Sin registro»; nunca se rellena ni se
   deduce un dato que nadie capturó.
-- **La doctora elige las secciones** y lo ve antes de emitirlo (vista previa
-  obligatoria). Los datos de la paciente, la firma, la fecha y el folio van
+- **El médico elige las secciones** y lo ve antes de emitirlo (vista previa
+  obligatoria). Los datos del paciente, la firma, la fecha y el folio van
   siempre.
 - **Hora de Mazatlán** en cada fecha y hora impresas.
 
@@ -34,7 +34,7 @@ from app.services.datos_de_cita import edad_gestacional
 
 SIN_REGISTRO = "Sin registro"
 
-# Las secciones que la doctora puede elegir, en el orden en que salen.
+# Las secciones que el médico puede elegir, en el orden en que salen.
 SECCIONES: dict[str, str] = {
     "alergias": "Alergias",
     "antecedentes": "Antecedentes",
@@ -131,18 +131,15 @@ def _alergias(patient: Patient) -> Seccion:
 
 
 def _antecedentes(patient: Patient) -> Seccion:
-    go = [
-        ("Gestas", patient.gestas), ("Partos", patient.paras),
-        ("Cesáreas", patient.cesareas), ("Abortos", patient.abortos),
-    ]
-    formula = ", ".join(f"{nombre} {valor}" for nombre, valor in go if valor is not None) or SIN_REGISTRO
+    # En Cortex los antecedentes son los de neurocirugía; los gineco-obstétricos
+    # de GEMS siguen en la base pero ya no se resumen.
     return Seccion("antecedentes", SECCIONES["antecedentes"], renglones=[
         Renglon("Personales", _texto(patient.personal_history)),
         Renglon("Familiares", _texto(patient.family_history)),
-        Renglon("Ginecológicos", _texto(patient.gynecological_history)),
-        Renglon("Obstétricos", formula),
-        Renglon("Menarca", f"{patient.menarca_age} años" if patient.menarca_age is not None else SIN_REGISTRO),
-        Renglon("Método anticonceptivo", _texto(patient.birth_control)),
+        Renglon("Neurológicos", _texto(patient.neurological_history)),
+        Renglon("Implantes y dispositivos", _texto(patient.implanted_devices)),
+        Renglon("Anticoagulantes", _texto(patient.anticoagulants)),
+        Renglon("Lateralidad", _texto(patient.dominant_hand)),
         Renglon("Grupo sanguíneo", _texto(patient.blood_type)),
     ])
 

@@ -33,7 +33,7 @@ const JHOANY: User = {
   created_at: '2026-09-01',
 }
 
-const DOCTORAS = [
+const MEDICOS = [
   { id: 7, full_name: 'ADOLFO RUIZ', role: Role.DOCTOR, is_active: true },
   { id: 8, full_name: 'CINTIA CASTRO', role: Role.DOCTOR, is_active: true },
 ]
@@ -44,7 +44,7 @@ const apoyo = (doctor_ids: number[], puede_ver_corte: boolean) => ({
 
 beforeEach(() => {
   apiGet.mockReset().mockImplementation((url: string) =>
-    url === '/users' ? Promise.resolve({ data: DOCTORAS }) : Promise.resolve(apoyo([], false)),
+    url === '/users' ? Promise.resolve({ data: MEDICOS }) : Promise.resolve(apoyo([], false)),
   )
   apiPut.mockReset().mockImplementation((_url: string, datos: any) =>
     Promise.resolve(apoyo(datos.doctor_ids, datos.puede_ver_corte)),
@@ -66,7 +66,7 @@ describe('UserForm', () => {
     await waitFor(() => expect(onSubmit).toHaveBeenCalled())
     expect(onSubmit.mock.calls[0][0]).toMatchObject({ tratamiento: 'Dra.' })
     // En el alta no hay doctoras que apoya: la usuaria todavía no existe.
-    expect(screen.queryByText('Doctoras que apoya')).not.toBeInTheDocument()
+    expect(screen.queryByText('Médicos que apoya')).not.toBeInTheDocument()
   })
 
   it('al editar a una secretaria guarda sus doctoras y el permiso del corte', async () => {
@@ -86,7 +86,7 @@ describe('UserForm', () => {
     await waitFor(() => expect(onClose).toHaveBeenCalled())
   })
 
-  it('si no se guardaron las doctoras lo dice y no cierra', async () => {
+  it('si no se guardaron los médicos lo dice y no cierra', async () => {
     const user = userEvent.setup()
     const onClose = vi.fn()
     const onGuardado = vi.fn()
@@ -105,7 +105,7 @@ describe('UserForm', () => {
     await user.click(screen.getByRole('button', { name: 'Guardar' }))
 
     expect(
-      await screen.findByText(/Los datos de la cuenta se guardaron, pero las doctoras que apoya y el permiso del corte NO/),
+      await screen.findByText(/Los datos de la cuenta se guardaron, pero los médicos que apoya y el permiso del corte NO/),
     ).toBeInTheDocument()
     expect(onClose).not.toHaveBeenCalled()
     // Sin esto la página decía "Usuario actualizado correctamente" encima del error.
@@ -116,7 +116,7 @@ describe('UserForm', () => {
     const user = userEvent.setup()
     apiGet.mockImplementation((url: string) =>
       url === '/users'
-        ? Promise.resolve({ data: DOCTORAS })
+        ? Promise.resolve({ data: MEDICOS })
         : Promise.reject({ response: { data: { detail: 'Sin conexión.' } } }),
     )
     render(<UserForm visible onClose={vi.fn()} onSubmit={vi.fn().mockResolvedValue(undefined)} user={JHOANY} />)
@@ -130,7 +130,7 @@ describe('UserForm', () => {
   it('sin cambios en las asignaciones no las vuelve a mandar', async () => {
     const user = userEvent.setup()
     apiGet.mockImplementation((url: string) =>
-      url === '/users' ? Promise.resolve({ data: DOCTORAS }) : Promise.resolve(apoyo([7], true)),
+      url === '/users' ? Promise.resolve({ data: MEDICOS }) : Promise.resolve(apoyo([7], true)),
     )
     const onClose = vi.fn()
     render(<UserForm visible onClose={onClose} onSubmit={vi.fn().mockResolvedValue(undefined)} user={JHOANY} />)

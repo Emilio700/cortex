@@ -7,7 +7,7 @@ le escondía el menú, pero por API seguía leyendo la agenda completa de la
 sucursal (auditoría, ``06`` M1).
 
 Dos cosas se comprueban: sin el permiso, 403; y los tres roles que hoy viven de
-esas lecturas (recepción con la agenda, la doctora con su calendario y el
+esas lecturas (recepción con la agenda, el médico con su calendario y el
 cobro, administración) las siguen teniendo por defecto.
 
 Usan SQLite en memoria y sobrescriben ``get_db``, como ``test_pagos_exigen_permiso.py``.

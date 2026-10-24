@@ -82,7 +82,7 @@ export const useSOAPNotes = () => {
       const response = await api.get<SOAPNote[]>(`/soap-notes/patient/${patientId}/all`)
       return response.data
     } catch (err: any) {
-      const mensaje = mensajeDeError(err, 'No se pudieron cargar las notas de la paciente.')
+      const mensaje = mensajeDeError(err, 'No se pudieron cargar las notas del paciente.')
       setError(mensaje)
       // Se relanza: quien pinta el historial tiene que distinguir «no hay»
       // de «no se pudo leer» (plan 29, T-1). El mensaje ya va en español.

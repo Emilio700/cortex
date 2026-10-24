@@ -1,7 +1,7 @@
 /**
  * Anexar el resultado de un estudio: uno o varios archivos (plan 26, D-1).
  *
- * Es el caso del estudio que la paciente le manda a la doctora por WhatsApp o
+ * Es el caso del estudio que el paciente le manda al médico por WhatsApp o
  * correo, o del sobre que recepción recibe del laboratorio. Se pueden elegir
  * varios archivos a la vez (el PDF del reporte y las fotos). La orden no exige
  * ninguno; aquí, como es para anexar, se pide al menos uno.
@@ -153,7 +153,7 @@ const AnexarResultadoModal = ({ visible, onClose, orden, onAnexado }: Props) => 
             onChange={(e) => agregar(e.target.files)}
           />
           <div className="form-text">
-            El reporte del laboratorio, la interpretación o las fotos del estudio que mandó la paciente.
+            El reporte del laboratorio, la interpretación o las fotos del estudio que mandó el paciente.
           </div>
         </div>
         {archivos.length > 0 && (

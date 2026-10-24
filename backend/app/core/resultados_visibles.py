@@ -8,10 +8,10 @@ paciente de la sucursal.
 Decisión de Emilio (plan 32, punto 6, decisión 2): recepción sí ve el archivo
 del resultado que **ella** recibió o subió («si le llegaron primero, que sí los
 vea»), pero no navega por los resultados de cualquier paciente. La
-interpretación, la valoración y las notas de la doctora viven en
+interpretación, la valoración y las notas del médico viven en
 ``DiagnosticResult`` y ``/documents`` nunca las devuelve.
 
-Quien tiene ``clinical_tracking.read`` (la doctora, la administración) ve
+Quien tiene ``clinical_tracking.read`` (el médico, la administración) ve
 todos: es el permiso que ya abre la bandeja de resultados.
 """
 from __future__ import annotations

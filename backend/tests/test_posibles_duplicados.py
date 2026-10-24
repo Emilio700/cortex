@@ -1,11 +1,11 @@
-"""Advertencia de posible paciente duplicada (B-06 parte API y S-06).
+"""Advertencia de posible paciente duplicado (B-06 parte API y S-06).
 
-Expedientes gemelos parten el historial: la doctora decide con la mitad de la
+Expedientes gemelos parten el historial: el médico decide con la mitad de la
 información. Decisión de Emilio (3.5): **sólo advertir**. El sistema enseña
-quién podría ser la misma paciente y deja continuar; no bloquea el alta, no
+quién podría ser la mismo paciente y deja continuar; no bloquea el alta, no
 agrega índices únicos y no fusiona.
 
-Se comprueba que encuentra a la misma paciente aunque el teléfono o el nombre
+Se comprueba que encuentra a la mismo paciente aunque el teléfono o el nombre
 estén escritos distinto, que devuelve sólo lo necesario para reconocerla, que
 respeta el alcance de quien pregunta y que el alta sigue pasando.
 """
@@ -82,7 +82,7 @@ def test_encuentra_a_la_misma_paciente_por_el_telefono_escrito_distinto(client, 
     assert candidatos[guardada.id]["motivos"] == ["telefono"]
     assert candidatos[guardada.id]["coincidencia"] == "alta"
     assert candidatos[guardada.id]["telefono_enmascarado"] == "•••-•••-2233"
-    # La paciente del escenario tiene el mismo número en ``phone``.
+    # El paciente del escenario tiene el mismo número en ``phone``.
     assert escenario["paciente"].id in candidatos
 
 

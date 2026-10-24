@@ -75,7 +75,7 @@ describe('AppointmentModal · reenviar confirmación (S-05)', () => {
     expect(await screen.findByText('Se reenvió la confirmación a a***@correo.com.')).toBeInTheDocument()
   })
 
-  it('si la paciente no tiene correo, lo dice y no finge que se envió', async () => {
+  it('si el paciente no tiene correo, lo dice y no finge que se envió', async () => {
     reenviarConfirmacion.mockResolvedValue({ enviado: false, motivo: 'sin_email', destinatario: null })
     const user = userEvent.setup()
     renderModal()

@@ -2,7 +2,7 @@
 
 Por qué una tabla y no una columna en cada tabla clínica
 -------------------------------------------------------
-Las pacientes ya tienen ``patients.expediente_legacy``, porque el buscador la
+Los pacientes ya tienen ``patients.expediente_legacy``, porque el buscador la
 usa: ahí el número de expediente es un dato del negocio. Las citas, las notas y
 las recetas no: de qué fila del sistema viejo salió una cita no le importa a
 nadie en el consultorio, sólo al espejo. Eso es contabilidad de la migración y
@@ -58,7 +58,7 @@ class VinculoLegacy(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
-    # Tabla del legacy: 'citas', 'recetas'. Las pacientes no se anotan aquí,
+    # Tabla del legacy: 'citas', 'recetas'. Los pacientes no se anotan aquí,
     # su vínculo es ``patients.expediente_legacy``.
     tabla_legacy = Column(String(20), nullable=False)
     # Llave primaria de esa fila en el legacy (id_cita, id_receta...).

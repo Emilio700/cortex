@@ -49,7 +49,7 @@ class Payment(Base):
     appointment_id = Column(Integer, ForeignKey("appointments.id"), nullable=True, index=True)
     service_id = Column(Integer, ForeignKey("services.id"), nullable=True, index=True)
     received_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    # De quién es el ingreso: la doctora que atendió, no quien cobró ni la
+    # De quién es el ingreso: el médico que atendió, no quien cobró ni la
     # titular de la cita. Anulable porque los pagos históricos sin cita no
     # tienen de dónde sacarla y no se inventa (plan 23).
     doctor_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)

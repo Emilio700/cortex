@@ -114,10 +114,10 @@ interface AppointmentModalProps {
      * se dibuja el botón, en vez de ofrecer algo que el servidor rechazaría.
      */
     onCobrar?: (cita: Appointment) => void
-    /** Con permiso de alta de pacientes se ofrece registrar a la paciente desde aquí. */
+    /** Con permiso de alta de pacientes se ofrece registrar al paciente desde aquí. */
     puedeRegistrarPaciente?: boolean
     /**
-     * La doctora que agenda en su propia Agenda (sin recepción, plan 32,
+     * El médico que agenda en su propia Agenda (sin recepción, plan 32,
      * punto 5): la cita nueva nace con ella y la lista sólo la ofrece a ella.
      * El servidor ya rechaza agendar en la agenda de una colega; aquí sólo se
      * evita ofrecerle una opción que le daría un error al guardar.
@@ -155,7 +155,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     const { getTriageByAppointment } = useTriage()
 
     const [patients, setPatients] = useState<Patient[]>([])
-    // Si la búsqueda falla, la lista vacía NO quiere decir que la paciente no
+    // Si la búsqueda falla, la lista vacía NO quiere decir que el paciente no
     // exista: se dice, para que no la registren dos veces (plan 29, T-1).
     const [errorBusqueda, setErrorBusqueda] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
@@ -179,7 +179,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     const [hasTriage, setHasTriage] = useState(false)
     // Si la lectura de signos falló no sabemos si hay o no: «Pendiente» sería
     // afirmar algo que el sistema no confirmó. Un 403 (doctora sin relación
-    // asistencial con la paciente) se dice aparte porque reintentar no lo arregla.
+    // asistencial con el paciente) se dice aparte porque reintentar no lo arregla.
     const [falloTriage, setFalloTriage] = useState<{ sinAcceso: boolean; mensaje: string } | null>(null)
     // Mientras la lectura está en vuelo no se afirma nada: el botón dice
     // «Consultando triage…» y no se ofrece capturar signos sobre lo que quizá
@@ -190,7 +190,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     // clicking "Cancelar Cita", and cancelling is blocked until it's non-empty.
     const [showCancelReason, setShowCancelReason] = useState(false)
     const [cancelReason, setCancelReason] = useState('')
-    // S-05: reenviar la confirmación por correo a la paciente.
+    // S-05: reenviar la confirmación por correo al paciente.
     const [reenviando, setReenviando] = useState(false)
     const [avisoConfirmacion, setAvisoConfirmacion] = useState<
         { tipo: 'ok' | 'warn' | 'error'; texto: string } | null
@@ -343,7 +343,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 setFalloTriage({
                     sinAcceso,
                     mensaje: sinAcceso
-                        ? 'No tienes acceso a los signos vitales de esta paciente.'
+                        ? 'No tienes acceso a los signos vitales de este paciente.'
                         : 'No se pudieron cargar los signos vitales. No sabemos si ya se registraron.',
                 })
             } finally {
@@ -437,7 +437,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
         if (!visible || !doctorElegido || !fechaClave) {
             setFranjas([])
             setAvisoHorarios(
-                !doctorElegido ? 'Elige primero a la doctora para ver sus horarios libres.' : null,
+                !doctorElegido ? 'Elige primero al médico para ver sus horarios libres.' : null,
             )
             return
         }
@@ -524,10 +524,10 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
         e.preventDefault()
 
         // Se recogen todos los faltantes de una vez: corregirlos de uno en uno
-        // desespera a la asistente con la paciente enfrente.
+        // desespera a la asistente con el paciente enfrente.
         const faltas: typeof errores = {}
-        if (formData.patient_id === 0) faltas.paciente = 'Elige a la paciente.'
-        if (formData.doctor_id === 0) faltas.doctora = 'Elige a la doctora.'
+        if (formData.patient_id === 0) faltas.paciente = 'Elige al paciente.'
+        if (formData.doctor_id === 0) faltas.doctora = 'Elige al médico.'
         if (!formData.scheduled_at) faltas.fechaHora = 'Elige la fecha y el horario de la cita.'
         if (salaRequerida && roomId == null) faltas.sala = 'Elige la sala donde será la cita.'
         // `noValidate` apagó el min/max del navegador: el rango de la duración
@@ -577,7 +577,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     /**
      * Alta desde la cita. Si el servidor la rechaza, el error sube al
      * formulario de alta, que se queda abierto con el motivo; sólo con la
-     * paciente creada se elige y se avisa.
+     * paciente creado se elige y se avisa.
      */
     const registrarPaciente = async (datos: PatientCreate) => {
         const nueva = await createPatient(datos)
@@ -591,9 +591,9 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     }
 
     /**
-     * S-06: si el aviso de duplicado muestra que la paciente ya existe, se
+     * S-06: si el aviso de duplicado muestra que el paciente ya existe, se
      * elige a la existente para la cita en vez de crearla de nuevo. Sólo se
-     * confirma si el servidor devolvió la paciente.
+     * confirma si el servidor devolvió el paciente.
      */
     const elegirPacienteExistente = async (candidato: { patient_id: number; full_name: string }) => {
         try {
@@ -612,7 +612,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
     /**
      * S-05: reenvía la confirmación por correo. Sólo se afirma «se reenvió» si
-     * el servidor lo confirma (`enviado`); si la paciente no tiene correo o el
+     * el servidor lo confirma (`enviado`); si el paciente no tiene correo o el
      * envío falló, se dice con honestidad, sin fingir éxito.
      */
     const handleReenviarConfirmacion = async () => {
@@ -624,12 +624,12 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
             if (r.enviado) {
                 setAvisoConfirmacion({
                     tipo: 'ok',
-                    texto: `Se reenvió la confirmación a ${r.destinatario ?? 'la paciente'}.`,
+                    texto: `Se reenvió la confirmación a ${r.destinatario ?? 'el paciente'}.`,
                 })
             } else if (r.motivo === 'sin_email') {
                 setAvisoConfirmacion({
                     tipo: 'warn',
-                    texto: 'La paciente no tiene correo capturado, así que no se envió nada.',
+                    texto: 'El paciente no tiene correo capturado, así que no se envió nada.',
                 })
             } else {
                 setAvisoConfirmacion({
@@ -772,7 +772,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                                     >
                                         {errorBusqueda ? (
                                             <div className="p-3 text-center text-danger small" role="alert">
-                                                No se pudo buscar. Esto no quiere decir que la paciente no exista: no la
+                                                No se pudo buscar. Esto no quiere decir que el paciente no exista: no la
                                                 registres de nuevo.{' '}
                                                 <button
                                                     type="button"
@@ -784,12 +784,12 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                                             </div>
                                         ) : searchTerm.trim().length === 0 && patients.length === 0 ? (
                                             <div className="p-3 text-center text-muted small">
-                                                Escribe el apellido, el nombre o el teléfono de la paciente.
+                                                Escribe el apellido, el nombre o el teléfono del paciente.
                                             </div>
                                         ) : patients.length === 0 ? (
                                             <div className="p-3 text-center text-muted small">
                                                 {puedeRegistrarPaciente
-                                                    ? 'Sin resultados. Si es nueva, regístrala con «Registrar paciente nueva».'
+                                                    ? 'Sin resultados. Si es nueva, regístrala con «Registrar paciente nuevo».'
                                                     : 'Sin resultados. Revisa cómo está escrito el nombre o el teléfono.'}
                                             </div>
                                         ) : (
@@ -850,7 +850,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                                     }}
                                     disabled={loading}
                                 >
-                                    + Registrar paciente nueva
+                                    + Registrar paciente nuevo
                                 </CButton>
                             )}
                             {/* Etiqueta verde: que no quede duda de a quién se le agenda. */}
@@ -868,7 +868,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                         </CCol>
                         <CCol md={4} data-tour="cita-doctor">
                             <CFormLabel htmlFor="doctor_id">
-                                Doctora <span className="text-danger">*</span>
+                                Médico <span className="text-danger">*</span>
                             </CFormLabel>
                             <CFormSelect
                                 id="doctor_id"
@@ -884,7 +884,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                                 aria-invalid={Boolean(errores.doctora) || undefined}
                                 aria-describedby={errores.doctora ? 'error-cita-doctora' : undefined}
                             >
-                                <option value={0}>Elige a la doctora...</option>
+                                <option value={0}>Elige al médico...</option>
                                 {(doctoraPropiaId
                                     ? doctors.filter((doctor) => doctor.id === doctoraPropiaId)
                                     : doctors
@@ -1117,7 +1117,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                         <CCol>
                             <CFormLabel htmlFor="motivo_extra">Motivo (opcional)</CFormLabel>
                             <p className="small text-body-secondary mb-2">
-                                ¿Por qué viene la paciente? Es una nota para la doctora; puedes
+                                ¿Por qué viene el paciente? Es una nota para el médico; puedes
                                 dejarla en blanco.
                             </p>
                             <div className="d-flex flex-wrap gap-1 mb-2" role="group" aria-label="Sugerencias de motivo">
@@ -1216,7 +1216,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                                     </CButton>
                                 )}
                                 {appointment.status === 'en_consulta' && (
-                                    // La doctora salió sin cerrar la consulta: vuelve al
+                                    // El médico salió sin cerrar la consulta: vuelve al
                                     // estado del que entró. «En consulta» no se elige:
                                     // lo pone abrir la consulta (plan 28, D-3).
                                     <CButton
@@ -1396,7 +1396,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                                 <div>
                                     <strong>Confirmación por correo</strong>
                                     <div className="small text-body-secondary">
-                                        Reenvía a la paciente el correo con la fecha y hora de su cita.
+                                        Reenvía al paciente el correo con la fecha y hora de su cita.
                                     </div>
                                 </div>
                                 <CButton
@@ -1475,7 +1475,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                     onClose={() => setAltaPacienteVisible(false)}
                     onSubmit={registrarPaciente}
                     onElegirExistente={elegirPacienteExistente}
-                    title="Nueva paciente"
+                    title="Nuevo paciente"
                 />
             )}
         </CModal>

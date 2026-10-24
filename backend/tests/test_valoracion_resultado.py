@@ -116,7 +116,7 @@ def test_la_serie_respeta_el_acceso(client, db_session, escenario, quien, codigo
 
 
 def test_cambiar_solo_la_valoracion_no_mueve_la_revision(client, db_session, escenario):
-    """La doctora desmarca un «crítico» de un archivo viejo sin tocar su revisión."""
+    """El médico desmarca un «crítico» de un archivo viejo sin tocar su revisión."""
     from app.models.clinical_tracking import DiagnosticOrder
 
     viejo = _registrar(client, db_session, escenario, escenario["orden"], valoracion="critico")

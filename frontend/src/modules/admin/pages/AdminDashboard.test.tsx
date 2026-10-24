@@ -50,7 +50,7 @@ describe('AdminDashboard · corte de caja de hoy', () => {
     expect(screen.getByText('Cobrado hoy')).toBeInTheDocument()
     expect(screen.getByText('Efectivo')).toBeInTheDocument()
     expect(screen.getByText('$1,200.00')).toBeInTheDocument()
-    // Pide el corte de la sucursal, no el de una doctora.
+    // Pide el corte de la sucursal, no el de un médico.
     expect(getCashCut).toHaveBeenCalledWith()
   })
 })

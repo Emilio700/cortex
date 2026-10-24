@@ -1,4 +1,4 @@
-"""La bandeja de órdenes de la doctora, agrupada por paciente (plan 26, B-1, B-7, B-9, D-3).
+"""La bandeja de órdenes del médico, agrupada por paciente (plan 26, B-1, B-7, B-9, D-3).
 
 Kenia Peraza aparecía en tres tarjetas, una por estudio, y la paginación por
 orden la podía partir entre páginas. Ahora se paginan pacientes: cada una
@@ -110,7 +110,7 @@ def test_criticos_primero_y_luego_por_prioridad(client, db_session, escenario):
     cuerpo = _pedir(client, db_session, d)
 
     nombres = [item["patient_name"] for item in cuerpo["items"]]
-    # La paciente del escenario tiene una orden urgente.
+    # El paciente del escenario tiene una orden urgente.
     assert nombres == ["Critica Tres", "María López Pérez", "Preferente Dos", "Rutina Uno"]
     assert cuerpo["items"][0]["tiene_criticos"] is True
     assert cuerpo["items"][0]["orders"][0]["critico_sin_comunicar"] is True

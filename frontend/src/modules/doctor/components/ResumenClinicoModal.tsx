@@ -1,7 +1,7 @@
 /**
  * Resumen clínico en PDF (plan 32, punto 8).
  *
- * La doctora elige las secciones y cuántas consultas, ve la vista previa (sin
+ * El médico elige las secciones y cuántas consultas, ve la vista previa (sin
  * folio, con la marca de vista previa) y solo entonces emite. El servidor
  * exige la constancia de esa vista previa con las mismas opciones: si la
  * doctora cambia algo, la vista previa se vuelve a pedir y el botón de emitir
@@ -115,7 +115,7 @@ export const ResumenClinicoModal: React.FC<Props> = ({ visible, onClose, patient
           <div className="mb-3" data-tour="resumen-secciones">
             <CFormLabel className="fw-semibold d-block">Qué incluir</CFormLabel>
             <p className="small text-body-secondary mb-2">
-              Los datos de la paciente, la firma, la fecha y el folio van siempre. Lo que no esté capturado sale como «Sin registro».
+              Los datos del paciente, la firma, la fecha y el folio van siempre. Lo que no esté capturado sale como «Sin registro».
             </p>
             <div className="d-flex flex-wrap gap-3">
               {SECCIONES_DEL_RESUMEN.map((s) => (

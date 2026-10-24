@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Los permisos cambian mientras la sesion sigue abierta: alguien los edito
   // desde la pantalla de Master. Antes eso no se notaba hasta volver a entrar,
   // asi que conceder un permiso parecia no hacer nada. Se recarga el perfil en
-  // silencio en vez de cerrar la sesion: una doctora documentando una nota no
+  // silencio en vez de cerrar la sesion: un médico documentando una nota no
   // puede perder lo capturado porque alguien toco un permiso.
   useEffect(() => {
     setPermissionsVersionListener((version) => {

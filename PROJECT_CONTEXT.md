@@ -2,26 +2,36 @@
 
 ## Descripción General
 
-El sistema **G.E.M.S** (Gynecology & Expert Management System) es una plataforma SaaS médica moderna diseñada para la gestión integral de clínicas ginecológicas. El propósito principal del sistema es reemplazar y modernizar las operaciones heredadas que previamente funcionaban en Visual FoxPro, trasladándolas a una arquitectura web contemporánea y segura.
+**CORTEX** es el sistema clínico de un consultorio de neurocirugía. Digitaliza la
+agenda, la recepción, la consulta y el expediente, con control de acceso por rol
+y trazabilidad de lo clínico. Nació como copia de Cortex v1.2.0 (sistema de
+ginecología, commit `987df76`) y se adaptó a neurocirugía: ficha neurológica,
+consentimientos, órdenes y episodios de neurocirugía, y una identidad visual
+propia. Opera como **consultorio único** (un tenant), aunque la infraestructura
+multi-sucursal de Cortex sigue disponible.
 
-El problema de negocio que resuelve es la digitalización, centralización y control de acceso a la información médica sensible, agendas y expedientes clínicos, optimizando el flujo de trabajo entre los distintos roles de una clínica.
+**Usuarios:**
+1. **Médico (neurocirujano):** consulta SOAP, recetas, órdenes de estudio y
+   resultados, consentimientos, certificados, cirugías programadas.
+2. **Recepción:** agenda, alta de pacientes, triage (signos vitales), documentos,
+   entrega de resultados y cobros.
+3. **Administración:** usuarios, servicios y precios, salas, reportes, auditoría.
+4. **Master:** rol de desarrollador (sucursales, roles y permisos).
 
-**Usuarios involucrados:**
-1.  **Admin:** Acceso total al sistema, gestión de usuarios, roles y configuración global.
-2.  **Secretaria:** Gestión administrativa, incluyendo agendas, registro de pacientes, toma de signos vitales (triage) y carga de documentos.
-3.  **Doctor:** Gestión clínica, incluyendo historiales médicos, notas SOAP (Subjetivo, Objetivo, Análisis, Plan), prescripciones y órdenes médicas.
+**Lo propio de neurocirugía:**
+- Ficha: lateralidad, antecedentes neurológicos y neuroquirúrgicos, implantes y
+  dispositivos (seguridad en resonancia) y anticoagulantes.
+- Señales de implantes y anticoagulantes en el expediente y en la consulta.
+- Consentimientos: craneotomía, cirugía de columna, derivación de LCR, biopsia
+  estereotáctica, intervencionismo de dolor, nervio periférico y punción lumbar.
+- Órdenes: plantillas (prequirúrgico, RM de encéfalo, columna lumbar y cervical,
+  epilepsia, nervio periférico, vascular) y categorías Neuroimagen y
+  Neurofisiología.
+- Citas de tipo cirugía con hospital y anestesiólogo; «Cirugías programadas» en el
+  inicio del médico.
 
-**Alcance funcional actual (Fase 1 completada, otras en progreso):**
-*   Autenticación y Control de Acceso Basado en Roles (RBAC).
-*   Gestión de infraestructura multi-tenant (para soporte a múltiples clínicas).
-*   Módulo de Secretaría (en desarrollo): Agenda, CRUD de pacientes, Triage.
-*   Módulo Médico (en desarrollo): Consultas médicas, Perfil Médico.
-
-**Casos de uso principales:**
-*   Autenticar usuarios según su rol.
-*   Agendar citas de pacientes (Secretaría).
-*   Registrar signos vitales pre-consulta / Triage (Secretaría).
-*   Realizar consulta médica y generar notas SOAP y prescripciones (Doctor).
+**Siguientes módulos previstos:** visor de neuroimagen (DICOM/MRI) y
+neurofisiología (EEG, EMG, potenciales evocados).
 
 ---
 
@@ -400,11 +410,11 @@ Auditoría realizada como Tech Lead sobre el código real. **Fase 1 aplicada y v
 
 # Conocimiento Acumulado del Proyecto
 
-*   **El paradigma del proyecto es Multi-Tenant de base de datos única:** A diferencia de arquitecturas multi-tenant con esquemas separados, GEMS utiliza una sola base de datos y aisla las clínicas lógicamente filtrando todos los queries de SQLAlchemy utilizando la relación `tenant_id`. Esta es la decisión arquitectónica más importante del sistema.
+*   **El paradigma del proyecto es Multi-Tenant de base de datos única:** A diferencia de arquitecturas multi-tenant con esquemas separados, Cortex utiliza una sola base de datos y aisla las clínicas lógicamente filtrando todos los queries de SQLAlchemy utilizando la relación `tenant_id`. Esta es la decisión arquitectónica más importante del sistema.
 *   El proyecto es una **migración** desde un sistema legado en FoxPro. Esto sugiere que las reglas de negocio, flujos y diccionarios de datos ya están probados históricamente en producción; la complejidad radica en mapearlos correctamente a web sin perder fluidez.
 
 ---
 
 # Resumen Técnico para Futuras Sesiones de IA
 
-G.E.M.S es un **SaaS Médico (React 19 + FastAPI + Postgres)**. La arquitectura es fuertemente tipada end-to-end (TypeScript en frontend, Pydantic/Mypy en backend). Utiliza un sistema **Multi-Tenant (Lógico)** y un **RBAC (Admin, Secretaria, Doctor)** gestionado vía **JWT Stateless**. El flujo principal interconecta la recepción del paciente (módulo Secretaria, manipula `appointments` y `triages`) con la atención clínica (módulo Doctor, manipula `soap_notes` y `prescriptions`). Riesgo principal: Aislamiento estricto de datos entre Tenants y estandarización del motor de PDFs para recetas que está pendiente de construcción. El sistema local levanta vía Docker Compose (`docker-compose up -d`). Para crear APIs nuevas, el flujo es siempre: *Modelo (DB) -> Migración (Alembic) -> Schema (Pydantic) -> Router (FastAPI) -> Vista (React)*.
+CORTEX es un **SaaS Médico (React 19 + FastAPI + Postgres)**. La arquitectura es fuertemente tipada end-to-end (TypeScript en frontend, Pydantic/Mypy en backend). Utiliza un sistema **Multi-Tenant (Lógico)** y un **RBAC (Admin, Secretaria, Doctor)** gestionado vía **JWT Stateless**. El flujo principal interconecta la recepción del paciente (módulo Secretaria, manipula `appointments` y `triages`) con la atención clínica (módulo Doctor, manipula `soap_notes` y `prescriptions`). Riesgo principal: Aislamiento estricto de datos entre Tenants y estandarización del motor de PDFs para recetas que está pendiente de construcción. El sistema local levanta vía Docker Compose (`docker-compose up -d`). Para crear APIs nuevas, el flujo es siempre: *Modelo (DB) -> Migración (Alembic) -> Schema (Pydantic) -> Router (FastAPI) -> Vista (React)*.

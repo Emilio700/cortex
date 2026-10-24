@@ -164,7 +164,7 @@ def test_texto_se_guarda_en_mayusculas_y_el_correo_no(client, headers):
 def test_editar_una_paciente_no_le_borra_la_fur_ni_la_fpp(client, headers, db_session):
     """La regresión que importó: editar el expediente no destruye fechas.
 
-    El sistema borraba FUR y FPP en cuanto la paciente estaba marcada como
+    El sistema borraba FUR y FPP en cuanto el paciente estaba marcada como
     ginecológica, y contestaba 200 igual. Como el 97% de las marcadas como
     obstétricas ya no lo están, esa bandera no podía decidir qué se conserva.
     """
@@ -317,7 +317,7 @@ def test_un_correo_invalido_guardado_no_tumba_la_respuesta(client, db_session, h
 
 
 def test_los_antecedentes_se_normalizan_a_mayusculas_en_el_esquema():
-    """Lo que sí captura la doctora sigue guardándose en MAYÚSCULAS."""
+    """Lo que sí captura el médico sigue guardándose en MAYÚSCULAS."""
     from app.schemas.patient import PatientCreate
 
     datos = PatientCreate(

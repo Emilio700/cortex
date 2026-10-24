@@ -158,7 +158,7 @@ def test_preferencias_arrancan_apagadas(client, db_session, e):
 
 
 def test_el_aviso_de_otra_sucursal_dice_cual_y_no_lleva_ir(client, db_session, e):
-    """Una doctora en dos sucursales ve los avisos de ambas, pero «Ir» a una
+    """Un médico en dos sucursales ve los avisos de ambas, pero «Ir» a una
     cita de la sucursal que no tiene activa terminaba en «no se encontró»."""
     otra = Notification(
         tenant_id=e["otra"].id, user_id=e["adolfo"].id, type=NotificationType.PATIENT_ARRIVED,
@@ -186,7 +186,7 @@ def test_el_aviso_de_otra_sucursal_dice_cual_y_no_lleva_ir(client, db_session, e
 
 
 def test_recepcion_no_ve_tipos_que_nunca_recibe(client, db_session, e):
-    """«Citas que te agenda alguien más» le llega a la doctora; ofrecérselo a
+    """«Citas que te agenda alguien más» le llega al médico; ofrecérselo a
     recepción era un interruptor de algo que nunca pasa (plan 29, N-1)."""
     doctora = client.get(f"{PREFIX}/notifications/preferencias", headers=headers(db_session, e["adolfo"])).json()
     recepcion = client.get(f"{PREFIX}/notifications/preferencias", headers=headers(db_session, e["jhoany"])).json()

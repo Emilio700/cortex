@@ -56,7 +56,7 @@ class PatientDocument(Base):
     anulado_at = Column(DateTime, nullable=True, index=True)
     anulado_por_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     anulado_motivo = Column(String(500), nullable=True)
-    # Si se subió a la paciente equivocada y se movió: de quién venía. El
+    # Si se subió al paciente equivocado y se movió: de quién venía. El
     # historial completo de movimientos queda en la bitácora de ambas.
     movido_desde_patient_id = Column(Integer, ForeignKey("patients.id"), nullable=True)
     movido_at = Column(DateTime, nullable=True)

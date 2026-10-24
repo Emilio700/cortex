@@ -3,7 +3,7 @@
  *
  * La valoración reemplaza a la casilla «Resultado crítico»: es opcional, de
  * cada resultado, y elegir «Crítico» es lo que abre la incidencia en el inicio
- * de la doctora. El orden va de mejor a peor y el número es el que usa la
+ * del médico. El orden va de mejor a peor y el número es el que usa la
  * gráfica del expediente.
  */
 export type Valoracion = 'excelente' | 'bien' | 'regular' | 'malo' | 'critico'
@@ -30,7 +30,7 @@ export const datosValoracion = (valor?: string | null) =>
 export const etiquetaValoracion = (valor?: string | null): string =>
   datosValoracion(valor)?.etiqueta ?? (valor || 'Sin valorar')
 
-/** Medio por el que se le comunicó o entregó el resultado a la paciente (D-8). */
+/** Medio por el que se le comunicó o entregó el resultado al paciente (D-8). */
 export type CanalComunicacion = 'en_mano' | 'llamada' | 'whatsapp' | 'correo'
 
 export const CANALES: ReadonlyArray<{ valor: CanalComunicacion; etiqueta: string }> = [

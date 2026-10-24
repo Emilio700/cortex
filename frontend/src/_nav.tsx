@@ -71,8 +71,8 @@ export const DESTINO_INICIO = '/'
 const _nav: NavItem[] = [
   {
     // Un solo «Inicio» que lleva al de cada rol. Antes había tres ítems
-    // «Dashboard» (el genérico, el de la doctora y el de administración) que
-    // llevaban a sitios distintos, y la doctora caía en la página de accesos
+    // «Dashboard» (el genérico, el del médico y el de administración) que
+    // llevaban a sitios distintos, y el médico caía en la página de accesos
     // la mitad de las veces (plan 28, D-2).
     component: CNavItem,
     name: 'Inicio',
@@ -203,7 +203,7 @@ const _nav: NavItem[] = [
     // doctora (respaldo por rol mientras conviven las fuentes).
     component: CNavItem,
     // Un solo nombre para los dos lados (plan 32, punto 6). En el menú sale
-    // solo a recepción: la doctora y la administración tienen su propia
+    // solo a recepción: el médico y la administración tienen su propia
     // «Órdenes y resultados» (la bandeja clínica) y dos entradas con el mismo
     // nombre confundían. La ruta les sigue abriendo por enlace.
     name: 'Órdenes y resultados',
@@ -213,7 +213,7 @@ const _nav: NavItem[] = [
     icon: <CIcon icon={cilCloudUpload} customClassName="nav-icon" />,
     roles: [Role.SECRETARIA],
   },
-  // Plan 23: la doctora recibe payments.read y payments.cashcut ("Mis cobros" y
+  // Plan 23: el médico recibe payments.read y payments.cashcut ("Mis cobros" y
   // su corte). Llega aquí sólo por permiso, a propósito sin respaldo por rol:
   // si el frontend se desplegara antes que el backend que le limita el alcance,
   // el rol le abriría pantallas con el dinero de toda la sucursal.
@@ -226,7 +226,7 @@ const _nav: NavItem[] = [
   // Plan 23, ajustes del 2026-09-28: nombres neutrales e iguales para todos los
   // roles. Nombres distintos por rol obligaban a condiciones en el menú y a
   // mantener recorridos por separado; la pantalla ya le dice "Mis cobros" y
-  // "Mi corte de caja" a la doctora. Las rutas no cambian.
+  // "Mi corte de caja" al médico. Las rutas no cambian.
   {
     component: CNavItem,
     name: 'Corte de caja',
@@ -234,7 +234,7 @@ const _nav: NavItem[] = [
     requires: ['payments.cashcut'],
     icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
     // Sin respaldo por rol para la secretaria: el corte se le concede por
-    // usuaria (payments.cashcut) y sólo abarca a las doctoras que apoya.
+    // usuaria (payments.cashcut) y sólo abarca a los médicos que apoya.
     roles: orMaster(Role.ADMIN),
   },
   {
@@ -247,7 +247,7 @@ const _nav: NavItem[] = [
   },
   {
     component: CNavTitle,
-    name: 'Doctora',
+    name: 'Médico',
     requires: ['doctor.appointments.read', 'clinical_tracking.read', 'doctor_profile.read'],
     roles: orMaster(Role.DOCTOR, Role.ADMIN),
   },
@@ -260,7 +260,7 @@ const _nav: NavItem[] = [
     icon: <CIcon icon={cilCalendar} customClassName="nav-icon" />,
     // Sin administración a propósito (revisión de flujos, 2026-10-04): su
     // perfil no trae doctor.appointments.read, el servidor le niega la agenda
-    // y el ítem sólo llevaba a una pantalla en error. La doctora la conserva.
+    // y el ítem sólo llevaba a una pantalla en error. El médico la conserva.
     roles: orMaster(Role.DOCTOR),
   },
   {

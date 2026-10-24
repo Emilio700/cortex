@@ -5,7 +5,7 @@ Por qué existe este módulo
 La misma pregunta —"¿esta usuaria puede ver este expediente?"— estaba resuelta a
 mano en medio centenar de puntos, cada router con su propia versión de
 ``if current_user.role == Role.DOCTOR``. Dos de esas versiones divergieron sin
-que nadie lo notara: la nota de consulta aceptaba a la doctora que cubría a una
+que nadie lo notara: la nota de consulta aceptaba al médico que cubría a una
 colega y la receta le devolvía 403 sobre la MISMA consulta, así que la sección se
 le dibujaba vacía sin explicación. El costo de ese desacuerdo no es una pantalla
 rota: es información clínica que aparece o desaparece según por qué endpoint se
@@ -23,16 +23,16 @@ escribirse a propósito.
 
 Qué cambió al cerrar la cobertura clínica entre doctoras
 --------------------------------------------------------
-Para una doctora, las tres variantes de expediente convergen hoy en la misma
+Para un médico, las tres variantes de expediente convergen hoy en la misma
 respuesta: entra si es la dueña. El equipo tratante dejó de abrirle el
-expediente de la paciente de otra (ver ``clinical_access``). Se conservan los
+expediente del paciente de otra (ver ``clinical_access``). Se conservan los
 tres nombres porque para recepción y administración **siguen significando cosas
 distintas**, y porque colapsarlos sería un refactor de acceso escondido dentro
 de una decisión de producto.
 
 Lo que NO cambió: la agenda. ``alcance_operativo_acotado`` y todo lo que cuelga
 de él —``exigir_agenda_propia``, ``filtrar_citas_del_alcance``, el horario de la
-doctora— quedaron intactos. Las doctoras se siguen viendo el calendario.
+doctora— quedaron intactos. Los médicos se siguen viendo el calendario.
 
 El eje que este módulo prepara (plan 20, ADR-002)
 -------------------------------------------------
@@ -40,7 +40,7 @@ Hoy "tener el alcance acotado" es literalmente "ser doctora". Mañana, cuando lo
 perfiles operativos traigan ``scope_clinical``/``scope_operational`` en base de
 datos, sólo cambian los dos predicados de abajo y todo lo demás sigue igual. Por
 eso los dos dominios se declaran separados aunque hoy den exactamente el mismo
-resultado: el día que una doctora con recepción tenga alcance operativo de
+resultado: el día que un médico con recepción tenga alcance operativo de
 clínica, su alcance clínico NO debe ampliarse con ella (NOM-004, LFPDPPP).
 """
 from typing import Optional
@@ -60,10 +60,10 @@ from app.models.payment import Payment, PaymentStatus
 from app.models.user import Role, User
 
 # Mensaje de "no existe" que comparte casi todo el expediente. Se centraliza
-# porque la redacción es parte del contrato con la pantalla: le dice a la doctora
+# porque la redacción es parte del contrato con la pantalla: le dice al médico
 # qué hacer (actualizar la lista) en vez de dejarla mirando un error.
 PACIENTE_NO_ENCONTRADA = (
-    "No se encontró a la paciente. Puede que la hayan eliminado; "
+    "No se encontró al paciente. Puede que la hayan eliminado; "
     "actualiza la lista de pacientes."
 )
 
@@ -88,14 +88,14 @@ def alcance_operativo_acotado(user: User) -> bool:
 
     Dominio deliberadamente distinto del clínico aunque hoy coincidan: son dos
     ejes que el plan 20 separa porque se amplían por razones distintas. Ampliar
-    el operativo (que una doctora cobre y agende para toda la clínica) es una
+    el operativo (que un médico cobre y agende para toda la clínica) es una
     decisión administrativa; ampliar el clínico toca datos sensibles.
     """
     return user.role == Role.DOCTOR
 
 
 # ---------------------------------------------------------------------------
-# Alcance clínico sobre la paciente
+# Alcance clínico sobre el paciente
 # ---------------------------------------------------------------------------
 
 def resolver_paciente_de_su_duena(
@@ -106,7 +106,7 @@ def resolver_paciente_de_su_duena(
     detalle_403: str,
     detalle_404: str = PACIENTE_NO_ENCONTRADA,
 ) -> Patient:
-    """Variante ``own``: sólo la doctora dueña del expediente entra.
+    """Variante ``own``: sólo el médico dueña del expediente entra.
 
     Es la regla más estrecha y la que gobierna los módulos que nacieron ligados a
     una titular única del expediente (episodios, imágenes, prenatal, seguimiento,
@@ -137,7 +137,7 @@ def resolver_paciente_con_relacion_asistencial(
 
     Es la regla canónica del expediente vivo —nota de consulta, receta,
     certificado, documentos— y la que se homologó justo después del incidente de
-    la receta. Para una doctora hoy equivale a ser la dueña; la membresía de
+    la receta. Para un médico hoy equivale a ser la dueña; la membresía de
     equipo tratante sólo abre la puerta a cuentas de apoyo. Los roles no clínicos
     NO se acotan aquí a propósito: recepción necesita adjuntar estudios de
     cualquier paciente de la clínica sin por eso poder leer la nota, que sí los
@@ -164,7 +164,7 @@ def exigir_relacion_asistencial(
     Se diferencia de ``resolver_paciente_con_relacion_asistencial`` en que NO deja
     pasar a recepción ni a administración por alcance de clínica: es la regla del
     expediente propiamente dicho —la nota de consulta y reabrir la consulta donde
-    va— donde ver la agenda no alcanza para leer lo que la doctora escribió.
+    va— donde ver la agenda no alcanza para leer lo que el médico escribió.
     Devuelve además qué relación abrió la puerta, que es lo que la bitácora
     necesita registrar.
     """
@@ -175,7 +175,7 @@ def filtrar_pacientes_del_alcance(query: Query, user: User) -> Query:
     """Recorta un listado de pacientes al alcance clínico de quien consulta.
 
     Contrapartida en lista de ``resolver_paciente_con_relacion_asistencial``: si
-    una doctora no puede abrir un expediente, tampoco debe verlo aparecer en el
+    un médico no puede abrir un expediente, tampoco debe verlo aparecer en el
     buscador y enterarse de que existe.
     """
     return apply_doctor_patient_access_filter(query, user)
@@ -190,7 +190,7 @@ def exigir_autoria_clinica(
 ) -> None:
     """Variante ``author``: además del expediente, exige haber firmado el registro.
 
-    Un embarazo, una visita prenatal o una orden de estudio los lleva la doctora
+    Un embarazo, una visita prenatal o una orden de estudio los lleva el médico
     que los abrió; que otra tenga acceso al expediente no la convierte en
     responsable de ese seguimiento. Se aplica SOBRE la regla de expediente, nunca
     en su lugar.
@@ -217,7 +217,7 @@ def exigir_agenda_propia(
     detalle: str,
     status_code: int = status.HTTP_403_FORBIDDEN,
 ) -> None:
-    """Una doctora sólo manda sobre su propia agenda.
+    """Un médico sólo manda sobre su propia agenda.
 
     ``status_code`` existe porque las dos familias de llamadas difieren a
     propósito: escribir en la agenda ajena responde 403 (la acción es legítima,
@@ -248,7 +248,7 @@ def filtrar_pagos_del_alcance(query: Query, user: User) -> Query:
     misma pantalla dirían cosas distintas, y un corte que no cuadra con su propio
     desglose es peor que no tener corte.
 
-    La doctora ve sólo los pagos cuyo ingreso es suyo (``doctor_id``), no los que
+    El médico ve sólo los pagos cuyo ingreso es suyo (``doctor_id``), no los que
     ella recibió: si la secretaria le cobró a su paciente, ese dinero también es
     de ella. Recepción y administración ven la sucursal completa, incluidos los
     pagos históricos sin doctora asignada, para que no dejen de ver nada de lo
@@ -273,23 +273,23 @@ def solo_pagos_vigentes(query: Query) -> Query:
 # ---------------------------------------------------------------------------
 
 def corte_acotado_a_asignadas(user: User) -> bool:
-    """¿El corte de esta usuaria se limita a las doctoras que apoya?
+    """¿El corte de esta usuaria se limita a los médicos que apoya?
 
     Sólo para la secretaria. La lista de pagos sigue siendo de toda la
     sucursal (cobra a cualquiera y tiene que ver lo que cobró); lo que se
-    acota es el corte, que dice cuánto ingresó cada doctora. Administración y
-    MASTER siguen viendo la sucursal, y la doctora ya está acotada a lo suyo
+    acota es el corte, que dice cuánto ingresó cada médico. Administración y
+    MASTER siguen viendo la sucursal, y el médico ya está acotada a lo suyo
     por ``filtrar_pagos_del_alcance``.
     """
     return user.role == Role.SECRETARIA
 
 
 def doctoras_asignadas(db: Session, user: User) -> list[int]:
-    """Ids de las doctoras que esta secretaria apoya, en su sucursal.
+    """Ids de los médicos que esta secretaria apoya, en su sucursal.
 
     Se filtra además por la sucursal y por que siga siendo doctora: una
     asignación vieja no puede abrirle el corte de alguien que cambió de
-    sucursal o de rol. NO se exige que la doctora siga activa: si se da de baja,
+    sucursal o de rol. NO se exige que el médico siga activa: si se da de baja,
     su secretaria todavía tiene que poder cuadrar los cortes de días pasados.
     """
     from app.models.secretaria_doctora import SecretariaDoctora

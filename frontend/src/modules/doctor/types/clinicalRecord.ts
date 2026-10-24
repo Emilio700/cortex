@@ -10,6 +10,15 @@ export type ClinicalEpisodeType =
   | 'fertility'
   | 'procedure'
   | 'other'
+  | 'spine'
+  | 'brain_tumor'
+  | 'cerebrovascular'
+  | 'neurotrauma'
+  | 'hydrocephalus'
+  | 'epilepsy'
+  | 'chronic_pain'
+  | 'peripheral_nerve'
+  | 'movement_disorder'
 
 export type ClinicalEpisodeStatus = 'active' | 'monitoring' | 'resolved' | 'archived'
 

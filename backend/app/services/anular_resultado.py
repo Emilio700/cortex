@@ -2,7 +2,7 @@
 
 Diseño aprobado por Emilio (delegado en el orquestador):
 
-- Desde la orden, con **motivo obligatorio**. Solo la doctora que pidió el
+- Desde la orden, con **motivo obligatorio**. Solo el médico que pidió el
   estudio o la administración. Nunca se borra nada: el resultado y su archivo
   se conservan anulados, con quién, cuándo y por qué.
 - Anula también el **documento ligado** (el mismo efecto que anularlo desde
@@ -79,7 +79,7 @@ def anular(db: Session, resultado: DiagnosticResult, order: DiagnosticOrder, use
     if not puede_anular(order, user):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Solo la doctora que pidió el estudio o la administración pueden anular un resultado.",
+            detail="Solo el médico que pidió el estudio o la administración pueden anular un resultado.",
         )
     if resultado.anulado_at is not None:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Este resultado ya estaba anulado.")

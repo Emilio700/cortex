@@ -23,6 +23,15 @@ class ConsentType(str, enum.Enum):
     DELIVERY = "delivery"
     CESAREAN = "cesarean"
     ILE = "ile"
+    # Neurocirugía (Cortex). Los de arriba son de GEMS: se conservan para poder
+    # abrir los consentimientos ya firmados, pero ya no se ofrecen.
+    CRANIOTOMY = "craniotomy"
+    SPINE_SURGERY = "spine_surgery"
+    CSF_SHUNT = "csf_shunt"
+    STEREOTACTIC_BIOPSY = "stereotactic_biopsy"
+    PAIN_INTERVENTION = "pain_intervention"
+    PERIPHERAL_NERVE = "peripheral_nerve"
+    LUMBAR_PUNCTURE = "lumbar_puncture"
 
 
 class ConsentStatus(str, enum.Enum):

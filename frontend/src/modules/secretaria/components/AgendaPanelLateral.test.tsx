@@ -90,11 +90,11 @@ describe('AgendaPanelLateral — citas del día', () => {
     expect(fns.onAbrirCita).toHaveBeenCalledWith(expect.objectContaining({ id: 1 }))
   })
 
-  it('el menú de tres puntos ofrece historial y citas de la paciente', async () => {
+  it('el menú de tres puntos ofrece historial y citas del paciente', async () => {
     const user = userEvent.setup()
     const fns = renderPanel({ citasDelMes: [cita(1, '08:15')] })
     await user.click(screen.getByRole('button', { name: /Acciones de la cita/ }))
-    await user.click(screen.getByText('Ver el historial de la paciente'))
+    await user.click(screen.getByText('Ver el historial del paciente'))
     expect(fns.onVerHistorial).toHaveBeenCalledWith(expect.objectContaining({ id: 1 }))
   })
 

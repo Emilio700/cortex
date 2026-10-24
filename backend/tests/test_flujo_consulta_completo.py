@@ -22,7 +22,7 @@ Dos reglas de fondo, ganadas a base de incidentes:
    500, pero incluso un 201 mentiroso habría pasado desapercibido.
 2. **Se relee por la API.** Guardar y no poder volver a leerlo es el otro
    defecto del mismo día: la consulta cerrada se dibujaba vacía encima de una
-   nota que sí existía, invitando a la doctora a escribirla otra vez.
+   nota que sí existía, invitando al médico a escribirla otra vez.
 
 Mismo arnés que ``test_appointments_creacion.py``: SQLite en memoria,
 ``TestClient`` y ``get_db`` sobrescrito. No hace falta una Postgres levantada.
@@ -95,7 +95,7 @@ def _auth_headers(db, user: User) -> dict[str, str]:
 def consultorio(db_session):
     """Una sucursal con secretaria, doctora y paciente: el reparto de una consulta.
 
-    La paciente queda a cargo de la doctora (``owner_doctor_id``) porque sin esa
+    El paciente queda a cargo del médico (``owner_doctor_id``) porque sin esa
     relación asistencial la API le niega el expediente, y entonces la prueba
     mediría el control de acceso en vez del flujo clínico.
     """
@@ -119,7 +119,7 @@ def consultorio(db_session):
         return usuario
 
     secretaria = _usuario("secretaria@gems.com", Role.SECRETARIA, "Secretaria de prueba")
-    doctora = _usuario("doctora@gems.com", Role.DOCTOR, "Doctora de prueba")
+    doctora = _usuario("doctora@gems.com", Role.DOCTOR, "Médico de prueba")
 
     paciente = Patient(
         tenant_id=tenant.id,
@@ -162,7 +162,7 @@ def _agendar(client, headers, consultorio, *, dentro_de_dias=1):
 def test_el_recorrido_completo_de_una_consulta_deja_todo_guardado(
     client, db_session, consultorio
 ):
-    """La consulta entera, paso a paso, como la vive la doctora.
+    """La consulta entera, paso a paso, como la vive el médico.
 
     Es la prueba que no existía. Cada paso comprueba la respuesta *y* el
     registro en la base, porque el sistema puede contestar que sí y no haber
@@ -214,7 +214,7 @@ def test_el_recorrido_completo_de_una_consulta_deja_todo_guardado(
     assert triage_guardado.chief_complaint == "DOLOR PÉLVICO DE 3 DÍAS"
     assert triage_guardado.weight_kg == 62.5
 
-    # 3. La paciente pasa a sala. El sistema exige triage previo, así que este
+    # 3. El paciente pasa a sala. El sistema exige triage previo, así que este
     #    paso también confirma que el anterior quedó registrado de verdad.
     a_sala = client.patch(
         f"{PREFIX}/appointments/{cita_id}/status",
@@ -227,7 +227,7 @@ def test_el_recorrido_completo_de_una_consulta_deja_todo_guardado(
     cita = db_session.query(Appointment).filter(Appointment.id == cita_id).one()
     assert cita.status == AppointmentStatus.EN_SALA
 
-    # 4. La doctora guarda la nota de consulta. ESTE es el paso que estuvo
+    # 4. El médico guarda la nota de consulta. ESTE es el paso que estuvo
     #    roto dos meses: respondía 500 y la nota no llegaba nunca a la tabla.
     nota = client.post(
         f"{PREFIX}/soap-notes",
@@ -253,7 +253,7 @@ def test_el_recorrido_completo_de_una_consulta_deja_todo_guardado(
     assert nota_guardada.plan == "ANALGÉSICO POR 5 DÍAS Y CONTROL EN UNA SEMANA"
     assert nota_guardada.doctor_id == consultorio["doctora"].id
 
-    # 5. La doctora emite la receta.
+    # 5. El médico emite la receta.
     receta = client.post(
         f"{PREFIX}/prescriptions",
         headers=doctora,
@@ -282,7 +282,7 @@ def test_el_recorrido_completo_de_una_consulta_deja_todo_guardado(
     assert receta_guardada.medications[0]["name"] == "IBUPROFENO 400 MG"
     assert receta_guardada.folio_number, "Una receta sin folio no se puede rastrear"
 
-    # 6. La doctora relee la consulta y ENCUENTRA lo que capturó. El otro
+    # 6. El médico relee la consulta y ENCUENTRA lo que capturó. El otro
     #    defecto del mismo día era éste: la consulta se abría en blanco encima
     #    de lo ya documentado. Por eso no basta con que la base tenga el dato:
     #    tiene que llegar por la misma puerta que usa la pantalla.
@@ -302,7 +302,7 @@ def test_el_recorrido_completo_de_una_consulta_deja_todo_guardado(
     assert relectura_recetas.status_code == 200, relectura_recetas.text
     assert [r["id"] for r in relectura_recetas.json()] == [receta_id]
 
-    # 7. La doctora finaliza la consulta.
+    # 7. El médico finaliza la consulta.
     finalizada = client.patch(
         f"{PREFIX}/appointments/{cita_id}/status",
         headers=doctora,
@@ -316,7 +316,7 @@ def test_el_recorrido_completo_de_una_consulta_deja_todo_guardado(
 
     # 8. Tras cerrar, la nota y la receta SIGUEN ahí y se pueden leer. Cerrar
     #    la consulta no puede ser una forma silenciosa de perder el expediente:
-    #    lo documentado es el expediente clínico de la paciente.
+    #    lo documentado es el expediente clínico del paciente.
     despues_nota = client.get(f"{PREFIX}/soap-notes/{nota_id}", headers=doctora)
     assert despues_nota.status_code == 200, despues_nota.text
     assert despues_nota.json()["plan"] == "ANALGÉSICO POR 5 DÍAS Y CONTROL EN UNA SEMANA"
@@ -337,7 +337,7 @@ def test_el_recorrido_completo_de_una_consulta_deja_todo_guardado(
 
 
 def test_la_nota_releida_es_exactamente_la_que_se_escribio(client, db_session, consultorio):
-    """Lo que la doctora escribió es lo que tiene que volver, acentos incluidos.
+    """Lo que el médico escribió es lo que tiene que volver, acentos incluidos.
 
     Una nota clínica que regresa con la ñ rota o la tilde comida no es la nota
     que se firmó. Se compara carácter por carácter contra el texto original,
@@ -378,7 +378,7 @@ def test_sin_nota_responde_204_y_con_nota_responde_200(client, db_session, consu
 
     204 significa «esta cita todavía no tiene nota, dibuja el formulario
     vacío» y 200 significa «aquí está lo documentado». Confundirlos fue lo que
-    puso a la doctora a escribir encima de una nota existente. Se prueban los
+    puso al médico a escribir encima de una nota existente. Se prueban los
     dos estados sobre la MISMA cita, antes y después de guardar, que es como
     los vive el frontend.
     """
@@ -405,7 +405,7 @@ def test_sin_nota_responde_204_y_con_nota_responde_200(client, db_session, consu
 def test_dos_recetas_distintas_en_la_misma_consulta(client, db_session, consultorio):
     """Recetar dos cosas en una consulta es clínico normal, no un error.
 
-    Una paciente puede salir con el analgésico y con el antibiótico en recetas
+    Un paciente puede salir con el analgésico y con el antibiótico en recetas
     separadas. Lo que no debe pasar es que la segunda pise a la primera ni que
     compartan folio: el folio es como se rastrea una receta después.
     """
@@ -495,7 +495,7 @@ def test_finalizar_la_consulta_no_pierde_la_nota(client, db_session, consultorio
     assert releida.json()["plan"] == "CONTROL EN UN MES"
 
     # Caso B: la consulta se cerró antes de guardar. La nota que llega tarde
-    # tiene que entrar igual; rechazarla sería perder el trabajo de la doctora.
+    # tiene que entrar igual; rechazarla sería perder el trabajo del médico.
     sin_nota = _agendar(client, secretaria, consultorio, dentro_de_dias=2)
     cerrada_antes = client.patch(
         f"{PREFIX}/appointments/{sin_nota}/status",

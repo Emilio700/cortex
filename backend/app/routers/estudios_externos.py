@@ -3,13 +3,13 @@
 Regla de arquitectura adoptada: «si GEMS puede saber qué estudio representa
 un archivo, no lo guarda como archivo suelto».
 
-- **Estudio de otro lugar**: lo que la paciente trae de otro médico o
+- **Estudio de otro lugar**: lo que el paciente trae de otro médico o
   laboratorio, sin orden de GEMS. Nace como una orden con ``origen='externo'``
-  ya con su resultado recibido, así va a Estudios, la doctora lo valora y lo
+  ya con su resultado recibido, así va a Estudios, el médico lo valora y lo
   revisa igual que uno propio, y cuenta en la gráfica y en la línea de tiempo.
 - **Resultados viejos sin orden**: antes de este cambio el modal de Documentos
   ofrecía «Resultado de Laboratorio» y no lo ligaba a nada (C4). Se listan y
-  la doctora los liga a su orden pendiente o los marca como estudio externo.
+  el médico los liga a su orden pendiente o los marca como estudio externo.
   Nada se cambia solo, y el archivo no se mueve ni se copia: se le crea su
   resultado apuntando al mismo documento.
 """
@@ -46,15 +46,16 @@ from app.utils.uploads import (
 router = APIRouter(prefix="/clinical-tracking", tags=["clinical-tracking"])
 
 ORIGEN_EXTERNO = "externo"
-CATEGORIAS = ("laboratory", "gynecology", "breast", "obstetric", "imaging", "other")
+CATEGORIAS = ("laboratory", "gynecology", "breast", "obstetric", "imaging", "neurophysiology", "other")
 TIPO_POR_CATEGORIA = {
     "laboratory": DocumentType.LAB_RESULT,
     "gynecology": DocumentType.LAB_RESULT,
     "breast": DocumentType.IMAGING_STUDY,
     "obstetric": DocumentType.IMAGING_STUDY,
     "imaging": DocumentType.IMAGING_STUDY,
+    "neurophysiology": DocumentType.IMAGING_STUDY,
 }
-INDICACION_EXTERNA = "Estudio de otro lugar, traído por la paciente."
+INDICACION_EXTERNA = "Estudio de otro lugar, traído por el paciente."
 TIPOS_QUE_PARECEN_RESULTADO = (DocumentType.LAB_RESULT, DocumentType.IMAGING_STUDY)
 
 
@@ -66,13 +67,13 @@ class EstudioExternoCreado(BaseModel):
 
 
 def _doctora_de(paciente: Patient, user: User) -> int:
-    """De quién es el estudio: la doctora que lo sube, o la dueña del expediente."""
+    """De quién es el estudio: el médico que lo sube, o la dueña del expediente."""
     if user.role == Role.DOCTOR:
         return user.id
     if paciente.owner_doctor_id is None:
         raise HTTPException(
             status_code=409,
-            detail="La paciente no tiene doctora asignada; pídele a la doctora que lo suba desde su expediente.",
+            detail="El paciente no tiene doctora asignada; pídele al médico que lo suba desde su expediente.",
         )
     return paciente.owner_doctor_id
 
@@ -114,7 +115,7 @@ async def subir_estudio_externo(
 ):
     """Sube un estudio de otro lugar: nace en Estudios con su resultado recibido.
 
-    Lo sube la doctora o recepción (que suele recibirlo). Le llega a la
+    Lo sube el médico o recepción (que suele recibirlo). Le llega a la
     doctora como resultado por revisar, igual que uno pedido en GEMS.
     """
     paciente = resolver_paciente_con_relacion_asistencial(db, patient_id, user)
@@ -207,7 +208,7 @@ def resultados_sin_orden(
     """Los archivos tipo «Resultado de laboratorio» o «Estudio de imagen» sin orden.
 
     Para el aviso discreto del expediente: «3 archivos parecen resultados sin
-    orden — ligarlos». Solo la doctora (quien interpreta).
+    orden — ligarlos». Solo el médico (quien interpreta).
     """
     resolver_paciente_con_relacion_asistencial(db, patient_id, user)
     registrar_acceso(db, user, patient_id, SeccionClinica.ESTUDIOS)
@@ -253,7 +254,7 @@ def ligar_documento(
             DiagnosticOrder.id == datos.order_id, DiagnosticOrder.patient_id == documento.patient_id
         ).first()
         if orden is None:
-            raise HTTPException(status_code=404, detail="No se encontró esa orden de la paciente.")
+            raise HTTPException(status_code=404, detail="No se encontró esa orden del paciente.")
         exigir_autoria_clinica(orden.doctor_id, user, detalle="Solo puedes ligar resultados a órdenes que solicitaste")
         from app.services.estudios_atrasados import ESTADOS_SIN_RESULTADO
 

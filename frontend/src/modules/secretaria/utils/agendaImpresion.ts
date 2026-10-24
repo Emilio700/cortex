@@ -3,7 +3,7 @@
  *
  * Decisión de Emilio: se imprime desde la vista Lista, el rango visible, con
  * hora, paciente, teléfono, doctora, servicio y estado. Nada más: el motivo es
- * una nota para la doctora y la hoja se queda en el mostrador.
+ * una nota para el médico y la hoja se queda en el mostrador.
  *
  * Se arma como documento aparte y se imprime desde un marco oculto. El CSS de
  * impresión de la agenda sólo esconde su panel y la barra del calendario; el
@@ -33,7 +33,7 @@ const escapar = (texto: string): string =>
     .replace(/'/g, '&#39;')
 
 /** Columnas de la hoja, en el orden de la decisión. */
-export const COLUMNAS_AGENDA_IMPRESA = ['Hora', 'Paciente', 'Teléfono', 'Doctora', 'Servicio', 'Estado']
+export const COLUMNAS_AGENDA_IMPRESA = ['Hora', 'Paciente', 'Teléfono', 'Médico', 'Servicio', 'Estado']
 
 /**
  * Una fila de la hoja, en texto plano. «Servicio» es el tipo de cita

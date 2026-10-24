@@ -47,7 +47,7 @@ interface CareTeamPanelProps {
 }
 
 const roleMeta: Record<CareTeamAccessRole, { label: string; color: 'primary' | 'info' | 'warning' }> = {
-  collaborator: { label: 'Doctora colaboradora', color: 'primary' },
+  collaborator: { label: 'Médico colaborador', color: 'primary' },
   assistant: { label: 'Auxiliar asignada', color: 'info' },
   temporary: { label: 'Acceso temporal', color: 'warning' },
 }
@@ -58,7 +58,7 @@ const formatDateTime = (value?: string | null) => {
 }
 
 // El equipo tratante concede apoyo administrativo sobre el expediente: quien
-// captura documentos o adjunta estudios de la paciente. No concede cobertura
+// captura documentos o adjunta estudios del paciente. No concede cobertura
 // clinica entre doctoras — eso se cerro el 2026-09-24 y el servidor lo rechaza
 // con 422. Este panel ofrece cuentas de recepcion y no de medicos por esa
 // razon: un selector que sirviera solo para recibir un error seria exactamente
@@ -214,7 +214,7 @@ const CareTeamPanel = ({ patientId, ownerDoctorId, embedded = false }: CareTeamP
         <CModalBody>
           <CAlert color="info" className="small">
             Da acceso a este expediente a una cuenta de apoyo; la responsabilidad clínica sigue siendo tuya.
-            El expediente completo de una paciente solo lo abre su médica responsable: compartir la agenda con otra
+            El expediente completo de un paciente solo lo abre su médica responsable: compartir la agenda con otra
             doctora no requiere este permiso.
           </CAlert>
           <CFormLabel htmlFor="care-team-user">Cuenta de apoyo</CFormLabel>

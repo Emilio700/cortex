@@ -20,19 +20,19 @@ class NotificationType:
     APPOINTMENT_SCHEDULED = "appointment_scheduled"
     PATIENT_ARRIVED = "patient_arrived"
     DOCUMENT_UPLOADED = "document_uploaded"
-    # Va a la asistente, no a la paciente ni a la doctora: el sistema no llama
-    # a nadie, se encarga de que la persona que llama no se le pase. La doctora
+    # Va a la asistente, no al paciente ni al médico: el sistema no llama
+    # a nadie, se encarga de que la persona que llama no se le pase. El médico
     # ve lo mismo en el tablero de control prenatal, que se consulta; un aviso
     # que solo dice "enterate" es lo que tiene la campanita llena sin leer.
     PRENATAL_REVIEW_DUE = "prenatal_review_due"
-    # A la doctora que pidió el estudio: llegó su resultado y falta que lo
+    # Al médico que pidió el estudio: llegó su resultado y falta que lo
     # interprete. Es un "haz algo", no un "entérate" (O-04).
     DIAGNOSTIC_RESULT_RECEIVED = "diagnostic_result_received"
-    # A recepción: la doctora cerró la consulta y el texto dice el estado real
+    # A recepción: el médico cerró la consulta y el texto dice el estado real
     # del cobro. Se usaba como cadena suelta en el router; un tipo que no está
     # aquí es un tipo que nadie encuentra al buscar quién avisa qué.
     CONSULTATION_COMPLETED = "consultation_completed"
-    # A la doctora: se le cayó o se le movió una cita. Si es de hoy o de mañana
+    # Al médico: se le cayó o se le movió una cita. Si es de hoy o de mañana
     # es un hueco (o un choque) en su agenda inmediata y pide hacer algo; si es
     # más lejos sólo hay que saberlo (plan 27, D-6).
     APPOINTMENT_CANCELLED = "appointment_cancelled"
@@ -42,7 +42,7 @@ class NotificationType:
     # se detiene; antes de la 1.2.0 llevaba días caído y nadie se enteró
     # (plan 32, punto 0). Lo escribe ``scripts/aviso_de_sistema.py``.
     SYSTEM_ALERT = "system_alert"
-    # A la doctora: estudios suyos que siguen sin resultado después de su
+    # Al médico: estudios suyos que siguen sin resultado después de su
     # plazo. Uno solo por día y agrupado (plan 32, punto 3); se cierra solo
     # cuando ya no le queda ninguno atrasado.
     STUDIES_OVERDUE = "studies_overdue"
@@ -133,7 +133,7 @@ class NotificationPreference(Base):
 
     Se guarda en el servidor para que la siga de un equipo a otro. Todo lo que
     hace ruido arranca apagado: sonido y notificación del navegador son
-    opt-in, y el recordatorio de cita de una hora sólo sale si la doctora lo
+    opt-in, y el recordatorio de cita de una hora sólo sale si el médico lo
     pide (D-1). Las informativas se pueden silenciar por tipo; lo accionable no,
     porque un «paciente en sala» que nadie ve es el problema que este plan
     resuelve.

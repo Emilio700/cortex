@@ -66,7 +66,7 @@ export interface Recorrido {
    * Cómo llegar a donde el recorrido se puede ver, cuando no se puede abrir
    * desde donde está la persona: una consulta concreta, el expediente de una
    * paciente o un formulario abierto. El centro de ayuda lo muestra en vez de
-   * elegir por ella una paciente o abrir un formulario (eso ya sería actuar).
+   * elegir por ella un paciente o abrir un formulario (eso ya sería actuar).
    */
   comoLlegar?: string
   /**

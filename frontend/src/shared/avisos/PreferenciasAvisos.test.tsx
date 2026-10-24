@@ -20,7 +20,7 @@ const preferencias = (tipos_silenciables: string[]) => ({
 })
 
 describe('PreferenciasAvisos', () => {
-  it('la doctora ve el recordatorio de una hora y los tipos que puede silenciar', () => {
+  it('el médico ve el recordatorio de una hora y los tipos que puede silenciar', () => {
     valor.rol = 'doctor'
     valor.avisos = { preferencias: preferencias(['appointment_scheduled']), guardarPreferencias: vi.fn() }
     render(<PreferenciasAvisos />)

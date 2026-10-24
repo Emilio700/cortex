@@ -1,4 +1,4 @@
-"""Configuración de la orden de estudio en el perfil de la doctora (plan 26, D-7).
+"""Configuración de la orden de estudio en el perfil del médico (plan 26, D-7).
 
 El membrete se comparte con la receta; lo propio de la orden (modo de
 impresión, qué datos salen y la leyenda del pie) vive en
@@ -123,7 +123,7 @@ def test_la_vista_previa_rechaza_claves_desconocidas(client, doctora):
 
 
 def test_el_papel_de_la_consulta_usa_el_modo_del_perfil(client, db_session, escenario):
-    """Sin ``modo`` en la llamada, manda lo que la doctora dejó en su perfil."""
+    """Sin ``modo`` en la llamada, manda lo que el médico dejó en su perfil."""
     from app.models.audit_log import AuditLog
 
     t, p, d = escenario["tenant"], escenario["paciente"], escenario["doctora"]

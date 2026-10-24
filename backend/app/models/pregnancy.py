@@ -81,8 +81,8 @@ class Pregnancy(Base):
     # Proxima revision prenatal.  Hasta ahora la fecha se calculaba en el
     # navegador y se perdia al recargar, asi que ningun proceso del servidor
     # podia recordarla: el recordatorio de "ya toca revision" corre aqui, no
-    # en el browser de la doctora.  Se guardan dos fechas a proposito:
-    # `next_review_on` es la que vale (la que la doctora acepto o movio) y
+    # en el browser del médico.  Se guardan dos fechas a proposito:
+    # `next_review_on` es la que vale (la que el médico acepto o movio) y
     # `next_review_suggested_on` es la que propuso la regla de intervalos, para
     # poder saber despues si la sugerencia se respeto o se ajusto.
     next_review_on = Column(Date, nullable=True, index=True)

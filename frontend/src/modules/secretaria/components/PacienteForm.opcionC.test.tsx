@@ -3,7 +3,7 @@
  *
  * Recepción captura nombre, contacto, fecha de nacimiento, alergias y FUR; los
  * antecedentes, la historia gineco-obstétrica y las notas de referencia de la
- * doctora no aparecen en su formulario ni salen en lo que guarda. La doctora
+ * doctora no aparecen en su formulario ni salen en lo que guarda. El médico
  * sigue viendo el formulario completo.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -46,18 +46,18 @@ beforeEach(() => {
 })
 
 describe('PacienteForm · recepción (opción C)', () => {
-  it('el alta exprés pide alergias y FUR, las dos opcionales', () => {
+  it('el alta exprés pide alergias, opcional, y ya no la FUR de GEMS', () => {
     render(<PacienteForm visible onClose={vi.fn()} onSubmit={onSubmit} />)
     expect(screen.getByLabelText('Alergias (opcional)')).toBeInTheDocument()
-    expect(screen.getByLabelText('Última menstruación (FUR, opcional)')).toBeInTheDocument()
+    expect(screen.queryByLabelText(/Última menstruación/)).toBeNull()
   })
 
   it('al editar no muestra antecedentes ni notas de referencia, y dice quién los captura', () => {
     render(<PacienteForm visible onClose={vi.fn()} onSubmit={onSubmit} patient={PACIENTE} />)
     expect(screen.queryByLabelText('Antecedentes personales')).toBeNull()
-    expect(screen.queryByLabelText('Gestas')).toBeNull()
+    expect(screen.queryByLabelText('Implantes y dispositivos')).toBeNull()
     expect(screen.queryByLabelText('Notas de referencia')).toBeNull()
-    expect(screen.getByText(/los captura la doctora/)).toBeInTheDocument()
+    expect(screen.getByText(/los captura el médico/)).toBeInTheDocument()
     // No dice «sin antecedentes»: no los ve, no es que no existan.
     expect(screen.queryByText(/sin antecedentes/i)).toBeNull()
   })
@@ -75,7 +75,7 @@ describe('PacienteForm · recepción (opción C)', () => {
   })
 })
 
-describe('PacienteForm · la doctora', () => {
+describe('PacienteForm · el médico', () => {
   it('ve el formulario completo', () => {
     sesion.role = 'doctor'
     sesion.permisos = ['medical_history.read']
@@ -88,7 +88,10 @@ describe('PacienteForm · la doctora', () => {
       />,
     )
     expect(screen.getByLabelText('Antecedentes personales')).toHaveValue('ASMA')
-    expect(screen.getByLabelText('Gestas')).toBeInTheDocument()
+    expect(screen.getByLabelText('Lateralidad')).toBeInTheDocument()
+    expect(screen.getByLabelText('Implantes y dispositivos')).toBeInTheDocument()
+    expect(screen.getByLabelText('Anticoagulantes / antiagregantes')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Gestas')).toBeNull()
     expect(screen.getByLabelText('Notas de referencia')).toBeInTheDocument()
   })
 })

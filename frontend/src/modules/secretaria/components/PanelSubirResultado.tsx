@@ -2,9 +2,9 @@
  * Recepción sube el resultado (PDF o foto) de una orden de estudio (O-04,
  * plan 26 fase 4).
  *
- * Decisión de Emilio: la doctora imprime la orden y recepción puede reimprimir
- * y subir el resultado; la doctora lo interpreta y marca revisado. Aquí
- * recepción encuentra a la paciente, adjunta uno o varios archivos a cada
+ * Decisión de Emilio: el médico imprime la orden y recepción puede reimprimir
+ * y subir el resultado; el médico lo interpreta y marca revisado. Aquí
+ * recepción encuentra al paciente, adjunta uno o varios archivos a cada
  * estudio y puede ver lo que ya subió (R-1): antes solo veía cuántos archivos
  * había, sin forma de notar que subió el sobre equivocado o el mismo dos veces.
  * No ve indicación ni interpretación: el servidor no las manda a esta lista.
@@ -51,7 +51,7 @@ const PanelSubirResultado = ({ puedeSeguir = false }: { puedeSeguir?: boolean })
   const [soloAtrasadas, setSoloAtrasadas] = useState(false)
   const [siguiendo, setSiguiendo] = useState<OrdenPendienteResultado | null>(null)
 
-  // Búsqueda con debounce, como la bandeja de la doctora.
+  // Búsqueda con debounce, como la bandeja del médico.
   useEffect(() => {
     const timer = window.setTimeout(() => void buscar(search, page, soloAtrasadas), 250)
     return () => clearTimeout(timer)
@@ -70,8 +70,8 @@ const PanelSubirResultado = ({ puedeSeguir = false }: { puedeSeguir?: boolean })
   return (
     <div data-tour="panel-resultados">
       <p className="text-body-secondary">
-        Busca a la paciente, adjunta a cada estudio el resultado que entregó el laboratorio (uno o
-        varios archivos) y revisa lo que ya subiste. La doctora lo revisa.
+        Busca al paciente, adjunta a cada estudio el resultado que entregó el laboratorio (uno o
+        varios archivos) y revisa lo que ya subiste. El médico lo revisa.
       </p>
 
       {exito && (
@@ -92,7 +92,7 @@ const PanelSubirResultado = ({ puedeSeguir = false }: { puedeSeguir?: boolean })
             setPage(0)
           }}
         />
-        {/* Recepción suele ser quien llama a la paciente o al laboratorio (plan 32, punto 3). */}
+        {/* Recepción suele ser quien llama al paciente o al laboratorio (plan 32, punto 3). */}
         <CButton
           color="warning"
           variant={soloAtrasadas ? undefined : 'outline'}
@@ -253,7 +253,7 @@ const PanelSubirResultado = ({ puedeSeguir = false }: { puedeSeguir?: boolean })
           onClose={() => setAnexando(null)}
           onAnexado={(confirmados) => {
             setExito(
-              `Se ${confirmados.length === 1 ? 'adjuntó 1 archivo' : `adjuntaron ${confirmados.length} archivos`} a la orden de ${anexando.study_name} de ${anexando.patient_name}. La doctora lo revisará.`,
+              `Se ${confirmados.length === 1 ? 'adjuntó 1 archivo' : `adjuntaron ${confirmados.length} archivos`} a la orden de ${anexando.study_name} de ${anexando.patient_name}. El médico lo revisará.`,
             )
             void buscar(search, page, soloAtrasadas)
           }}

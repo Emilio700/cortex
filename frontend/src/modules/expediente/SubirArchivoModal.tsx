@@ -1,11 +1,11 @@
 /**
- * Un solo modal para subir cualquier archivo de una paciente (plan 32, punto 6).
+ * Un solo modal para subir cualquier archivo de un paciente (plan 32, punto 6).
  *
  * La pregunta clave va primero: «¿Es el resultado de un estudio que se le
  * pidió?». Si sí, se elige su orden pendiente y el archivo se adjunta a la
- * orden: le llega a la doctora como resultado. Si no, se dice qué es: un
+ * orden: le llega al médico como resultado. Si no, se dice qué es: un
  * estudio de otro lugar (va a Estudios, marcado como externo), una referencia
- * de otro médico o, para la doctora, otro archivo (van a Documentos). Antes
+ * de otro médico o, para el médico, otro archivo (van a Documentos). Antes
  * había dos maneras de «subir un resultado» que hacían cosas distintas (C4).
  *
  * Solo se dice «subido» con la respuesta del servidor; si algo falla, el
@@ -140,7 +140,7 @@ export default function SubirArchivoModal({ visible, patientId, patientName, onC
           resulted_on: fecha || undefined,
           reporting_provider: proveedor || undefined,
         })
-        onSubido('estudios', `Se adjuntó el resultado a ${orden?.study_name ?? 'su orden'}. La doctora lo revisará.`)
+        onSubido('estudios', `Se adjuntó el resultado a ${orden?.study_name ?? 'su orden'}. El médico lo revisará.`)
       } else if (que === 'externo') {
         const datos = new FormData()
         datos.append('patient_id', String(patientId))
@@ -187,7 +187,7 @@ export default function SubirArchivoModal({ visible, patientId, patientName, onC
         {puedeAdjuntar && (
           <fieldset className="mb-3" data-tour="subir-archivo-pregunta">
             <legend className="fs-6 fw-semibold">¿Es el resultado de un estudio que se le pidió?</legend>
-            <CFormCheck type="radio" name="es-resultado" id="es-resultado-si" label="Sí, de una orden de GEMS"
+            <CFormCheck type="radio" name="es-resultado" id="es-resultado-si" label="Sí, de una orden de Cortex"
               checked={esResultado === true} onChange={() => setEsResultado(true)} disabled={guardando} />
             <CFormCheck type="radio" name="es-resultado" id="es-resultado-no" label="No"
               checked={esResultado === false} onChange={() => setEsResultado(false)} disabled={guardando} />

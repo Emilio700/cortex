@@ -1,5 +1,5 @@
 /**
- * Un punto discreto junto al nombre de una paciente con la ficha incompleta
+ * Un punto discreto junto al nombre de un paciente con la ficha incompleta
  * (plan 32, punto 5; decisión de Emilio: «aprobada, pero sutil»).
  *
  * Nada de insignia llamativa: el detalle va en el `title` al pasar el cursor y

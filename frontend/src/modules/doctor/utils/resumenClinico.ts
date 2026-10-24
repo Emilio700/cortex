@@ -24,7 +24,8 @@ export const SECCIONES_DEL_RESUMEN: { clave: SeccionResumen; nombre: string }[] 
   { clave: 'alergias', nombre: 'Alergias' },
   { clave: 'antecedentes', nombre: 'Antecedentes' },
   { clave: 'diagnosticos', nombre: 'Diagnósticos activos' },
-  { clave: 'embarazo', nombre: 'Embarazo' },
+  // Sin «Embarazo»: la sección sigue en el servidor (GEMS), pero en
+  // neurocirugía no se ofrece.
   { clave: 'consultas', nombre: 'Últimas consultas' },
   { clave: 'estudios', nombre: 'Estudios' },
   { clave: 'medicacion', nombre: 'Última receta' },

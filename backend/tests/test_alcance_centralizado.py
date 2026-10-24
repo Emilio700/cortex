@@ -2,7 +2,7 @@
 
 Por qué una prueba estática y no de integración: el defecto que motivó el B6 no
 fue un endpoint que fallara, fue que dos endpoints **se contradijeran**. La nota
-de consulta aceptaba a la doctora que cubría a una colega y la receta le devolvía
+de consulta aceptaba al médico que cubría a una colega y la receta le devolvía
 403 sobre la misma consulta. Ninguna prueba por endpoint detecta eso, porque cada
 uno pasaba la suya: lo que hay que vigilar es que la regla siga viviendo en un
 solo sitio.
@@ -10,10 +10,10 @@ solo sitio.
 El candado es por eso sobre el código fuente, igual que el de
 ``test_esquemas_vs_modelos.py``: un ``if current_user.role == Role.DOCTOR`` nuevo
 en un router ya migrado falla aquí el mismo día que se escribe, y no dentro de
-seis meses cuando una doctora reporte que ve la nota pero no la receta.
+seis meses cuando un médico reporte que ve la nota pero no la receta.
 
 La lista de migrados es explícita a propósito. Hay routers que todavía deciden
-por rol (``tenants.py`` resuelve a qué sucursales puede cambiarse una doctora,
+por rol (``tenants.py`` resuelve a qué sucursales puede cambiarse un médico,
 que es otro eje) y no queremos que esta prueba los dé por buenos ni que falle por
 ellos: cuando alguno se migre, se agrega aquí y el candado empieza a cuidarlo.
 """
@@ -129,7 +129,7 @@ def test_los_dos_dominios_de_alcance_siguen_separados():
     El plan 20 los separa por razones legales: ampliar el operativo (cobrar y
     agendar para toda la clínica) es administrativo; ampliar el clínico toca
     datos sensibles. Fundirlos en un solo predicado "porque devuelven lo mismo"
-    haría que el día que una doctora reciba recepción se lleve de regalo los
+    haría que el día que un médico reciba recepción se lleve de regalo los
     expedientes de sus colegas.
     """
     from app.core import access_scope

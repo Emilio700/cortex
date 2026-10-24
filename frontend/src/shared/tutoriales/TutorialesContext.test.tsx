@@ -70,7 +70,7 @@ const recorridoAdmin: Recorrido = {
 const recorridoPacientes: Recorrido = {
   ...recorridoAgenda,
   id: 'pacientes-prueba',
-  titulo: 'Las pacientes',
+  titulo: 'Los pacientes',
   ruta: '/secretaria/pacientes',
 }
 
@@ -85,7 +85,7 @@ const recorridoFormulario: Recorrido = {
   roles: [Role.SECRETARIA],
   contexto: 'cita-modal',
   comoLlegar: 'Pulsa Nueva cita y luego ¿Cómo se llena?.',
-  pasos: [{ elemento: 'cita-paciente', titulo: 'Paciente', texto: 'Busca a la paciente' }],
+  pasos: [{ elemento: 'cita-paciente', titulo: 'Paciente', texto: 'Busca al paciente' }],
 }
 
 const bienvenida: Recorrido = {
@@ -466,40 +466,40 @@ describe('nada arranca solo', () => {
     expect(popover()).toBeNull()
   })
 
-  it('quien ya conocía GEMS ve una vez «GEMS se actualizó», y las novedades sólo si las pide', async () => {
+  it('quien ya usaba el sistema ve una vez «Cortex se actualizó», y las novedades sólo si las pide', async () => {
     vi.useFakeTimers()
     mockUseAuth.mockReturnValue(sesion(Role.SECRETARIA, ['appointments.read']))
     // Ya había visto el aviso de la primera vez en una versión anterior.
     localStorage.setItem('gems.tutoriales.aviso.42', '1')
     const vista = montar('/secretaria/agenda')
     expect(screen.queryByText(AVISO)).not.toBeInTheDocument()
-    expect(screen.getByText(/GEMS se actualizó a la 1\.2\.0/)).toBeInTheDocument()
+    expect(screen.getByText(/Cortex se actualizó a la 0\.1\.0/)).toBeInTheDocument()
     await esperar(30000)
     // Nada se abrió solo.
     expect(popover()).toBeNull()
-    expect(screen.queryByText('Novedades de la 1.2.0')).not.toBeInTheDocument()
+    expect(screen.queryByText('Novedades de la 0.1.0')).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Ver las novedades' }))
     await act(async () => {
       await import('./CentroAyuda')
     })
-    expect(screen.getByRole('button', { name: /Novedades de la 1\.2\.0/ })).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByText('Folios con formato nuevo')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Novedades de la 0\.1\.0/ })).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByText('Bienvenido a Cortex')).toBeInTheDocument()
     vista.unmount()
 
     // Ya se avisó: no se repite.
     montar('/secretaria/agenda')
-    expect(screen.queryByText(/GEMS se actualizó/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Cortex se actualizó/)).not.toBeInTheDocument()
   })
 
   it('a quien llega por primera vez no se le dice que algo cambió', () => {
     mockUseAuth.mockReturnValue(sesion(Role.SECRETARIA, ['appointments.read']))
     const vista = montar('/secretaria/agenda')
     expect(screen.getByText(AVISO)).toBeInTheDocument()
-    expect(screen.queryByText(/GEMS se actualizó/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Cortex se actualizó/)).not.toBeInTheDocument()
     vista.unmount()
     montar('/secretaria/agenda')
-    expect(screen.queryByText(/GEMS se actualizó/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Cortex se actualizó/)).not.toBeInTheDocument()
   })
 
   it('con localStorage bloqueado, el aviso sale y en la sesión no se repite', () => {
@@ -768,7 +768,7 @@ describe('recorrido completo', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Ver recorrido: ¿Cómo se llena?' }))
     // El arranque espera a que el motor esté listo (carga diferida): dar el microturno.
     await esperar(0)
-    expect(popover()?.textContent).toContain('Busca a la paciente')
+    expect(popover()?.textContent).toContain('Busca al paciente')
     fireEvent.click(document.querySelector('.driver-popover-next-btn')!)
     expect(
       screen.getByText(/En el recorrido completo sigue «Agenda» \(2 de 2\)/),

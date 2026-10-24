@@ -135,7 +135,7 @@ def update_my_profile(
         # Con traza y qué campos se intentaban actualizar, para diagnosticar sin
         # exponer nada a la usuaria (a ella se le responde el 500 en español).
         logger.exception(
-            "No se pudo actualizar el perfil de la doctora; campos intentados: %s",
+            "No se pudo actualizar el perfil del médico; campos intentados: %s",
             list(profile_in.model_dump(exclude_unset=True).keys()),
         )
         raise HTTPException(status_code=500, detail="No fue posible actualizar el perfil") from e
@@ -279,7 +279,7 @@ class _PerfilDePrueba:
 
 
 def _receta_de_muestra():
-    """Datos de ejemplo para la vista previa. Ninguna paciente real."""
+    """Datos de ejemplo para la vista previa. Ningún paciente real."""
     from datetime import date
     from types import SimpleNamespace
 
@@ -403,13 +403,13 @@ class _PerfilConAjustesDeOrden:
 
 
 def _ordenes_de_muestra():
-    """Una consulta de ejemplo con estudios de los tres destinos. Ninguna paciente real."""
+    """Una consulta de ejemplo con estudios de los tres destinos. Ningún paciente real."""
     from datetime import date
     from types import SimpleNamespace
 
     hoy = ahora_local().date()
     comun = dict(
-        clinical_indication="Control prenatal del primer trimestre", requested_on=hoy, desired_on=None,
+        clinical_indication="Protocolo prequirúrgico de columna lumbar", requested_on=hoy, desired_on=None,
         destination=None, specimen_or_body_site=None, preparation_instructions=None, priority="routine",
     )
     estudios = [
@@ -417,11 +417,11 @@ def _ordenes_de_muestra():
              preparation_instructions="Ayuno de 8 horas", destination="Laboratorio Central"),
         dict(category="laboratory", study_name="Examen general de orina",
              preparation_instructions="Primera orina de la mañana", destination="Laboratorio Central"),
-        dict(category="gynecology", study_name="Citología cervicovaginal", specimen_or_body_site="Cérvix",
-             destination="Laboratorio Central"),
-        dict(category="obstetric", study_name="Ultrasonido obstétrico", priority="preferential",
-             preparation_instructions="Vejiga llena", desired_on=hoy),
-        dict(category="referral", study_name="Valoración por nutrición"),
+        dict(category="imaging", study_name="Resonancia magnética de columna lumbar simple",
+             specimen_or_body_site="Columna lumbar", priority="preferential",
+             preparation_instructions="Retirar objetos metálicos", desired_on=hoy),
+        dict(category="neurophysiology", study_name="Electromiografía de miembros pélvicos"),
+        dict(category="referral", study_name="Valoración preanestésica"),
     ]
     ordenes = [
         SimpleNamespace(id=1000 + numero, order_group_id=None, **{**comun, **estudio})
@@ -443,7 +443,7 @@ def order_settings_from_prescription(
     los de la receta, SIN guardarlos.
 
     La orden ya no lee la receta; esto evita capturar dos veces. La pantalla
-    los muestra, la doctora los ajusta y los guarda con ``PUT /me``.
+    los muestra, el médico los ajusta y los guarda con ``PUT /me``.
     """
     from app.utils.orden_config import ajustes_desde_receta
 
@@ -463,7 +463,7 @@ def preview_my_order(
     """El PDF REAL de una orden de muestra con los ajustes **sin guardar**.
 
     Lo genera el mismo código que la orden de verdad, con datos de ejemplo,
-    para que la doctora vea cómo le va a quedar antes de decidir. No guarda
+    para que el médico vea cómo le va a quedar antes de decidir. No guarda
     nada.
     """
     from fastapi.responses import StreamingResponse
@@ -516,7 +516,7 @@ def get_plazos_atrasado(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_permission("doctor_profile.read")),
 ):
-    """Los plazos de la doctora; sin perfil o sin cambiar, los de fábrica."""
+    """Los plazos del médico; sin perfil o sin cambiar, los de fábrica."""
     from app.services.estudios_atrasados import normalizar_plazos
 
     profile = db.query(DoctorProfile).filter(DoctorProfile.user_id == current_user.id).first()

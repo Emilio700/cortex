@@ -22,7 +22,7 @@ describe('matchRoutePath', () => {
     expect(route?.roles).toEqual(expect.arrayContaining([Role.DOCTOR, Role.MASTER]))
     // Administración quedó fuera a propósito (revisión de flujos, 2026-10-04):
     // su perfil no trae doctor.appointments.read y la consulta es el espacio de
-    // escritura de la doctora; su lectura clínica va por el Expediente Clínico.
+    // escritura del médico; su lectura clínica va por el Expediente Clínico.
     expect(route?.roles).not.toContain(Role.ADMIN)
     expect(route?.roles).not.toContain(Role.SECRETARIA)
   })
@@ -62,7 +62,7 @@ describe('resolveTabTitle', () => {
     expect(resolveTabTitle('/reportes-del-mes', conNodo)).toBe('Reportes Del Mes')
   })
 
-  it('el inicio de la doctora y el de administración se llaman «Inicio», como en el menú', () => {
+  it('el inicio del médico y el de administración se llaman «Inicio», como en el menú', () => {
     expect(resolveTabTitle('/doctor/dashboard', entries)).toBe('Inicio')
     expect(resolveTabTitle('/admin/dashboard', entries)).toBe('Inicio')
   })

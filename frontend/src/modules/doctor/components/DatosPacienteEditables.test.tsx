@@ -49,7 +49,7 @@ const paciente = (extra: Partial<Patient> = {}): Patient => ({
 })
 
 const abrirModal = async (usuario: ReturnType<typeof userEvent.setup>) => {
-    await usuario.click(screen.getByRole('button', { name: 'Completar datos de la paciente' }))
+    await usuario.click(screen.getByRole('button', { name: 'Completar datos del paciente' }))
     await screen.findByLabelText('Fecha de nacimiento')
     // CoreUI activa la trampa de foco de su modal cuando termina la animación,
     // y al activarse mueve el foco al principio del cuadro. Una prueba teclea
@@ -80,8 +80,8 @@ describe('DatosPacienteEditables · accesibilidad del ícono (U-08)', () => {
                 onGuardado={onGuardado}
             />,
         )
-        const boton = screen.getByRole('button', { name: 'Completar datos de la paciente' })
-        expect(boton).toHaveAttribute('title', 'Completar datos de la paciente')
+        const boton = screen.getByRole('button', { name: 'Completar datos del paciente' })
+        expect(boton).toHaveAttribute('title', 'Completar datos del paciente')
     })
 })
 
@@ -167,7 +167,7 @@ describe('DatosPacienteEditables · un guardado que falla se ve', () => {
             response: {
                 status: 400,
                 data: {
-                    detail: 'Ese correo ya está registrado en el expediente de otra paciente.',
+                    detail: 'Ese correo ya está registrado en el expediente de otro paciente.',
                 },
             },
         })
@@ -178,7 +178,7 @@ describe('DatosPacienteEditables · un guardado que falla se ve', () => {
         await guardar(usuario)
 
         expect(
-            await screen.findByText('Ese correo ya está registrado en el expediente de otra paciente.'),
+            await screen.findByText('Ese correo ya está registrado en el expediente de otro paciente.'),
         ).toBeInTheDocument()
         expect(onGuardado).not.toHaveBeenCalled()
     })
@@ -268,7 +268,7 @@ describe('DatosPacienteEditables · cambios sin guardar', () => {
 
         await usuario.type(screen.getByLabelText('Celular'), '5512345678')
 
-        expect(etiquetasSinGuardar('/doctor/consulta/10')).toEqual(['Datos de la paciente'])
+        expect(etiquetasSinGuardar('/doctor/consulta/10')).toEqual(['Datos del paciente'])
     })
 
     it('cerrar con la ✕ con trabajo dentro avisa en vez de tirarlo', async () => {
@@ -335,7 +335,7 @@ describe('DatosPacienteEditables · dónde se nota el hueco', () => {
         )
 
         expect(
-            screen.getByRole('button', { name: 'Completar datos de la paciente' }),
+            screen.getByRole('button', { name: 'Completar datos del paciente' }),
         ).toBeInTheDocument()
         expect(screen.queryByText('Completar datos')).not.toBeInTheDocument()
     })

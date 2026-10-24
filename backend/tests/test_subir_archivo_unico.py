@@ -4,7 +4,7 @@
   de otro lugar, y llega a Estudios.
 - Documentos ya no lista los archivos que son resultado (C3) y dice cuántos.
 - Los resultados viejos sin orden se ligan sin mover el archivo.
-- La doctora sube documentos (decisión 3).
+- El médico sube documentos (decisión 3).
 """
 import io
 
@@ -69,7 +69,7 @@ def test_estudio_de_otro_lugar_nace_en_estudios_por_revisar(client, db_session, 
     orden = db_session.get(DiagnosticOrder, r.json()["order_id"])
     assert orden.origen == "externo" and orden.status == "result_received"
     assert orden.doctor_id == e["paciente"].owner_doctor_id
-    # La doctora lo ve en Estudios como «por revisar», y no se le ofrece imprimirlo ni cancelarlo.
+    # El médico lo ve en Estudios como «por revisar», y no se le ofrece imprimirlo ni cancelarlo.
     lista = client.get(f"{PREFIX}/clinical-tracking/patient/{e['paciente'].id}/orders",
                        headers=_auth_headers(db_session, e["doctora"])).json()
     externa = next(o for o in lista if o["id"] == orden.id)

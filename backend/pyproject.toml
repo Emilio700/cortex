@@ -1,7 +1,7 @@
 [project]
-name = "gems-backend"
-version = "1.2.0"
-description = "G.E.M.S Medical SaaS Backend"
+name = "cortex-backend"
+version = "0.1.0"
+description = "CORTEX - backend del sistema clínico para neurocirugía"
 requires-python = ">=3.11"
 
 [tool.ruff]

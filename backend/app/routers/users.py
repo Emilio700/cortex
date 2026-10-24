@@ -239,7 +239,7 @@ def update_user(
 
 
 # ---------------------------------------------------------------------------
-# Doctoras que apoya una secretaria (plan 23, ajustes del 2026-09-28)
+# Médicos que apoya una secretaria (plan 23, ajustes del 2026-09-28)
 # ---------------------------------------------------------------------------
 
 PERMISO_CORTE = "payments.cashcut"
@@ -301,13 +301,13 @@ def put_doctoras_que_apoya(
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
 ):
-    """Reemplaza las doctoras que apoya la secretaria y concede o quita su corte.
+    """Reemplaza los médicos que apoya la secretaria y concede o quita su corte.
 
     El corte (``payments.cashcut``) no es permiso del rol secretaria: se le da
-    a ella, como excepción individual, y sólo abarca a las doctoras de aquí.
+    a ella, como excepción individual, y sólo abarca a los médicos de aquí.
     Se toca ÚNICAMENTE esa excepción; las demás que tenga se conservan.
 
-    Quitar una doctora desactiva la fila en vez de borrarla, y todo cambio
+    Quitar un médico desactiva la fila en vez de borrarla, y todo cambio
     queda en la bitácora con quién lo hizo.
     """
     secretaria = _secretaria_de_la_sucursal(db, user_id, current_user)
@@ -329,7 +329,7 @@ def put_doctoras_que_apoya(
         if faltan:
             raise HTTPException(
                 status_code=400,
-                detail="Alguna de las doctoras elegidas no es una doctora activa de esta sucursal. Actualiza la lista y vuelve a elegir.",
+                detail="Alguna de los médicos elegidas no es un médico activo de esta sucursal. Actualiza la lista y vuelve a elegir.",
             )
 
     antes = _estado_de_apoyo(db, secretaria)

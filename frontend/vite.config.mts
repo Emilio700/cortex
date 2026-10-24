@@ -52,7 +52,7 @@ export default defineConfig(() => {
       },
     },
     define: {
-      __GEMS_VERSION__: JSON.stringify(version),
+      __CORTEX_VERSION__: JSON.stringify(version),
     },
     plugins: [react()],
     resolve: {

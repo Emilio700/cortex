@@ -18,6 +18,10 @@ const FIELD_LABELS: Record<string, string> = {
   personal_history: 'Antecedentes personales',
   family_history: 'Antecedentes familiares',
   gynecological_history: 'Antecedentes gineco-obstétricos',
+  dominant_hand: 'Lateralidad',
+  neurological_history: 'Antecedentes neurológicos',
+  implanted_devices: 'Implantes y dispositivos',
+  anticoagulants: 'Anticoagulantes',
 }
 
 /**

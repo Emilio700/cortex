@@ -41,7 +41,7 @@ export const usePrescriptions = () => {
   /**
    * Devuelve `Cargado` y no `Prescription[]` porque una lista vacía por error
    * es indistinguible de una consulta sin recetas: la página dibujaba el
-   * formulario en blanco y la doctora volvía a capturar una receta que ya
+   * formulario en blanco y el médico volvía a capturar una receta que ya
    * estaba emitida.
    */
   const getAppointmentPrescriptions = async (
@@ -67,7 +67,7 @@ export const usePrescriptions = () => {
       const response = await api.get<Prescription[]>(`/prescriptions/patient/${patientId}/all`, { params: { skip, limit } })
       return response.data
     } catch (err: any) {
-      const mensaje = mensajeDeError(err, 'No se pudieron cargar las recetas de la paciente.')
+      const mensaje = mensajeDeError(err, 'No se pudieron cargar las recetas del paciente.')
       setError(mensaje)
       // Se relanza: quien pinta el historial tiene que distinguir «no hay»
       // de «no se pudo leer» (plan 29, T-1). El mensaje ya va en español.

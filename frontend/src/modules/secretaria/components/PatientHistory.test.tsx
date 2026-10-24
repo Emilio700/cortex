@@ -1,5 +1,5 @@
 /**
- * Historial de la paciente (plan 29, lote 6): «Última consulta» es la última
+ * Historial del paciente (plan 29, lote 6): «Última consulta» es la última
  * atendida, no la primera de la lista (que puede ser una cita futura), y un
  * fallo al leer no se ve como «sin historial».
  */

@@ -87,7 +87,7 @@ def generate_consent_pdf(consent, patient, doctor, signature_content: bytes | No
             _draw_cancellation_watermark(pdf, width, height)
         y = height - 52
     pdf.setFont("Helvetica-Bold", 10)
-    pdf.drawString(x, y, "Confirmaciones de la paciente")
+    pdf.drawString(x, y, "Confirmaciones del paciente")
     y -= 16
     pdf.setFont("Helvetica", 9)
     for item in consent.acknowledgements:

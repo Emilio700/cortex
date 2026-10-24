@@ -2,7 +2,7 @@
  * La lista de triage es la de hoy.
  *
  * Antes pedía las citas sin fecha: el API devolvía las más recientes de
- * cualquier día y la paciente que llegaba hoy podía no aparecer, mientras la
+ * cualquier día y el paciente que llegaba hoy podía no aparecer, mientras la
  * pantalla decía «para hoy».
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
@@ -114,7 +114,7 @@ describe('TriagePage', () => {
       getTriageByAppointment.mockRejectedValue(fallo(403))
       await abrirSignosDeAna()
 
-      await screen.findByText(/No tienes acceso a los signos vitales de esta paciente/)
+      await screen.findByText(/No tienes acceso a los signos vitales de este paciente/)
       expect(screen.queryByTestId('captura-signos')).toBeNull()
       expect(screen.queryByRole('button', { name: 'Reintentar' })).toBeNull()
     })

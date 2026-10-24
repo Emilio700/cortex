@@ -2,9 +2,9 @@
  * La fecha de la próxima revisión prenatal, editable y guardada de verdad.
  *
  * Hasta ahora la sugerencia se calculaba en el navegador y ahí se quedaba: si
- * la doctora quería adelantarla o retrasarla no tenía dónde anotarlo, y al
+ * el médico quería adelantarla o retrasarla no tenía dónde anotarlo, y al
  * recargar la pantalla la corrección desaparecía. Peor: ningún proceso del
- * servidor podía saber que esa paciente tenía revisión próxima, así que el
+ * servidor podía saber que ese paciente tenía revisión próxima, así que el
  * recordatorio no podía existir.
  *
  * Guardar la fecha NO agenda nada. Mientras no exista el paso de elegir hora,
@@ -29,7 +29,7 @@ interface Props {
 
 const ProximaRevisionEditable = ({ pregnancy, resumen, onGuardada }: Props) => {
   const sugerida = resumen?.proxima?.fecha ?? null
-  // La guardada manda sobre la sugerida: si la doctora ya decidió, lo que se
+  // La guardada manda sobre la sugerida: si el médico ya decidió, lo que se
   // muestra es su decisión, no la propuesta de la regla.
   const guardada = pregnancy.next_review_on ?? null
   const [fecha, setFecha] = useState(guardada ?? sugerida ?? '')
@@ -57,7 +57,7 @@ const ProximaRevisionEditable = ({ pregnancy, resumen, onGuardada }: Props) => {
         {
           next_review_on: fecha || null,
           // Se manda también la sugerida para que el servidor pueda saber
-          // después si la doctora aceptó la regla o la corrigió.
+          // después si el médico aceptó la regla o la corrigió.
           next_review_suggested_on: sugerida,
         },
       )
@@ -122,7 +122,7 @@ const ProximaRevisionEditable = ({ pregnancy, resumen, onGuardada }: Props) => {
               ? `Guardada: ${formatearFechaLarga(guardada)}, ajustada respecto a la sugerida.`
               : `Guardada: ${formatearFechaLarga(guardada)}.`
             : 'Sin fecha registrada. Guárdala para que quede en el expediente.'}{' '}
-        Guardar la fecha no agenda la cita ni avisa a la paciente.
+        Guardar la fecha no agenda la cita ni avisa al paciente.
       </div>
     </div>
   )

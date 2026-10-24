@@ -32,7 +32,7 @@ const Franja = () => {
   const texto =
     mensaje ??
     (deNovedades
-      ? `GEMS se actualizó a la ${VERSION_NOVEDADES}: mira qué cambió en el ? de arriba.`
+      ? `Cortex se actualizó a la ${VERSION_NOVEDADES}: mira qué cambió en el ? de arriba.`
       : '¿Dudas? Aquí encuentras guías de cada pantalla.')
   const cerrar = mensaje ? descartarMensaje : deNovedades ? descartarAvisoNovedades : descartarAviso
 

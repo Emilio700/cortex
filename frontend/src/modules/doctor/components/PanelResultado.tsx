@@ -13,8 +13,8 @@
  * no se podía desmarcar (M6).
  *
  * Incidencia crítica (D-8): se cierra al documentar que se le comunicó o
- * entregó a la paciente (con el medio), o al revisarla **dentro de una consulta**
- * de la paciente (`appointmentId`). Revisarla desde la bandeja no la cierra, y
+ * entregó al paciente (con el medio), o al revisarla **dentro de una consulta**
+ * del paciente (`appointmentId`). Revisarla desde la bandeja no la cierra, y
  * el aviso lo dice con lo que contestó el servidor.
  *
  * Regla de oro (plan 22): el panel solo se cierra y la fila solo cambia cuando
@@ -66,7 +66,7 @@ interface Props {
   /** Abre «Anexar resultado» para esta orden. */
   onAnexar?: () => void
   /**
-   * La consulta abierta de la paciente, cuando se revisa desde ella. Revisar
+   * La consulta abierta del paciente, cuando se revisa desde ella. Revisar
    * dentro de una consulta cierra la incidencia crítica (D-8).
    */
   appointmentId?: number
@@ -157,13 +157,13 @@ const mensajeTrasGuardar = (
   const base: Record<Accion, string> = {
     received: `Se registró el resultado de ${estudio}.`,
     reviewed: `${estudio}: marcada como revisada.`,
-    communicated: `${estudio}: se documentó la comunicación a la paciente.`,
+    communicated: `${estudio}: se documentó la comunicación al paciente.`,
   }
   if (incidenciaAbierta(orden) && resultado.cierre_en_consulta === 'cita_de_otro_dia') {
-    return `${base[accion]} La incidencia crítica sigue abierta: esta consulta no es de hoy. Se cierra al documentar que se le comunicó o entregó a la paciente, o al revisarlo en una consulta de hoy.`
+    return `${base[accion]} La incidencia crítica sigue abierta: esta consulta no es de hoy. Se cierra al documentar que se le comunicó o entregó al paciente, o al revisarlo en una consulta de hoy.`
   }
   if (incidenciaAbierta(orden)) {
-    return `${base[accion]} La incidencia crítica sigue abierta: se cierra al documentar que se le comunicó o entregó a la paciente, o al revisarlo dentro de una consulta suya de hoy.`
+    return `${base[accion]} La incidencia crítica sigue abierta: se cierra al documentar que se le comunicó o entregó al paciente, o al revisarlo dentro de una consulta suya de hoy.`
   }
   if (
     resultado.cierre_en_consulta === 'aplicada' ||
@@ -409,7 +409,7 @@ const PanelResultado = ({
               ? // No se promete el cierre: depende de que la consulta sea de hoy, y eso
                 // lo decide el servidor; el aviso al guardar dice lo que contestó (R1).
                 'Lo estás revisando dentro de la consulta. Si es una consulta de hoy, marcarlo revisado cierra la incidencia crítica; al guardar te decimos si quedó cerrada.'
-              : 'Desde la bandeja, marcarlo revisado no cierra una incidencia crítica: se cierra al documentar que se le comunicó o entregó a la paciente, o al revisarlo dentro de una consulta suya.'}
+              : 'Desde la bandeja, marcarlo revisado no cierra una incidencia crítica: se cierra al documentar que se le comunicó o entregó al paciente, o al revisarlo dentro de una consulta suya.'}
           </CAlert>
           {ultimo ? (
             <div className="small mb-3">
@@ -472,7 +472,7 @@ const PanelResultado = ({
             </>
           )}
           <div className="form-text mt-n2 mb-3">
-            «Crítico» sube a la paciente al principio de la bandeja y deja la incidencia en tu
+            «Crítico» sube al paciente al principio de la bandeja y deja la incidencia en tu
             inicio hasta que se cierre.
           </div>
           <CFormTextarea
@@ -495,7 +495,7 @@ const PanelResultado = ({
           {(ultimo || modo === 'comunicar') && (
             <fieldset className="mb-3" data-tour="resultado-comunicacion">
               <legend className="small fw-semibold mb-1">
-                Comunicación o entrega a la paciente
+                Comunicación o entrega al paciente
               </legend>
               <div className="d-flex flex-wrap gap-3 mb-2">
                 {CANALES.map((c) => (
@@ -514,7 +514,7 @@ const PanelResultado = ({
                 ref={campoComunicacion}
                 rows={2}
                 id="panel-comunicacion"
-                label="Cuándo y a quién (p. ej. «3/10, a la paciente»)"
+                label="Cuándo y a quién (p. ej. «3/10, al paciente»)"
                 value={comunicacion}
                 onChange={(e) => setComunicacion(e.target.value)}
               />

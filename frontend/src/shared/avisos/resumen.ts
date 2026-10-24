@@ -3,7 +3,7 @@
  * consulta finalizada».
  *
  * Lo que llegó mientras la usuaria no tenía GEMS abierto antes sólo sumaba al
- * contador (plan 27, F-4): la doctora entraba con la paciente ya en sala y
+ * contador (plan 27, F-4): el médico entraba con el paciente ya en sala y
  * nada se lo decía. Un emergente por aviso, en cambio, inundaría la pantalla
  * al entrar; por eso es uno solo, que cuenta por tipo.
  */

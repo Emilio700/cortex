@@ -1,9 +1,9 @@
-"""Quién tiene relación asistencial con una paciente.
+"""Quién tiene relación asistencial con un paciente.
 
-La dueña del expediente es el único camino clínico para una doctora. El equipo
+La dueña del expediente es el único camino clínico para un médico. El equipo
 tratante existe para el **apoyo administrativo** de la titular —recepción
-adjuntando estudios, capturando documentos— y no para que una doctora abra el
-expediente completo de la paciente de otra.
+adjuntando estudios, capturando documentos— y no para que un médico abra el
+expediente completo del paciente de otra.
 
 Por qué se cerró la cobertura clínica entre doctoras
 ----------------------------------------------------
@@ -11,10 +11,10 @@ Se habilitó y se deshabilitó en menos de una semana: no se estaba usando y
 multiplicaba las formas de entrar a un expediente, que es justo lo que no
 conviene multiplicar en datos sensibles (NOM-004, LFPDPPP). Emilio lo decidió
 así, y con una precisión que este módulo sí respeta: **se cierra el expediente,
-no la agenda**. Las doctoras se siguen viendo y compartiendo el calendario;
+no la agenda**. Los médicos se siguen viendo y compartiendo el calendario;
 eso vive en ``alcance_operativo_acotado`` y aquí no se toca.
 
-El efecto lateral que se buscaba: el acceso clínico de una doctora vuelve a ser
+El efecto lateral que se buscaba: el acceso clínico de un médico vuelve a ser
 uno solo —ser la dueña— y con eso desaparece la asimetría que teníamos
 documentada, donde quien cubría leía la nota y la receta pero recibía 403 en
 episodios, imágenes, prenatal, seguimiento y consentimientos.
@@ -57,7 +57,7 @@ def _active_membership_query(db: Session, patient_id: int, user_id: int):
 
 
 def apply_doctor_patient_access_filter(query: Query, current_user: User) -> Query:
-    """Recorta un listado de pacientes a las del expediente propio de la doctora.
+    """Recorta un listado de pacientes a las del expediente propio del médico.
 
     Contrapartida en lista de ``assert_patient_clinical_access``: las dos tienen
     que decir lo mismo o el buscador enseña pacientes que después no se abren.
@@ -73,9 +73,9 @@ def apply_doctor_patient_access_filter(query: Query, current_user: User) -> Quer
 def assert_patient_clinical_access(
     db: Session, patient_id: int, current_user: User
 ) -> PatientClinicalAccess:
-    """Devuelve la paciente sólo a quien tiene una relación asistencial explícita.
+    """Devuelve el paciente sólo a quien tiene una relación asistencial explícita.
 
-    MASTER conserva su bypass supervisorio. Una doctora entra **sólo** si es la
+    MASTER conserva su bypass supervisorio. Un médico entra **sólo** si es la
     dueña del expediente: una membresía de equipo tratante ya no le abre la
     puerta, aunque siga viva en la base. El resto de las cuentas sí pueden
     entrar por una membresía activa, que es el diseño original del equipo
@@ -93,7 +93,7 @@ def assert_patient_clinical_access(
     if current_user.role == Role.MASTER:
         return PatientClinicalAccess(patient=patient, relation="master")
     if current_user.role == Role.DOCTOR:
-        # Una sola puerta para la doctora. El `return` temprano es la parte
+        # Una sola puerta para el médico. El `return` temprano es la parte
         # importante: sin él, una membresía vieja de las que se otorgaron
         # mientras la cobertura estuvo habilitada seguiría abriendo el
         # expediente sin que nadie la hubiera vuelto a conceder.
@@ -116,12 +116,12 @@ def assert_patient_clinical_access(
 
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
-        detail="No tienes una relación asistencial activa con esta paciente",
+        detail="No tienes una relación asistencial activa con este paciente",
     )
 
 
 def can_manage_patient_care_team(patient: Patient, current_user: User) -> bool:
-    """Sólo la doctora responsable (o MASTER) concede o revoca el apoyo."""
+    """Sólo el médico responsable (o MASTER) concede o revoca el apoyo."""
     return current_user.role == Role.MASTER or (
         current_user.role == Role.DOCTOR and patient.owner_doctor_id == current_user.id
     )

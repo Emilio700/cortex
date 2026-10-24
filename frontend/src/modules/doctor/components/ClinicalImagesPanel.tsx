@@ -204,7 +204,7 @@ const ClinicalImagesPanel = ({ patientId, appointmentId, mostrarGaleria = true, 
       {canUpload && <CCard className="border-0 shadow-sm">
         <CCardBody>
           <div className="d-flex align-items-center gap-2 mb-3"><CIcon icon={cilPlus} className="text-primary" /><h3 className="h5 mb-0">Agregar imagen clínica</h3></div>
-          <CAlert color="info" className="small">La imagen quedará vinculada a esta paciente y consulta. Confirma consentimiento y evita incluir información no necesaria.</CAlert>
+          <CAlert color="info" className="small">La imagen quedará vinculada a este paciente y consulta. Confirma consentimiento y evita incluir información no necesaria.</CAlert>
           <CRow className="g-3">
             <CCol md={6}>
               <CFormLabel htmlFor="clinical-image-file">Tomar foto o seleccionar imagen</CFormLabel>

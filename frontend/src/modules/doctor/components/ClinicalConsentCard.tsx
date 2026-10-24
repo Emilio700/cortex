@@ -34,7 +34,7 @@ const buildTemplateBody = (template: ConsentTemplate | null, procedureName: stri
   const lines = [template.summary]
   if (procedureName.trim()) lines.push(`Procedimiento confirmado: ${procedureName.trim()}.`)
   if (diagnosis.trim()) lines.push(`Diagnóstico o indicación documentada: ${diagnosis.trim()}.`)
-  lines.push('La paciente declara que recibió información suficiente y puede realizar preguntas antes de firmar.')
+  lines.push('El paciente declara que recibió información suficiente y puede realizar preguntas antes de firmar.')
   return lines.join('\n\n')
 }
 
@@ -117,8 +117,8 @@ const ClinicalConsentCard = ({ patientId, appointmentId, patientName = '', defau
     finally { setSaving(false) }
   }
   const sign = async () => {
-    if (!activeDraft || !signature) { setError('La paciente debe firmar antes de guardar.'); return }
-    if (!patientSignedName.trim()) { setError('Confirma el nombre de la paciente que firma.'); return }
+    if (!activeDraft || !signature) { setError('El paciente debe firmar antes de guardar.'); return }
+    if (!patientSignedName.trim()) { setError('Confirma el nombre del paciente que firma.'); return }
     if (selectedTemplate && checks.length !== selectedTemplate.acknowledgements.length) { setError('Confirma todos los puntos antes de firmar.'); return }
     if (selectedTemplate?.allows_transfusion_choice && transfusion === null) { setError('Registra la decisión sobre transfusión.'); return }
     setSaving(true); setError(null)
@@ -176,11 +176,11 @@ const ClinicalConsentCard = ({ patientId, appointmentId, patientName = '', defau
       {selectedTemplate && <CAlert color="light" className="small mt-3 mb-0"><strong>{selectedTemplate.title}</strong><br />{selectedTemplate.summary}</CAlert>}
       <div className="d-flex justify-content-end mt-3"><CButton color="primary" onClick={createDraft} disabled={saving || !selectedType}>{saving ? <CSpinner size="sm" className="me-2" /> : <CIcon icon={cilPlus} className="me-1" />}Preparar para firma</CButton></div>
     </>}
-    {!loading && activeDraft && selectedTemplate && <div className="border rounded p-3 bg-light"><div className="d-flex justify-content-between gap-2 mb-2"><h6 className="mb-0">Revisión con la paciente</h6><CBadge color="secondary">Borrador</CBadge></div><p className="small white-space-pre-line mb-3">{activeDraft.rendered_body}</p>
+    {!loading && activeDraft && selectedTemplate && <div className="border rounded p-3 bg-light"><div className="d-flex justify-content-between gap-2 mb-2"><h6 className="mb-0">Revisión con el paciente</h6><CBadge color="secondary">Borrador</CBadge></div><p className="small white-space-pre-line mb-3">{activeDraft.rendered_body}</p>
       {selectedTemplate.acknowledgements.map((item) => <CFormCheck key={item} id={`consent-check-${item}`} className="mb-2" checked={checks.includes(item)} onChange={() => toggleCheck(item)} label={item} disabled={saving || readOnly} />)}
       {selectedTemplate.allows_photos && <div className="border-top mt-3 pt-3"><CFormCheck id="photo-record" checked={photoRecord} onChange={(event) => setPhotoRecord(event.target.checked)} label="Autorizo fotografías clínicas para mi expediente y seguimiento." disabled={saving || readOnly} /><CFormCheck id="photo-education" className="mt-2" checked={photoEducation} onChange={(event) => setPhotoEducation(event.target.checked)} label="Autorizo el uso docente/educativo de imágenes, de forma separada." disabled={saving || readOnly} /></div>}
       {selectedTemplate.allows_transfusion_choice && <div className="border-top mt-3 pt-3"><CFormLabel className="small fw-semibold">Transfusión y hemoderivados si son médicamente necesarios</CFormLabel><CFormCheck type="radio" name="transfusion" id="transfusion-yes" label="Autorizo" checked={transfusion === true} onChange={() => setTransfusion(true)} /><CFormCheck type="radio" name="transfusion" id="transfusion-no" label="No autorizo y comprendo los riesgos explicados" checked={transfusion === false} onChange={() => setTransfusion(false)} /></div>}
-      <CFormLabel className="mt-3">Nombre de la paciente que firma</CFormLabel><CFormInput value={patientSignedName} maxLength={200} onChange={(event) => setPatientSignedName(event.target.value)} disabled={saving || readOnly} /><CFormLabel className="mt-3">Firma de la paciente</CFormLabel><SignatureCanvas onChange={setSignature} disabled={saving || readOnly} />
+      <CFormLabel className="mt-3">Nombre del paciente que firma</CFormLabel><CFormInput value={patientSignedName} maxLength={200} onChange={(event) => setPatientSignedName(event.target.value)} disabled={saving || readOnly} /><CFormLabel className="mt-3">Firma del paciente</CFormLabel><SignatureCanvas onChange={setSignature} disabled={saving || readOnly} />
       <div className="d-flex justify-content-end gap-2 mt-3">{!readOnly && <CButton color="danger" variant="outline" onClick={() => openCancel(activeDraft)} disabled={saving}><CIcon icon={cilBan} className="me-1" />Cancelar este consentimiento</CButton>}<CButton color="success" onClick={sign} disabled={saving || readOnly}>{saving ? <CSpinner size="sm" className="me-2" /> : <CIcon icon={cilPen} className="me-1" />}Confirmar y guardar firmado</CButton></div>
     </div>}
     {cancelTarget && <div className="border border-danger rounded p-3 mt-3">

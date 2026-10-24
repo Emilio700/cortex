@@ -79,7 +79,7 @@ const paginas = import.meta.glob<string>('/src/modules/**/pages/*.tsx', {
 })
 
 const CON_H1_PROPIO: Record<string, string> = {
-  // El saludo del día es la identidad del inicio de la doctora (plan 28).
+  // El saludo del día es la identidad del inicio del médico (plan 28).
   DoctorDashboard: 'EncabezadoDelDia',
   // La consulta lleva sus secciones dentro de la misma tarjeta del encabezado.
   ConsultationPage: '<h1',

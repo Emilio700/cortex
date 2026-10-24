@@ -11,7 +11,7 @@ import { mensajeDeError } from '../../../shared/utils/errors'
 
 /**
  * Estados en los que el servidor no imprime (responde 409): la orden no se
- * emitió o la doctora ya no la quiere. El botón ni se ofrece.
+ * emitió o el médico ya no la quiere. El botón ni se ofrece.
  */
 export const ESTADOS_SIN_IMPRESION = new Set(['draft', 'cancelled', 'rejected'])
 
@@ -57,7 +57,7 @@ export const obtenerPdfOrden = async (orderId: number): Promise<Blob> => {
 
 /**
  * Cómo se reparte el papel con varios estudios (plan 26, D-2): una hoja por
- * destino físico (laboratorio, imagen y gabinete, otros), para que la paciente
+ * destino físico (laboratorio, imagen y gabinete, otros), para que el paciente
  * entregue cada una donde va, o todo seguido en una sola hoja.
  */
 export type ModoImpresion = 'separado' | 'una_hoja'
@@ -68,7 +68,7 @@ export const MODOS_DE_IMPRESION: ReadonlyArray<{ valor: ModoImpresion; etiqueta:
 ]
 
 /**
- * Pide un PDF de varias órdenes. Sin `modo` el servidor usa el que la doctora
+ * Pide un PDF de varias órdenes. Sin `modo` el servidor usa el que el médico
  * autora fijó en su perfil; por eso no se manda un valor inventado.
  */
 const pedirPdf = async (ruta: string, params: Record<string, string>): Promise<PdfConOrdenes> => {
@@ -100,8 +100,8 @@ export const obtenerPdfOrdenesDeConsulta = (
 ): Promise<PdfConOrdenes> => pedirPdf(`/clinical-tracking/appointments/${appointmentId}/orders/pdf`, conModo(modo))
 
 /**
- * Papel de varias órdenes de una paciente, aunque no sean de la misma consulta
- * (p. ej. «Imprimir orden de la paciente» en la bandeja o en recepción).
+ * Papel de varias órdenes de un paciente, aunque no sean de la misma consulta
+ * (p. ej. «Imprimir orden del paciente» en la bandeja o en recepción).
  */
 export const obtenerPdfOrdenesDePaciente = (
   patientId: number,
@@ -174,7 +174,7 @@ const pdfDeRespuesta = (respuesta: { data: BlobPart; headers?: Cabeceras }): Pdf
  * anota que generó el PDF. Esto se llama al pulsar Imprimir o Descargar.
  *
  * Devuelve `null` si quedó registrado o un aviso si no; nunca lanza, porque la
- * bitácora no debe impedir que la paciente se lleve su orden.
+ * bitácora no debe impedir que el paciente se lleve su orden.
  */
 export const registrarImpresion = async (
   orderIds: number[],
@@ -208,7 +208,7 @@ export interface PdfConOrdenes {
 }
 
 /**
- * Papel con TODAS las órdenes pendientes de la paciente con una doctora, sin
+ * Papel con TODAS las órdenes pendientes del paciente con un médico, sin
  * depender de la página que se ve (plan 26, M5): `?pendientes=true&doctor_id=`.
  * El servidor dice cuáles imprimió en `X-Order-Ids`; con esos se anota la
  * impresión en la bitácora.

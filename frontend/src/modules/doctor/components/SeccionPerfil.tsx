@@ -1,12 +1,12 @@
 /**
- * Una sección del perfil de la doctora, plegable en el teléfono.
+ * Una sección del perfil del médico, plegable en el teléfono.
  *
  * En el celular el perfil medía ~10 600 px: «Perfil incompleto: falta cédula»
  * mandaba a «Datos profesionales», que quedaba ~6 000 px abajo, después de los
  * dos editores de membrete (plan 29). En el teléfono cada sección es un botón
  * que se abre y se cierra; en la computadora no cambia nada, todo a la vista.
  *
- * Plegada, la sección sigue montada (sólo se oculta): lo que la doctora haya
+ * Plegada, la sección sigue montada (sólo se oculta): lo que el médico haya
  * cambiado sin guardar en un membrete no se pierde por cerrar la sección.
  */
 import { useEffect, useState, type ReactNode } from 'react'

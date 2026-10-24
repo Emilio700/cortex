@@ -1,7 +1,7 @@
 """La cobertura clínica entre doctoras está cerrada — y el calendario no.
 
-Este archivo describía lo contrario: durante unos días una doctora pudo entrar
-al expediente completo de la paciente de otra registrándose en su equipo
+Este archivo describía lo contrario: durante unos días un médico pudo entrar
+al expediente completo del paciente de otra registrándose en su equipo
 tratante. Emilio lo deshabilitó —no se estaba usando y multiplicaba las formas
 de entrar a datos sensibles— con una precisión que es la mitad del contenido de
 estas pruebas: **se cierra el expediente, no la agenda**.
@@ -9,12 +9,12 @@ estas pruebas: **se cierra el expediente, no la agenda**.
 Por eso se prueban tres cosas que se rompen por separado y que en la pantalla se
 parecen entre sí:
 
-1. que una doctora ya no se registra en el equipo tratante de una paciente
+1. que un médico ya no se registra en el equipo tratante de un paciente
    ajena, ni por el alta ni por una membresía vieja que quedara viva en la base;
 2. que el equipo tratante **sigue funcionando** para las cuentas de apoyo, que
    es su diseño original, y que el hueco del rol temporal —que no validaba
    nada— sigue tapado;
-3. que las doctoras se siguen viendo la agenda entre ellas.
+3. que los médicos se siguen viendo la agenda entre ellas.
 """
 from datetime import timedelta
 from uuid import uuid4
@@ -80,7 +80,7 @@ def _auth_headers(db, user: User) -> dict[str, str]:
 
 @pytest.fixture
 def consultorio(db_session):
-    """Dos doctoras y una recepción; la paciente es de la Dra. B."""
+    """Dos doctoras y una recepción; el paciente es de el Dr. B."""
     tenant = Tenant(name="Clínica de cobertura", is_active=True)
     db_session.add(tenant)
     db_session.commit()
@@ -147,7 +147,7 @@ def test_una_doctora_ya_no_se_registra_en_el_equipo_de_una_paciente_ajena(
 
     assert respuesta.status_code == 422, respuesta.text
     # El mensaje tiene que decir qué sí quedó abierto: si sólo dijera que no se
-    # puede, la doctora asumiría que también perdió el calendario compartido.
+    # puede, el médico asumiría que también perdió el calendario compartido.
     assert "agenda" in respuesta.json()["detail"].lower()
 
 
@@ -270,7 +270,7 @@ def test_las_doctoras_se_siguen_viendo_la_agenda_entre_ellas(
 
     Es lo único que impide que "cerrar la cobertura" se implemente de más: el
     calendario compartido vive en el alcance operativo, que esta decisión no
-    tocó. Si alguien acota la agenda a la doctora dueña, aquí se cae.
+    tocó. Si alguien acota la agenda al médico dueña, aquí se cae.
     """
     headers = _auth_headers(db_session, consultorio["dra_a"])
 

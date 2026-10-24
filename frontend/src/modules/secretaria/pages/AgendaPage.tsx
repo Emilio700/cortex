@@ -132,7 +132,7 @@ const AgendaPage: React.FC = () => {
     const navigate = useNavigate()
 
     // La pestaña se dibuja sin la parte `?…` de la URL (TabsOutlet), así que
-    // `useSearchParams` aquí siempre venía vacío y «Ver citas de la paciente»
+    // `useSearchParams` aquí siempre venía vacío y «Ver citas del paciente»
     // no filtraba nada. Se lee de la URL real, y solo mientras ésta sea la de
     // la agenda: con otra pestaña al frente se conserva lo último que se vio.
     const parametrosRef = useRef<URLSearchParams>(new URLSearchParams())
@@ -143,7 +143,7 @@ const AgendaPage: React.FC = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([])
     // Un doctor solo ve SUS citas, asi que no sabria que un companero ya tiene
     // tomada la sala. Esto trae la ocupacion de toda la sucursal, sin ningun
-    // dato de las pacientes ajenas: solo sala, hora y de quien es.
+    // dato de los pacientes ajenos: solo sala, hora y de quien es.
     const [ocupacionAjena, setOcupacionAjena] = useState<Appointment[]>([])
     // La ocupación ajena no se pudo leer (revisión de flujos): sin esto, el
     // fallo se pintaba como «sala libre». `intentoOcupacion` fuerza releerla.
@@ -200,7 +200,7 @@ const AgendaPage: React.FC = () => {
     const [selectedType, setSelectedType] = useState<string>(ALL)
     const [selectedRoomId, setSelectedRoomId] = useState<string>(ALL)
 
-    // Citas de una paciente («Ver citas» en Pacientes o en el panel). Vive en
+    // Citas de un paciente («Ver citas» en Pacientes o en el panel). Vive en
     // el estado y no solo en la URL: al cambiar de pestaña, TabsOutlet deja la
     // URL en la ruta sin `?…` y el filtro se perdía al instante.
     const [filtroPaciente, setFiltroPaciente] = useState<{ id: string; nombre: string } | null>(null)
@@ -601,7 +601,7 @@ const AgendaPage: React.FC = () => {
         const parts: string[] = []
         if (selectedDoctorId !== ALL) {
             const doctor = doctors.find((d) => String(d.id) === selectedDoctorId)
-            parts.push(doctor ? nombreConTratamiento(doctor) : 'Doctora seleccionada')
+            parts.push(doctor ? nombreConTratamiento(doctor) : 'Médico seleccionada')
         }
         if (canFilterBySucursal && selectedTenantId !== ALL) {
             const sucursal = sucursales.find((s) => String(s.id) === selectedTenantId)
@@ -668,7 +668,7 @@ const AgendaPage: React.FC = () => {
                             Exportar
                         </CButton>
                         {/* Siempre visible para que se sepa que existe; sólo imprime
-                            desde la Lista, que es la hoja que se lleva la doctora. */}
+                            desde la Lista, que es la hoja que se lleva el médico. */}
                         <CButton
                             color="light"
                             variant="outline"
@@ -701,7 +701,7 @@ const AgendaPage: React.FC = () => {
                         <CCol xs={12} md={anchoFiltro}>
                             <label className="form-label small fw-semibold mb-1" htmlFor="filtro-doctor">
                                 <CIcon icon={cilUser} size="sm" className="me-1" />
-                                Doctora
+                                Médico
                             </label>
                             <CFormSelect
                                 id="filtro-doctor"
@@ -709,7 +709,7 @@ const AgendaPage: React.FC = () => {
                                 value={selectedDoctorId}
                                 onChange={(e) => setSelectedDoctorId(e.target.value)}
                             >
-                                <option value={ALL}>Todas las doctoras</option>
+                                <option value={ALL}>Todos los médicos</option>
                                 {doctors.map((doctor) => (
                                     <option key={doctor.id} value={doctor.id}>
                                         {nombreConTratamiento(doctor)}

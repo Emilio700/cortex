@@ -2,7 +2,7 @@
 
 Recetas, pagos, consentimientos e imágenes ya dejaban rastro en la bitácora;
 la nota de consulta, los signos vitales y el alta, edición o desactivación de
-una paciente no. En un expediente clínico (NOM-004) esa pregunta no puede
+un paciente no. En un expediente clínico (NOM-004) esa pregunta no puede
 depender del módulo. Acción B-01 del backlog de auditoría.
 
 Se afirma contra la tabla ``audit_logs`` y contra ``GET /audit-logs``, que es
@@ -89,7 +89,7 @@ def _usuario(db, tenant, email, role):
 
 @pytest.fixture
 def escenario(db_session):
-    """Una doctora con su paciente y una cita; recepción, admin y master."""
+    """Un médico con su paciente y una cita; recepción, admin y master."""
     tenant = Tenant(name="Clínica de prueba", is_active=True)
     db_session.add(tenant)
     db_session.commit()
@@ -192,7 +192,7 @@ def test_corregir_la_nota_registra_los_apartados_sin_copiar_el_texto(client, db_
 
 
 def test_capturar_signos_deja_quien_los_tomo(client, db_session, escenario):
-    """Recepción en la sala de espera o la doctora en consulta: hay que poder saberlo."""
+    """Recepción en la sala de espera o el médico en consulta: hay que poder saberlo."""
     respuesta = client.post(
         f"{PREFIX}/triage",
         headers=_auth_headers(db_session, escenario["secretaria"]),
@@ -261,7 +261,7 @@ def test_editar_una_paciente_registra_los_campos_sin_los_valores(client, db_sess
 
 
 def test_desactivar_una_paciente_deja_quien_lo_hizo(client, db_session, escenario):
-    """Una paciente desactivada sale de la búsqueda; sin registro nadie sabría por qué."""
+    """Un paciente desactivada sale de la búsqueda; sin registro nadie sabría por qué."""
     respuesta = client.patch(
         f"{PREFIX}/patients/{escenario['paciente'].id}/deactivate",
         headers=_auth_headers(db_session, escenario["master"]),

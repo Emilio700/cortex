@@ -34,7 +34,7 @@ const montar = () =>
       <Routes>
         <Route path="/403" element={<Page403 />} />
         <Route path="/secretaria/agenda" element={<div>Agenda</div>} />
-        <Route path="/doctor/dashboard" element={<div>Tablero de la doctora</div>} />
+        <Route path="/doctor/dashboard" element={<div>Tablero del médico</div>} />
       </Routes>
     </MemoryRouter>,
   )
@@ -52,6 +52,6 @@ describe('Page403 · volver al inicio', () => {
     sesion.permisos = ['doctor.dashboard.read']
     montar()
     await userEvent.click(screen.getByRole('button', { name: /Volver al inicio/ }))
-    expect(await screen.findByText('Tablero de la doctora')).toBeInTheDocument()
+    expect(await screen.findByText('Tablero del médico')).toBeInTheDocument()
   })
 })

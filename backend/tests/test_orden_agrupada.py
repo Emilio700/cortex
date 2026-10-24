@@ -90,7 +90,7 @@ def test_el_lote_y_cada_estudio_quedan_en_la_bitacora(client, db_session, escena
 
 
 def test_si_un_estudio_no_se_guarda_no_queda_ninguno(client, db_session, escenario, monkeypatch):
-    """Un lote a medias es un papel al que le falta un estudio que la doctora sí pidió."""
+    """Un lote a medias es un papel al que le falta un estudio que el médico sí pidió."""
     import app.routers.clinical_tracking as modulo
 
     original = modulo.DiagnosticOrder

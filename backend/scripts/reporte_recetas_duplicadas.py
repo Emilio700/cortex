@@ -11,7 +11,7 @@ cuántos son.
 
 Este reporte es de SÓLO LECTURA. No borra, no modifica y no genera un DELETE
 listo para ejecutar, a propósito: una receta es un documento clínico y quién se
-queda y quién se va lo decide la doctora, viendo el folio impreso.
+queda y quién se va lo decide el médico, viendo el folio impreso.
 
 Criterio de duplicado exacto
 ----------------------------
@@ -79,7 +79,7 @@ def clave_duplicado(receta) -> tuple:
     Decisión: dos recetas con los mismos medicamentos en distinto ORDEN sí
     cuentan como duplicado. El orden de la lista no tiene significado clínico
     —no es una secuencia de administración, es el orden en que se teclearon— y
-    una doctora que de verdad quiere dos recetas distintas cambia el fármaco,
+    un médico que de verdad quiere dos recetas distintas cambia el fármaco,
     la dosis o la duración, no reacomoda la misma lista. Aun así el reporte
     avisa cuándo el grupo empató sólo tras reordenar, para que ella lo vea.
 
@@ -162,7 +162,7 @@ def buscar_duplicados(db, tenant_id: int | None = None, desde: datetime | None =
             continue
         # La consulta ya viene ordenada por created_at, pero se reordena aquí
         # para no depender de eso: la primera del grupo tiene que ser la más
-        # antigua porque es la que la doctora normalmente conserva.
+        # antigua porque es la que el médico normalmente conserva.
         ordenadas = sorted(
             recetas_del_grupo,
             key=lambda r: (r.created_at or datetime.min, r.id),
@@ -206,7 +206,7 @@ def diferencia_humana(segundos: float) -> str:
 
 
 def _folio(receta) -> str:
-    """El folio es lo que la doctora ve impreso; el id sólo es el último recurso."""
+    """El folio es lo que el médico ve impreso; el id sólo es el último recurso."""
     if receta.folio_number:
         return f"Folio {receta.folio_number}"
     return f"(sin folio, registro interno {receta.id})"
@@ -268,7 +268,7 @@ def imprimir_reporte(reporte: Reporte, tenant_id: int | None = None) -> None:
             )
 
     print("\n" + "-" * 78)
-    print("Qué sigue: la doctora revisa cada grupo y decide, por folio, cuál se")
+    print("Qué sigue: el médico revisa cada grupo y decide, por folio, cuál se")
     print("conserva. Este script no borra nada.")
 
 

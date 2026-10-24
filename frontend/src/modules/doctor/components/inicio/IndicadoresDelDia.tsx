@@ -3,7 +3,7 @@
  *
  * Cada uno es un botón con su nombre completo para el lector de pantalla
  * («12 citas hoy, 4 por atender»). Un número que no se sabe es «—», nunca
- * «0»: cero es un dato y le diría a la doctora que no tiene nada.
+ * «0»: cero es un dato y le diría al médico que no tiene nada.
  */
 import React from 'react'
 import CIcon from '@coreui/icons-react'

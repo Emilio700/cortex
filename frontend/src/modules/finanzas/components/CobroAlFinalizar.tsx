@@ -1,13 +1,13 @@
 /**
  * Sección "Cobro" del modal de finalizar consulta.
  *
- * Existe para que no se cobre doble: muchas veces la doctora cobra ella misma
+ * Existe para que no se cobre doble: muchas veces el médico cobra ella misma
  * y recepción, sin saberlo, vuelve a pasar la tarjeta. Al cerrar la consulta
- * la doctora dice en un clic quién cobra, y el servidor lo guarda en la misma
+ * el médico dice en un clic quién cobra, y el servidor lo guarda en la misma
  * operación que cierra la cita (plan 23, "Finalizar y cobrar es UNA operación").
  *
  * Es un componente controlado: el borrador vive en la página para que el
- * reintento después de un error conserve lo que la doctora ya capturó.
+ * reintento después de un error conserve lo que el médico ya capturó.
  */
 import React, { useEffect, useState } from 'react'
 import {

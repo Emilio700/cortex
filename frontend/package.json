@@ -1,7 +1,7 @@
 {
-  "name": "gems-frontend",
-  "version": "1.2.0",
-  "description": "GEMS - Global Ecosystem for Medical Services",
+  "name": "cortex-frontend",
+  "version": "0.1.0",
+  "description": "CORTEX - Sistema clínico para neurocirugía",
   "private": true,
   "config": {
     "theme": "modern",

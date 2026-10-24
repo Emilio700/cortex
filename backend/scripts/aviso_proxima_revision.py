@@ -3,21 +3,21 @@
 Qué problema resuelve
 ---------------------
 La fecha de la próxima revisión ya se guarda (``pregnancies.next_review_on``),
-pero guardarla no hace que nadie la mire. Una paciente que sale de consulta sin
+pero guardarla no hace que nadie la mire. Un paciente que sale de consulta sin
 agendar el siguiente control se pierde en silencio: no hay pantalla que la
 reclame y el embarazo sigue su curso igual.
 
-Quién recibe el aviso, y por qué no la doctora ni la paciente
+Quién recibe el aviso, y por qué no el médico ni el paciente
 -------------------------------------------------------------
-La asistente. Decisión de Emilio, textual: el recordatorio a la paciente lo hace
-un humano; el sistema se encarga de que ese humano no se le pase. Las pacientes
+La asistente. Decisión de Emilio, textual: el recordatorio al paciente lo hace
+un humano; el sistema se encarga de que ese humano no se le pase. Los pacientes
 no son usuarias del sistema —``notify()`` despacha a un ``user_id``, o sea a
 personal— así que avisarles directo ni siquiera es posible por aquí.
 
-A la doctora no se le avisa a propósito: lo que ella necesita saber cabe en una
+Al médico no se le avisa a propósito: lo que ella necesita saber cabe en una
 lista que se consulta (el tablero de ``clinical_tracking``), y un aviso que sólo
 dice "entérate" es lo que tiene su campanita llena de cosas sin leer. Una
-notificación significa "haz algo"; llamar a la paciente lo es, enterarse no.
+notificación significa "haz algo"; llamar al paciente lo es, enterarse no.
 
 Las dos cosas que este trabajo tiene que no romper
 --------------------------------------------------
@@ -25,7 +25,7 @@ Las dos cosas que este trabajo tiene que no romper
 que evita el reenvío no es la hora a la que corre sino
 ``pregnancies.next_review_reminded_on``: guarda **de qué fecha** ya se avisó, no
 que se avisó. Si la corrida se repite diez veces, la comparación falla diez
-veces y no sale nada; si la doctora mueve la revisión, la comparación vuelve a
+veces y no sale nada; si el médico mueve la revisión, la comparación vuelve a
 dar distinto y el aviso se rearma solo, que es justo lo que hay que hacer con
 una fecha nueva.
 
@@ -58,11 +58,11 @@ log = logging.getLogger(__name__)
 
 # Con cuántos días de anticipación se avisa. Emilio pidió "de 5 días a una
 # semana": se toma el extremo largo porque el aviso no cuesta nada extra y le
-# deja a la asistente una semana hábil completa para localizar a la paciente.
+# deja a la asistente una semana hábil completa para localizar al paciente.
 ANTICIPACION_DIAS = 7
 
 # Cuánto después de la revisión se sigue considerando que una cita "es" ese
-# control. Una paciente citada tres días después de la fecha sugerida no está
+# control. Un paciente citado tres días después de la fecha sugerida no está
 # perdida, está agendada: avisar de ella sería ruido, y el ruido es lo que hace
 # que se dejen de leer los avisos que sí importan.
 HOLGURA_CITA_DIAS = 7
@@ -89,7 +89,7 @@ def _asistentes_de(db: Session, embarazo: Pregnancy) -> list[User]:
     """Quién de recepción recibe el aviso de este embarazo.
 
     Por permiso de agendar (un perfil personalizado de recepción también
-    cuenta) y, si la doctora del embarazo tiene asistentes asignadas, sólo
+    cuenta) y, si el médico del embarazo tiene asistentes asignadas, sólo
     ellas (plan 27, D-a y D-5). Es el mismo criterio que el resto de los avisos
     a recepción, en ``destinatarios_de_recepcion``.
     """
@@ -99,7 +99,7 @@ def _asistentes_de(db: Session, embarazo: Pregnancy) -> list[User]:
 
 
 def _ventana_de_cita(embarazo: Pregnancy, hoy: date) -> tuple[datetime, datetime]:
-    """La ventana en la que una cita cuenta como que la paciente va a pasar por
+    """La ventana en la que una cita cuenta como que el paciente va a pasar por
     este control: de hoy hasta la revisión más la holgura (y no de la revisión
     en adelante, para que una cita ya agendada para antes también cuente).
 
@@ -115,7 +115,7 @@ def _ventana_de_cita(embarazo: Pregnancy, hoy: date) -> tuple[datetime, datetime
 
 
 def _tiene_cita(db: Session, embarazo: Pregnancy, hoy: date) -> bool:
-    """¿La paciente ya está citada para este control?"""
+    """¿El paciente ya está citada para este control?"""
     inicio, fin = _ventana_de_cita(embarazo, hoy)
     return (
         db.query(Appointment.id)
@@ -131,7 +131,7 @@ def _tiene_cita(db: Session, embarazo: Pregnancy, hoy: date) -> bool:
 
 
 def _embarazos_ya_citados(db: Session, embarazos: list[Pregnancy], hoy: date) -> set[int]:
-    """Cuáles de estos embarazos ya tienen a la paciente citada, en UNA consulta.
+    """Cuáles de estos embarazos ya tienen al paciente citado, en UNA consulta.
 
     Misma ventana que ``_tiene_cita`` (comparten ``_ventana_de_cita``), pero
     resuelta a lotes para el tablero (B-07): antes era una consulta por embarazo.
@@ -171,8 +171,8 @@ def _embarazos_ya_citados(db: Session, embarazos: list[Pregnancy], hoy: date) ->
 def _nombre(db: Session, patient_id: int) -> str:
     paciente = db.query(Patient).filter(Patient.id == patient_id).first()
     if not paciente:
-        return "la paciente"
-    return " ".join(filter(None, [paciente.first_name, paciente.last_name])) or "la paciente"
+        return "el paciente"
+    return " ".join(filter(None, [paciente.first_name, paciente.last_name])) or "el paciente"
 
 
 def ejecutar(db: Session, *, aplicar: bool = True, hoy: date | None = None) -> Resumen:

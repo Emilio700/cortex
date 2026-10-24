@@ -2,7 +2,7 @@
  * Lectura de signos vitales dentro de la cita.
  *
  * Desde que el servidor exige relación asistencial para leer el triage, una
- * doctora ajena a la paciente recibe 403. El modal convertía cualquier error
+ * doctora ajena al paciente recibe 403. El modal convertía cualquier error
  * en «Pendiente» y ofrecía «Registrar Triage»: afirmaba que no había signos
  * cuando sólo no pudo leerlos. Aquí se comprueba que cada caso diga lo suyo.
  */
@@ -94,7 +94,7 @@ describe('AppointmentModal · lectura del triage', () => {
     getTriageByAppointment.mockRejectedValue(falloCon(403))
     renderModal()
 
-    expect(await screen.findByText('No tienes acceso a los signos vitales de esta paciente.')).toBeInTheDocument()
+    expect(await screen.findByText('No tienes acceso a los signos vitales de este paciente.')).toBeInTheDocument()
     expect(screen.getByText('Sin acceso')).toBeInTheDocument()
     expect(screen.queryByText('Pendiente')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Registrar Triage' })).not.toBeInTheDocument()
@@ -184,7 +184,7 @@ describe('AppointmentModal · salir de consulta a donde estaba (plan 28, D-3)', 
   })
 })
 
-describe('AppointmentModal · paciente ya elegida (plan 29, lote 5)', () => {
+describe('AppointmentModal · paciente ya elegido (plan 29, lote 5)', () => {
   it('una cita nueva con defaultPatient abre con ella elegida', async () => {
     render(
       <AppointmentModal

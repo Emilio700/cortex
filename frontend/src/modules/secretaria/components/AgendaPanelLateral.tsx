@@ -141,7 +141,7 @@ const TarjetaDia: React.FC<{
                         {t.estadoLabel}
                     </span>
                     {t.motivo && (
-                        <span className="agenda-tarjeta-dia-motivo" title="Motivo anotado para la doctora">
+                        <span className="agenda-tarjeta-dia-motivo" title="Motivo anotado para el médico">
                             {t.motivo}
                         </span>
                     )}
@@ -163,10 +163,10 @@ const TarjetaDia: React.FC<{
                         Abrir la cita
                     </CDropdownItem>
                     <CDropdownItem role="button" onClick={onVerHistorial}>
-                        Ver el historial de la paciente
+                        Ver el historial del paciente
                     </CDropdownItem>
                     <CDropdownItem role="button" onClick={onVerCitasDePaciente}>
-                        Ver sólo las citas de esta paciente
+                        Ver sólo las citas de este paciente
                     </CDropdownItem>
                 </CDropdownMenu>
             </CDropdown>

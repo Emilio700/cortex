@@ -152,7 +152,7 @@ def _nombre_con_tratamiento(usuario) -> str:
 
     ``users.full_name`` se guarda **sin** tratamiento justo para que el codigo
     pueda anteponerlo. El que se antepone es el capturado en la usuaria; si no
-    hay, va el nombre solo (un "Dr." fijo le llegaba también a las doctoras).
+    hay, va el nombre solo (un "Dr." fijo le llegaba también a los médicos).
     """
     limpio = _san(getattr(usuario, "full_name", None))
     return anteponer_tratamiento(limpio, usuario)
@@ -524,7 +524,7 @@ def generate_prescription_pdf(prescription, doctor_profile, patient, triage=None
     record; a large bordered 'TX' treatment area listing the medications with
     a subtle isotype watermark; and an institutional footer.
 
-    El bloque de la derecha lo compone cada doctora: su nombre con la fuente,
+    El bloque de la derecha lo compone cada médico: su nombre con la fuente,
     el tamano, las negritas, la cursiva y el color que elija, y debajo las
     credenciales. Si ademas subio una imagen de firma, la imagen va arriba y el
     nombre debajo: antes el nombre se callaba en cuanto habia imagen.
@@ -533,7 +533,7 @@ def generate_prescription_pdf(prescription, doctor_profile, patient, triage=None
     elementos se imprimen (``app/utils/receta_config.py``), la leyenda del pie
     y el color del membrete. El expediente clinico **no** se imprime: la receta
     viaja a la farmacia. La unica excepcion es el motivo de consulta, y solo si
-    la doctora lo escribio en ESA receta (``prescription.diagnosis``).
+    el médico lo escribio en ESA receta (``prescription.diagnosis``).
     ``soap_note`` se sigue aceptando para no romper a quien llama a esta
     funcion, pero se ignora.
     """
@@ -621,14 +621,14 @@ def generate_prescription_pdf(prescription, doctor_profile, patient, triage=None
         c.drawCentredString((x0 + mid - gap) / 2, header_bot + header_h / 2 - 16, "GINECÓLOGOS")
 
     # Credenciales: solo las que el doctor dejo encendidas y tienen valor.
-    # Caben cuatro lineas antes de invadir el bloque de la paciente.
+    # Caben cuatro lineas antes de invadir el bloque del paciente.
     member_lines = lineas_credenciales(doctor_profile, ajustes)[:4]
     # El nombre se imprime tal como el doctor lo configuro. Si ya trae "Dra."
     # no se le antepone otro tratamiento: ese fue el bug del "Dr. Dr.".
     nombre_doctor = _san(nombre_para_receta(doctor_profile))
 
     # ── Bloque de la firma: el logo se queda solo a la izquierda ──────────
-    # El lado derecho es un bloque de texto que la doctora compone: su nombre
+    # El lado derecho es un bloque de texto que el médico compone: su nombre
     # con la letra, el tamaño, las negritas, la cursiva y el color que elija.
     # Antes el nombre se callaba en cuanto había imagen de firma; ahora manda
     # el interruptor "Nombre del médico" y, si hay imagen, el nombre va debajo.
@@ -710,7 +710,7 @@ def generate_prescription_pdf(prescription, doctor_profile, patient, triage=None
         c.setStrokeColor(FIELD); c.setLineWidth(0.7)
         c.line(fx + lw + 5, fy - 2.5, fx + col_w, fy - 2.5)
 
-    # Solo lo imprescindible para identificar a la paciente. El numero de
+    # Solo lo imprescindible para identificar al paciente. El numero de
     # EXPEDIENTE y el motivo de CONSULTA salieron de la receta: son expediente
     # clinico y el consultorio pidio que la receta no lo lleve.
     campos = [("NOMBRE DEL PACIENTE:", patient_name)]
@@ -749,18 +749,18 @@ def generate_prescription_pdf(prescription, doctor_profile, patient, triage=None
     # Aqui se imprimia la nota SOAP entera (SINTOMAS, HALLAZGOS, DIAGNOSTICO y
     # PLAN) bajo el titulo "NOTAS DE CONSULTA". Es expediente clinico y el
     # consultorio pidio expresamente que la receta no lo lleve: la receta se
-    # entrega impresa y la paciente puede ensenarsela a quien sea (farmacia,
+    # entrega impresa y el paciente puede ensenarsela a quien sea (farmacia,
     # familia, trabajo), asi que su diagnostico no tiene por que viajar en
     # ella. ``soap_note`` se sigue recibiendo para no romper a quien llama a
     # esta funcion, pero ya no se imprime.
     soap_y = y_after - (11 * MM if (has_vitals or allergies) else 2 * MM)
 
-    # ── Motivo de consulta, solo si la doctora lo pidió en ESTA receta ────
+    # ── Motivo de consulta, solo si el médico lo pidió en ESTA receta ────
     # Sigue apagado de origen: la receta viaja a la farmacia y la puede leer
     # cualquiera. Se imprime únicamente el texto que ella escribió al emitirla,
     # congelado con el documento; nunca se lee de la nota de consulta al
     # imprimir, para que una reimpresión diga lo mismo que el papel que ya
-    # tiene la paciente en la mano.
+    # tiene el paciente en la mano.
     motivo = _san(getattr(prescription, "diagnosis", None))
     box_top = soap_y - 4 * MM
     if motivo:
@@ -823,7 +823,7 @@ def generate_prescription_pdf(prescription, doctor_profile, patient, triage=None
         if med.get("quantity"):
             renglones.append(f"Surtir: {_san(med['quantity'])}")
         # Las indicaciones propias de ESTE medicamento se capturaban desde
-        # siempre y no se imprimían en ningún lado: la paciente solo veía las
+        # siempre y no se imprimían en ningún lado: el paciente solo veía las
         # generales del pie.
         if med.get("notes"):
             renglones.append(f"Indicaciones: {_san(med['notes'])}")
@@ -870,7 +870,7 @@ def generate_prescription_pdf(prescription, doctor_profile, patient, triage=None
         c.drawCentredString(PW / 2, footer_top - 6 * MM, ("     |     ".join(contact))[:120])
 
     if ajustes["mostrar_pie_legal"]:
-        # La leyenda la escribe la doctora; sin nada escrito manda la de
+        # La leyenda la escribe el médico; sin nada escrito manda la de
         # fábrica, que es la que estaba aquí dentro.
         c.setFillColor(PURPLE); c.setFont("Helvetica-Bold", 8)
         c.drawCentredString(PW / 2, M_BOT + 3 * MM, resolver_leyenda(doctor_profile)[:110])
@@ -1162,13 +1162,15 @@ def generate_receipt_pdf(payment, patient, doctor_name: str = "", tenant_name: s
 # Etiquetas en español de los valores que guarda la orden. Son los mismos del
 # formulario de la consulta (``ClinicalPlanPanel.tsx``); un valor que no esté
 # aquí se imprime tal cual en vez de esconderse, porque un estudio con tipo
-# desconocido sigue siendo un estudio que la paciente tiene que hacerse.
+# desconocido sigue siendo un estudio que el paciente tiene que hacerse.
 CATEGORIAS_DE_ORDEN = {
     "laboratory": "Laboratorio",
     "gynecology": "Ginecología / Pap / HPV",
     # «Mama e imagen» se leía como dos cosas; es una sola (plan 26, P-8).
     "breast": "Imagen de mama",
     "obstetric": "Obstetricia",
+    "imaging": "Neuroimagen",
+    "neurophysiology": "Neurofisiología",
     "procedure": "Procedimiento",
     "referral": "Interconsulta",
     "other": "Otro",
@@ -1179,13 +1181,13 @@ PRIORIDADES_DE_ORDEN = {
     "urgent": "Urgente",
 }
 
-# Destino físico de cada hoja del papel consolidado (plan 26, D-2): la paciente
+# Destino físico de cada hoja del papel consolidado (plan 26, D-2): el paciente
 # entrega cada hoja en un lugar distinto. La citología y el VPH se toman en el
 # laboratorio, por eso ginecología va con laboratorio. Lo que no esté en las
 # dos primeras va a «Otros», incluida una categoría desconocida.
 DESTINOS_FISICOS = (
     ("laboratorio", "LABORATORIO", ("laboratory", "gynecology")),
-    ("imagen", "IMAGEN Y GABINETE", ("breast", "obstetric")),
+    ("imagen", "IMAGEN Y GABINETE", ("breast", "obstetric", "imaging", "neurophysiology")),
     ("otros", "OTROS", None),
 )
 
@@ -1307,7 +1309,7 @@ class _PapelDeOrden:
         """Dibuja el membrete y devuelve la ``y`` donde empieza el cuerpo.
 
         La altura del recuadro se calcula: es la mayor entre el logo, el
-        bloque de la doctora y la columna de credenciales. Con la caja fija de
+        bloque del médico y la columna de credenciales. Con la caja fija de
         antes (108 pt) un perfil completo dejaba tres credenciales fuera,
         encimadas con el folio (plan 26, P-1).
         """
@@ -1324,7 +1326,7 @@ class _PapelDeOrden:
         ancho_credenciales = 175
         ancho_texto = (derecha - relleno - ancho_credenciales - 12) - texto_x
 
-        # Bloque de la doctora: (texto, fuente, tamaño, color).
+        # Bloque del médico: (texto, fuente, tamaño, color).
         renglones: list[tuple[str, str, float, colors.Color]] = []
         nombre = _san(nombre_para_orden(perfil, self.ajustes))
         if self.ajustes["mostrar_nombre"] and nombre:
@@ -1431,7 +1433,7 @@ class _PapelDeOrden:
         c.setStrokeColor(MEDICAL_DARK)
         c.setLineWidth(1)
         c.line(centro - 1.5 * inch, raya_y, centro + 1.5 * inch, raya_y)
-        # El nombre bajo la raya sale siempre, con la letra que la doctora
+        # El nombre bajo la raya sale siempre, con la letra que el médico
         # eligió para la orden; el tamaño se acota para no pisar la raya.
         estilo = self.ajustes.get("estilo_firma")
         if estilo:
@@ -1501,7 +1503,7 @@ class _PapelDeOrden:
     def parrafo(self, texto: str, negritas: bool = False) -> None:
         # Una indicación o una preparación pueden ser largas (hasta 4000
         # caracteres): se parte en páginas en vez de cortarse, porque un
-        # renglón de preparación que no sale impreso es uno que la paciente
+        # renglón de preparación que no sale impreso es uno que el paciente
         # no sigue.
         self.fluir(Paragraph(self._marcado(texto, negritas), self.estilo_texto))
 
@@ -1555,7 +1557,7 @@ def _fecha_de_solicitud(ordenes, requested_on=None) -> str:
 
 
 def generate_diagnostic_order_pdf(order, doctor_profile, patient, tenant_name: str = "", ajustes_orden: dict | None = None):
-    """La orden de estudio de un solo estudio, la que la paciente lleva al laboratorio.
+    """La orden de estudio de un solo estudio, la que el paciente lleva al laboratorio.
 
     Es un formato propio de la clínica y genérico (decisión de Emilio,
     preguntas 1.1–1.6): no copia el papel de ningún laboratorio, porque la
@@ -1563,12 +1565,12 @@ def generate_diagnostic_order_pdf(order, doctor_profile, patient, tenant_name: s
     (plan 24) para que el laboratorio reconozca a la médica.
 
     Sólo lleva lo que el laboratorio necesita para hacer el estudio: quién es
-    la paciente, qué se pide, por qué, con qué urgencia y cómo prepararse. Nada
+    el paciente, qué se pide, por qué, con qué urgencia y cómo prepararse. Nada
     del expediente (notas, alergias, antecedentes, teléfono): el papel sale de
     la clínica y no se sabe en cuántas manos acaba.
 
     El folio es el id de la orden: es único y es con el que recepción liga el
-    resultado cuando la paciente vuelve con el papel.
+    resultado cuando el paciente vuelve con el papel.
     """
     from app.utils.orden_config import resolver_ajustes_orden
 
@@ -1628,14 +1630,14 @@ def generate_diagnostic_order_group_pdf(group, orders, doctor_profile, patient, 
 def generate_consolidated_order_pdf(ordenes, doctor_profile, patient, tenant_name: str = "", *, folio: str,
                                     modo: str | None = None, indicacion_comun: str | None = None,
                                     requested_on=None, ajustes_orden: dict | None = None):
-    """Un papel con varios estudios de la misma paciente (plan 26, D-2 y D-5).
+    """Un papel con varios estudios de la mismo paciente (plan 26, D-2 y D-5).
 
-    Dos formas, que la doctora elige al imprimir (y fija por omisión en su
+    Dos formas, que el médico elige al imprimir (y fija por omisión en su
     perfil):
 
     - ``separado``: una hoja por destino físico (laboratorio, imagen y
-      gabinete, otros), porque la paciente entrega cada una en un lugar
-      distinto. Cada hoja lleva la paciente, la indicación y la firma.
+      gabinete, otros), porque el paciente entrega cada una en un lugar
+      distinto. Cada hoja lleva el paciente, la indicación y la firma.
     - ``una_hoja``: todo seguido, con un subtítulo por destino.
 
     Cada renglón conserva su «Orden n.º {id}»: es con lo que recepción liga el
@@ -1644,7 +1646,7 @@ def generate_consolidated_order_pdf(ordenes, doctor_profile, patient, tenant_nam
     from app.utils.orden_config import MODOS_DE_IMPRESION, resolver_ajustes_orden
 
     ajustes = ajustes_orden or resolver_ajustes_orden(doctor_profile)
-    # Sin modo pedido manda el que la doctora dejó en su perfil.
+    # Sin modo pedido manda el que el médico dejó en su perfil.
     modo = modo if modo in MODOS_DE_IMPRESION else ajustes["modo_impresion"]
     ordenes = list(ordenes)
     fecha = _fecha_de_solicitud(ordenes, requested_on)

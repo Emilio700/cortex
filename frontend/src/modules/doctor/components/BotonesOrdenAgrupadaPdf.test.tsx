@@ -53,7 +53,7 @@ describe('BotonesOrdenAgrupadaPdf', () => {
     expect(screen.getByRole('button', { name: 'Imprimir orden (10 estudios, 1 papel)' })).toBeInTheDocument()
   })
 
-  it('abre la vista previa con el modo del perfil de la doctora y lo pide una sola vez', async () => {
+  it('abre la vista previa con el modo del perfil del médico y lo pide una sola vez', async () => {
     responder('una_hoja')
     const user = userEvent.setup()
     render(<BotonesOrdenAgrupadaPdf groupId={9} />)
@@ -80,7 +80,7 @@ describe('BotonesOrdenAgrupadaPdf', () => {
     expect(llamadasPdf()[1][1]).toEqual({ responseType: 'blob', params: { modo: 'una_hoja' } })
   })
 
-  it('recepción no tiene perfil: se pide sin modo y lo decide la doctora autora', async () => {
+  it('recepción no tiene perfil: se pide sin modo y lo decide el médico autora', async () => {
     sesion.rol = 'secretaria'
     get.mockResolvedValue(pdf())
     const user = userEvent.setup()

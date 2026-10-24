@@ -1,10 +1,10 @@
-"""La ficha de la paciente para recepción, sin lo clínico (opción C, plan 32).
+"""La ficha del paciente para recepción, sin lo clínico (opción C, plan 32).
 
 Decisión de Emilio: recepción ve y captura nombre, contacto, fecha de
 nacimiento, alergias y FUR. No ve ni captura antecedentes personales,
 familiares ni ginecológicos, datos obstétricos ni las notas de referencia de
-la doctora. Lo que importa de verdad: que al guardar recepción la ficha, los
-antecedentes que capturó la doctora queden intactos.
+el médico. Lo que importa de verdad: que al guardar recepción la ficha, los
+antecedentes que capturó el médico queden intactos.
 """
 from datetime import date
 

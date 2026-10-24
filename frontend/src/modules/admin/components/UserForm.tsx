@@ -3,8 +3,8 @@
  *
  * Plan 23, ajustes del 2026-09-28:
  * - "Tratamiento" (Dr., Dra. o nada) en alta y edición. Sin tratamiento el
- *   sistema pone sólo el nombre: un "Dr." equivocado a una doctora es peor.
- * - Al editar a una secretaria, "Doctoras que apoya" y el permiso de ver el
+ *   sistema pone sólo el nombre: un "Dr." equivocado a un médico es peor.
+ * - Al editar a una secretaria, "Médicos que apoya" y el permiso de ver el
  *   corte de caja de esas doctoras. Se guardan aparte de los datos de la
  *   cuenta, y si eso falla se dice qué sí quedó y qué no.
  */
@@ -84,7 +84,7 @@ export const UserForm: React.FC<UserFormProps> = ({ visible, onClose, onSubmit, 
     // Errores junto al campo (`noValidate`): el navegador ya no enseña su globo.
     const [errores, setErrores] = useState<{ email?: string; full_name?: string; password?: string }>({})
 
-    // Doctoras que apoya (sólo al editar a una secretaria).
+    // Médicos que apoya (sólo al editar a una secretaria).
     const [doctoras, setDoctoras] = useState<User[]>([])
     const [apoyoLeido, setApoyoLeido] = useState<Apoyo | null>(null)
     const [errorApoyo, setErrorApoyo] = useState<string | null>(null)
@@ -136,8 +136,8 @@ export const UserForm: React.FC<UserFormProps> = ({ visible, onClose, onSubmit, 
             })
             .catch((err: any) => {
                 // Sin lo guardado no se ofrece editar: guardar sobre una lista vacía
-                // le quitaría a la secretaria las doctoras que ya apoya.
-                if (vigente) setErrorApoyo(err?.message || 'No se pudieron cargar las doctoras que apoya.')
+                // le quitaría a la secretaria los médicos que ya apoya.
+                if (vigente) setErrorApoyo(err?.message || 'No se pudieron cargar los médicos que apoya.')
             })
         return () => {
             vigente = false
@@ -204,7 +204,7 @@ export const UserForm: React.FC<UserFormProps> = ({ visible, onClose, onSubmit, 
                 // Los datos de la cuenta sí quedaron; esto no. Se dice tal cual y el
                 // formulario sigue abierto para reintentar.
                 setError(
-                    `Los datos de la cuenta se guardaron, pero las doctoras que apoya y el permiso del corte NO: ${err.message}`,
+                    `Los datos de la cuenta se guardaron, pero los médicos que apoya y el permiso del corte NO: ${err.message}`,
                 )
                 setLoading(false)
                 return
@@ -353,7 +353,7 @@ export const UserForm: React.FC<UserFormProps> = ({ visible, onClose, onSubmit, 
                     {editaSecretaria && (
                         <div className="border rounded-3 p-3 mb-3">
                             <div data-tour="usuario-doctoras-que-apoya">
-                                <div className="fw-semibold mb-1">Doctoras que apoya</div>
+                                <div className="fw-semibold mb-1">Médicos que apoya</div>
                                 <small className="text-muted d-block mb-2">
                                     Sigue cobrando y viendo los pagos de toda la sucursal. Esto sólo decide de qué
                                     doctoras ve el corte de caja.

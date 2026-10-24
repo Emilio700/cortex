@@ -1,7 +1,7 @@
 /**
  * Sube un archivo de resultado y lo liga a su orden (O-04, plan 26 D-1).
  *
- * Lo usan recepción (el sobre del laboratorio) y la doctora (el estudio que la
+ * Lo usan recepción (el sobre del laboratorio) y el médico (el estudio que la
  * paciente le mandó por WhatsApp o correo). Cada subida crea su propio
  * resultado con su documento, así una orden admite varios archivos: el PDF del
  * reporte y las fotos del ultrasonido.

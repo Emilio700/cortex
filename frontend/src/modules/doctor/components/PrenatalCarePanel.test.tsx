@@ -137,11 +137,11 @@ describe('PrenatalCarePanel', () => {
     render(<PrenatalCarePanel patientId={1} />)
 
     expect(await screen.findByText(/No se pudo saber si tiene un embarazo activo/)).toBeInTheDocument()
-    expect(screen.queryByText('No hay un embarazo activo registrado para esta paciente.')).not.toBeInTheDocument()
+    expect(screen.queryByText('No hay un embarazo activo registrado para este paciente.')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Registrar embarazo/i })).not.toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }))
 
-    expect(await screen.findByText('No hay un embarazo activo registrado para esta paciente.')).toBeInTheDocument()
+    expect(await screen.findByText('No hay un embarazo activo registrado para este paciente.')).toBeInTheDocument()
   })
 })

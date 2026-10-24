@@ -69,7 +69,7 @@ describe('ClinicalConsentCard', () => {
     await waitFor(() => expect((areaTexto() as HTMLTextAreaElement).value).toContain('Biopsia cervical'))
     expect(screen.getByText('Usando texto precargado')).toBeInTheDocument()
 
-    await user.type(areaTexto(), ' Aclaración de la doctora.')
+    await user.type(areaTexto(), ' Aclaración del médico.')
     expect(screen.getByText(/ajustado por ti/)).toBeInTheDocument()
   })
 
@@ -128,16 +128,16 @@ describe('ClinicalConsentCard', () => {
       {
         ...FIRMADO,
         status: 'cancelled' as const,
-        cancelled_reason: 'Se emitió a la paciente equivocada',
+        cancelled_reason: 'Se emitió al paciente equivocado',
         cancelled_at: '2026-09-19T09:00:00',
-        cancelled_by_name: 'Doctora de prueba',
+        cancelled_by_name: 'Médico de prueba',
       },
     ])
     renderCard()
 
     await waitFor(() => expect(screen.getByText('Cancelado')).toBeInTheDocument())
-    expect(screen.getByText(/Se emitió a la paciente equivocada/)).toBeInTheDocument()
-    expect(screen.getByText(/Doctora de prueba/)).toBeInTheDocument()
+    expect(screen.getByText(/Se emitió al paciente equivocado/)).toBeInTheDocument()
+    expect(screen.getByText(/Médico de prueba/)).toBeInTheDocument()
   })
 })
 

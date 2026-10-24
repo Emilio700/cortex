@@ -106,7 +106,7 @@ TIPOS: dict[str, TipoDeAviso] = {
 TIPOS_SILENCIABLES = tuple(t for t, info in TIPOS.items() if info.prioridad == NotificationPriority.INFORMATIVO)
 
 # Quién recibe cada tipo informativo. Todos los de la agenda y los documentos
-# van a la doctora de la cita (``appointments.doctor_id`` sólo admite cuentas
+# van al médico de la cita (``appointments.doctor_id`` sólo admite cuentas
 # con rol de doctora). Ofrecerle a recepción «Citas que te agenda alguien más»
 # era un interruptor de algo que nunca le llega (plan 29, N-1).
 _INFORMATIVOS_DE_LA_DOCTORA = frozenset(TIPOS_SILENCIABLES)

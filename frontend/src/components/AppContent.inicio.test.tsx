@@ -39,7 +39,7 @@ beforeEach(() => {
 })
 
 describe('AppContent · inicio por rol', () => {
-  it('la raíz lleva a la doctora a su tablero y le abre esa pestaña', async () => {
+  it('la raíz lleva al médico a su tablero y le abre esa pestaña', async () => {
     montar('/')
     await waitFor(() => expect(screen.getByTestId('ruta')).toHaveTextContent('/doctor/dashboard'))
     expect(openTab).toHaveBeenCalledWith(expect.objectContaining({ path: '/doctor/dashboard' }))

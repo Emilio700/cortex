@@ -17,7 +17,7 @@ LOCAL_URL="${LOCAL_URL:-http://127.0.0.1:8090}"
 
 # Queda en el registro del servidor aunque nadie mire la salida del cron.
 registrar() {
-  if command -v logger >/dev/null 2>&1; then logger -t gems-healthcheck -- "$*" || true; fi
+  if command -v logger >/dev/null 2>&1; then logger -t cortex-healthcheck -- "$*" || true; fi
   echo "$*" >&2
 }
 
@@ -35,7 +35,7 @@ echo "Servicios, base de datos y proxy responden"
 
 # clamav: en la 1.1.0 llevaba días unhealthy y nadie lo supo, porque la
 # dependencia solo se revisa al arrancar. Aquí se revisa en cada corrida y se
-# avisa al admin dentro de GEMS (plan 27); el aviso no se repite mientras siga
+# avisa al admin dentro de Cortex (plan 27); el aviso no se repite mientras siga
 # abierto y se cierra solo cuando clamav vuelve.
 clamav_id="$("${COMPOSE[@]}" ps -a -q clamav 2>/dev/null | head -n1)"
 clamav_status="missing"

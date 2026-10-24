@@ -101,3 +101,20 @@ def test_recepcion_ve_si_hay_consentimientos_firmados_sin_su_contenido(client, d
     lista = _get(client, db_session, e["secretaria"], f"{e['paciente'].id}/expediente/consentimientos").json()
     assert len(lista) == 1 and lista[0]["firmado"] is True
     assert "rendered_body" not in lista[0]
+
+
+def test_implantes_y_anticoagulantes_solo_en_la_vista_clinica(client, db_session, escenario):
+    """Las señales de neurocirugía (Cortex) son antecedentes clínicos: el médico
+    las ve en el encabezado; recepción no, aunque sí vea las alergias."""
+    e = escenario
+    e["paciente"].implanted_devices = "VÁLVULA VENTRÍCULO-PERITONEAL PROGRAMABLE"
+    e["paciente"].anticoagulants = "CLOPIDOGREL"
+    db_session.commit()
+
+    medico = _get(client, db_session, e["doctora"], f"{e['paciente'].id}/expediente").json()
+    assert medico["implanted_devices"] == "VÁLVULA VENTRÍCULO-PERITONEAL PROGRAMABLE"
+    assert medico["anticoagulants"] == "CLOPIDOGREL"
+
+    recepcion = _get(client, db_session, e["secretaria"], f"{e['paciente'].id}/expediente").json()
+    assert recepcion["implanted_devices"] is None
+    assert recepcion["anticoagulants"] is None
