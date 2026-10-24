@@ -806,3 +806,126 @@ body.hf-theme {
     --cui-btn-disabled-border-color: rgba(125, 211, 252, 0.2);
   }
 }
+
+// ── Menú lateral a toda altura ───────────────────────────────────
+// GEMS lo dejaba flotando, separado del borde y con esquinas redondeadas. En
+// Cortex va pegado al borde, de arriba abajo, como el marco marino de la app.
+@media (min-width: 992px) {
+  .sidebar.sidebar-fixed:not(.sidebar-end) {
+    top: 0;
+    bottom: 0;
+    inset-inline-start: 0;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 0;
+  }
+
+  .wrapper {
+    padding-inline-start: var(--cui-sidebar-occupy-start, 0px) !important;
+  }
+}
+
+.sidebar {
+  border-radius: 0 !important;
+  border-width: 0 1px 0 0 !important;
+}
+
+// ── Secciones plegables del menú ─────────────────────────────────
+.cx-seccion {
+  margin-top: 0.35rem;
+
+  &__titulo {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: start;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #6f88b8 !important;
+
+    &:hover {
+      color: #fff !important;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--cx-cian);
+      outline-offset: -2px;
+    }
+  }
+
+  &__nombre {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__flecha {
+    flex: none;
+    width: 0.8rem !important;
+    height: 0.8rem !important;
+    opacity: 0.7;
+    transform: rotate(-90deg);
+    transition: transform var(--gems-mov, 180ms) var(--cx-curva);
+  }
+
+  &__insignia {
+    margin-inline-end: 0.4rem;
+  }
+
+  // La altura se anima con una rejilla de 0fr a 1fr: no hace falta medir la
+  // lista ni fijar un alto máximo.
+  &__cuerpo {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.26s var(--cx-curva);
+  }
+
+  &__items {
+    min-height: 0;
+    overflow: hidden;
+    padding-inline-start: 0.35rem;
+    border-inline-start: 1px solid rgba(125, 211, 252, 0.1);
+    margin-inline-start: 1.15rem;
+  }
+
+  &--abierta {
+    .cx-seccion__cuerpo {
+      grid-template-rows: 1fr;
+    }
+
+    .cx-seccion__flecha {
+      transform: rotate(0deg);
+    }
+  }
+
+  // La sección donde está la pantalla abierta se distingue aun cerrada.
+  &--activa .cx-seccion__titulo {
+    color: var(--cx-cian-claro) !important;
+  }
+}
+
+// Menú angosto (sin pasar el cursor): sólo íconos, sin nombre ni flecha.
+.sidebar-narrow-unfoldable:not(:hover),
+.sidebar-narrow {
+  .cx-seccion__nombre,
+  .cx-seccion__flecha,
+  .cx-seccion__insignia {
+    display: none;
+  }
+
+  .cx-seccion__items {
+    margin-inline-start: 0;
+    padding-inline-start: 0;
+    border-inline-start: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cx-seccion__cuerpo,
+  .cx-seccion__flecha {
+    transition: none;
+  }
+}
