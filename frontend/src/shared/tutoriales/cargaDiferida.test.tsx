@@ -65,5 +65,8 @@ describe('carga diferida de la ayuda', () => {
     // módulos al vuelo y con varios archivos en paralelo puede tardar.
     expect(await screen.findByText('Centro de ayuda', {}, { timeout: 5000 })).toBeInTheDocument()
     await vi.waitFor(() => expect(motorCargado()).toBe(true), { timeout: 5000 })
-  })
+    // La prueba entera también necesita ese margen: sus dos esperas de 5 s no
+    // caben en los 5 s por omisión de Vitest, y con la suite completa en
+    // paralelo fallaba por tiempo, no por un defecto.
+  }, 20_000)
 })
