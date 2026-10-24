@@ -9,10 +9,16 @@ import { Provider } from 'react-redux'
 import App from './App'
 import store from './store'
 import './i18n'
+// Barrera raíz: la de `App` vive dentro del enrutador, así que un fallo al
+// armar la sesión o el propio enrutador se escapaba y React 19 desmontaba todo
+// (pantalla en blanco, sin mensaje). Esta envuelve a todo.
+import BarreraDeError from './shared/components/BarreraDeError'
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <App />
+    <BarreraDeError respaldo={{ etiqueta: 'Ir al acceso', ruta: '/login' }}>
+      <App />
+    </BarreraDeError>
   </Provider>,
 )
 

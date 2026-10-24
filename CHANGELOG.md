@@ -40,10 +40,19 @@ Todos los cambios notables de Cortex. Formato basado en
   (T1, T1+C, T2, FLAIR) con paciente ficticio `DEMO^SINTETICO`.
 - Barrera de error por pestaña y de último recurso: una pantalla que falla ya no
   deja el sitio en blanco; muestra el motivo y ofrece recargar o volver al inicio.
+- Guardia de arranque en `index.html`, en HTML y JavaScript puros: si el paquete no
+  carga o algo truena antes de que exista la primera barrera de React, la pantalla
+  dice qué pasó y ofrece recargar. Antes ese caso se veía como una página en blanco,
+  sin mensaje y sin forma de saber por qué.
 
 ### Cambiado
 - Voz de la interfaz en masculino genérico: «el paciente», «el médico».
 - Puertos, contenedores y nombres de producción propios para convivir con GEMS.
+
+### Corregido
+- La barrera de error raíz envuelve también la sesión y el enrutador: un fallo al
+  armar `AuthProvider` o `HashRouter` desmontaba toda la aplicación (React 19) y se
+  veía en blanco, porque la barrera de `App` vive por dentro de ellos.
 
 ### Quitado
 - Lo ginecológico deja de ofrecerse (embarazo y control prenatal, historia

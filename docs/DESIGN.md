@@ -243,6 +243,28 @@ resonancia. El cromo alrededor sí usa los tokens.
 
 Referencia: `frontend/src/modules/imagen/`.
 
+### 4.10 Cuando algo falla: nunca una pantalla en blanco
+
+Una pantalla vacía no dice nada y no se puede diagnosticar; con el médico
+enfrente es una consulta detenida. Cuatro capas, de adentro hacia afuera:
+
+1. **Por pestaña**: `BarreraDeError` en `TabsOutlet`. Falla la pantalla, siguen
+   vivas las demás pestañas y el menú.
+2. **De la aplicación**: otra `BarreraDeError` dentro de `App`, por si falla el
+   armazón o el enrutador.
+3. **Raíz**: en `index.tsx`, envolviendo todo. Sin ella, un fallo al armar la
+   sesión o el enrutador se escapaba de las dos anteriores y React desmontaba la
+   aplicación entera.
+4. **Guardia de arranque**: en `index.html`, en HTML y JavaScript puros, fuera de
+   React y de Vite. Es lo único que sobrevive si el paquete no carga, y es el caso
+   que se veía como una página en blanco sin pista alguna. Muestra el motivo, un
+   botón de recarga y se retira sola en cuanto React pinta algo.
+
+El mensaje dice qué pasó y qué hacer; el detalle técnico va plegado. Nunca datos
+del paciente: el detalle es el mensaje del error, no el expediente.
+
+Referencia: `frontend/src/shared/components/BarreraDeError.tsx` y `frontend/index.html`.
+
 ---
 
 ## 11. Dónde vive cada cosa (módulos)
