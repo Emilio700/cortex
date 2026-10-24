@@ -10,7 +10,7 @@ import {
 } from '@coreui/react-pro'
 
 import { AppSidebarNav } from './AppSidebarNav'
-import GemsLogo from './GemsLogo'
+import CortexMarca from './marca/CortexMarca'
 
 // sidebar nav config
 import navigation, { filterNavByAccess, resolverInicio } from '../_nav'
@@ -77,7 +77,12 @@ const AppSidebar = () => {
           // (axe, label-content-name-mismatch; plan 32).
           style={{ gap: 0 }}
         >
-          <GemsLogo size={unfoldable ? 28 : 36} mono />
+          <CortexMarca
+            variante={unfoldable ? 'icono' : 'completa'}
+            tamano={unfoldable ? 30 : 38}
+            conLema
+            animada
+          />
           <span className="visually-hidden">, ir al inicio</span>
         </CSidebarBrand>
         <CCloseButton

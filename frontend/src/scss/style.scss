@@ -7,11 +7,13 @@
 // Se oscurece a #1a66cc (5.5:1 con blanco y 5.0:1 sobre el gris del fondo),
 // el mismo azul que el plan 29, lote 6 ya usaba para letras y enlaces: un
 // solo azul en toda la app. Decisión de Emilio, 2026-10-04.
-$primary-color: #1a66cc !default;
+// Cortex: el azul eléctrico del logo, oscurecido lo justo para que la letra
+// blanca encima siga en 5.2:1 (WCAG AA pide 4.5:1).
+$primary-color: #1e63e9 !default;
 $success-color: #51cc8a !default;
 $danger-color: #ef376e !default;
 $warning-color: #fc0 !default;
-$info-color: #747af2 !default;
+$info-color: #0e8fc4 !default;
 
 $primary-dark-color: color.adjust($primary-color, $saturation: -10%) !default;
 $success-dark-color: color.adjust($success-color, $saturation: -10%) !default;
@@ -74,6 +76,7 @@ $info-gradient-dark-color: gradient($info-dark-color) !default;
   $warning-border-subtle-dark: tint-color($warning-dark-color, 60%),
   $danger-border-subtle-dark: tint-color($danger-dark-color, 60%),
   $font-size-base: .9375rem,
+  $font-family-sans-serif: ("Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif),
   $border-color-translucent: rgba(#080a0c, .0875),
   $footer-bg: var(--cui-body-bg),
   $table-cell-padding-y: .75rem,
@@ -93,6 +96,7 @@ $info-gradient-dark-color: gradient($info-dark-color) !default;
 @use "acceso";
 @use "movimiento";
 @use "contraste";
+@use "cortex";
 
 body {
   background-color: var(--#{$prefix}tertiary-bg);

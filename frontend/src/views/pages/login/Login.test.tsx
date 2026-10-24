@@ -106,9 +106,10 @@ describe('Login · recordar mi correo y «Entrando…» (plan 32, punto 1)', () 
     expect(await screen.findByRole('button', { name: /Entrando…/ })).toBeDisabled()
   })
 
-  it('lleva el nombre del sistema, no el lema viejo', () => {
+  it('lleva la marca de Cortex, no la de GEMS', () => {
     montar()
-    expect(screen.getByText('Gynecology & Expert Management System')).toBeInTheDocument()
-    expect(screen.queryByText(/Global Ecosystem/)).toBeNull()
+    expect(screen.getByRole('img', { name: 'CORTEX' })).toBeInTheDocument()
+    expect(screen.getByText('Neurocirugía de precisión')).toBeInTheDocument()
+    expect(screen.queryByText(/Gynecology|G\.E\.M\.S/)).toBeNull()
   })
 })

@@ -65,7 +65,8 @@ export default defineConfig(() => {
       extensions: ['.mjs', '.mts', '.js', '.ts', '.jsx', '.tsx', '.json', '.scss'],
     },
     server: {
-      port: 3000,
+      // 3010 y no 3000: Cortex corre junto a GEMS en la misma máquina.
+      port: 3010,
       proxy: {
         // https://vitejs.dev/config/server-options.html
       },
