@@ -2,22 +2,22 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
-    container_name: gems_postgres
+    container_name: cortex_postgres
     environment:
-      POSTGRES_USER: gems_user
-      POSTGRES_PASSWORD: gems_password
-      POSTGRES_DB: gems_db
+      POSTGRES_USER: cortex_user
+      POSTGRES_PASSWORD: cortex_password
+      POSTGRES_DB: cortex_db
     ports:
-      - "5432:5432"
+      - "5442:5432"
     volumes:
-      - gems_postgres_data:/var/lib/postgresql/data
+      - cortex_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gems_user -d gems_db"]
+      test: ["CMD-SHELL", "pg_isready -U cortex_user -d cortex_db"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - gems_network
+      - cortex_network
 
   # FastAPI Backend
   backend:
@@ -25,17 +25,17 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       target: development
-    container_name: gems_backend
+    container_name: cortex_backend
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     environment:
-      DATABASE_URL: postgresql://gems_user:gems_password@postgres:5432/gems_db
+      DATABASE_URL: postgresql://cortex_user:cortex_password@postgres:5432/cortex_db
       SECRET_KEY: dev-secret-key-change-in-production-12345678901234567890
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
-      CORS_ORIGINS: http://localhost:5173,http://localhost:3000
-      FRONTEND_URL: http://localhost:3000
+      CORS_ORIGINS: http://localhost:5173,http://localhost:3010
+      FRONTEND_URL: http://localhost:3010
       ENVIRONMENT: development
-      APP_NAME: G.E.M.S
+      APP_NAME: CORTEX
       # SMTP credentials come from the untracked .env file — never hardcode the
       # Gmail App Password here, this file is committed. See .env.example.
       EMAIL_ENABLED: ${EMAIL_ENABLED:-false}
@@ -44,17 +44,17 @@ services:
       SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
-      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS:-no-reply@gems.local}
-      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-G.E.M.S}
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS:-no-reply@cortex.local}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-CORTEX}
     ports:
-      - "8000:8000"
+      - "8010:8000"
     volumes:
       - ./backend:/app
     depends_on:
       postgres:
         condition: service_healthy
     networks:
-      - gems_network
+      - cortex_network
 
   # React Frontend (Vite)
   frontend:
@@ -62,43 +62,43 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       target: development
-    container_name: gems_frontend
+    container_name: cortex_frontend
     environment:
-      VITE_API_BASE_URL: http://localhost:8000
+      VITE_API_BASE_URL: http://localhost:8010
     ports:
-      - "3000:3000"
+      - "3010:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     depends_on:
       - backend
     networks:
-      - gems_network
+      - cortex_network
 
   # pgAdmin (Optional - for database management)
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: gems_pgadmin
+    container_name: cortex_pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@gems.local
+      PGADMIN_DEFAULT_EMAIL: admin@cortex.local
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-change-me-local-only}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - "5050:80"
+      - "5060:80"
     volumes:
-      - gems_pgadmin_data:/var/lib/pgadmin
+      - cortex_pgadmin_data:/var/lib/pgadmin
     networks:
-      - gems_network
+      - cortex_network
     profiles:
       - tools
 
 volumes:
-  gems_postgres_data:
-    name: gems_postgres_data
-  gems_pgadmin_data:
-    name: gems_pgadmin_data
+  cortex_postgres_data:
+    name: cortex_postgres_data
+  cortex_pgadmin_data:
+    name: cortex_pgadmin_data
 
 networks:
-  gems_network:
-    name: gems_network
+  cortex_network:
+    name: cortex_network
     driver: bridge
