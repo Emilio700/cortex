@@ -19,6 +19,9 @@ UPPERCASE_FIELDS = (
     "blood_type",
     "menstrual_rhythm",
     "birth_control",
+    "neurological_history",
+    "implanted_devices",
+    "anticoagulants",
 )
 
 # Lo clínico de la ficha (opción C, decisión de Emilio, plan 32): antecedentes
@@ -41,6 +44,10 @@ CAMPOS_CLINICOS_DE_FICHA = (
     "paras",
     "cesareas",
     "abortos",
+    "dominant_hand",
+    "neurological_history",
+    "implanted_devices",
+    "anticoagulants",
 )
 
 # Regla de Naegele: fecha probable de parto = FUR + 280 días.
@@ -123,6 +130,10 @@ class PatientBase(BaseModel):
     last_menstrual_period: Optional[date] = None
     expected_delivery_date: Optional[date] = None
     notas_referencia: Optional[str] = None
+    dominant_hand: Optional[str] = None
+    neurological_history: Optional[str] = None
+    implanted_devices: Optional[str] = None
+    anticoagulants: Optional[str] = None
     gestas: Optional[int] = None
     paras: Optional[int] = None
     cesareas: Optional[int] = None
@@ -176,6 +187,10 @@ class PatientUpdate(_PatientTextMixin):
     last_menstrual_period: Optional[date] = None
     expected_delivery_date: Optional[date] = None
     notas_referencia: Optional[str] = None
+    dominant_hand: Optional[str] = None
+    neurological_history: Optional[str] = None
+    implanted_devices: Optional[str] = None
+    anticoagulants: Optional[str] = None
     gestas: Optional[int] = None
     paras: Optional[int] = None
     cesareas: Optional[int] = None

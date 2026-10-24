@@ -131,18 +131,15 @@ def _alergias(patient: Patient) -> Seccion:
 
 
 def _antecedentes(patient: Patient) -> Seccion:
-    go = [
-        ("Gestas", patient.gestas), ("Partos", patient.paras),
-        ("Cesáreas", patient.cesareas), ("Abortos", patient.abortos),
-    ]
-    formula = ", ".join(f"{nombre} {valor}" for nombre, valor in go if valor is not None) or SIN_REGISTRO
+    # En Cortex los antecedentes son los de neurocirugía; los gineco-obstétricos
+    # de GEMS siguen en la base pero ya no se resumen.
     return Seccion("antecedentes", SECCIONES["antecedentes"], renglones=[
         Renglon("Personales", _texto(patient.personal_history)),
         Renglon("Familiares", _texto(patient.family_history)),
-        Renglon("Ginecológicos", _texto(patient.gynecological_history)),
-        Renglon("Obstétricos", formula),
-        Renglon("Menarca", f"{patient.menarca_age} años" if patient.menarca_age is not None else SIN_REGISTRO),
-        Renglon("Método anticonceptivo", _texto(patient.birth_control)),
+        Renglon("Neurológicos", _texto(patient.neurological_history)),
+        Renglon("Implantes y dispositivos", _texto(patient.implanted_devices)),
+        Renglon("Anticoagulantes", _texto(patient.anticoagulants)),
+        Renglon("Lateralidad", _texto(patient.dominant_hand)),
         Renglon("Grupo sanguíneo", _texto(patient.blood_type)),
     ])
 

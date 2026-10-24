@@ -46,16 +46,16 @@ beforeEach(() => {
 })
 
 describe('PacienteForm · recepción (opción C)', () => {
-  it('el alta exprés pide alergias y FUR, las dos opcionales', () => {
+  it('el alta exprés pide alergias, opcional, y ya no la FUR de GEMS', () => {
     render(<PacienteForm visible onClose={vi.fn()} onSubmit={onSubmit} />)
     expect(screen.getByLabelText('Alergias (opcional)')).toBeInTheDocument()
-    expect(screen.getByLabelText('Última menstruación (FUR, opcional)')).toBeInTheDocument()
+    expect(screen.queryByLabelText(/Última menstruación/)).toBeNull()
   })
 
   it('al editar no muestra antecedentes ni notas de referencia, y dice quién los captura', () => {
     render(<PacienteForm visible onClose={vi.fn()} onSubmit={onSubmit} patient={PACIENTE} />)
     expect(screen.queryByLabelText('Antecedentes personales')).toBeNull()
-    expect(screen.queryByLabelText('Gestas')).toBeNull()
+    expect(screen.queryByLabelText('Implantes y dispositivos')).toBeNull()
     expect(screen.queryByLabelText('Notas de referencia')).toBeNull()
     expect(screen.getByText(/los captura el médico/)).toBeInTheDocument()
     // No dice «sin antecedentes»: no los ve, no es que no existan.
@@ -88,7 +88,10 @@ describe('PacienteForm · el médico', () => {
       />,
     )
     expect(screen.getByLabelText('Antecedentes personales')).toHaveValue('ASMA')
-    expect(screen.getByLabelText('Gestas')).toBeInTheDocument()
+    expect(screen.getByLabelText('Lateralidad')).toBeInTheDocument()
+    expect(screen.getByLabelText('Implantes y dispositivos')).toBeInTheDocument()
+    expect(screen.getByLabelText('Anticoagulantes / antiagregantes')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Gestas')).toBeNull()
     expect(screen.getByLabelText('Notas de referencia')).toBeInTheDocument()
   })
 })

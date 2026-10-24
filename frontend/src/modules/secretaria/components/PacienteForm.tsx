@@ -51,6 +51,7 @@ import type { Patient, PatientCreate } from '../types'
 const CAMPOS_CLINICOS: (keyof PatientCreate)[] = [
     'personal_history', 'family_history', 'gynecological_history', 'menarca_age', 'menstrual_rhythm',
     'ivsa_age', 'birth_control', 'notas_referencia', 'gestas', 'paras', 'cesareas', 'abortos',
+    'dominant_hand', 'neurological_history', 'implanted_devices', 'anticoagulants',
 ]
 
 const sinLoClinico = (datos: PatientCreate): PatientCreate => {
@@ -119,6 +120,10 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
         personal_history: '',
         family_history: '',
         gynecological_history: '',
+        dominant_hand: '',
+        neurological_history: '',
+        implanted_devices: '',
+        anticoagulants: '',
     }
 
     const [formData, setFormData] = useState<PatientCreate>(emptyForm)
@@ -147,7 +152,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
     // Opción C (plan 32, decisión de Emilio): lo clínico de la ficha —antecedentes,
     // historia gineco-obstétrica, G/P/C/A y las notas de referencia de la
     // doctora— sólo lo ve y lo captura quien tiene el expediente clínico.
-    // Recepción captura nombre, contacto, fecha de nacimiento, alergias y FUR.
+    // Recepción captura nombre, contacto, fecha de nacimiento y alergias.
     // El servidor además ignora lo clínico que mande recepción.
     const veAntecedentes =
         (user?.role === 'master' || Boolean(can?.('medical_history.read'))) &&
@@ -183,6 +188,10 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                 personal_history: patient.personal_history || '',
                 family_history: patient.family_history || '',
                 gynecological_history: patient.gynecological_history || '',
+                dominant_hand: patient.dominant_hand || '',
+                neurological_history: patient.neurological_history || '',
+                implanted_devices: patient.implanted_devices || '',
+                anticoagulants: patient.anticoagulants || '',
                 last_menstrual_period: patient.last_menstrual_period || '',
                 owner_doctor_id: (patient as any).owner_doctor_id ?? undefined,
             })
@@ -432,32 +441,23 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                         </CCol>
                     </CRow>
 
-                    {/* Alergias y FUR van en el alta exprés (opción C, plan 32): son lo
+                    {/* Las alergias van en el alta exprés (opción C, plan 32): es lo
                         que recepción pregunta en la llamada y lo que el médico
-                        necesita ver primero. Las dos son opcionales. */}
+                        necesita ver primero. Es opcional. */}
                     <CRow className="mb-3">
-                        <CCol md={8}>
+                        <CCol>
                             <CFormLabel htmlFor="allergies">Alergias (opcional)</CFormLabel>
                             <CFormTextarea
                                 id="allergies"
                                 rows={1}
                                 value={formData.allergies}
                                 onChange={handleTextoNormalizado('allergies')}
-                                placeholder="Ej. PENICILINA, LÁTEX… en blanco si aún no se pregunta"
+                                placeholder="Ej. PENICILINA, LÁTEX, MEDIO DE CONTRASTE… en blanco si aún no se pregunta"
                                 disabled={loading}
                             />
                             <small className="text-muted">
                                 Se imprime en las recetas. Vacío quiere decir &quot;no registrado&quot;, no &quot;sin alergias&quot;.
                             </small>
-                        </CCol>
-                        <CCol md={4}>
-                            <CFormLabel htmlFor="last_menstrual_period">Última menstruación (FUR, opcional)</CFormLabel>
-                            <DateInput
-                                id="last_menstrual_period"
-                                value={formData.last_menstrual_period || ''}
-                                onChange={(iso) => handleChange('last_menstrual_period', iso)}
-                                disabled={loading}
-                            />
                         </CCol>
                     </CRow>
 
@@ -637,119 +637,60 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                             {veAntecedentes && (
                             <>
                             <hr />
-                            <h6 className="mb-3">Historia gineco-obstétrica</h6>
+                            <h6 className="mb-3">Antecedentes neurológicos</h6>
 
                             <CRow className="mb-3">
-                                <CCol md={3}>
-                                    <CFormLabel htmlFor="menarca_age">Menarca (edad)</CFormLabel>
-                                    <CFormInput
-                                        id="menarca_age"
-                                        type="number"
-                                        inputMode="numeric"
-                                        value={formData.menarca_age ?? ''}
-                                        onChange={(e) => handleChange('menarca_age', e.target.value ? parseInt(e.target.value) : '')}
-                                        placeholder="12"
+                                <CCol md={4}>
+                                    <CFormLabel htmlFor="dominant_hand">Lateralidad</CFormLabel>
+                                    <CFormSelect
+                                        id="dominant_hand"
+                                        value={formData.dominant_hand || ''}
+                                        onChange={(e) => handleChange('dominant_hand', e.target.value)}
                                         disabled={loading}
-                                    />
+                                    >
+                                        <option value="">Sin registrar</option>
+                                        <option value="DIESTRO">Diestro</option>
+                                        <option value="ZURDO">Zurdo</option>
+                                        <option value="AMBIDIESTRO">Ambidiestro</option>
+                                    </CFormSelect>
                                 </CCol>
-                                <CCol md={3}>
-                                    <CFormLabel htmlFor="menstrual_rhythm">Ritmo</CFormLabel>
+                                <CCol md={8}>
+                                    <CFormLabel htmlFor="anticoagulants">Anticoagulantes / antiagregantes</CFormLabel>
                                     <CFormInput
-                                        id="menstrual_rhythm"
-                                        value={formData.menstrual_rhythm || ''}
-                                        onChange={handleTextoNormalizado('menstrual_rhythm')}
-                                        placeholder="28X4 EU"
-                                        disabled={loading}
-                                    />
-                                </CCol>
-                                <CCol md={3}>
-                                    <CFormLabel htmlFor="ivsa_age">IVSA (edad)</CFormLabel>
-                                    <CFormInput
-                                        id="ivsa_age"
-                                        type="number"
-                                        inputMode="numeric"
-                                        value={formData.ivsa_age ?? ''}
-                                        onChange={(e) => handleChange('ivsa_age', e.target.value ? parseInt(e.target.value) : '')}
-                                        placeholder="18"
-                                        disabled={loading}
-                                    />
-                                </CCol>
-                                <CCol md={3}>
-                                    <CFormLabel htmlFor="birth_control">Control Fertilidad</CFormLabel>
-                                    <CFormInput
-                                        id="birth_control"
-                                        value={formData.birth_control || ''}
-                                        onChange={handleTextoNormalizado('birth_control')}
-                                        placeholder="OTB, DIU, HORMONAL..."
+                                        id="anticoagulants"
+                                        value={formData.anticoagulants || ''}
+                                        onChange={handleTextoNormalizado('anticoagulants')}
+                                        placeholder="ASPIRINA, CLOPIDOGREL, WARFARINA, APIXABÁN…"
                                         disabled={loading}
                                     />
                                 </CCol>
                             </CRow>
 
                             <CRow className="mb-3">
-                                <CCol md={3}>
-                                    <CFormLabel htmlFor="gestas">Gestas</CFormLabel>
-                                    <CFormInput
-                                        id="gestas"
-                                        type="number"
-                                        inputMode="numeric"
-                                        min="0"
-                                        value={formData.gestas ?? ''}
-                                        onChange={(e) => handleChange('gestas', e.target.value ? parseInt(e.target.value) : '')}
+                                <CCol md={6}>
+                                    <CFormLabel htmlFor="neurological_history">
+                                        Antecedentes neurológicos y neuroquirúrgicos
+                                    </CFormLabel>
+                                    <CFormTextarea
+                                        id="neurological_history"
+                                        rows={2}
+                                        value={formData.neurological_history || ''}
+                                        onChange={handleTextoNormalizado('neurological_history')}
+                                        placeholder="CRISIS CONVULSIVAS, EVC, TCE, CIRUGÍAS DE CRÁNEO O COLUMNA…"
                                         disabled={loading}
-                                        invalid={Boolean(errores.gestas)}
-                                        aria-invalid={Boolean(errores.gestas) || undefined}
-                                        aria-describedby={errores.gestas ? 'error-paciente-gestas' : undefined}
                                     />
-                                    <ErrorDeCampo id="error-paciente-gestas" mensaje={errores.gestas} />
                                 </CCol>
-                                <CCol md={3}>
-                                    <CFormLabel htmlFor="paras">Paras</CFormLabel>
-                                    <CFormInput
-                                        id="paras"
-                                        type="number"
-                                        inputMode="numeric"
-                                        min="0"
-                                        value={formData.paras ?? ''}
-                                        onChange={(e) => handleChange('paras', e.target.value ? parseInt(e.target.value) : '')}
+                                <CCol md={6}>
+                                    <CFormLabel htmlFor="implanted_devices">Implantes y dispositivos</CFormLabel>
+                                    <CFormTextarea
+                                        id="implanted_devices"
+                                        rows={2}
+                                        value={formData.implanted_devices || ''}
+                                        onChange={handleTextoNormalizado('implanted_devices')}
+                                        placeholder="VÁLVULA DE DERIVACIÓN, MARCAPASOS, NEUROESTIMULADOR, MATERIAL DE OSTEOSÍNTESIS…"
                                         disabled={loading}
-                                        invalid={Boolean(errores.paras)}
-                                        aria-invalid={Boolean(errores.paras) || undefined}
-                                        aria-describedby={errores.paras ? 'error-paciente-paras' : undefined}
                                     />
-                                    <ErrorDeCampo id="error-paciente-paras" mensaje={errores.paras} />
-                                </CCol>
-                                <CCol md={3}>
-                                    <CFormLabel htmlFor="cesareas">Cesáreas</CFormLabel>
-                                    <CFormInput
-                                        id="cesareas"
-                                        type="number"
-                                        inputMode="numeric"
-                                        min="0"
-                                        value={formData.cesareas ?? ''}
-                                        onChange={(e) => handleChange('cesareas', e.target.value ? parseInt(e.target.value) : '')}
-                                        disabled={loading}
-                                        invalid={Boolean(errores.cesareas)}
-                                        aria-invalid={Boolean(errores.cesareas) || undefined}
-                                        aria-describedby={errores.cesareas ? 'error-paciente-cesareas' : undefined}
-                                    />
-                                    <ErrorDeCampo id="error-paciente-cesareas" mensaje={errores.cesareas} />
-                                </CCol>
-                                <CCol md={3}>
-                                    <CFormLabel htmlFor="abortos">Abortos</CFormLabel>
-                                    <CFormInput
-                                        id="abortos"
-                                        type="number"
-                                        inputMode="numeric"
-                                        min="0"
-                                        value={formData.abortos ?? ''}
-                                        onChange={(e) => handleChange('abortos', e.target.value ? parseInt(e.target.value) : '')}
-                                        disabled={loading}
-                                        invalid={Boolean(errores.abortos)}
-                                        aria-invalid={Boolean(errores.abortos) || undefined}
-                                        aria-describedby={errores.abortos ? 'error-paciente-abortos' : undefined}
-                                    />
-                                    <ErrorDeCampo id="error-paciente-abortos" mensaje={errores.abortos} />
+                                    <small className="text-muted">Decide si una resonancia magnética es segura.</small>
                                 </CCol>
                             </CRow>
 
@@ -801,23 +742,11 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                                 </CCol>
                             </CRow>
 
-                            <CRow className="mb-3">
-                                <CCol>
-                                    <CFormLabel htmlFor="gynecological_history">Antecedentes gineco-obstétricos</CFormLabel>
-                                    <CFormTextarea
-                                        id="gynecological_history"
-                                        rows={2}
-                                        value={formData.gynecological_history}
-                                        onChange={handleTextoNormalizado('gynecological_history')}
-                                        disabled={loading}
-                                    />
-                                </CCol>
-                            </CRow>
                             </>
                             )}
                             {!veAntecedentes && (
                                 <p className="small text-body-secondary mb-0">
-                                    Los antecedentes y la historia gineco-obstétrica los captura el médico
+                                    Los antecedentes y la historia neurológica los captura el médico
                                     en el expediente clínico.
                                 </p>
                             )}

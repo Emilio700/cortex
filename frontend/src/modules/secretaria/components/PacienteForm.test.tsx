@@ -48,13 +48,11 @@ describe('PacienteForm · el alta ya no clasifica al paciente', () => {
         expect(screen.queryByText('Ginecológicas')).not.toBeInTheDocument()
     })
 
-    it('no pide la FPP (es del embarazo); la FUR se pregunta, opcional (opción C, plan 32)', () => {
+    it('no pide fechas del embarazo: ni FPP ni FUR (eran de GEMS)', () => {
         renderForm()
 
         expect(screen.queryByLabelText('FPP')).not.toBeInTheDocument()
-        // La FUR que dice el paciente al llamar; el fechado del embarazo sigue
-        // viviendo en su registro, con su propio método.
-        expect(screen.getByLabelText('Última menstruación (FUR, opcional)')).toBeInTheDocument()
+        expect(screen.queryByLabelText(/Última menstruación/)).not.toBeInTheDocument()
     })
 
     it('el alta express sale sin tipo ni fechas de embarazo en el cuerpo', async () => {

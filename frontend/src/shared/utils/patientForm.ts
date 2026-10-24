@@ -86,6 +86,9 @@ export const CAMPOS_EN_MAYUSCULAS = [
     'blood_type',
     'menstrual_rhythm',
     'birth_control',
+    'neurological_history',
+    'implanted_devices',
+    'anticoagulants',
 ] as const
 
 export type CampoEnMayusculas = (typeof CAMPOS_EN_MAYUSCULAS)[number]

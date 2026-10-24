@@ -72,36 +72,22 @@ const CAMPOS = [
     'blood_type',
     'personal_history',
     'family_history',
-    'gynecological_history',
-    'menarca_age',
-    'menstrual_rhythm',
-    'ivsa_age',
-    'birth_control',
-    'gestas',
-    'paras',
-    'cesareas',
-    'abortos',
+    'dominant_hand',
+    'neurological_history',
+    'implanted_devices',
+    'anticoagulants',
 ] as const
 
 type CampoEditable = (typeof CAMPOS)[number]
 
 /** Van como número o como null; nunca como cadena. */
-const CAMPOS_NUMERICOS: CampoEditable[] = [
-    'menarca_age',
-    'ivsa_age',
-    'gestas',
-    'paras',
-    'cesareas',
-    'abortos',
-]
+// Hoy no queda ninguno: los de G/P/C/A eran de GEMS. La conversión a número
+// se conserva para el siguiente campo numérico que se agregue.
+const CAMPOS_NUMERICOS: CampoEditable[] = []
 
 type Formulario = Record<CampoEditable, string>
 
 const TIPOS_DE_SANGRE = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
-
-/** Número guardado a texto de formulario, distinguiendo el 0 del "sin dato". */
-const numeroATexto = (valor?: number | null): string =>
-    valor === null || valor === undefined ? '' : String(valor)
 
 /**
  * Estado inicial del formulario a partir del expediente guardado.
@@ -124,15 +110,10 @@ const aFormulario = (paciente: Patient): Formulario => ({
     blood_type: paciente.blood_type ?? '',
     personal_history: paciente.personal_history ?? '',
     family_history: paciente.family_history ?? '',
-    gynecological_history: paciente.gynecological_history ?? '',
-    menarca_age: numeroATexto(paciente.menarca_age),
-    menstrual_rhythm: paciente.menstrual_rhythm ?? '',
-    ivsa_age: numeroATexto(paciente.ivsa_age),
-    birth_control: paciente.birth_control ?? '',
-    gestas: numeroATexto(paciente.gestas),
-    paras: numeroATexto(paciente.paras),
-    cesareas: numeroATexto(paciente.cesareas),
-    abortos: numeroATexto(paciente.abortos),
+    dominant_hand: paciente.dominant_hand ?? '',
+    neurological_history: paciente.neurological_history ?? '',
+    implanted_devices: paciente.implanted_devices ?? '',
+    anticoagulants: paciente.anticoagulants ?? '',
 })
 
 interface DatosPacienteEditablesProps {
@@ -284,14 +265,6 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
     const texto = (campo: CampoEditable) => ({
         value: valores?.[campo] ?? '',
         onChange: enMayusculas(cambiar(campo)),
-        disabled: guardando,
-    })
-
-    const numero = (campo: CampoEditable) => ({
-        type: 'number' as const,
-        min: 0,
-        value: valores?.[campo] ?? '',
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => cambiar(campo)(e.target.value),
         disabled: guardando,
     })
 
@@ -478,61 +451,48 @@ const DatosPacienteEditables: React.FC<DatosPacienteEditablesProps> = ({
                                 />
                             </CCol>
                             <CCol md={4}>
-                                <CFormLabel htmlFor="dpe-gynecological_history">
-                                    Gineco-obstétricos
-                                </CFormLabel>
+                                <CFormLabel htmlFor="dpe-neurological_history">Neurológicos</CFormLabel>
                                 <CFormTextarea
-                                    id="dpe-gynecological_history"
+                                    id="dpe-neurological_history"
                                     rows={3}
-                                    {...texto('gynecological_history')}
+                                    {...texto('neurological_history')}
                                 />
                             </CCol>
                         </CRow>
 
                         <hr />
-                        <h6 className="mb-3">Historia gineco-obstétrica</h6>
+                        <h6 className="mb-3">Antes de operar o de pedir resonancia</h6>
                         <CRow className="g-3">
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-menarca_age">Menarca (edad)</CFormLabel>
-                                <CFormInput id="dpe-menarca_age" {...numero('menarca_age')} />
+                            <CCol md={4}>
+                                <CFormLabel htmlFor="dpe-dominant_hand">Lateralidad</CFormLabel>
+                                <CFormSelect
+                                    id="dpe-dominant_hand"
+                                    value={valores?.dominant_hand ?? ''}
+                                    onChange={(e) => cambiar('dominant_hand')(e.target.value)}
+                                    disabled={guardando}
+                                >
+                                    <option value="">Sin registrar</option>
+                                    <option value="DIESTRO">Diestro</option>
+                                    <option value="ZURDO">Zurdo</option>
+                                    <option value="AMBIDIESTRO">Ambidiestro</option>
+                                </CFormSelect>
                             </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-menstrual_rhythm">Ritmo menstrual</CFormLabel>
+                            <CCol md={8}>
+                                <CFormLabel htmlFor="dpe-anticoagulants">Anticoagulantes / antiagregantes</CFormLabel>
                                 <CFormInput
-                                    id="dpe-menstrual_rhythm"
-                                    placeholder="28X4"
-                                    {...texto('menstrual_rhythm')}
+                                    id="dpe-anticoagulants"
+                                    placeholder="ASPIRINA, CLOPIDOGREL, WARFARINA…"
+                                    {...texto('anticoagulants')}
                                 />
                             </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-ivsa_age">IVSA (edad)</CFormLabel>
-                                <CFormInput id="dpe-ivsa_age" {...numero('ivsa_age')} />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-birth_control">
-                                    Método anticonceptivo
-                                </CFormLabel>
-                                <CFormInput
-                                    id="dpe-birth_control"
-                                    placeholder="DIU, OTB, HORMONAL..."
-                                    {...texto('birth_control')}
+                            <CCol xs={12}>
+                                <CFormLabel htmlFor="dpe-implanted_devices">Implantes y dispositivos</CFormLabel>
+                                <CFormTextarea
+                                    id="dpe-implanted_devices"
+                                    rows={2}
+                                    placeholder="VÁLVULA DE DERIVACIÓN, MARCAPASOS, NEUROESTIMULADOR, MATERIAL METÁLICO…"
+                                    {...texto('implanted_devices')}
                                 />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-gestas">Gestas</CFormLabel>
-                                <CFormInput id="dpe-gestas" {...numero('gestas')} />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-paras">Paras</CFormLabel>
-                                <CFormInput id="dpe-paras" {...numero('paras')} />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-cesareas">Cesáreas</CFormLabel>
-                                <CFormInput id="dpe-cesareas" {...numero('cesareas')} />
-                            </CCol>
-                            <CCol md={3}>
-                                <CFormLabel htmlFor="dpe-abortos">Abortos</CFormLabel>
-                                <CFormInput id="dpe-abortos" {...numero('abortos')} />
                             </CCol>
                         </CRow>
                     </CModalBody>

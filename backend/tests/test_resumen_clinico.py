@@ -80,7 +80,7 @@ def test_la_vista_previa_no_emite_folio_y_dice_que_es_vista_previa(client, db_se
 def test_contenido_por_seccion_y_sin_registro_donde_falta(client, db_session, e):
     texto = _texto_del_pdf(_vista_previa(client, db_session, e["doctora"], e["ana"], consultas=2).content)
     for esperado in ("Penicilina", "Hipotiroidismo", "Endometriosis", "Biometría hemática", "Anemia leve",
-                     "Regular", "Diagnóstico 2", "Motivo 1", "Últimas consultas".upper(), "Ginecológicos"):
+                     "Regular", "Diagnóstico 2", "Motivo 1", "Últimas consultas".upper(), "Neurológicos"):
         assert esperado in texto, esperado
     # La consulta más vieja no entra con 2; los familiares nadie los capturó.
     assert "Diagnóstico 0" not in texto

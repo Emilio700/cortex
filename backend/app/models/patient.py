@@ -54,6 +54,12 @@ class Patient(Base):
     paras = Column(Integer, nullable=True)
     cesareas = Column(Integer, nullable=True)
     abortos = Column(Integer, nullable=True)
+    # Antecedentes neurológicos (Cortex, migración 0048). Lo que el
+    # neurocirujano revisa antes de operar o de pedir una resonancia.
+    dominant_hand = Column(String(20), nullable=True)  # diestro, zurdo, ambidiestro
+    neurological_history = Column(Text, nullable=True)
+    implanted_devices = Column(Text, nullable=True)  # válvulas, marcapasos, material metálico
+    anticoagulants = Column(Text, nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
     # Notas del doctor para reconocer al paciente (de donde es, quien la
     # recomendo). Separado de allergies, que se imprime en las recetas.

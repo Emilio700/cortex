@@ -40,6 +40,10 @@ export interface Patient {
   address?: string
   allergies?: string | null
   notas_referencia?: string | null
+  dominant_hand?: string | null
+  neurological_history?: string | null
+  implanted_devices?: string | null
+  anticoagulants?: string | null
   personal_history?: string | null
   family_history?: string | null
   gynecological_history?: string | null
@@ -83,6 +87,10 @@ export interface PatientCreate {
   address?: string
   allergies?: string
   notas_referencia?: string
+  dominant_hand?: string
+  neurological_history?: string
+  implanted_devices?: string
+  anticoagulants?: string
   personal_history?: string
   family_history?: string
   gynecological_history?: string
