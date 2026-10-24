@@ -87,6 +87,10 @@ class EncabezadoExpediente(BaseModel):
     phone: Optional[str] = None
     cell_phone: Optional[str] = None
     allergies: Optional[str] = None
+    # Señales de neurocirugía (Cortex): son clínicas, así que solo viajan a
+    # quien lee el expediente clínico, igual que el resto de antecedentes.
+    implanted_devices: Optional[str] = None
+    anticoagulants: Optional[str] = None
     owner_doctor_id: Optional[int] = None
     pestanas: list[str]
     # Solo para quien lee lo clínico; ``None`` = no aplica a esta sesión.
@@ -214,6 +218,8 @@ def encabezado_del_expediente(
         phone=paciente.phone,
         cell_phone=paciente.cell_phone,
         allergies=paciente.allergies,
+        implanted_devices=paciente.implanted_devices if clinica else None,
+        anticoagulants=paciente.anticoagulants if clinica else None,
         owner_doctor_id=paciente.owner_doctor_id,
         pestanas=pestanas,
         vista_clinica=clinica,

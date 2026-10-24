@@ -72,6 +72,27 @@ describe('ExpedienteDePaciente', () => {
     ])
   })
 
+  it('avisa de implantes y anticoagulantes junto a las alergias (neurocirugía)', async () => {
+    get.mockImplementation((url: string) =>
+      Promise.resolve({
+        data: url.endsWith('/resumen')
+          ? RESUMEN
+          : { ...MEDICO, implanted_devices: 'VÁLVULA VP PROGRAMABLE', anticoagulants: 'CLOPIDOGREL' },
+      }),
+    )
+    montar()
+    expect(await screen.findByText(/Implantes: VÁLVULA VP PROGRAMABLE/)).toBeInTheDocument()
+    expect(screen.getByText(/Anticoagulantes: CLOPIDOGREL/)).toBeInTheDocument()
+  })
+
+  it('sin implantes ni anticoagulantes no inventa la señal', async () => {
+    get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MEDICO }))
+    montar()
+    await screen.findByText('Alergias: Penicilina')
+    expect(screen.queryByText(/Implantes:/)).toBeNull()
+    expect(screen.queryByText(/Anticoagulantes:/)).toBeNull()
+  })
+
   it('«Abrir la consulta de hoy» lleva a su cita', async () => {
     const user = userEvent.setup()
     get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MEDICO }))

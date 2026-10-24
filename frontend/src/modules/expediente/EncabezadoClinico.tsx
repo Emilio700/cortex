@@ -1,14 +1,14 @@
 /**
  * El encabezado clínico fijo del expediente (plan 32, punto 6).
  *
- * Nombre, edad, expediente y teléfono; alergias; embarazo activo con sus
- * semanas; alertas de críticos y atrasados. A la derecha, la acción que sí
- * existe en GEMS: «Abrir la consulta de hoy» si tiene cita hoy, o «Agendar»
+ * Nombre, edad, expediente y teléfono; alergias; implantes (deciden si una
+ * resonancia es segura) y anticoagulantes (riesgo de sangrado al operar);
+ * alertas de críticos y atrasados. A la derecha, la acción que sí existe: «Abrir la consulta de hoy» si tiene cita hoy, o «Agendar»
  * (no hay consulta sin cita: nace de la Agenda, plan 28).
  */
 import { CButton } from '@coreui/react-pro'
 import CIcon from '@coreui/icons-react'
-import { cilCalendar, cilClock, cilMediaPlay, cilPhone, cilWarning } from '@coreui/icons'
+import { cilCalendar, cilClock, cilDrop, cilBolt, cilMediaPlay, cilPhone, cilWarning } from '@coreui/icons'
 
 import { formatEdad, formatearHoraDeCita } from '../../shared/utils/date'
 import { PuntoFichaIncompleta } from '../../shared/components/PuntoFichaIncompleta'
@@ -57,6 +57,18 @@ export default function EncabezadoClinico({ datos, enConsulta, puedeAgendar, onA
           <CIcon icon={cilWarning} size="sm" aria-hidden="true" />
           {datos.allergies ? `Alergias: ${datos.allergies}` : 'Alergias: sin registro'}
         </span>
+        {datos.implanted_devices && (
+          <span className="expediente-senal expediente-senal--implante" title="Revisa la compatibilidad antes de pedir una resonancia">
+            <CIcon icon={cilBolt} size="sm" aria-hidden="true" />
+            Implantes: {datos.implanted_devices}
+          </span>
+        )}
+        {datos.anticoagulants && (
+          <span className="expediente-senal expediente-senal--anticoagulante" title="Riesgo de sangrado: valora suspenderlo antes de un procedimiento">
+            <CIcon icon={cilDrop} size="sm" aria-hidden="true" />
+            Anticoagulantes: {datos.anticoagulants}
+          </span>
+        )}
         {datos.embarazo && (
           <span className="expediente-senal expediente-senal--embarazo">
             {datos.embarazo.semanas != null

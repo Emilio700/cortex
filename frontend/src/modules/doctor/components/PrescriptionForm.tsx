@@ -68,8 +68,10 @@ interface PrescriptionFormProps {
 const ATAJOS_DOSIS = ['1/2 tableta', '1 tableta', '2 tabletas']
 const ATAJOS_FRECUENCIA = ['Cada 6 h', 'Cada 8 h', 'Cada 12 h', 'Cada 24 h']
 const ATAJOS_DURACION = ['1 día', '3 días', '5 días', '7 días']
-const ATAJOS_VIA = ['Vía oral', 'Vía vaginal', 'Vía tópica', 'Vía intramuscular', 'Vía sublingual']
-const ATAJOS_PRESENTACION = ['Tabletas', 'Cápsulas', 'Óvulos', 'Solución', 'Crema', 'Gotas']
+// Las vías y presentaciones más comunes en neurocirugía (analgesia, anticomiciales,
+// esteroides, relajantes): en GEMS estaban las de ginecología (óvulos, vía vaginal).
+const ATAJOS_VIA = ['Vía oral', 'Vía intravenosa', 'Vía intramuscular', 'Vía subcutánea', 'Vía sublingual', 'Vía tópica']
+const ATAJOS_PRESENTACION = ['Tabletas', 'Cápsulas', 'Solución', 'Ampolletas', 'Gotas', 'Parche']
 const SUGERENCIAS_INDICACIONES = [
     'Tomar con alimentos',
     'No exceder la dosis recomendada',

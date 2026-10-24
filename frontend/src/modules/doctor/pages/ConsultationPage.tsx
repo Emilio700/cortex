@@ -40,6 +40,7 @@ import BotonAyudaContextual from '../../../shared/tutoriales/BotonAyudaContextua
 import { SOAPNoteForm } from '../components/SOAPNoteForm'
 import PrescriptionForm from '../components/PrescriptionForm'
 import AvisoAlergias from '../components/AvisoAlergias'
+import SenalesNeuroquirurgicas from '../components/SenalesNeuroquirurgicas'
 import CertificateForm from '../components/CertificateForm'
 import { TriageForm } from '../../secretaria/components/TriageForm'
 import ExpedienteDePaciente, { pedirPestanaDelExpediente } from '../../expediente/ExpedienteDePaciente'
@@ -546,10 +547,12 @@ const ConsultationPage = () => {
               )}
             </CRow>
 
-            {/* Alergias: si existen, o el aviso de que no se pudieron leer. */}
-            {(fullPatient?.allergies || errorPaciente) && (
-              <div className="mt-2 pt-2 border-top">
+            {/* Alergias: si existen, o el aviso de que no se pudieron leer. Junto a
+                ellas, los implantes y anticoagulantes (Cortex, neurocirugía). */}
+            {(fullPatient?.allergies || errorPaciente || fullPatient?.implanted_devices || fullPatient?.anticoagulants) && (
+              <div className="mt-2 pt-2 border-top d-flex flex-wrap gap-2">
                 <AvisoAlergias paciente={fullPatient} error={errorPaciente} onReintentar={() => recargarPaciente()} />
+                <SenalesNeuroquirurgicas paciente={fullPatient} />
               </div>
             )}
           </CCardBody>
