@@ -211,7 +211,7 @@ export const BuscadorPacientes: React.FC = () => {
         </li>
       )
     } else if (pacientes.length === 0) {
-      contenidoLista = <li className="buscador-nota">Ninguna paciente coincide con «{consulta}».</li>
+      contenidoLista = <li className="buscador-nota">Ningún paciente coincide con «{consulta}».</li>
     } else {
       contenidoLista = pacientes.map((paciente, indice) => {
         const nombre = `${paciente.first_name} ${paciente.last_name}`.trim()
@@ -292,7 +292,7 @@ export const BuscadorPacientes: React.FC = () => {
           {mostrarLista && estado.tipo === 'listo'
             ? pacientes.length === 0
               ? 'Sin resultados'
-              : `${pacientes.length} pacientes encontradas`
+              : `${pacientes.length} pacientes encontrados`
             : ''}
         </span>
       </div>

@@ -62,7 +62,7 @@ log = logging.getLogger(__name__)
 ANTICIPACION_DIAS = 7
 
 # Cuánto después de la revisión se sigue considerando que una cita "es" ese
-# control. Un paciente citada tres días después de la fecha sugerida no está
+# control. Un paciente citado tres días después de la fecha sugerida no está
 # perdida, está agendada: avisar de ella sería ruido, y el ruido es lo que hace
 # que se dejen de leer los avisos que sí importan.
 HOLGURA_CITA_DIAS = 7
@@ -131,7 +131,7 @@ def _tiene_cita(db: Session, embarazo: Pregnancy, hoy: date) -> bool:
 
 
 def _embarazos_ya_citados(db: Session, embarazos: list[Pregnancy], hoy: date) -> set[int]:
-    """Cuáles de estos embarazos ya tienen al paciente citada, en UNA consulta.
+    """Cuáles de estos embarazos ya tienen al paciente citado, en UNA consulta.
 
     Misma ventana que ``_tiene_cita`` (comparten ``_ventana_de_cita``), pero
     resuelta a lotes para el tablero (B-07): antes era una consulta por embarazo.

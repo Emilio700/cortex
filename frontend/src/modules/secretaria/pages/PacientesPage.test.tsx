@@ -117,7 +117,7 @@ describe('PacientesPage · fichas incompletas (plan 32, punto 5)', () => {
     await user.click(screen.getByLabelText('Fichas incompletas'))
 
     await waitFor(() => expect(fetchPatients).toHaveBeenLastCalledWith(undefined, 0, 51, true))
-    expect(await screen.findByText('Ninguna paciente tiene la ficha incompleta.')).toBeInTheDocument()
+    expect(await screen.findByText('Ningún paciente tiene la ficha incompleta.')).toBeInTheDocument()
   })
 })
 

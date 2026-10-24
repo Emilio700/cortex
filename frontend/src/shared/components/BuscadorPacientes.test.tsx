@@ -120,12 +120,12 @@ describe('BuscadorPacientes', () => {
     get.mockResolvedValueOnce({ data: [] })
     montar()
     await userEvent.type(campo(), 'zz')
-    expect(await screen.findByText(/Ninguna paciente coincide con «zz»/)).toBeInTheDocument()
+    expect(await screen.findByText(/Ningún paciente coincide con «zz»/)).toBeInTheDocument()
 
     get.mockRejectedValueOnce({ response: { status: 500, data: {} } }).mockResolvedValueOnce({ data: PACIENTES })
     await userEvent.type(campo(), 'z')
     expect(await screen.findByRole('button', { name: 'Reintentar' })).toBeInTheDocument()
-    expect(screen.queryByText(/Ninguna paciente/)).toBeNull()
+    expect(screen.queryByText(/Ningún paciente/)).toBeNull()
 
     await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }))
     expect(await screen.findAllByRole('option')).toHaveLength(2)

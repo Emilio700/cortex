@@ -108,7 +108,7 @@ describe('PatientDocuments · corrección (plan 29, lote 7)', () => {
     expect(screen.queryByText(/Se anuló/)).toBeNull()
   })
 
-  it('mover busca al paciente correcta y la manda con el motivo', async () => {
+  it('mover busca al paciente correcto y la manda con el motivo', async () => {
     get.mockResolvedValue({ data: [{ id: 5, first_name: 'BERTA', last_name: 'RUIZ' }] })
     moverDocumento.mockResolvedValue({ ...DOC, patient_id: 5, movido_desde_patient_id: 4 })
     const user = userEvent.setup()

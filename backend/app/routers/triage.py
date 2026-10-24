@@ -134,7 +134,7 @@ def get_triage_by_appointment(
     if not appointment:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se encontró la cita. Puede que la hayan eliminado; vuelve a la agenda y actualízala.")
 
-    # Antes de mirar si hay signos: con el 204 primero, un médico ajena podría
+    # Antes de mirar si hay signos: con el 204 primero, un médico ajeno podría
     # enterarse de si al paciente ya la pasaron por triage.
     _exigir_alcance_de_lectura(db, appointment.patient_id, current_user)
 

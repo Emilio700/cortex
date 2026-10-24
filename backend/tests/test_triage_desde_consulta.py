@@ -276,7 +276,7 @@ def test_otra_doctora_no_lee_los_signos_de_la_cita_de_una_paciente_ajena(client,
 
 
 def test_otra_doctora_no_sabe_si_la_paciente_ajena_ya_paso_por_triage(client, db_session, escenario):
-    """Sin signos, el médico ajena recibe 403 y no el 204 que delataría que faltan."""
+    """Sin signos, el médico ajeno recibe 403 y no el 204 que delataría que faltan."""
     respuesta = client.get(
         f"{PREFIX}/triage/appointment/{escenario['cita'].id}",
         headers=_auth_headers(db_session, escenario["colega"]),

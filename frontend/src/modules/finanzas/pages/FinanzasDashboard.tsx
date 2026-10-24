@@ -287,7 +287,7 @@ const FinanzasDashboard: React.FC = () => {
                   Médico
                 </CFormLabel>
                 <CFormSelect id="corte-doctora" size="sm" value={doctorId} onChange={(e) => setDoctorId(e.target.value)}>
-                  <option value="">{acotadaASusDoctoras ? 'Todas mis doctoras' : 'Todas los médicos'}</option>
+                  <option value="">{acotadaASusDoctoras ? 'Todas mis doctoras' : 'Todos los médicos'}</option>
                   {doctorasDelSelector.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.full_name}

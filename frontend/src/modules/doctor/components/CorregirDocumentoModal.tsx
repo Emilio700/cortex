@@ -1,9 +1,9 @@
 /**
- * Corregir un documento subido al paciente equivocada (plan 29, lote 7).
+ * Corregir un documento subido al paciente equivocado (plan 29, lote 7).
  *
  * Tres acciones, todas con motivo obligatorio, que el servidor registra en la
  * bitácora: anular (sale de las vistas; el archivo se conserva), mover a la
- * paciente correcta (de la misma sucursal) y, solo administración, revertir una
+ * paciente correcto (de la misma sucursal) y, solo administración, revertir una
  * anulación. Nada se borra. La pantalla solo anuncia lo que el servidor
  * confirmó; si lo rechaza (p. ej. es el archivo de un resultado de orden), su
  * explicación se ve aquí mismo.
@@ -178,7 +178,7 @@ export const CorregirDocumentoModal: React.FC<Props> = ({ documento, accion, onC
                 {buscando && <div className="small text-body-secondary mt-1">Buscando…</div>}
                 {errorBusqueda && <div className="small text-danger mt-1">{errorBusqueda}</div>}
                 {!buscando && !errorBusqueda && busqueda.trim().length >= 2 && candidatas.length === 0 && (
-                  <div className="small text-body-secondary mt-1">Ninguna paciente coincide.</div>
+                  <div className="small text-body-secondary mt-1">Ningún paciente coincide.</div>
                 )}
                 {candidatas.length > 0 && (
                   <CListGroup className="mt-2">

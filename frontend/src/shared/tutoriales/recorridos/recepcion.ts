@@ -21,7 +21,7 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
       {
         titulo: 'La agenda de la clínica',
         texto:
-          'Aquí se ven, se crean y se mueven las citas de todas los médicos. Te enseñamos cada parte en menos de un minuto.',
+          'Aquí se ven, se crean y se mueven las citas de todos los médicos. Te enseñamos cada parte en menos de un minuto.',
       },
       {
         elemento: 'agenda-nueva-cita',
@@ -315,7 +315,7 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
         elemento: 'pacientes-incompletas',
         titulo: 'Fichas incompletas',
         texto:
-          'Un paciente dada de alta al agendar puede quedar sin fecha de nacimiento. Este filtro muestra solo esas, para completarlas cuando venga a consulta.',
+          'Un paciente dado de alta al agendar puede quedar sin fecha de nacimiento. Este filtro muestra solo esas, para completarlas cuando venga a consulta.',
         lado: 'bottom',
       },
       {
@@ -375,9 +375,9 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
       {
         // Solo aparece si la sesión puede corregir ese documento; si no, se salta.
         elemento: 'documentos-corregir',
-        titulo: 'Si se subió al paciente equivocada',
+        titulo: 'Si se subió al paciente equivocado',
         texto:
-          'Con los tres puntos lo <b>mueves al paciente correcta</b> o lo <b>anulas</b>, siempre con el motivo. Nada se borra: el archivo se conserva y queda registrado quién lo corrigió. Si tú lo subiste, puedes corregirlo en las primeras 24 horas; después, pídeselo al médico o a la administración.',
+          'Con los tres puntos lo <b>mueves al paciente correcto</b> o lo <b>anulas</b>, siempre con el motivo. Nada se borra: el archivo se conserva y queda registrado quién lo corrigió. Si tú lo subiste, puedes corregirlo en las primeras 24 horas; después, pídeselo al médico o a la administración.',
         lado: 'left',
       },
     ],

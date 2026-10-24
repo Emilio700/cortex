@@ -143,7 +143,7 @@ const AgendaPage: React.FC = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([])
     // Un doctor solo ve SUS citas, asi que no sabria que un companero ya tiene
     // tomada la sala. Esto trae la ocupacion de toda la sucursal, sin ningun
-    // dato de los pacientes ajenas: solo sala, hora y de quien es.
+    // dato de los pacientes ajenos: solo sala, hora y de quien es.
     const [ocupacionAjena, setOcupacionAjena] = useState<Appointment[]>([])
     // La ocupación ajena no se pudo leer (revisión de flujos): sin esto, el
     // fallo se pintaba como «sala libre». `intentoOcupacion` fuerza releerla.
@@ -709,7 +709,7 @@ const AgendaPage: React.FC = () => {
                                 value={selectedDoctorId}
                                 onChange={(e) => setSelectedDoctorId(e.target.value)}
                             >
-                                <option value={ALL}>Todas los médicos</option>
+                                <option value={ALL}>Todos los médicos</option>
                                 {doctors.map((doctor) => (
                                     <option key={doctor.id} value={doctor.id}>
                                         {nombreConTratamiento(doctor)}

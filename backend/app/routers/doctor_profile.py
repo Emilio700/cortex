@@ -279,7 +279,7 @@ class _PerfilDePrueba:
 
 
 def _receta_de_muestra():
-    """Datos de ejemplo para la vista previa. Ninguna paciente real."""
+    """Datos de ejemplo para la vista previa. Ningún paciente real."""
     from datetime import date
     from types import SimpleNamespace
 
@@ -403,7 +403,7 @@ class _PerfilConAjustesDeOrden:
 
 
 def _ordenes_de_muestra():
-    """Una consulta de ejemplo con estudios de los tres destinos. Ninguna paciente real."""
+    """Una consulta de ejemplo con estudios de los tres destinos. Ningún paciente real."""
     from datetime import date
     from types import SimpleNamespace
 

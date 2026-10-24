@@ -577,7 +577,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     /**
      * Alta desde la cita. Si el servidor la rechaza, el error sube al
      * formulario de alta, que se queda abierto con el motivo; sólo con la
-     * paciente creada se elige y se avisa.
+     * paciente creado se elige y se avisa.
      */
     const registrarPaciente = async (datos: PatientCreate) => {
         const nueva = await createPatient(datos)

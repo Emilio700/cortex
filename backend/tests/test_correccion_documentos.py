@@ -1,4 +1,4 @@
-"""Corrección de documentos subidos al paciente equivocada (plan 29, lote 7).
+"""Corrección de documentos subidos al paciente equivocado (plan 29, lote 7).
 
 Nunca se borra: se anula (con motivo, reversible por administración) o se
 mueve (con motivo, bitácora en las dos pacientes). Permiso documents.correct,

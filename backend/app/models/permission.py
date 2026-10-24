@@ -270,7 +270,7 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         # Sube documentos (decisión de Emilio, plan 32 punto 6): antes veía el
         # botón y al guardar recibía un 403 (C7).
         "documents.read", "documents.upload",
-        # Corrige el documento que se subió al paciente equivocada (plan 29).
+        # Corrige el documento que se subió al paciente equivocado (plan 29).
         "documents.correct",
         "notifications.read",
         # Muchas veces no hay asistente que tome los signos en la sala de

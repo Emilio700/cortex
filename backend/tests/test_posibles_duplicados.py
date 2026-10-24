@@ -1,4 +1,4 @@
-"""Advertencia de posible paciente duplicada (B-06 parte API y S-06).
+"""Advertencia de posible paciente duplicado (B-06 parte API y S-06).
 
 Expedientes gemelos parten el historial: el médico decide con la mitad de la
 información. Decisión de Emilio (3.5): **sólo advertir**. El sistema enseña

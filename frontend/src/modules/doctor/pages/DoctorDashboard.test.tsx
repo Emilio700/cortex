@@ -315,10 +315,10 @@ describe('DoctorDashboard · agenda y pestañas', () => {
     expect(navigate).toHaveBeenCalledWith('/doctor/consultation/2')
   })
 
-  it('MASTER lee que ve las citas de todas los médicos', async () => {
+  it('MASTER lee que ve las citas de todos los médicos', async () => {
     usuario.actual = { ...usuario.actual, role: 'master' }
     montar()
-    expect(await screen.findByText(/Viendo las citas de todas los médicos/)).toBeInTheDocument()
+    expect(await screen.findByText(/Viendo las citas de todos los médicos/)).toBeInTheDocument()
   })
 })
 

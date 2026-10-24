@@ -159,12 +159,17 @@ export const PendientesYSeguimiento: React.FC<Props> = ({ criticos, resultados, 
               <ul className="inicio-sublista">
                 {listaCirugias.slice(0, 3).map((cita) => (
                   <li key={cita.id}>
-                    <button type="button" className="inicio-subitem" onClick={() => abrirExpediente(cita.patient_id)}>
+                    <button
+                      type="button"
+                      className="inicio-subitem inicio-subitem--pila"
+                      onClick={() => abrirExpediente(cita.patient_id)}
+                    >
                       <span className="inicio-subitem-nombre">
                         {cita.patient ? `${cita.patient.first_name} ${cita.patient.last_name}` : 'Paciente'}
-                        {cita.cirugia_type && <span className="inicio-subitem-dato"> · {cita.cirugia_type}</span>}
                       </span>
-                      <span className="inicio-subitem-dato">{fechaYHora(cita.scheduled_at)}</span>
+                      <span className="inicio-subitem-dato">
+                        {[cita.cirugia_type, fechaYHora(cita.scheduled_at)].filter(Boolean).join(' · ')}
+                      </span>
                     </button>
                   </li>
                 ))}

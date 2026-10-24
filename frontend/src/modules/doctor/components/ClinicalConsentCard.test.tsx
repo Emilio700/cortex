@@ -128,7 +128,7 @@ describe('ClinicalConsentCard', () => {
       {
         ...FIRMADO,
         status: 'cancelled' as const,
-        cancelled_reason: 'Se emitió al paciente equivocada',
+        cancelled_reason: 'Se emitió al paciente equivocado',
         cancelled_at: '2026-09-19T09:00:00',
         cancelled_by_name: 'Médico de prueba',
       },
@@ -136,7 +136,7 @@ describe('ClinicalConsentCard', () => {
     renderCard()
 
     await waitFor(() => expect(screen.getByText('Cancelado')).toBeInTheDocument())
-    expect(screen.getByText(/Se emitió al paciente equivocada/)).toBeInTheDocument()
+    expect(screen.getByText(/Se emitió al paciente equivocado/)).toBeInTheDocument()
     expect(screen.getByText(/Médico de prueba/)).toBeInTheDocument()
   })
 })

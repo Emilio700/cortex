@@ -96,7 +96,7 @@ beforeEach(() => {
 })
 
 describe('AppointmentModal · alta de paciente desde la cita', () => {
-  it('el paciente creada queda elegida y la cita se guarda con ella, sin perder lo capturado', async () => {
+  it('el paciente creado queda elegido y la cita se guarda con ella, sin perder lo capturado', async () => {
     createPatient.mockResolvedValue({ id: 41, first_name: 'ANA', last_name: 'LÓPEZ', phone: '5512345678' })
     const user = userEvent.setup()
     renderModal()

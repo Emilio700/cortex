@@ -19,7 +19,7 @@ import cerebro from '../../../../assets/images/cortex-cerebro-chico.png'
 interface Props {
   nombre: string
   sucursal: string | null
-  /** MASTER ve las citas de todas los médicos: la pantalla lo dice. */
+  /** MASTER ve las citas de todos los médicos: la pantalla lo dice. */
   esMaster: boolean
   actualizadoEn: Date | null
   /** Error del último refresco de la agenda, si falló. */
@@ -56,7 +56,7 @@ export const EncabezadoDelDia: React.FC<Props> = ({
         <p className="inicio-encabezado-sub">
           <span className="inicio-fecha">{fecha}</span>
           {sucursal && <span> · {sucursal}</span>}
-          {esMaster && <span> · Viendo las citas de todas los médicos</span>}
+          {esMaster && <span> · Viendo las citas de todos los médicos</span>}
         </p>
       </div>
       <div className="inicio-actualizado" aria-live="polite">

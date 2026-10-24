@@ -1,5 +1,5 @@
 /**
- * Aviso de posibles pacientes duplicadas al dar de alta (S-06).
+ * Aviso de posibles pacientes duplicados al dar de alta (S-06).
  *
  * Decisión 3.5: sólo advertir, sin bloquear. Lo que importa: se muestran las
  * candidatas, se puede seguir con «Es otra persona», se puede elegir la

@@ -136,7 +136,7 @@ const PacientesPage: React.FC = () => {
         setShowForm(true)
     }
 
-    // «Agendar» abre la Agenda con «Nueva cita» y el paciente ya elegida.
+    // «Agendar» abre la Agenda con «Nueva cita» y el paciente ya elegido.
     const handleAgendar = (patient: Patient) => {
         pedir('agenda:dia', {
             fecha: hoyLocalISO(),
@@ -172,7 +172,7 @@ const PacientesPage: React.FC = () => {
     }
 
     /**
-     * S-06: si la persona resulta ser un paciente ya registrada, se abre su
+     * S-06: si la persona resulta ser un paciente ya registrado, se abre su
      * expediente en el mismo formulario (pasa a modo edición) en vez de
      * duplicarla. Sólo se cambia si el servidor devolvió al paciente.
      */
@@ -262,7 +262,7 @@ const PacientesPage: React.FC = () => {
                                                             </CButton>
                                                         </span>
                                                     ) : soloIncompletas && !searchTerm ? (
-                                                        'Ninguna paciente tiene la ficha incompleta.'
+                                                        'Ningún paciente tiene la ficha incompleta.'
                                                     ) : searchTerm ? (
                                                         'No se encontraron pacientes'
                                                     ) : (

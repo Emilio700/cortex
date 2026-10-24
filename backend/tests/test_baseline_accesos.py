@@ -86,7 +86,7 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "dashboard.read",
         "doctor_profile.read",
         # Por decisión (plan 29, lote 7): anular o mover un documento subido a la
-        # paciente equivocada; nunca borra (test_correccion_documentos.py).
+        # paciente equivocado; nunca borra (test_correccion_documentos.py).
         "documents.correct",
         "documents.delete",
         "documents.read",
@@ -199,7 +199,7 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "doctor_profile.read",
         "doctor_profile.update",
         # Por decisión (plan 29, lote 7): anular o mover un documento subido a la
-        # paciente equivocada; nunca borra (test_correccion_documentos.py).
+        # paciente equivocado; nunca borra (test_correccion_documentos.py).
         "documents.correct",
         "documents.read",
         # Por decisión (plan 32, punto 6): el médico sube documentos; antes
@@ -456,7 +456,7 @@ def test_el_filtro_de_pacientes_no_acota_a_secretaria_ni_a_admin(db, escenario_c
     """
     for quien in ("secretaria", "admin"):
         query = apply_doctor_patient_access_filter(db.query(Patient), escenario_clinico[quien])
-        assert len(query.all()) == 2, f"{quien} dejó de ver a todas los pacientes"
+        assert len(query.all()) == 2, f"{quien} dejó de ver a todos los pacientes"
 
 
 def test_la_doctora_dueña_entra_al_expediente(db, escenario_clinico):

@@ -211,7 +211,7 @@ const PagosPage: React.FC = () => {
         <CCardBody>
           <CRow className="g-2 align-items-end">
             {/* En tablet (md) los cuatro filtros en una fila cortaban "Todos los
-                métodos" y "Todas los médicos": van de dos en dos hasta lg. */}
+                métodos" y "Todos los médicos": van de dos en dos hasta lg. */}
             <CCol sm={6} lg={3}>
               <CInputGroup size="sm">
                 <CInputGroupText className="bg-transparent">
@@ -240,7 +240,7 @@ const PagosPage: React.FC = () => {
                   value={filterDoctor}
                   onChange={e => setFilterDoctor(e.target.value)}
                 >
-                  <option value="">Todas los médicos</option>
+                  <option value="">Todos los médicos</option>
                   {doctoras.map(d => (
                     <option key={d.id} value={d.id}>{d.full_name}</option>
                   ))}

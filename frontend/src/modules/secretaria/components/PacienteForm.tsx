@@ -6,7 +6,7 @@
  * los campos" para que la asistente dé de alta en segundos y alguien más
  * complete la historia clínica después.
  *
- * Aquí no se captura el tipo de paciente ni la FUR/FPP. Ninguna paciente *es*
+ * Aquí no se captura el tipo de paciente ni la FUR/FPP. Ningún paciente *es*
  * obstétrica: *está* embarazada, y el embarazo se registra aparte, con su
  * propio fechado y su desenlace. Preguntarlo en el alta dejaba una bandera que
  * nadie apagaba (el 97% de las marcadas como obstétricas no tenían embarazo
@@ -165,7 +165,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
             setFormData({
                 first_name: patient.first_name,
                 last_name: patient.last_name,
-                // Un paciente dada de alta express llega sin fecha: el campo se
+                // Un paciente dado de alta express llega sin fecha: el campo se
                 // abre vacío para que se capture, no relleno con nada inventado.
                 date_of_birth: patient.date_of_birth || '',
                 gender: patient.gender || '',
@@ -470,7 +470,7 @@ export const PacienteForm: React.FC<PacienteFormProps> = ({
                             </div>
                         )}
 
-                    {/* S-06: posibles pacientes ya registradas. Sólo advierte. */}
+                    {/* S-06: posibles pacientes ya registrados. Sólo advierte. */}
                     {!patient &&
                         !duplicadosDescartados &&
                         (duplicados?.candidatos.length ?? 0) > 0 && (

@@ -328,7 +328,7 @@ def test_la_receta_emitida_por_la_doctora_se_reimprime_pero_no_se_reescribe(
 
 def test_la_doctora_que_cubre_tambien_puede_escribir_la_nota(client, db_session, cobertura):
     """El ultimo resto de A12: leer la nota y emitir receta ya se habian
-    homologado, pero crearla seguia exigiendo ser el médico asignada a la cita.
+    homologado, pero crearla seguia exigiendo ser el médico asignado a la cita.
 
     El hueco era absurdo en la practica: el médico que cubre abria el
     expediente, emitia la receta, y se topaba con un 403 al documentar lo que

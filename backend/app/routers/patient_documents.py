@@ -316,12 +316,12 @@ def delete_document(
 
     Antes borraba el archivo y el registro sin dejar rastro del contenido. Un
     documento subido por error se anula (con motivo, y se puede revertir) o se
-    mueve al paciente correcta.
+    mueve al paciente correcto.
     """
     _documento(db, document_id, current_user, incluir_anulado=True)
     raise HTTPException(
         status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
-        detail="Los documentos clínicos no se borran. Anúlalo con su motivo o muévelo al paciente correcta.",
+        detail="Los documentos clínicos no se borran. Anúlalo con su motivo o muévelo al paciente correcto.",
     )
 
 
@@ -364,7 +364,7 @@ def mover_documento(
     datos: MoverDocumento,
     current_user: User = Depends(require_permission("documents.read")),
 ):
-    """Mueve un documento al paciente correcta, de la misma sucursal.
+    """Mueve un documento al paciente correcto, de la misma sucursal.
 
     Misma puerta y misma regla que anular: ``documents.correct`` o quien lo
     subió en las primeras 24 h, aplicada en ``correccion.mover``.

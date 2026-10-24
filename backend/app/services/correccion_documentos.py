@@ -1,4 +1,4 @@
-"""Corrección de documentos clínicos subidos al paciente equivocada (plan 29, lote 7).
+"""Corrección de documentos clínicos subidos al paciente equivocado (plan 29, lote 7).
 
 Diseño aprobado por Emilio (delegado en el orquestador), que manda:
 

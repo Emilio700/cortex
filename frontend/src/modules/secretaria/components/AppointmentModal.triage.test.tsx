@@ -184,7 +184,7 @@ describe('AppointmentModal · salir de consulta a donde estaba (plan 28, D-3)', 
   })
 })
 
-describe('AppointmentModal · paciente ya elegida (plan 29, lote 5)', () => {
+describe('AppointmentModal · paciente ya elegido (plan 29, lote 5)', () => {
   it('una cita nueva con defaultPatient abre con ella elegida', async () => {
     render(
       <AppointmentModal

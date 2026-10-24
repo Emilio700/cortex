@@ -329,7 +329,7 @@ def put_doctoras_que_apoya(
         if faltan:
             raise HTTPException(
                 status_code=400,
-                detail="Alguna de los médicos elegidas no es un médico activa de esta sucursal. Actualiza la lista y vuelve a elegir.",
+                detail="Alguna de los médicos elegidas no es un médico activo de esta sucursal. Actualiza la lista y vuelve a elegir.",
             )
 
     antes = _estado_de_apoyo(db, secretaria)

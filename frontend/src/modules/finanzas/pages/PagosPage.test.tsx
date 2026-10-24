@@ -560,7 +560,7 @@ describe('PagosPage', () => {
 
       const selector = await screen.findByLabelText('Médico')
       expect(selector).toHaveValue('')
-      expect(within(selector).getByRole('option', { name: 'Todas los médicos' })).toBeInTheDocument()
+      expect(within(selector).getByRole('option', { name: 'Todos los médicos' })).toBeInTheDocument()
       await waitFor(() => expect(fetchPayments).toHaveBeenCalled())
       expect(fetchPayments.mock.calls[0][0]).not.toHaveProperty('doctor_id')
     })
@@ -675,11 +675,11 @@ describe('PagosPage', () => {
 
       const casilla = within(dialogo).getByLabelText('Cancelar también la consulta express registrada al cobrar')
       expect(casilla).toBeChecked()
-      await user.type(within(dialogo).getByLabelText(/Motivo/), 'paciente equivocada')
+      await user.type(within(dialogo).getByLabelText(/Motivo/), 'paciente equivocado')
       await user.click(within(dialogo).getByRole('button', { name: 'Anular pago' }))
 
       expect(await screen.findByText(/La consulta express quedó cancelada/)).toBeInTheDocument()
-      expect(anularPago).toHaveBeenLastCalledWith(500, 'PACIENTE EQUIVOCADA', { cancelarConsultaExpress: true })
+      expect(anularPago).toHaveBeenLastCalledWith(500, 'PACIENTE EQUIVOCADO', { cancelarConsultaExpress: true })
     })
 
     it('si la desmarca, sólo se anula el cobro y no se dice que se canceló nada', async () => {

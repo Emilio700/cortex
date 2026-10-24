@@ -263,7 +263,7 @@ def test_la_cancelacion_queda_en_la_auditoria(client, escenario, db_session):
     client.post(
         f"{PREFIX}/clinical-consents/{firmado['id']}/cancel",
         headers=escenario["headers"],
-        json={"reason": "Se emitió al paciente equivocada"},
+        json={"reason": "Se emitió al paciente equivocado"},
     )
 
     registro = (
@@ -271,7 +271,7 @@ def test_la_cancelacion_queda_en_la_auditoria(client, escenario, db_session):
     )
     assert registro.entity_id == firmado["id"]
     assert registro.actor_user_id == escenario["doctora"].id
-    assert registro.reason == "Se emitió al paciente equivocada"
+    assert registro.reason == "Se emitió al paciente equivocado"
 
 
 def test_el_pdf_descargado_de_un_cancelado_queda_marcado(client, escenario, db_session):

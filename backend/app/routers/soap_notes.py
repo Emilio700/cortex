@@ -37,7 +37,7 @@ def create_soap_note(
         raise HTTPException(status_code=404, detail="No se encontró la cita. Puede que la hayan eliminado; vuelve a la agenda y actualízala.")
 
     # El acceso se deriva de la relación con el paciente, no de quién agendó la
-    # cita. Antes esto exigía ser el médico asignada, y como leer la nota sí
+    # cita. Antes esto exigía ser el médico asignado, y como leer la nota sí
     # usaba la regla del paciente, quedaba un hueco absurdo: el médico que
     # cubre a otra podía abrir el expediente y emitir la receta, pero se topaba
     # con un 403 justo al escribir la nota de lo que acababa de atender.

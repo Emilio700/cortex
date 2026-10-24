@@ -183,7 +183,7 @@ def test_una_doctora_no_ve_el_seguimiento_prenatal_de_su_colega(client, db_sessi
     """El tablero no es una puerta lateral al expediente de otra.
 
     Es la misma regla que gobierna prenatal: el embarazo lo lleva quien lo
-    abrió. Un tablero que listara nombres de pacientes ajenas ya estaría
+    abrió. Un tablero que listara nombres de pacientes ajenos ya estaría
     filtrando información clínica aunque no dejara abrir nada.
     """
     hoy = hoy_local()

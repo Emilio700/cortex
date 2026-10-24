@@ -184,7 +184,7 @@ export const RegistrarPagoModal: React.FC<Props> = ({
   }>({})
   const limpiarError = (campo: keyof typeof errores) =>
     setErrores((prev) => (prev[campo] ? { ...prev, [campo]: undefined } : prev))
-  // Con algo capturado (monto, concepto, paciente elegida), la X, Cancelar y
+  // Con algo capturado (monto, concepto, paciente elegido), la X, Cancelar y
   // Esc preguntan antes de descartar (plan 29, lote 8).
   const cobroSucio =
     visible && (JSON.stringify(form) !== JSON.stringify(FORMULARIO_VACIO) || (paciente !== null && pestana !== 'cita'))
