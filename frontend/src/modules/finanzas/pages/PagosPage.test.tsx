@@ -95,7 +95,7 @@ const CITAS_ATENDIDAS = [
 ]
 
 const SERVICIOS = [{ id: 3, name: 'CONSULTA GINECOLÓGICA', price: '800.00', is_active: true }]
-const MÉDICOS = [
+const MEDICOS = [
   { id: 7, full_name: 'CINTIA MORALES', role: 'doctor' },
   { id: 8, full_name: 'KARLA PÉREZ', role: 'doctor' },
 ]
@@ -133,7 +133,7 @@ describe('PagosPage', () => {
     apiGet.mockReset().mockImplementation((url: string) => {
       if (url === '/appointments') return Promise.resolve({ data: CITAS_ATENDIDAS })
       if (url === '/services') return Promise.resolve({ data: SERVICIOS })
-      if (url === '/users/directory') return Promise.resolve({ data: MÉDICOS })
+      if (url === '/users/directory') return Promise.resolve({ data: MEDICOS })
       return Promise.resolve({ data: [] })
     })
   })
@@ -220,7 +220,7 @@ describe('PagosPage', () => {
           return Promise.resolve({ data: estado === 'en_sala' ? [EN_SALA] : CITAS_ATENDIDAS })
         }
         if (url === '/services') return Promise.resolve({ data: SERVICIOS })
-        if (url === '/users/directory') return Promise.resolve({ data: MÉDICOS })
+        if (url === '/users/directory') return Promise.resolve({ data: MEDICOS })
         return Promise.resolve({ data: [] })
       })
     })

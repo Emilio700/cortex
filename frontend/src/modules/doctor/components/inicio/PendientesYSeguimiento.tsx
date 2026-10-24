@@ -9,16 +9,17 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
-import { cilBellExclamation, cilTask, cilWarning, cilBabyCarriage } from '@coreui/icons'
+import { cilMedicalCross, cilTask, cilWarning } from '@coreui/icons'
 
 import type { DatoVivo } from '../../hooks/useDatoVivo'
-import type { Criticos, PartoProximo } from '../../hooks/useInicioDoctora'
-import type { RevisionPendiente } from '../TableroRevisionPrenatal'
-import { formatearFechaISOCon } from '../../../../shared/utils/date'
+import { DIAS_DE_CIRUGIAS, type Criticos } from '../../hooks/useInicioDoctora'
+import type { Appointment } from '../../../secretaria/types'
+import { formatearEnConsultorio } from '../../../../shared/utils/date'
 import { pedirFiltroBandeja } from '../../utils/filtroBandeja'
 import { rutaDelExpediente } from '../../../expediente/rutas'
 
-const fechaCorta = (iso: string) => formatearFechaISOCon(iso, { day: 'numeric', month: 'short' })
+const fechaYHora = (iso: string) =>
+  formatearEnConsultorio(new Date(iso), { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
 
 interface RenglonProps {
   icono: string[]
@@ -98,15 +99,13 @@ const Renglon: React.FC<RenglonProps> = ({
 interface Props {
   criticos: DatoVivo<Criticos>
   resultados: DatoVivo<number>
-  prenatales: DatoVivo<RevisionPendiente[]>
-  partos: DatoVivo<PartoProximo[]>
+  cirugias: DatoVivo<Appointment[]>
 }
 
-export const PendientesYSeguimiento: React.FC<Props> = ({ criticos, resultados, prenatales, partos }) => {
+export const PendientesYSeguimiento: React.FC<Props> = ({ criticos, resultados, cirugias }) => {
   const navigate = useNavigate()
   const abrirExpediente = (patientId: number) => navigate(rutaDelExpediente(patientId))
-  const listaPrenatales = prenatales.datos ?? []
-  const listaPartos = partos.datos ?? []
+  const listaCirugias = cirugias.datos ?? []
 
   return (
     <section className="inicio-tarjeta inicio-aparece" data-tour="doctora-pendientes" aria-labelledby="inicio-pendientes-titulo">
@@ -146,58 +145,30 @@ export const PendientesYSeguimiento: React.FC<Props> = ({ criticos, resultados, 
           tour="doctora-resultados-sin-revisar"
         />
         <Renglon
-          icono={cilBellExclamation}
-          tono="ambar"
-          titulo="Controles prenatales sin cita"
-          numero={prenatales.datos ? prenatales.datos.length : null}
-          error={prenatales.error}
-          cargando={prenatales.cargando}
-          alDia="Al día: todas tienen su control agendado"
-          onReintentar={() => void prenatales.recargar()}
-          tour="doctora-revision-prenatal"
-          detalle={
-            listaPrenatales.length > 0 && (
-              <ul className="inicio-sublista">
-                {listaPrenatales.slice(0, 3).map((item) => (
-                  <li key={item.pregnancy_id}>
-                    <button type="button" className="inicio-subitem" onClick={() => abrirExpediente(item.patient_id)}>
-                      <span className="inicio-subitem-nombre">{item.patient_full_name}</span>
-                      <span className={item.vencida ? 'inicio-detalle-critico' : 'inicio-subitem-dato'}>
-                        {item.vencida ? 'Vencido' : 'Toca'} {fechaCorta(item.next_review_on)}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-                {listaPrenatales.length > 3 && (
-                  <li className="inicio-subitem-mas">y {listaPrenatales.length - 3} más</li>
-                )}
-              </ul>
-            )
-          }
-        />
-        <Renglon
-          icono={cilBabyCarriage}
+          icono={cilMedicalCross}
           tono="azul"
-          titulo="Partos próximos"
-          numero={partos.datos ? partos.datos.length : null}
-          error={partos.error}
-          cargando={partos.cargando}
-          alDia="Ninguna fecha probable de parto cercana"
-          onReintentar={() => void partos.recargar()}
+          titulo="Cirugías programadas"
+          numero={cirugias.datos ? cirugias.datos.length : null}
+          error={cirugias.error}
+          cargando={cirugias.cargando}
+          alDia={`Ninguna en los próximos ${DIAS_DE_CIRUGIAS} días`}
+          onReintentar={() => void cirugias.recargar()}
+          tour="medico-cirugias"
           detalle={
-            listaPartos.length > 0 && (
+            listaCirugias.length > 0 && (
               <ul className="inicio-sublista">
-                {listaPartos.slice(0, 3).map((item) => (
-                  <li key={item.pregnancy_id}>
-                    <button type="button" className="inicio-subitem" onClick={() => abrirExpediente(item.patient_id)}>
-                      <span className="inicio-subitem-nombre">{item.patient_full_name || 'Paciente sin nombre'}</span>
-                      <span className={item.vencida ? 'inicio-detalle-critico' : 'inicio-subitem-dato'}>
-                        {item.vencida ? 'FPP vencida' : 'FPP'} {fechaCorta(item.estimated_delivery_date)}
+                {listaCirugias.slice(0, 3).map((cita) => (
+                  <li key={cita.id}>
+                    <button type="button" className="inicio-subitem" onClick={() => abrirExpediente(cita.patient_id)}>
+                      <span className="inicio-subitem-nombre">
+                        {cita.patient ? `${cita.patient.first_name} ${cita.patient.last_name}` : 'Paciente'}
+                        {cita.cirugia_type && <span className="inicio-subitem-dato"> · {cita.cirugia_type}</span>}
                       </span>
+                      <span className="inicio-subitem-dato">{fechaYHora(cita.scheduled_at)}</span>
                     </button>
                   </li>
                 ))}
-                {listaPartos.length > 3 && <li className="inicio-subitem-mas">y {listaPartos.length - 3} más</li>}
+                {listaCirugias.length > 3 && <li className="inicio-subitem-mas">y {listaCirugias.length - 3} más</li>}
               </ul>
             )
           }

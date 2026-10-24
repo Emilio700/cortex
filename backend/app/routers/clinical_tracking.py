@@ -1516,6 +1516,9 @@ TIPO_DE_DOCUMENTO_POR_CATEGORIA = {
     "gynecology": DocumentType.LAB_RESULT,
     "breast": DocumentType.IMAGING_STUDY,
     "obstetric": DocumentType.IMAGING_STUDY,
+    # Cortex: la neuroimagen y la neurofisiología (EEG, EMG) son de gabinete.
+    "imaging": DocumentType.IMAGING_STUDY,
+    "neurophysiology": DocumentType.IMAGING_STUDY,
 }
 
 

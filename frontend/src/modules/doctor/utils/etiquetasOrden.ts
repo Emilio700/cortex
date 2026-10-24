@@ -97,16 +97,23 @@ export const pesoPrioridad = (priority: string): number =>
  */
 export const TIPOS_DE_ESTUDIO: ReadonlyArray<{ valor: string; etiqueta: string }> = [
   { valor: 'laboratory', etiqueta: 'Laboratorio' },
-  { valor: 'gynecology', etiqueta: 'Ginecología / Pap / VPH' },
-  { valor: 'breast', etiqueta: 'Imagen de mama' },
-  { valor: 'obstetric', etiqueta: 'Obstetricia' },
+  { valor: 'imaging', etiqueta: 'Neuroimagen (RM, TAC, angiografía, Rx)' },
+  { valor: 'neurophysiology', etiqueta: 'Neurofisiología (EEG, EMG, potenciales)' },
   { valor: 'procedure', etiqueta: 'Procedimiento' },
   { valor: 'referral', etiqueta: 'Interconsulta' },
   { valor: 'other', etiqueta: 'Otro' },
 ]
 
+// Los tipos de GEMS ya no se ofrecen, pero una orden vieja debe seguir
+// mostrando su nombre y no la clave en inglés.
+const TIPOS_HEREDADOS: ReadonlyArray<{ valor: string; etiqueta: string }> = [
+  { valor: 'gynecology', etiqueta: 'Ginecología / Pap / VPH' },
+  { valor: 'breast', etiqueta: 'Imagen de mama' },
+  { valor: 'obstetric', etiqueta: 'Obstetricia' },
+]
+
 const TIPOS: Record<string, string> = Object.fromEntries(
-  TIPOS_DE_ESTUDIO.map(({ valor, etiqueta }) => [valor, etiqueta]),
+  [...TIPOS_DE_ESTUDIO, ...TIPOS_HEREDADOS].map(({ valor, etiqueta }) => [valor, etiqueta]),
 )
 
 export const etiquetaTipoEstudio = (category: string): string => TIPOS[category] ?? category
@@ -123,6 +130,8 @@ const DESTINOS: Record<string, DestinoFisico> = {
   gynecology: 'laboratorio',
   breast: 'imagen',
   obstetric: 'imagen',
+  imaging: 'imagen',
+  neurophysiology: 'imagen',
 }
 
 export const DESTINOS_FISICOS: ReadonlyArray<{ valor: DestinoFisico; etiqueta: string }> = [

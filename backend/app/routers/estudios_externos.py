@@ -46,13 +46,14 @@ from app.utils.uploads import (
 router = APIRouter(prefix="/clinical-tracking", tags=["clinical-tracking"])
 
 ORIGEN_EXTERNO = "externo"
-CATEGORIAS = ("laboratory", "gynecology", "breast", "obstetric", "imaging", "other")
+CATEGORIAS = ("laboratory", "gynecology", "breast", "obstetric", "imaging", "neurophysiology", "other")
 TIPO_POR_CATEGORIA = {
     "laboratory": DocumentType.LAB_RESULT,
     "gynecology": DocumentType.LAB_RESULT,
     "breast": DocumentType.IMAGING_STUDY,
     "obstetric": DocumentType.IMAGING_STUDY,
     "imaging": DocumentType.IMAGING_STUDY,
+    "neurophysiology": DocumentType.IMAGING_STUDY,
 }
 INDICACION_EXTERNA = "Estudio de otro lugar, traído por el paciente."
 TIPOS_QUE_PARECEN_RESULTADO = (DocumentType.LAB_RESULT, DocumentType.IMAGING_STUDY)

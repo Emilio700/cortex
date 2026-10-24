@@ -128,7 +128,7 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
   },
   {
     id: 'cita-formulario',
-    version: 8,
+    version: 9,
     titulo: 'Agendar o editar una cita',
     resumen: 'Cada campo del formulario de cita, y cómo pasar al paciente a sala.',
     grupo: 'Recepción',
@@ -150,7 +150,7 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
         elemento: 'cita-paciente',
         titulo: 'Paciente',
         texto:
-          'Escribe su nombre o teléfono y elígela de la lista. Si es nueva, regístrala ahí mismo con <b>+ Registrar paciente nuevo</b>: basta con nombre, apellidos y celular; si los da, el <b>correo</b>, sus <b>alergias</b> y su última menstruación (FUR). Si se parece a alguien ya registrado, te lo avisa antes de crearla otra vez: elige <b>Es este paciente</b> o <b>Es otra persona, continuar</b>. Al guardarla queda elegida, y lo que ya capturaste de la cita no se pierde, aunque canceles el alta. (Ya no hay pantalla de Preregistro: este es el camino para un paciente nuevo.)',
+          'Escribe su nombre o teléfono y elígela de la lista. Si es nueva, regístrala ahí mismo con <b>+ Registrar paciente nuevo</b>: basta con nombre, apellidos y celular; si los da, el <b>correo</b> y sus <b>alergias</b>. Si se parece a alguien ya registrado, te lo avisa antes de crearla otra vez: elige <b>Es este paciente</b> o <b>Es otra persona, continuar</b>. Al guardarla queda elegida, y lo que ya capturaste de la cita no se pierde, aunque canceles el alta. (Ya no hay pantalla de Preregistro: este es el camino para un paciente nuevo.)',
         lado: 'bottom',
       },
       {
@@ -289,7 +289,7 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
   },
   {
     id: 'pacientes',
-    version: 4,
+    version: 5,
     titulo: 'Pacientes',
     resumen: 'El directorio: buscar, registrar y abrir el expediente de cada paciente.',
     grupo: 'Recepción',
@@ -333,7 +333,7 @@ export const RECORRIDOS_RECEPCION: Recorrido[] = [
       {
         elemento: 'pacientes-mas',
         titulo: 'Más acciones',
-        texto: 'En <b>⋯</b>: <b>Editar ficha</b> (teléfono, dirección, fecha de nacimiento, alergias, FUR o su médico titular; los antecedentes los captura el médico en el expediente), <b>Agendar</b> y <b>Ver sus citas</b>.',
+        texto: 'En <b>⋯</b>: <b>Editar ficha</b> (teléfono, dirección, fecha de nacimiento, alergias o su médico titular; los antecedentes los captura el médico en el expediente), <b>Agendar</b> y <b>Ver sus citas</b>.',
         lado: 'left',
       },
     ],

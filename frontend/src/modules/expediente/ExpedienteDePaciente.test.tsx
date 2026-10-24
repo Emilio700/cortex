@@ -32,7 +32,7 @@ vi.mock('../doctor/components/ClinicalRecordPanel', () => ({
 
 import ExpedienteDePaciente from './ExpedienteDePaciente'
 
-const MÉDICO = {
+const MEDICO = {
   patient_id: 7, nombre: 'Ana López', first_name: 'Ana', last_name: 'López', date_of_birth: '1990-01-01',
   phone: '669 123 4567', allergies: 'Penicilina',
   pestanas: ['resumen', 'consultas', 'estudios', 'documentos', 'imagenes', 'embarazo', 'consentimientos', 'equipo'],
@@ -41,7 +41,7 @@ const MÉDICO = {
   alertas: { criticos: 1, atrasados: 2, por_revisar: 0, pendientes: 3 },
   cita_de_hoy: { id: 55, scheduled_at: '2026-10-10T10:00:00', status: 'confirmada' },
 }
-const RESUMEN = { ultima_consulta: null, proxima_cita: null, episodios_activos: [], resultados_recientes: [], alertas: MÉDICO.alertas }
+const RESUMEN = { ultima_consulta: null, proxima_cita: null, episodios_activos: [], resultados_recientes: [], alertas: MEDICO.alertas }
 
 const montar = () =>
   render(
@@ -60,7 +60,7 @@ describe('ExpedienteDePaciente', () => {
 
   it('el médico ve el encabezado clínico y todas las pestañas', async () => {
     get.mockImplementation((url: string) =>
-      Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MÉDICO }),
+      Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MEDICO }),
     )
     montar()
     expect(await screen.findByText('Alergias: Penicilina')).toBeInTheDocument()
@@ -68,13 +68,13 @@ describe('ExpedienteDePaciente', () => {
     expect(screen.getByRole('button', { name: /1 crítico abierto/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /2 estudios atrasados/ })).toBeInTheDocument()
     expect(screen.getAllByRole('tab').map((t) => t.textContent)).toEqual([
-      'Resumen', 'Consultas', 'Estudios', 'Documentos', 'Imágenes', 'Embarazo', 'Consentimientos', 'Equipo',
+      'Resumen', 'Consultas', 'Estudios', 'Documentos', 'Imágenes', 'Consentimientos', 'Equipo',
     ])
   })
 
   it('«Abrir la consulta de hoy» lleva a su cita', async () => {
     const user = userEvent.setup()
-    get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MÉDICO }))
+    get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MEDICO }))
     montar()
     await user.click(await screen.findByRole('button', { name: /Abrir la consulta de hoy/ }))
     expect(navigate).toHaveBeenCalledWith('/doctor/consultation/55')
@@ -82,7 +82,7 @@ describe('ExpedienteDePaciente', () => {
 
   it('sin cita hoy ofrece «Agendar», no una consulta sin cita', async () => {
     get.mockImplementation((url: string) =>
-      Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : { ...MÉDICO, cita_de_hoy: null } }),
+      Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : { ...MEDICO, cita_de_hoy: null } }),
     )
     montar()
     expect(await screen.findByRole('button', { name: /Agendar/ })).toBeInTheDocument()
@@ -91,7 +91,7 @@ describe('ExpedienteDePaciente', () => {
 
   it('cada pestaña se monta solo al abrirla y recuerda cuál quedó abierta', async () => {
     const user = userEvent.setup()
-    get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MÉDICO }))
+    get.mockImplementation((url: string) => Promise.resolve({ data: url.endsWith('/resumen') ? RESUMEN : MEDICO }))
     const { unmount } = montar()
     await screen.findByRole('tab', { name: /Estudios/ })
     expect(screen.queryByText('Historial de estudios')).toBeNull()
@@ -109,7 +109,7 @@ describe('ExpedienteDePaciente', () => {
       if (url.endsWith('/expediente')) {
         return Promise.resolve({
           data: {
-            ...MÉDICO, vista_clinica: false, embarazo: null, alertas: null, cita_de_hoy: null,
+            ...MEDICO, vista_clinica: false, embarazo: null, alertas: null, cita_de_hoy: null,
             pestanas: ['resumen', 'consultas', 'estudios', 'documentos', 'consentimientos'],
           },
         })

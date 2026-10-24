@@ -409,7 +409,7 @@ def _ordenes_de_muestra():
 
     hoy = ahora_local().date()
     comun = dict(
-        clinical_indication="Control prenatal del primer trimestre", requested_on=hoy, desired_on=None,
+        clinical_indication="Protocolo prequirúrgico de columna lumbar", requested_on=hoy, desired_on=None,
         destination=None, specimen_or_body_site=None, preparation_instructions=None, priority="routine",
     )
     estudios = [
@@ -417,11 +417,11 @@ def _ordenes_de_muestra():
              preparation_instructions="Ayuno de 8 horas", destination="Laboratorio Central"),
         dict(category="laboratory", study_name="Examen general de orina",
              preparation_instructions="Primera orina de la mañana", destination="Laboratorio Central"),
-        dict(category="gynecology", study_name="Citología cervicovaginal", specimen_or_body_site="Cérvix",
-             destination="Laboratorio Central"),
-        dict(category="obstetric", study_name="Ultrasonido obstétrico", priority="preferential",
-             preparation_instructions="Vejiga llena", desired_on=hoy),
-        dict(category="referral", study_name="Valoración por nutrición"),
+        dict(category="imaging", study_name="Resonancia magnética de columna lumbar simple",
+             specimen_or_body_site="Columna lumbar", priority="preferential",
+             preparation_instructions="Retirar objetos metálicos", desired_on=hoy),
+        dict(category="neurophysiology", study_name="Electromiografía de miembros pélvicos"),
+        dict(category="referral", study_name="Valoración preanestésica"),
     ]
     ordenes = [
         SimpleNamespace(id=1000 + numero, order_group_id=None, **{**comun, **estudio})

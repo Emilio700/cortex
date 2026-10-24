@@ -33,7 +33,7 @@ def _detalle(client, db_session, quien, clave):
 # Leer las plantillas
 # ---------------------------------------------------------------------------
 
-def test_la_doctora_ve_el_indice_de_plantillas_con_las_seis_semilla(client, db_session, escenario):
+def test_la_doctora_ve_el_indice_de_plantillas_de_neurocirugia(client, db_session, escenario):
     respuesta = _listar(client, db_session, escenario["doctora"])
 
     assert respuesta.status_code == 200, respuesta.text
@@ -41,19 +41,19 @@ def test_la_doctora_ve_el_indice_de_plantillas_con_las_seis_semilla(client, db_s
     assert cuerpo["version"] >= 1
     claves = {p["clave"] for p in cuerpo["plantillas"]}
     assert claves == {
-        "primera_consulta_prenatal", "control_prenatal_subsecuente",
-        "tamizaje_diabetes_gestacional", "papanicolau_hpv", "its", "fertilidad",
+        "valoracion_prequirurgica", "rm_encefalo", "columna_lumbar", "columna_cervical",
+        "epilepsia", "nervio_periferico", "vascular_cerebral",
     }
-    prenatal = next(p for p in cuerpo["plantillas"] if p["clave"] == "primera_consulta_prenatal")
-    assert prenatal["num_estudios"] == 10
+    prequirurgica = next(p for p in cuerpo["plantillas"] if p["clave"] == "valoracion_prequirurgica")
+    assert prequirurgica["num_estudios"] == 9
 
 
 def test_el_detalle_trae_los_estudios_para_precargar(client, db_session, escenario):
-    respuesta = _detalle(client, db_session, escenario["doctora"], "papanicolau_hpv")
+    respuesta = _detalle(client, db_session, escenario["doctora"], "columna_lumbar")
 
     assert respuesta.status_code == 200, respuesta.text
     cuerpo = respuesta.json()
-    assert cuerpo["nombre"] == "Papanicolau / HPV"
+    assert cuerpo["nombre"] == "Columna lumbar"
     assert cuerpo["indicacion_sugerida"]
     assert len(cuerpo["estudios"]) == 2
     estudio = cuerpo["estudios"][0]
@@ -70,7 +70,7 @@ def test_leer_plantillas_no_crea_ninguna_orden(client, db_session, escenario):
     """La plantilla es sólo lectura: consultarla no toca el expediente."""
     antes = db_session.query(DiagnosticOrder).count()
     _listar(client, db_session, escenario["doctora"])
-    _detalle(client, db_session, escenario["doctora"], "its")
+    _detalle(client, db_session, escenario["doctora"], "columna_lumbar")
     # El escenario ya trae una orden suelta; el número no debe cambiar.
     assert db_session.query(DiagnosticOrder).count() == antes
 
@@ -83,7 +83,7 @@ def test_recepcion_no_ve_las_plantillas(client, db_session, escenario):
     """Sólo quien puede pedir estudios (clinical_tracking.create) las usa."""
     lista = _listar(client, db_session, escenario["secretaria"])
     assert lista.status_code == 403
-    detalle = _detalle(client, db_session, escenario["secretaria"], "its")
+    detalle = _detalle(client, db_session, escenario["secretaria"], "columna_lumbar")
     assert detalle.status_code == 403
 
 
@@ -94,7 +94,7 @@ def test_recepcion_no_ve_las_plantillas(client, db_session, escenario):
 def test_los_estudios_de_una_plantilla_crean_la_orden_al_confirmar(client, db_session, escenario):
     """El flujo real: se lee la plantilla, se precarga el formulario y el médico
     confirma con POST /order-groups (O-02). La confirmación es lo que crea."""
-    plantilla = _detalle(client, db_session, escenario["doctora"], "control_prenatal_subsecuente").json()
+    plantilla = _detalle(client, db_session, escenario["doctora"], "epilepsia").json()
 
     cuerpo = {
         "patient_id": escenario["paciente"].id,
@@ -108,19 +108,19 @@ def test_los_estudios_de_una_plantilla_crean_la_orden_al_confirmar(client, db_se
     lote = respuesta.json()
     assert len(lote["orders"]) == len(plantilla["estudios"]) == 3
     nombres = {o["study_name"] for o in lote["orders"]}
-    assert "Biometría hemática completa" in nombres
+    assert "Electroencefalograma con privación de sueño" in nombres
 
 
 def test_la_doctora_puede_editar_los_estudios_antes_de_confirmar(client, db_session, escenario):
     """Precargar no obliga: el médico quita uno y agrega otro, y se crea lo que
     ella confirmó, no lo que traía la plantilla."""
-    plantilla = _detalle(client, db_session, escenario["doctora"], "control_prenatal_subsecuente").json()
+    plantilla = _detalle(client, db_session, escenario["doctora"], "epilepsia").json()
     estudios = plantilla["estudios"][:1]  # se queda con uno
-    estudios.append({"category": "laboratory", "study_name": "Grupo sanguíneo y factor Rh"})
+    estudios.append({"category": "laboratory", "study_name": "Creatinina sérica"})
 
     cuerpo = {
         "patient_id": escenario["paciente"].id,
-        "clinical_indication": "Control prenatal subsecuente",
+        "clinical_indication": "Protocolo de epilepsia",
         "requested_on": "2026-09-29",
         "studies": estudios,
     }
@@ -128,4 +128,4 @@ def test_la_doctora_puede_editar_los_estudios_antes_de_confirmar(client, db_sess
 
     assert respuesta.status_code == 201, respuesta.text
     nombres = {o["study_name"] for o in respuesta.json()["orders"]}
-    assert nombres == {"Biometría hemática completa", "Grupo sanguíneo y factor Rh"}
+    assert nombres == {"Electroencefalograma con privación de sueño", "Creatinina sérica"}

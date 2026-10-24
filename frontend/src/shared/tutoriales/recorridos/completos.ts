@@ -41,7 +41,7 @@ export const RECORRIDOS_COMPLETOS: RecorridoCompleto[] = [
     roles: [Role.SECRETARIA],
     etapas: [
       { recorridoId: 'agenda', nombre: 'Agenda' },
-      // «Consulta por cobrar» y «control prenatal sin cita» le llegan aquí.
+      // «Consulta por cobrar» le llega aquí.
       { recorridoId: 'avisos', nombre: 'Avisos' },
       { recorridoId: 'cita-formulario', nombre: 'Agendar una cita' },
       { recorridoId: 'pacientes', nombre: 'Pacientes' },

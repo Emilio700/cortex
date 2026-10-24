@@ -13,7 +13,7 @@ const CLINICO = [Role.DOCTOR, Role.ADMIN, Role.MASTER]
 export const RECORRIDOS_DOCTORA: Recorrido[] = [
   {
     id: 'doctora-dashboard',
-    version: 6,
+    version: 7,
     titulo: 'Tu inicio',
     resumen:
       'Tu día de un vistazo: citas de hoy, quién espera en sala, resultados y pendientes, y las acciones de siempre.',
@@ -48,7 +48,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'doctora-citas-hoy',
         titulo: 'Tu agenda de hoy',
         texto:
-          'En orden de hora, con la edad y, si está embarazada, sus semanas de gestación. Las pestañas filtran: <b>Por atender</b>, <b>En sala</b>, <b>En consulta</b> y <b>Atendidas</b>. Cada cita dice su estado en palabras y avisa si está en sala <b>Sin signos</b>.',
+          'En orden de hora y con la edad de cada paciente. Las pestañas filtran: <b>Por atender</b>, <b>En sala</b>, <b>En consulta</b> y <b>Atendidas</b>. Cada cita dice su estado en palabras y avisa si está en sala <b>Sin signos</b>.',
         lado: 'top',
       },
       {
@@ -62,7 +62,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'doctora-pendientes',
         titulo: 'Pendientes y seguimiento',
         texto:
-          'Resultados críticos y sin revisar, controles prenatales que nadie agendó y partos próximos, cada uno con su número. Cuando están en cero lo dicen («al día»); si no se pudieron consultar, también, con <b>Reintentar</b>.',
+          'Resultados críticos y sin revisar, y las cirugías programadas de las próximas dos semanas, cada uno con su número. Cuando están en cero lo dicen («al día»); si no se pudieron consultar, también, con <b>Reintentar</b>.',
         lado: 'left',
       },
       {
@@ -158,7 +158,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
   },
   {
     id: 'doctora-consulta',
-    version: 14,
+    version: 15,
     titulo: 'La consulta, paso a paso',
     resumen: 'Signos vitales, nota, receta, plan, certificado y cómo finalizar sin perder nada.',
     grupo: 'Consulta médica',
@@ -185,7 +185,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'consulta-pestanas',
         titulo: 'Pestañas del paciente',
         texto:
-          '<b>Consulta</b> es la atención de hoy. <b>Expediente</b> es el mismo expediente del paciente, con sus secciones (Resumen, Consultas, Estudios, Documentos, Imágenes, Embarazo…), y se consulta sin salir: lo que llevas escrito en la nota no se pierde al cambiar de pestaña. En su sección <b>Estudios</b> está la gráfica de cómo han ido las valoraciones de sus resultados.',
+          '<b>Consulta</b> es la atención de hoy. <b>Expediente</b> es el mismo expediente del paciente, con sus secciones (Resumen, Consultas, Estudios, Documentos, Imágenes, Consentimientos…), y se consulta sin salir: lo que llevas escrito en la nota no se pierde al cambiar de pestaña. En su sección <b>Estudios</b> está la gráfica de cómo han ido las valoraciones de sus resultados.',
         lado: 'bottom',
       },
       {
@@ -438,9 +438,9 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
   },
   {
     id: 'doctora-expediente',
-    version: 7,
+    version: 8,
     titulo: 'El expediente de un paciente',
-    resumen: 'Todo lo de un paciente en un solo lugar: resumen, consultas, estudios, documentos, imágenes y embarazo.',
+    resumen: 'Todo lo de un paciente en un solo lugar: resumen, consultas, estudios, documentos, imágenes y consentimientos.',
     grupo: 'Consulta médica',
     ruta: '/pacientes/:patientId/expediente',
     requiere: ['patients.read'],
@@ -453,7 +453,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'expediente-encabezado',
         titulo: 'Quién es',
         texto:
-          'Su nombre, edad, número de expediente y teléfono, y sus <b>alergias</b>: «sin registro» quiere decir que nadie las capturó, no que no tenga. Quien lleva lo clínico ve además el embarazo con sus semanas y los críticos o atrasados; tócalos para ir a sus estudios. Un punto junto al nombre avisa que a su ficha le falta la fecha de nacimiento.',
+          'Su nombre, edad, número de expediente y teléfono, y sus <b>alergias</b>: «sin registro» quiere decir que nadie las capturó, no que no tenga. Quien lleva lo clínico ve además los resultados críticos o atrasados; tócalos para ir a sus estudios. Un punto junto al nombre avisa que a su ficha le falta la fecha de nacimiento.',
         lado: 'bottom',
       },
       {
@@ -475,7 +475,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'expediente-pestanas',
         titulo: 'Sus secciones',
         texto:
-          '<b>Resumen</b>, <b>Consultas</b> (cada cita con su nota, receta y certificado), <b>Estudios</b>, <b>Documentos</b>, <b>Imágenes</b>, <b>Embarazo</b>, <b>Consentimientos</b> y <b>Equipo</b>. Cada quien ve las que le tocan: recepción ve la ficha, las citas, los documentos de referencia y si sus estudios ya tienen resultado, sin lo clínico. Cada sección se carga al abrirla, y el expediente recuerda cuál dejaste abierta.',
+          '<b>Resumen</b>, <b>Consultas</b> (cada cita con su nota, receta y certificado), <b>Estudios</b>, <b>Documentos</b>, <b>Imágenes</b>, <b>Consentimientos</b> y <b>Equipo</b>. Cada quien ve las que le tocan: recepción ve la ficha, las citas, los documentos de referencia y si sus estudios ya tienen resultado, sin lo clínico. Cada sección se carga al abrirla, y el expediente recuerda cuál dejaste abierta.',
         lado: 'bottom',
       },
       {
@@ -494,7 +494,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
       {
         elemento: 'expediente-episodios',
         titulo: 'Episodios y seguimiento',
-        texto: 'Un episodio agrupa un motivo de seguimiento (un embarazo, un tratamiento) a lo largo de varias consultas.',
+        texto: 'Un episodio agrupa un motivo de seguimiento (una hernia de disco, un tumor en vigilancia) a lo largo de varias consultas.',
         lado: 'top',
       },
     ],

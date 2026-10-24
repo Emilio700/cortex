@@ -42,19 +42,38 @@ import { resumirEmbarazo } from '../utils/embarazo'
 import { formatearFechaISO, hoyLocalISO, formatearHoraDeCita } from '../../../shared/utils/date'
 import { mensajeDeError } from '../../../shared/utils/errors'
 
+// Los motivos que Cortex ofrece al abrir un episodio: los grandes grupos de
+// la neurocirugía.
 const EPISODE_TYPES: Array<{ value: ClinicalEpisodeType; label: string }> = [
-  { value: 'routine', label: 'Consulta preventiva / rutina' },
-  { value: 'pregnancy', label: 'Embarazo y control prenatal' },
-  { value: 'bleeding', label: 'Sangrado o dolor pélvico' },
-  { value: 'infection', label: 'Infección, ITS o síntomas urinarios' },
-  { value: 'breast', label: 'Mama / mastografía / ultrasonido' },
-  { value: 'cervix', label: 'Papanicolaou, HPV o cérvix' },
-  { value: 'menopause', label: 'Menopausia o síntomas hormonales' },
-  { value: 'contraception', label: 'Anticoncepción o plan reproductivo' },
-  { value: 'fertility', label: 'Fertilidad' },
-  { value: 'procedure', label: 'Procedimiento ginecológico, láser o funcional' },
+  { value: 'spine', label: 'Columna: hernia, estenosis, radiculopatía o mielopatía' },
+  { value: 'brain_tumor', label: 'Tumor o lesión intracraneal' },
+  { value: 'cerebrovascular', label: 'Vascular: aneurisma, MAV, hemorragia o EVC' },
+  { value: 'neurotrauma', label: 'Traumatismo craneoencefálico o raquimedular' },
+  { value: 'hydrocephalus', label: 'Hidrocefalia o válvula de derivación' },
+  { value: 'epilepsy', label: 'Epilepsia y neurofisiología' },
+  { value: 'chronic_pain', label: 'Dolor crónico y neuromodulación' },
+  { value: 'peripheral_nerve', label: 'Nervio periférico (túnel del carpo, cubital…)' },
+  { value: 'movement_disorder', label: 'Movimientos anormales o cirugía funcional' },
+  { value: 'routine', label: 'Valoración o control de rutina' },
+  { value: 'procedure', label: 'Procedimiento en consultorio' },
   { value: 'other', label: 'Otro motivo clínico' },
 ]
+
+// Los motivos de GEMS ya no se ofrecen, pero un episodio viejo debe seguir
+// mostrando su nombre y no la clave en inglés.
+const ETIQUETAS_HEREDADAS: Partial<Record<ClinicalEpisodeType, string>> = {
+  pregnancy: 'Embarazo y control prenatal',
+  bleeding: 'Sangrado o dolor pélvico',
+  infection: 'Infección, ITS o síntomas urinarios',
+  breast: 'Mama / mastografía / ultrasonido',
+  cervix: 'Papanicolaou, HPV o cérvix',
+  menopause: 'Menopausia o síntomas hormonales',
+  contraception: 'Anticoncepción o plan reproductivo',
+  fertility: 'Fertilidad',
+}
+
+const etiquetaDelEpisodio = (tipo: ClinicalEpisodeType) =>
+  EPISODE_TYPES.find((item) => item.value === tipo)?.label ?? ETIQUETAS_HEREDADAS[tipo] ?? tipo
 
 const STATUS_META: Record<ClinicalEpisodeStatus, { label: string; color: 'success' | 'warning' | 'secondary' | 'dark' }> = {
   active: { label: 'Activo', color: 'success' },
@@ -271,7 +290,7 @@ const ClinicalRecordPanel = ({
                       <strong>{episode.title}</strong>
                       <CBadge color={meta.color}>{meta.label}</CBadge>
                     </div>
-                    <small className="text-body-secondary">{EPISODE_TYPES.find((item) => item.value === episode.episode_type)?.label || episode.episode_type} · Inicio: {formatDate(episode.started_on)}</small>
+                    <small className="text-body-secondary">{etiquetaDelEpisodio(episode.episode_type)} · Inicio: {formatDate(episode.started_on)}</small>
                   </div>
                   {episode.follow_up_on && <span className="small text-body-secondary"><CIcon icon={cilCalendar} className="me-1" />{formatDate(episode.follow_up_on)}</span>}
                 </div>

@@ -25,6 +25,17 @@ class ClinicalEpisodeType(str, enum.Enum):
     FERTILITY = "fertility"
     PROCEDURE = "procedure"
     OTHER = "other"
+    # Neurocirugía (Cortex). Los de ginecología de arriba se conservan para los
+    # episodios que ya existan; la interfaz ya no los ofrece.
+    SPINE = "spine"
+    BRAIN_TUMOR = "brain_tumor"
+    CEREBROVASCULAR = "cerebrovascular"
+    NEUROTRAUMA = "neurotrauma"
+    HYDROCEPHALUS = "hydrocephalus"
+    EPILEPSY = "epilepsy"
+    CHRONIC_PAIN = "chronic_pain"
+    PERIPHERAL_NERVE = "peripheral_nerve"
+    MOVEMENT_DISORDER = "movement_disorder"
 
 
 class ClinicalEpisodeStatus(str, enum.Enum):

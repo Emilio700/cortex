@@ -1169,6 +1169,8 @@ CATEGORIAS_DE_ORDEN = {
     # «Mama e imagen» se leía como dos cosas; es una sola (plan 26, P-8).
     "breast": "Imagen de mama",
     "obstetric": "Obstetricia",
+    "imaging": "Neuroimagen",
+    "neurophysiology": "Neurofisiología",
     "procedure": "Procedimiento",
     "referral": "Interconsulta",
     "other": "Otro",
@@ -1185,7 +1187,7 @@ PRIORIDADES_DE_ORDEN = {
 # dos primeras va a «Otros», incluida una categoría desconocida.
 DESTINOS_FISICOS = (
     ("laboratorio", "LABORATORIO", ("laboratory", "gynecology")),
-    ("imagen", "IMAGEN Y GABINETE", ("breast", "obstetric")),
+    ("imagen", "IMAGEN Y GABINETE", ("breast", "obstetric", "imaging", "neurophysiology")),
     ("otros", "OTROS", None),
 )
 

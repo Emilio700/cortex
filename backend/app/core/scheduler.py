@@ -224,59 +224,6 @@ def _sync_medication_cache() -> None:
         db.close()
 
 
-def _espejar_legacy() -> None:
-    """Copia hacia GEMS los pacientes que el Dr. Adolfo sigue capturando en el
-    sistema anterior, mientras dura la transición.
-
-    Va en un solo sentido y nunca pisa lo capturado en GEMS; el detalle de las
-    reglas está en ``scripts/espejo_legacy.py``. Aquí sólo se envuelve para que
-    el resumen quede en la bitácora y para que ningún fallo del legacy tumbe
-    al scheduler: se reintenta en la corrida siguiente.
-    """
-    import logging
-
-    from scripts.espejo_legacy import ejecutar_espejo, lineas_resumen
-
-    log = logging.getLogger("scripts.espejo_legacy")
-    try:
-        resumen = ejecutar_espejo(aplicar=True)
-    except Exception:
-        log.exception("Espejo del legacy: la corrida falló entera")
-        return
-    for linea in lineas_resumen(resumen, aplicar=True):
-        log.info(linea)
-
-
-def _avisar_proxima_revision_prenatal() -> None:
-    """Le avisa a recepción de los controles prenatales que se vienen sin cita.
-
-    Corre **una vez al día** y no cada pocos minutos, aunque el trabajo sea
-    idempotente por su propia marca: con una anticipación de una semana, correr
-    seguido no adelanta nada y sí multiplica las oportunidades de que un cambio
-    futuro se cuele como aviso repetido a la única persona que los lee.
-
-    El detalle de las reglas está en ``scripts/aviso_proxima_revision.py``. Aquí
-    sólo se envuelve para que el resumen quede en la bitácora y para que un
-    fallo no tumbe al programador: se reintenta mañana.
-    """
-    import logging
-
-    from app.db.session import SessionLocal
-    from scripts.aviso_proxima_revision import ejecutar, lineas_resumen
-
-    log = logging.getLogger("scripts.aviso_proxima_revision")
-    db = SessionLocal()
-    try:
-        resumen = ejecutar(db, aplicar=True)
-    except Exception:
-        log.exception("Aviso de revision prenatal: la corrida fallo entera")
-        return
-    finally:
-        db.close()
-    for linea in lineas_resumen(resumen, aplicar=True):
-        log.info(linea)
-
-
 def _avisar_estudios_atrasados() -> None:
     """Un aviso al día, agrupado, por doctora con estudios atrasados (plan 32, punto 3).
 
@@ -299,44 +246,6 @@ def _avisar_estudios_atrasados() -> None:
         db.close()
     for linea in lineas_resumen(resumen):
         log.info(linea)
-
-
-def _registrar_espejo_legacy() -> None:
-    """Registra el espejo sólo donde hay credenciales del sistema anterior.
-
-    Cada 30 minutos: la recepción da de alta al paciente en el sistema viejo
-    un rato antes de que pase a consultorio, así que media hora basta para que
-    ya esté en GEMS cuando el doctor la busque, y son 48 corridas al día sobre
-    el MySQL del hosting en vez de las 96 que costaría cada cuarto de hora.
-    No hay nada urgente aquí: si una corrida se salta, la siguiente la alcanza.
-    """
-    import logging
-
-    log = logging.getLogger("scripts.espejo_legacy")
-    try:
-        from scripts.espejo_legacy import espejo_configurado
-    except ImportError as exc:
-        # El backend tiene que arrancar igual, pero que el espejo no exista no
-        # puede quedar en silencio: hoy `pymysql` no está en requirements.txt,
-        # así que en la imagen de producción este import falla.
-        log.warning("Espejo del legacy: no se pudo cargar el job (%r)", exc)
-        return
-    if not espejo_configurado():
-        log.info(
-            "Espejo del legacy: sin credenciales LEGACY_*; el job no se registra"
-        )
-        return
-    scheduler.add_job(
-        _espejar_legacy,
-        "interval",
-        minutes=30,
-        id="espejo_legacy",
-        replace_existing=True,
-        # Lee el padrón completo de las dos clínicas: si una corrida se alarga,
-        # que espere en vez de encimarse con la siguiente sobre las mismas filas.
-        max_instances=1,
-        coalesce=True,
-    )
 
 
 def start_scheduler() -> None:
@@ -373,20 +282,8 @@ def start_scheduler() -> None:
         id="sync_medication_cache",
         replace_existing=True,
     )
-    scheduler.add_job(
-        _avisar_proxima_revision_prenatal,
-        "cron",
-        hour=7,
-        minute=30,
-        id="aviso_proxima_revision_prenatal",
-        replace_existing=True,
-        # A las 7:30 recepción ya está abriendo y todavía no empieza la consulta:
-        # el aviso llega con tiempo de hacer las llamadas antes de que la sala se
-        # llene. Si el contenedor estuvo caído a esa hora, la corrida se salta y
-        # la de mañana la alcanza: la ventana es de una semana, no de un día.
-        coalesce=True,
-        max_instances=1,
-    )
+    # Cortex no registra el aviso diario de revisión prenatal ni el espejo del
+    # sistema anterior de GEMS: no hay embarazos que vigilar ni sistema legado.
     scheduler.add_job(
         _avisar_estudios_atrasados,
         "cron",
@@ -409,7 +306,6 @@ def start_scheduler() -> None:
         coalesce=True,
         max_instances=1,
     )
-    _registrar_espejo_legacy()
     scheduler.start()
 
 

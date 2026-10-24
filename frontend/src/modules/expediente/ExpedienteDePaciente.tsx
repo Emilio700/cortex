@@ -54,7 +54,9 @@ const PESTANAS: Record<PestanaExpediente, { nombre: string; icono: string[] }> =
   consentimientos: { nombre: 'Consentimientos', icono: cilShieldAlt },
   equipo: { nombre: 'Equipo', icono: cilPeople },
 }
-const ORDEN: PestanaExpediente[] = ['resumen', 'consultas', 'estudios', 'documentos', 'imagenes', 'embarazo', 'consentimientos', 'equipo']
+// Sin «Embarazo»: es de GEMS (ginecología). El servidor aún la ofrece a quien
+// tiene prenatal.read, pero en neurocirugía no se muestra.
+const ORDEN: PestanaExpediente[] = ['resumen', 'consultas', 'estudios', 'documentos', 'imagenes', 'consentimientos', 'equipo']
 
 const llave = (patientId: number) => `gems.expediente.pestana.${patientId}`
 const leerPestana = (patientId: number): PestanaExpediente | null => {

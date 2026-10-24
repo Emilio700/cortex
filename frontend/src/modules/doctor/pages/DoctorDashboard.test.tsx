@@ -78,7 +78,14 @@ const responder = () =>
     const params = config?.params ?? {}
     let clave = url
     if (url === '/appointments/my-appointments') {
-      clave = params.status === 'atendida' ? 'recientes' : params.fecha_desde === params.fecha_hasta ? 'hoy' : 'mes'
+      clave =
+        params.appointment_type === 'cirugia'
+          ? 'cirugias'
+          : params.status === 'atendida'
+            ? 'recientes'
+            : params.fecha_desde === params.fecha_hasta
+              ? 'hoy'
+              : 'mes'
     }
     const valor = respuestas[clave]
     if (valor instanceof Error) return Promise.reject(valor)
@@ -208,24 +215,27 @@ describe('DoctorDashboard · cada sección falla sola y nunca dice «0»', () =>
   })
 
   it('un renglón de pendientes que falla lo dice y ofrece reintentar; en cero dice «al día»', async () => {
-    respuestas['/clinical-tracking/obstetric-dashboard'] = errorDeRed()
+    respuestas.cirugias = errorDeRed()
     montar()
 
     const pendientes = await screen.findByRole('region', { name: 'Pendientes y seguimiento' })
     await waitFor(() => expect(pendientes).toHaveTextContent('No se pudo consultar.'))
-    expect(pendientes).toHaveTextContent('Al día: todas tienen su control agendado')
+    expect(pendientes).toHaveTextContent('Ninguno abierto')
     expect(within(pendientes).getByRole('button', { name: 'Reintentar' })).toBeInTheDocument()
   })
 
-  it('los partos próximos llevan el nombre, no «Embarazo #id», y marcan la FPP vencida', async () => {
-    respuestas['/clinical-tracking/obstetric-dashboard'] = [
-      { pregnancy_id: 9, patient_id: 40, patient_full_name: 'ANA PAZ', estimated_delivery_date: '2026-10-01', vencida: true, dating_status: 'confirmed' },
+  it('las cirugías programadas llevan el nombre y el procedimiento, y no cuentan las canceladas', async () => {
+    respuestas.cirugias = [
+      cita('confirmada', '07:00', { appointment_type: 'cirugia', cirugia_type: 'Microdiscectomía lumbar' }),
+      cita('cancelada', '09:00', { appointment_type: 'cirugia', cirugia_type: 'Craneotomía' }),
     ]
     montar()
 
     const pendientes = await screen.findByRole('region', { name: 'Pendientes y seguimiento' })
-    expect(await within(pendientes).findByRole('button', { name: /ANA PAZ/ })).toHaveTextContent('FPP vencida')
-    expect(pendientes).not.toHaveTextContent('Embarazo #9')
+    const fila = await within(pendientes).findByRole('button', { name: /PRUEBA/ })
+    expect(fila).toHaveTextContent('Microdiscectomía lumbar')
+    expect(pendientes).not.toHaveTextContent('Craneotomía')
+    expect(pendientes).not.toHaveTextContent(/prenatal|parto/i)
   })
 })
 

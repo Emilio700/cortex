@@ -80,7 +80,7 @@ export const DoctorDashboard: React.FC = () => {
   const esMaster = user?.role === Role.MASTER
   const sucursal = useSucursalActiva()
   const inicio = useInicioDoctora()
-  const { citasHoy, recientes, resultados, criticos, prenatales, partos, veCitas, veSeguimiento } = inicio
+  const { citasHoy, recientes, resultados, criticos, cirugias, veCitas, veSeguimiento } = inicio
 
   const [pestana, setPestana] = useState<PestanaAgenda>('todas')
   const agendaRef = useRef<HTMLDivElement>(null)
@@ -172,8 +172,7 @@ export const DoctorDashboard: React.FC = () => {
               <PendientesYSeguimiento
                 criticos={criticos}
                 resultados={resultados}
-                prenatales={prenatales}
-                partos={partos}
+                cirugias={cirugias}
               />
             </div>
           )}

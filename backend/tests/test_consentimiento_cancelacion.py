@@ -119,7 +119,7 @@ def _crear_borrador(client, escenario, **extra) -> dict:
         headers=escenario["headers"],
         json={
             "patient_id": escenario["paciente"].id,
-            "consent_type": "cervical_biopsy",
+            "consent_type": "stereotactic_biopsy",
             **extra,
         },
     )
@@ -134,7 +134,7 @@ def _puntos_requeridos(client, escenario) -> list[str]:
     return next(
         item["acknowledgements"]
         for item in plantillas
-        if item["consent_type"] == "cervical_biopsy"
+        if item["consent_type"] == "stereotactic_biopsy"
     )
 
 
@@ -170,13 +170,13 @@ def test_el_texto_escrito_por_la_doctora_se_guarda_tal_cual(client, escenario):
 
 def test_sin_texto_propio_se_conserva_el_de_la_plantilla(client, escenario):
     cuerpo = _crear_borrador(client, escenario)
-    assert "Biopsia cervical" in cuerpo["rendered_body"]
+    assert "estereotaxia" in cuerpo["rendered_body"]
     assert cuerpo["field_values"]["body_source"] == "template"
 
 
 def test_la_plantilla_precargada_puede_ajustarse_antes_de_firmar(client, escenario):
     """Encendido el interruptor, el médico aún puede editar el texto cargado."""
-    ajustado = "Biopsia cervical con una aclaración añadida por el médico."
+    ajustado = "Biopsia estereotáctica con una aclaración añadida por el médico."
     cuerpo = _crear_borrador(client, escenario, custom_body=ajustado, use_template_body=True)
     assert cuerpo["rendered_body"] == ajustado
     assert cuerpo["field_values"]["body_edited"] is True
@@ -310,3 +310,15 @@ def test_un_borrador_cancelado_ya_no_puede_firmarse(client, escenario):
         },
     )
     assert respuesta.status_code == 409
+
+
+
+def test_ya_no_se_emiten_consentimientos_de_ginecologia(client, escenario):
+    """Los tipos de GEMS se conservan para lo ya firmado, pero no se crean nuevos."""
+    respuesta = client.post(
+        f"{PREFIX}/clinical-consents",
+        headers=escenario["headers"],
+        json={"patient_id": escenario["paciente"].id, "consent_type": "cesarean"},
+    )
+    assert respuesta.status_code == 422
+    assert "ya no se ofrece" in respuesta.json()["detail"]

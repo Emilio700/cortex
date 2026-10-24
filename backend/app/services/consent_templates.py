@@ -128,8 +128,81 @@ TEMPLATES: dict[ConsentType, ConsentTemplate] = {
 }
 
 
+TEMPLATES.update({
+    ConsentType.CRANIOTOMY: _template(
+        ConsentType.CRANIOTOMY,
+        "Consentimiento para craneotomía",
+        "Apertura quirúrgica del cráneo para resección de lesión, drenaje de hematoma, "
+        "clipaje vascular u otra indicación neuroquirúrgica documentada.",
+        "Comprendo los riesgos de sangrado, infección, crisis convulsivas, déficit neurológico "
+        "nuevo o mayor, fístula de líquido cefalorraquídeo y necesidad de cuidados intensivos.",
+        "Autorizo el envío de tejido a estudio histopatológico cuando corresponda.",
+        allows_photos=True,
+        allows_transfusion_choice=True,
+    ),
+    ConsentType.SPINE_SURGERY: _template(
+        ConsentType.SPINE_SURGERY,
+        "Consentimiento para cirugía de columna",
+        "Descompresión, discectomía, artrodesis o instrumentación de columna cervical, "
+        "dorsal o lumbar según la indicación documentada.",
+        "Comprendo los riesgos de lesión radicular o medular, fístula de líquido "
+        "cefalorraquídeo, infección, falla del material y persistencia del dolor.",
+        "Comprendo que puede requerirse fluoroscopía intraoperatoria y material de implante.",
+        allows_photos=True,
+        allows_transfusion_choice=True,
+    ),
+    ConsentType.CSF_SHUNT: _template(
+        ConsentType.CSF_SHUNT,
+        "Consentimiento para derivación de líquido cefalorraquídeo",
+        "Colocación, revisión o retiro de válvula de derivación ventricular "
+        "(ventrículo-peritoneal, ventrículo-atrial) o ventriculostomía.",
+        "Comprendo los riesgos de obstrucción, infección, hiper o hipodrenaje y la "
+        "posible necesidad de revisiones futuras de la válvula.",
+    ),
+    ConsentType.STEREOTACTIC_BIOPSY: _template(
+        ConsentType.STEREOTACTIC_BIOPSY,
+        "Consentimiento para biopsia cerebral estereotáctica",
+        "Toma de muestra de lesión intracraneal guiada por estereotaxia o neuronavegación.",
+        "Comprendo el riesgo de hemorragia, déficit neurológico y de que la muestra no sea diagnóstica.",
+        "Autorizo el envío de tejido a estudio histopatológico.",
+    ),
+    ConsentType.PAIN_INTERVENTION: _template(
+        ConsentType.PAIN_INTERVENTION,
+        "Consentimiento para procedimiento intervencionista de dolor",
+        "Bloqueo radicular, facetario o epidural, radiofrecuencia o infiltración guiada por imagen.",
+        "Comprendo que el alivio puede ser parcial o temporal y los riesgos de punción "
+        "dural, infección, sangrado y reacción al medicamento o al contraste.",
+    ),
+    ConsentType.PERIPHERAL_NERVE: _template(
+        ConsentType.PERIPHERAL_NERVE,
+        "Consentimiento para cirugía de nervio periférico",
+        "Liberación, neurólisis o reparación de nervio periférico (p. ej., túnel del carpo, "
+        "nervio cubital).",
+        "Comprendo los riesgos de dolor persistente, alteración sensitiva o motora y recurrencia.",
+    ),
+    ConsentType.LUMBAR_PUNCTURE: _template(
+        ConsentType.LUMBAR_PUNCTURE,
+        "Consentimiento para punción lumbar",
+        "Punción lumbar diagnóstica o terapéutica, incluida la prueba de drenaje de líquido cefalorraquídeo.",
+        "Comprendo los riesgos de cefalea pospunción, sangrado, infección y dolor en el sitio.",
+    ),
+})
+
+# Los que Cortex ofrece al crear un consentimiento nuevo. Los de GEMS siguen en
+# TEMPLATES para abrir y descargar los ya firmados.
+TIPOS_VIGENTES: tuple[ConsentType, ...] = (
+    ConsentType.CRANIOTOMY,
+    ConsentType.SPINE_SURGERY,
+    ConsentType.CSF_SHUNT,
+    ConsentType.STEREOTACTIC_BIOPSY,
+    ConsentType.PAIN_INTERVENTION,
+    ConsentType.PERIPHERAL_NERVE,
+    ConsentType.LUMBAR_PUNCTURE,
+)
+
+
 def list_templates() -> list[ConsentTemplate]:
-    return list(TEMPLATES.values())
+    return [TEMPLATES[tipo] for tipo in TIPOS_VIGENTES]
 
 
 def get_template(consent_type: ConsentType) -> ConsentTemplate:

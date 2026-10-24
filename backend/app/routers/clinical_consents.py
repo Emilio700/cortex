@@ -40,7 +40,7 @@ from app.services.antivirus_service import scan_upload
 from app.services.audit_service import log_action
 from app.services.bitacora_accesos import registrar_acceso
 from app.services.consent_pdf_service import generate_consent_pdf
-from app.services.consent_templates import get_template, list_templates
+from app.services.consent_templates import TIPOS_VIGENTES, get_template, list_templates
 from app.utils.uploads import validate_file_structure
 
 router = APIRouter(prefix="/clinical-consents", tags=["clinical-consents"])
@@ -244,6 +244,13 @@ def create_consent_draft(
 ) -> ClinicalConsent:
     patient = _patient_in_scope(db, data.patient_id, current_user)
     _validate_context(db, data, patient, current_user)
+    # Los tipos de GEMS (ginecología) siguen abriéndose si ya existen, pero
+    # Cortex ya no emite consentimientos nuevos de ellos.
+    if data.consent_type not in TIPOS_VIGENTES:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="Ese tipo de consentimiento ya no se ofrece en Cortex.",
+        )
     template = get_template(data.consent_type)
     consent = ClinicalConsent(
         tenant_id=patient.tenant_id,

@@ -33,7 +33,7 @@ const JHOANY: User = {
   created_at: '2026-09-01',
 }
 
-const MÉDICOS = [
+const MEDICOS = [
   { id: 7, full_name: 'ADOLFO RUIZ', role: Role.DOCTOR, is_active: true },
   { id: 8, full_name: 'CINTIA CASTRO', role: Role.DOCTOR, is_active: true },
 ]
@@ -44,7 +44,7 @@ const apoyo = (doctor_ids: number[], puede_ver_corte: boolean) => ({
 
 beforeEach(() => {
   apiGet.mockReset().mockImplementation((url: string) =>
-    url === '/users' ? Promise.resolve({ data: MÉDICOS }) : Promise.resolve(apoyo([], false)),
+    url === '/users' ? Promise.resolve({ data: MEDICOS }) : Promise.resolve(apoyo([], false)),
   )
   apiPut.mockReset().mockImplementation((_url: string, datos: any) =>
     Promise.resolve(apoyo(datos.doctor_ids, datos.puede_ver_corte)),
@@ -116,7 +116,7 @@ describe('UserForm', () => {
     const user = userEvent.setup()
     apiGet.mockImplementation((url: string) =>
       url === '/users'
-        ? Promise.resolve({ data: MÉDICOS })
+        ? Promise.resolve({ data: MEDICOS })
         : Promise.reject({ response: { data: { detail: 'Sin conexión.' } } }),
     )
     render(<UserForm visible onClose={vi.fn()} onSubmit={vi.fn().mockResolvedValue(undefined)} user={JHOANY} />)
@@ -130,7 +130,7 @@ describe('UserForm', () => {
   it('sin cambios en las asignaciones no las vuelve a mandar', async () => {
     const user = userEvent.setup()
     apiGet.mockImplementation((url: string) =>
-      url === '/users' ? Promise.resolve({ data: MÉDICOS }) : Promise.resolve(apoyo([7], true)),
+      url === '/users' ? Promise.resolve({ data: MEDICOS }) : Promise.resolve(apoyo([7], true)),
     )
     const onClose = vi.fn()
     render(<UserForm visible onClose={onClose} onSubmit={vi.fn().mockResolvedValue(undefined)} user={JHOANY} />)
