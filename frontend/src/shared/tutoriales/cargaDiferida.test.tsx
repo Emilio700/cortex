@@ -63,10 +63,10 @@ describe('carga diferida de la ayuda', () => {
     // Al pedirla aparece el centro (React.lazy) y con él llega el motor. El
     // margen es amplio a propósito: la primera vez Vitest transforma los
     // módulos al vuelo y con varios archivos en paralelo puede tardar.
-    expect(await screen.findByText('Centro de ayuda', {}, { timeout: 5000 })).toBeInTheDocument()
-    await vi.waitFor(() => expect(motorCargado()).toBe(true), { timeout: 5000 })
-    // La prueba entera también necesita ese margen: sus dos esperas de 5 s no
+    expect(await screen.findByText('Centro de ayuda', {}, { timeout: 15_000 })).toBeInTheDocument()
+    await vi.waitFor(() => expect(motorCargado()).toBe(true), { timeout: 15_000 })
+    // La prueba entera también necesita ese margen: sus dos esperas de 15 s no
     // caben en los 5 s por omisión de Vitest, y con la suite completa en
     // paralelo fallaba por tiempo, no por un defecto.
-  }, 20_000)
+  }, 40_000)
 })
