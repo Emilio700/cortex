@@ -15,6 +15,7 @@ import { mensajeDeError } from '../../shared/utils/errors'
 import { formatearInstante } from '../../shared/utils/date'
 import VisorDocumentos, { type ArchivoVisor } from '../../shared/components/VisorDocumentos'
 import ClinicalImagesPanel from '../doctor/components/ClinicalImagesPanel'
+import EstudiosDelPaciente from '../imagen/componentes/EstudiosDelPaciente'
 import { useAuth } from '../../shared/context/AuthContext'
 
 export interface ImagenDePaciente {
@@ -94,6 +95,7 @@ export default function PestanaImagenes({ patientId, appointmentId }: { patientI
 
   return (
     <div className="d-flex flex-column gap-3">
+      <EstudiosDelPaciente patientId={patientId} />
       {subeFotos && (
         <ClinicalImagesPanel
           patientId={patientId}

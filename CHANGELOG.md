@@ -22,6 +22,19 @@ Todos los cambios notables de Cortex. Formato basado en
   Neurofisiología) de neurocirugía.
 - «Cirugías programadas» de las próximas dos semanas en el inicio del médico.
 - Seed de demostración `seed_cortex` con un consultorio de neurocirugía ficticio.
+- Estudios de imagen DICOM dentro del expediente: carga de cortes o del ZIP del CD,
+  agrupación por estudio y serie, orden de cortes por geometría, detección de la
+  secuencia (T1, T2, FLAIR, DWI…) y estado que distingue «completo» de «llegó
+  incompleto». Tres tablas nuevas (`imaging_studies`, `imaging_series`,
+  `imaging_annotations`); no toca nada de lo guardado.
+- Visor de estudios en `/pacientes/:id/estudios/:studyId`: series, contraste,
+  recorrido con la rueda, medición con unidades reales, comparación en paralelo con
+  el estudio previo y avisos cuando las secuencias no son comparables.
+- Mediciones como dato del expediente: nacen sin aceptar, se pueden borrar mientras
+  no se acepten, y una aceptada ya no se borra. Se muestra la evolución contra el
+  estudio previo (`+3.3 (+18.3 %)`).
+- Módulo `modules/imagen` con la separación dominio · servicios · componentes ·
+  páginas, documentada en `docs/DESIGN.md`.
 
 ### Cambiado
 - Voz de la interfaz en masculino genérico: «el paciente», «el médico».
