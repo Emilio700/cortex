@@ -138,6 +138,7 @@ Todos los cambios notables de Cortex. Formato basado en
 - Puertos, contenedores y nombres de producción propios para convivir con GEMS.
 
 ### Corregido
+- Cambiar de serie en el visor de estudios ya no tumba la pantalla («No se pudo mostrar esta pantalla»): Cornerstone monta en su propio lienzo y no borra la etiqueta y el estado que pinta la interfaz.
 - Al cerrar sesión y entrar con otra cuenta en la misma ventana, la cuenta nueva ya no hereda las pestañas abiertas de la anterior (con nombres de pacientes en sus títulos): se borran al salir y cada lista sólo se carga para quien la abrió.
 - La sección «Escalas neurológicas» de la consulta usa un ícono de CoreUI en lugar de un emoji, como el resto de las secciones.
 - Las mediciones trazadas **nunca llegaban al panel**: el visor escuchaba el fin del

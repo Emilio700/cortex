@@ -716,7 +716,11 @@ export default function VisorEstudioPage() {
             />
 
             <div className="visor-lienzo" data-comparando={compararCon ? 'true' : 'false'}>
-              <div className="visor-viewport" ref={refIzquierda}>
+              <div className="visor-viewport">
+                {/* Cornerstone vacía su elemento al montar y al cambiar de serie:
+                    si fuera este mismo div, se llevaría la etiqueta y el estado
+                    que pinta React y la pantalla se caería (removeChild). */}
+                <div className="visor-viewport__lienzo" ref={refIzquierda} />
                 <div className="visor-viewport__etiqueta">
                   {serieActiva ? nombreDeSerie(serieActiva) : 'Sin serie'}
                   <br />
@@ -746,7 +750,8 @@ export default function VisorEstudioPage() {
                 )}
               </div>
               {compararCon && (
-                <div className="visor-viewport" ref={refDerecha}>
+                <div className="visor-viewport">
+                  <div className="visor-viewport__lienzo" ref={refDerecha} />
                   <div className="visor-viewport__etiqueta">
                     {previo ? fechaCorta(previo.study_date) : 'Estudio previo'}
                   </div>
