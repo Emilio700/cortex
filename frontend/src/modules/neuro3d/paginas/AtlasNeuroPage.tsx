@@ -37,6 +37,8 @@ import { AVISO_ORIGEN, type OrigenModelo } from '../dominio/origenModelo'
 import OrigenTemporalRx from '../componentes/OrigenTemporalRx'
 import PanelMedicionesRx from '../componentes/PanelMedicionesRx'
 import { columnaRxApi, type AjusteRxGuardado } from '../servicios/columnaRxApi'
+import { tomarOrigenPedido } from '../servicios/origenPedido'
+import { useAlReactivarPestana } from '../../../shared/tabs/useAlReactivarPestana'
 import '../ui/radiografia.css'
 import { componerCaptura, descargar, nombreDeCaptura } from '../servicios/captura'
 import { useReducirMovimiento } from '../servicios/movimiento'
@@ -83,24 +85,40 @@ export default function AtlasNeuroPage() {
   const puedeGuardar = patientId !== null && can('clinical_images.upload')
 
   // ── Origen del modelo (columna desde radiografía) ────────────────────────
-  // Con `?origen=radiografia` (viene de la herramienta de marcado) se abre con
-  // las medidas del paciente, si tiene un ajuste vigente.
+  // Desde la herramienta de marcado («Ver en Neuro 3D») se abre con las medidas
+  // del paciente, si tiene un ajuste vigente. El pedido llega por
+  // `origenPedido` (las pestañas no conservan el `?…`) o, fuera de pestañas,
+  // por `?origen=radiografia`.
   const [parametros] = useSearchParams()
-  const [origen, setOrigen] = useState<OrigenModelo>(parametros.get('origen') === 'radiografia' ? 'radiografia' : 'esquematico')
+  const [origen, setOrigen] = useState<OrigenModelo>(() => {
+    const pedido = patientId !== null ? tomarOrigenPedido(patientId) : null
+    return pedido ?? (parametros.get('origen') === 'radiografia' ? 'radiografia' : 'esquematico')
+  })
   const [ajusteRx, setAjusteRx] = useState<AjusteRxGuardado | null | 'cargando' | 'error'>(null)
+  const [recargaRx, setRecargaRx] = useState(0)
   const veRx = patientId !== null && can('spine_rx.read')
   useEffect(() => {
     if (!veRx || patientId === null) return
     let vigente = true
-    setAjusteRx('cargando')
+    // Al recargar no se vuelve a «cargando»: la escena seguiría con el ajuste
+    // que ya tenía y se rehace sólo si el vigente cambió.
+    if (recargaRx === 0) setAjusteRx('cargando')
     columnaRxApi
       .vigente(patientId)
-      .then((a) => vigente && setAjusteRx(a))
+      .then((a) => vigente && setAjusteRx((x) => (x && typeof x === 'object' && a && x.id === a.id ? x : a)))
       .catch(() => vigente && setAjusteRx('error'))
     return () => {
       vigente = false
     }
-  }, [veRx, patientId])
+  }, [veRx, patientId, recargaRx])
+  // La pestaña de Neuro 3D no se desmonta: al volver a ella se trae el ajuste
+  // vigente (pudo guardarse uno nuevo) y se aplica el origen que se pidió.
+  useAlReactivarPestana(() => {
+    if (patientId === null) return
+    const pedido = tomarOrigenPedido(patientId)
+    if (pedido) setOrigen(pedido)
+    setRecargaRx((n) => n + 1)
+  })
   const ajusteVigente = ajusteRx && typeof ajusteRx === 'object' ? ajusteRx : null
   const origenEfectivo: OrigenModelo = origen === 'radiografia' && ajusteVigente ? 'radiografia' : 'esquematico'
   const avisoDelOrigen = AVISO_ORIGEN[origenEfectivo]

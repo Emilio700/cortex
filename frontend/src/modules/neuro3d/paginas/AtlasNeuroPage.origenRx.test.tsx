@@ -133,6 +133,15 @@ describe('Neuro 3D desde radiografía', () => {
     expect(screen.queryByRole('link', { name: 'Marcar radiografías' })).toBeNull()
   })
 
+  it('el pedido de la herramienta de marcado llega aunque la pestaña quite el ?origen', async () => {
+    responder([AJUSTE])
+    sessionStorage.setItem('cortex.neuro3d.origen.5', 'radiografia')
+    abrir('/pacientes/5/neuro-3d')
+    await waitFor(() => expect(screen.getByText(AVISO_ORIGEN.radiografia)).toBeInTheDocument())
+    // Se toma una sola vez.
+    expect(sessionStorage.getItem('cortex.neuro3d.origen.5')).toBeNull()
+  })
+
   it('sin paciente en contexto no aparece el origen', async () => {
     abrir('/imagen/neuro-3d')
     await waitFor(() => expect(crearEscena).toHaveBeenCalled())
