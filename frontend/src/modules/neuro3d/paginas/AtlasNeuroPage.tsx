@@ -12,7 +12,7 @@
  * un mensaje claro en vez de una pantalla en blanco.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { CAlert, CBadge, CButton, CSpinner } from '@coreui/react-pro'
 import { cil3d } from '@coreui/icons'
 
@@ -31,14 +31,20 @@ import ModalGuardarExpediente from '../componentes/ModalGuardarExpediente'
 import PanelCapas from '../componentes/PanelCapas'
 import PanelExplicar from '../componentes/PanelExplicar'
 import { atlasApi } from '../servicios/atlasApi'
+// Columna desde radiografías (feat/columna-desde-radiografias)
+import { ajusteDelEje } from '../dominio/ajusteRadiografico'
+import { AVISO_ORIGEN, type OrigenModelo } from '../dominio/origenModelo'
+import OrigenTemporalRx from '../componentes/OrigenTemporalRx'
+import PanelMedicionesRx from '../componentes/PanelMedicionesRx'
+import { columnaRxApi, type AjusteRxGuardado } from '../servicios/columnaRxApi'
+import '../ui/radiografia.css'
 import { componerCaptura, descargar, nombreDeCaptura } from '../servicios/captura'
 import { useReducirMovimiento } from '../servicios/movimiento'
 import { hayWebGL } from '../servicios/webgl'
 import type { EscenaAtlas, Resaltado } from '../servicios/escena'
 import '../ui/atlas.css'
 
-export const AVISO_ESQUEMATICO =
-  'Modelo esquemático con fines educativos; no representa la anatomía de este paciente ni sustituye su estudio de imagen.'
+export const AVISO_ESQUEMATICO = AVISO_ORIGEN.esquematico
 
 type EstadoEscena = { tipo: 'cargando' } | { tipo: 'lista' } | { tipo: 'sin-webgl' } | { tipo: 'error'; mensaje: string }
 
@@ -76,6 +82,46 @@ export default function AtlasNeuroPage() {
 
   const puedeGuardar = patientId !== null && can('clinical_images.upload')
 
+  // ── Origen del modelo (columna desde radiografía) ────────────────────────
+  // Con `?origen=radiografia` (viene de la herramienta de marcado) se abre con
+  // las medidas del paciente, si tiene un ajuste vigente.
+  const [parametros] = useSearchParams()
+  const [origen, setOrigen] = useState<OrigenModelo>(parametros.get('origen') === 'radiografia' ? 'radiografia' : 'esquematico')
+  const [ajusteRx, setAjusteRx] = useState<AjusteRxGuardado | null | 'cargando' | 'error'>(null)
+  const veRx = patientId !== null && can('spine_rx.read')
+  useEffect(() => {
+    if (!veRx || patientId === null) return
+    let vigente = true
+    setAjusteRx('cargando')
+    columnaRxApi
+      .vigente(patientId)
+      .then((a) => vigente && setAjusteRx(a))
+      .catch(() => vigente && setAjusteRx('error'))
+    return () => {
+      vigente = false
+    }
+  }, [veRx, patientId])
+  const ajusteVigente = ajusteRx && typeof ajusteRx === 'object' ? ajusteRx : null
+  const origenEfectivo: OrigenModelo = origen === 'radiografia' && ajusteVigente ? 'radiografia' : 'esquematico'
+  const avisoDelOrigen = AVISO_ORIGEN[origenEfectivo]
+  const ajusteDeEscena = useMemo(
+    () => (origenEfectivo === 'radiografia' && ajusteVigente ? ajusteDelEje(ajusteVigente.mediciones) : null),
+    [origenEfectivo, ajusteVigente],
+  )
+  const claveDeEscena = ajusteDeEscena && ajusteVigente ? `rx-${ajusteVigente.id}` : 'esquematico'
+  const razonSinRadiografia =
+    patientId === null
+      ? 'Abre Neuro 3D desde el expediente de un paciente.'
+      : !veRx
+        ? 'Tu cuenta no puede ver los ajustes de radiografía.'
+        : ajusteRx === 'cargando'
+          ? 'Buscando el ajuste del paciente…'
+          : ajusteRx === 'error'
+            ? 'No se pudo consultar el ajuste de radiografía.'
+            : !ajusteVigente
+              ? 'Este paciente no tiene radiografías marcadas.'
+              : null
+
   // ── Escena: se carga aparte y se libera al salir ─────────────────────────
   useEffect(() => {
     if (!hayWebGL()) {
@@ -86,12 +132,14 @@ export default function AtlasNeuroPage() {
     let creada: EscenaAtlas | null = null
     const contenedor = contenedorRef.current
     if (!contenedor) return
+    setEstadoEscena({ tipo: 'cargando' })
     void (async () => {
       try {
         const { crearEscena } = await import('../servicios/escena')
         creada = await crearEscena({
           contenedor,
           reducirMovimiento,
+          ajusteColumna: ajusteDeEscena,
           alSeleccionar: (id) => setSeleccion(id),
           alPasar: (id, x, y) => setHover(id ? { id, x, y } : null),
           alInteractuar: () => setRotacion(false),
@@ -115,9 +163,10 @@ export default function AtlasNeuroPage() {
       escenaRef.current = null
       creada?.liberar()
     }
-    // La escena se crea una sola vez; el resto de los cambios se le pasan abajo.
+    // La escena se crea una vez por origen del modelo (la columna del paciente
+    // cambia la geometría); el resto de los cambios se le pasan abajo.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [claveDeEscena])
 
   const lista = estadoEscena.tipo === 'lista'
 
@@ -291,7 +340,7 @@ export default function AtlasNeuroPage() {
       silueta: explicar ? siluetaMarcasRef.current : siluetaFichaRef.current,
       titulo: 'Neuro 3D · Cortex',
       lineas,
-      leyenda: AVISO_ESQUEMATICO,
+      leyenda: avisoDelOrigen,
       fondo: estilo.getPropertyValue('--cx-anat-fondo').trim() || '#040a18',
       texto: estilo.getPropertyValue('--cx-anat-texto').trim() || '#e4ecfb',
       textoSecundario: estilo.getPropertyValue('--cx-anat-texto-2').trim() || '#9fb2d6',
@@ -320,7 +369,7 @@ export default function AtlasNeuroPage() {
       const blob = await capturar()
       if (!blob) throw new Error('sin escena')
       const lineas = textoDeMarcasParaCaptura(marcas)
-      const descripcion = ['ATLAS NEURO 3D (MODELO ESQUEMÁTICO)', ...lineas.map((l) => l.toUpperCase()), estructura ? estructura.nombre.toUpperCase() : '']
+      const descripcion = [origenEfectivo === 'radiografia' ? 'NEURO 3D (APROXIMACIÓN DESDE RADIOGRAFÍA)' : 'ATLAS NEURO 3D (MODELO ESQUEMÁTICO)', ...lineas.map((l) => l.toUpperCase()), estructura ? estructura.nombre.toUpperCase() : '']
         .filter(Boolean)
         .join('. ')
       setGuardar({ imagen: blob, descripcion })
@@ -373,8 +422,17 @@ export default function AtlasNeuroPage() {
       />
 
       <p className="atlas-aviso" role="note" data-tour="atlas-aviso">
-        {AVISO_ESQUEMATICO}
+        {avisoDelOrigen}
       </p>
+
+      {patientId !== null && (
+        <OrigenTemporalRx
+          origen={origenEfectivo}
+          alCambiar={setOrigen}
+          razonSinRadiografia={razonSinRadiografia}
+          rutaMarcado={can('spine_rx.write') ? `/pacientes/${patientId}/neuro-3d/radiografia` : null}
+        />
+      )}
 
       {aviso && (
         <CAlert color={aviso.color} dismissible onClose={() => setAviso(null)} className="py-2">
@@ -460,6 +518,11 @@ export default function AtlasNeuroPage() {
         </section>
 
         <aside className="atlas-panel atlas-panel--ficha" aria-label="Ficha y explicación">
+          {origenEfectivo === 'radiografia' && ajusteVigente && (
+            <div className="mb-3">
+              <PanelMedicionesRx resultado={ajusteVigente.mediciones} calibraciones={ajusteVigente.calibracion} origen="servidor" compacto />
+            </div>
+          )}
           {estructura ? (
             <FichaEstructura
               ref={siluetaFichaRef}

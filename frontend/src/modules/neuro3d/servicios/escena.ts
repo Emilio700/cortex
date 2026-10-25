@@ -27,6 +27,7 @@ import { construirEnvolturas } from './anatomia/envolturas'
 import { construirVasos } from './anatomia/vasos'
 import { construirVentriculos } from './anatomia/ventriculos'
 import { construirVias } from './anatomia/vias'
+import type { AjusteDelEje } from '../dominio/ajusteRadiografico'
 import { hayWebGL } from './webgl'
 
 export type TonoDeEtiqueta = 'seleccion' | 'conexion' | 'afectado'
@@ -60,6 +61,11 @@ export interface OpcionesDeEscena {
   alInteractuar?: () => void
   /** Se perdió el contexto WebGL (la tarjeta gráfica se reinició, p. ej.). */
   alPerderContexto?: () => void
+  /**
+   * Medidas del paciente desde radiografía (origen «radiografia»): la columna
+   * se dobla a ellas. Sin ajuste, la columna esquemática de siempre.
+   */
+  ajusteColumna?: AjusteDelEje | null
 }
 
 export interface EscenaAtlas {
@@ -328,7 +334,7 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
     })
 
   // ── Construcción de las capas ────────────────────────────────────────────
-  const modelo = crearModeloColumna()
+  const modelo = crearModeloColumna(op.ajusteColumna)
   const CAPAS_DEL_ATLAS: CapaAnatomica[] = [
     { id: 'envolturas', nombre: 'Piel y cráneo', origen: 'procedural', construir: (c) => construirEnvolturas(c.columna!) },
     { id: 'encefalo', nombre: 'Encéfalo', origen: 'procedural', construir: () => construirEncefalo() },
