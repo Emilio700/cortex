@@ -407,6 +407,42 @@ contexto). Permiso `neuro3d.read`.
 
 Referencia: `frontend/src/modules/neuro3d/`.
 
+<!-- Columna desde radiografías (feat/columna-desde-radiografias) -->
+### 4.15 Columna desde radiografía: marcar, sugerir y aproximar
+
+Pantalla `/pacientes/:id/neuro-3d/radiografia` (permiso `spine_rx.write`), a la que
+se llega desde Neuro 3D con el paciente en contexto («Marcar radiografías»).
+
+- **Siempre se dice qué es.** Arriba, fijo, el aviso del origen «radiografía»
+  (`AVISO_ORIGEN` de `dominio/origenModelo.ts`): las medidas doblan la columna
+  esquemática, la forma de cada vértebra no es la del paciente. Y la petición de
+  fotografiar la placa de frente.
+- **La placa va sobre negro fijo**, como en el visor (§4.9). Puntos y platillos en
+  cian; lo que se está moviendo y la distancia de referencia, en ámbar.
+- **Un punto a la vez.** Una franja dice qué esquina toca y dónde está
+  («L3 · platillo superior, esquina anterior»), con el avance («12 de 60»). Al tocar
+  aparece la **lupa** (×3) del lado contrario al dedo; el punto se coloca al soltar.
+  Tocar cerca de uno ya puesto lo arrastra. **Deshacer**, **Saltar punto** (lo que
+  dependía de él no se calcula y se dice por qué) y **Mover imagen** (el dedo
+  desplaza la placa sin marcar) son botones de 40 px. Funciona a 390 px.
+- **Sugerir, no decidir.** Las mediciones se calculan en vivo con la insignia
+  «Sugerencia» y su fuente; lo fuera de referencia va en ámbar como aviso. El Cobb
+  coronal elige sus vértebras límite y el médico puede cambiarlas.
+- **Escala explícita.** Sin escala sólo hay ángulos y proporciones; los milímetros
+  aparecen con el espaciado del DICOM (lo pone el servidor, leído de la serie) o con
+  una distancia conocida que el médico marca, y el panel dice cuál se usó.
+- **El servidor manda.** «Guardado» sólo aparece con su respuesta; desde ahí se ven
+  sus mediciones («Calculadas por el servidor») y, si no coinciden con la sugerencia,
+  se dice. Si falla, los puntos se quedan. Un ajuste no se edita: se anula con motivo
+  y queda tachado en «Ajustes guardados».
+- **En Neuro 3D** el origen «Desde radiografía» usa el ajuste vigente más reciente,
+  cambia el aviso y pone las mediciones en la ficha. Sin ajuste, la opción queda
+  deshabilitada y dice por qué. (El selector definitivo, con TC, es
+  `SelectorOrigen`; hasta integrarlo hay una entrada temporal.)
+
+Referencia: `frontend/src/modules/neuro3d/paginas/MarcadoRadiografiaPage.tsx`,
+`dominio/ajusteRadiografico.ts` y `backend/app/services/columna_rx.py`.
+
 ---
 
 ## 11. Dónde vive cada cosa (módulos)
