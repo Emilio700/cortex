@@ -1,0 +1,1465 @@
+[
+ {
+  "clave": "hueso-frontal",
+  "estructura": "hueso-frontal",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52734"
+  ]
+ },
+ {
+  "clave": "hueso-occipital",
+  "estructura": "hueso-occipital",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52735"
+  ]
+ },
+ {
+  "clave": "hueso-esfenoides",
+  "estructura": "hueso-esfenoides",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52736"
+  ]
+ },
+ {
+  "clave": "hueso-etmoides",
+  "estructura": "hueso-etmoides",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52740"
+  ]
+ },
+ {
+  "clave": "hueso-temporal-izq",
+  "estructura": "hueso-temporal-izq",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52739"
+  ]
+ },
+ {
+  "clave": "hueso-temporal-der",
+  "estructura": "hueso-temporal-der",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52738"
+  ]
+ },
+ {
+  "clave": "hueso-parietal-izq",
+  "estructura": "hueso-parietal-izq",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52789"
+  ]
+ },
+ {
+  "clave": "hueso-parietal-der",
+  "estructura": "hueso-parietal-der",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52788"
+  ]
+ },
+ {
+  "clave": "hueso-cigomatico-izq",
+  "estructura": "hueso-cigomatico-izq",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52893"
+  ]
+ },
+ {
+  "clave": "hueso-cigomatico-der",
+  "estructura": "hueso-cigomatico-der",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52892"
+  ]
+ },
+ {
+  "clave": "maxilar-izq",
+  "estructura": "maxilar-izq",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA53650"
+  ]
+ },
+ {
+  "clave": "maxilar-der",
+  "estructura": "maxilar-der",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA53649"
+  ]
+ },
+ {
+  "clave": "mandibula",
+  "estructura": "mandibula",
+  "parteDe": "craneo",
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA52748"
+  ]
+ },
+ {
+  "clave": "huesos-nasales",
+  "estructura": "craneo",
+  "parteDe": null,
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA53647",
+   "FMA53648"
+  ]
+ },
+ {
+  "clave": "huesos-lagrimales",
+  "estructura": "craneo",
+  "parteDe": null,
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA53645",
+   "FMA53646"
+  ]
+ },
+ {
+  "clave": "huesos-palatinos",
+  "estructura": "craneo",
+  "parteDe": null,
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA53655",
+   "FMA53656"
+  ]
+ },
+ {
+  "clave": "vomer",
+  "estructura": "craneo",
+  "parteDe": null,
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA9710"
+  ]
+ },
+ {
+  "clave": "conchas-nasales-inferiores",
+  "estructura": "craneo",
+  "parteDe": null,
+  "capa": "craneo",
+  "tejido": "craneo",
+  "region": "cabeza",
+  "fma": [
+   "FMA54737",
+   "FMA54738"
+  ]
+ },
+ {
+  "clave": "ventriculo-lateral-izq",
+  "estructura": "ventriculo-lateral-izq",
+  "parteDe": null,
+  "capa": "ventriculos",
+  "tejido": "liquido",
+  "region": "cabeza",
+  "fma": [
+   "FMA78450"
+  ]
+ },
+ {
+  "clave": "ventriculo-lateral-der",
+  "estructura": "ventriculo-lateral-der",
+  "parteDe": null,
+  "capa": "ventriculos",
+  "tejido": "liquido",
+  "region": "cabeza",
+  "fma": [
+   "FMA78449"
+  ]
+ },
+ {
+  "clave": "tercer-ventriculo",
+  "estructura": "tercer-ventriculo",
+  "parteDe": null,
+  "capa": "ventriculos",
+  "tejido": "liquido",
+  "region": "cabeza",
+  "fma": [
+   "FMA78454"
+  ]
+ },
+ {
+  "clave": "acueducto",
+  "estructura": "acueducto",
+  "parteDe": null,
+  "capa": "ventriculos",
+  "tejido": "liquido",
+  "region": "cabeza",
+  "fma": [
+   "FMA78467"
+  ]
+ },
+ {
+  "clave": "cuarto-ventriculo",
+  "estructura": "cuarto-ventriculo",
+  "parteDe": null,
+  "capa": "ventriculos",
+  "tejido": "liquido",
+  "region": "cabeza",
+  "fma": [
+   "FMA78469"
+  ]
+ },
+ {
+  "clave": "giro-frontal-superior-izq",
+  "estructura": "giro-frontal-superior-izq",
+  "parteDe": "lobulo-frontal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72654"
+  ]
+ },
+ {
+  "clave": "giro-frontal-superior-der",
+  "estructura": "giro-frontal-superior-der",
+  "parteDe": "lobulo-frontal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72653"
+  ]
+ },
+ {
+  "clave": "giro-frontal-medio-izq",
+  "estructura": "giro-frontal-medio-izq",
+  "parteDe": "lobulo-frontal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72656"
+  ]
+ },
+ {
+  "clave": "giro-frontal-medio-der",
+  "estructura": "giro-frontal-medio-der",
+  "parteDe": "lobulo-frontal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72655"
+  ]
+ },
+ {
+  "clave": "giro-frontal-inferior-izq",
+  "estructura": "giro-frontal-inferior-izq",
+  "parteDe": "lobulo-frontal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72658"
+  ]
+ },
+ {
+  "clave": "giro-frontal-inferior-der",
+  "estructura": "giro-frontal-inferior-der",
+  "parteDe": "lobulo-frontal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72657"
+  ]
+ },
+ {
+  "clave": "giro-precentral-izq",
+  "estructura": "giro-precentral-izq",
+  "parteDe": "lobulo-frontal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72662"
+  ]
+ },
+ {
+  "clave": "giro-precentral-der",
+  "estructura": "giro-precentral-der",
+  "parteDe": "lobulo-frontal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72661"
+  ]
+ },
+ {
+  "clave": "giros-orbitarios-izq",
+  "estructura": "giros-orbitarios-izq",
+  "parteDe": "lobulo-frontal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA256194"
+  ]
+ },
+ {
+  "clave": "giros-orbitarios-der",
+  "estructura": "giros-orbitarios-der",
+  "parteDe": "lobulo-frontal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA256194"
+  ]
+ },
+ {
+  "clave": "giro-poscentral-izq",
+  "estructura": "giro-poscentral-izq",
+  "parteDe": "lobulo-parietal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72666"
+  ]
+ },
+ {
+  "clave": "giro-poscentral-der",
+  "estructura": "giro-poscentral-der",
+  "parteDe": "lobulo-parietal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72665"
+  ]
+ },
+ {
+  "clave": "giro-supramarginal-izq",
+  "estructura": "giro-supramarginal-izq",
+  "parteDe": "lobulo-parietal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72668"
+  ]
+ },
+ {
+  "clave": "giro-supramarginal-der",
+  "estructura": "giro-supramarginal-der",
+  "parteDe": "lobulo-parietal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72667"
+  ]
+ },
+ {
+  "clave": "giro-angular-izq",
+  "estructura": "giro-angular-izq",
+  "parteDe": "lobulo-parietal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72670"
+  ]
+ },
+ {
+  "clave": "giro-angular-der",
+  "estructura": "giro-angular-der",
+  "parteDe": "lobulo-parietal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72669"
+  ]
+ },
+ {
+  "clave": "lobulillo-parietal-superior-izq",
+  "estructura": "lobulillo-parietal-superior-izq",
+  "parteDe": "lobulo-parietal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72672"
+  ]
+ },
+ {
+  "clave": "lobulillo-parietal-superior-der",
+  "estructura": "lobulillo-parietal-superior-der",
+  "parteDe": "lobulo-parietal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72671"
+  ]
+ },
+ {
+  "clave": "giro-temporal-superior-izq",
+  "estructura": "giro-temporal-superior-izq",
+  "parteDe": "lobulo-temporal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72801",
+   "FMA72805"
+  ]
+ },
+ {
+  "clave": "giro-temporal-superior-der",
+  "estructura": "giro-temporal-superior-der",
+  "parteDe": "lobulo-temporal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72800",
+   "FMA72804"
+  ]
+ },
+ {
+  "clave": "giro-temporal-medio-izq",
+  "estructura": "giro-temporal-medio-izq",
+  "parteDe": "lobulo-temporal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72686"
+  ]
+ },
+ {
+  "clave": "giro-temporal-medio-der",
+  "estructura": "giro-temporal-medio-der",
+  "parteDe": "lobulo-temporal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72685"
+  ]
+ },
+ {
+  "clave": "giro-temporal-inferior-izq",
+  "estructura": "giro-temporal-inferior-izq",
+  "parteDe": "lobulo-temporal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72688"
+  ]
+ },
+ {
+  "clave": "giro-temporal-inferior-der",
+  "estructura": "giro-temporal-inferior-der",
+  "parteDe": "lobulo-temporal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72687"
+  ]
+ },
+ {
+  "clave": "giro-fusiforme-izq",
+  "estructura": "giro-fusiforme-izq",
+  "parteDe": "lobulo-temporal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72690"
+  ]
+ },
+ {
+  "clave": "giro-fusiforme-der",
+  "estructura": "giro-fusiforme-der",
+  "parteDe": "lobulo-temporal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72689"
+  ]
+ },
+ {
+  "clave": "giro-parahipocampico-izq",
+  "estructura": "giro-parahipocampico-izq",
+  "parteDe": "lobulo-temporal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72706"
+  ]
+ },
+ {
+  "clave": "giro-parahipocampico-der",
+  "estructura": "giro-parahipocampico-der",
+  "parteDe": "lobulo-temporal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72705"
+  ]
+ },
+ {
+  "clave": "hipocampo-izq",
+  "estructura": "hipocampo-izq",
+  "parteDe": "lobulo-temporal-izq",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72714"
+  ]
+ },
+ {
+  "clave": "hipocampo-der",
+  "estructura": "hipocampo-der",
+  "parteDe": "lobulo-temporal-der",
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72713"
+  ]
+ },
+ {
+  "clave": "lobulo-occipital-izq",
+  "estructura": "lobulo-occipital-izq",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72976"
+  ]
+ },
+ {
+  "clave": "lobulo-occipital-der",
+  "estructura": "lobulo-occipital-der",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72975"
+  ]
+ },
+ {
+  "clave": "insula-izq",
+  "estructura": "insula-izq",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72978"
+  ]
+ },
+ {
+  "clave": "insula-der",
+  "estructura": "insula-der",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72977"
+  ]
+ },
+ {
+  "clave": "giro-cingulado-izq",
+  "estructura": "giro-cingulado-izq",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72718"
+  ]
+ },
+ {
+  "clave": "giro-cingulado-der",
+  "estructura": "giro-cingulado-der",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA72717"
+  ]
+ },
+ {
+  "clave": "talamo-izq",
+  "estructura": "talamo-izq",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA258716"
+  ]
+ },
+ {
+  "clave": "talamo-der",
+  "estructura": "talamo-der",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA258714"
+  ]
+ },
+ {
+  "clave": "cuerpo-calloso",
+  "estructura": "cuerpo-calloso",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "sustancia-blanca",
+  "region": "cabeza",
+  "fma": [
+   "FMA86464"
+  ]
+ },
+ {
+  "clave": "cerebelo",
+  "estructura": "cerebelo",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "corteza",
+  "region": "cabeza",
+  "fma": [
+   "FMA67944"
+  ]
+ },
+ {
+  "clave": "mesencefalo",
+  "estructura": "mesencefalo",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "sustancia-blanca",
+  "region": "cabeza",
+  "fma": [
+   "FMA61993",
+   "FMA62394"
+  ]
+ },
+ {
+  "clave": "protuberancia",
+  "estructura": "protuberancia",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "sustancia-blanca",
+  "region": "cabeza",
+  "fma": [
+   "FMA67943"
+  ]
+ },
+ {
+  "clave": "bulbo",
+  "estructura": "bulbo",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "sustancia-blanca",
+  "region": "cabeza",
+  "fma": [
+   "FMA62004"
+  ]
+ },
+ {
+  "clave": "nervio-optico-izq",
+  "estructura": "nervio-optico-izq",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "nervio",
+  "region": "cabeza",
+  "fma": [
+   "FMA50863"
+  ]
+ },
+ {
+  "clave": "nervio-optico-der",
+  "estructura": "nervio-optico-der",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "nervio",
+  "region": "cabeza",
+  "fma": [
+   "FMA50863"
+  ]
+ },
+ {
+  "clave": "quiasma-optico",
+  "estructura": "quiasma-optico",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "nervio",
+  "region": "cabeza",
+  "fma": [
+   "FMA62045"
+  ]
+ },
+ {
+  "clave": "nervio-troclear-izq",
+  "estructura": "nervio-troclear-izq",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "nervio",
+  "region": "cabeza",
+  "fma": [
+   "FMA50865"
+  ]
+ },
+ {
+  "clave": "nervio-troclear-der",
+  "estructura": "nervio-troclear-der",
+  "parteDe": null,
+  "capa": "encefalo",
+  "tejido": "nervio",
+  "region": "cabeza",
+  "fma": [
+   "FMA50865"
+  ]
+ },
+ {
+  "clave": "carotida-interna-izq",
+  "estructura": "carotida-interna-izq",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA3947"
+  ]
+ },
+ {
+  "clave": "carotida-interna-der",
+  "estructura": "carotida-interna-der",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA3947"
+  ]
+ },
+ {
+  "clave": "vertebral-izq",
+  "estructura": "vertebral-izq",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA3956"
+  ]
+ },
+ {
+  "clave": "vertebral-der",
+  "estructura": "vertebral-der",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA3956"
+  ]
+ },
+ {
+  "clave": "basilar",
+  "estructura": "basilar",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50542"
+  ]
+ },
+ {
+  "clave": "cerebral-anterior-izq",
+  "estructura": "cerebral-anterior-izq",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50030"
+  ]
+ },
+ {
+  "clave": "cerebral-anterior-der",
+  "estructura": "cerebral-anterior-der",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50029"
+  ]
+ },
+ {
+  "clave": "cerebral-media-izq",
+  "estructura": "cerebral-media-izq",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50365",
+   "FMA50368"
+  ]
+ },
+ {
+  "clave": "cerebral-media-der",
+  "estructura": "cerebral-media-der",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50365",
+   "FMA50368"
+  ]
+ },
+ {
+  "clave": "cerebral-posterior-izq",
+  "estructura": "cerebral-posterior-izq",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50590",
+   "FMA50591"
+  ]
+ },
+ {
+  "clave": "cerebral-posterior-der",
+  "estructura": "cerebral-posterior-der",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50590",
+   "FMA50591"
+  ]
+ },
+ {
+  "clave": "comunicante-anterior",
+  "estructura": "comunicante-anterior",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50169"
+  ]
+ },
+ {
+  "clave": "comunicante-posterior-izq",
+  "estructura": "comunicante-posterior-izq",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50084"
+  ]
+ },
+ {
+  "clave": "comunicante-posterior-der",
+  "estructura": "comunicante-posterior-der",
+  "parteDe": null,
+  "capa": "vasos",
+  "tejido": "arteria",
+  "region": "cabeza",
+  "fma": [
+   "FMA50084"
+  ]
+ },
+ {
+  "clave": "vertebra-C1",
+  "estructura": "vertebra-C1",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA12519"
+  ]
+ },
+ {
+  "clave": "vertebra-C2",
+  "estructura": "vertebra-C2",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA12520"
+  ]
+ },
+ {
+  "clave": "vertebra-C3",
+  "estructura": "vertebra-C3",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA12521"
+  ]
+ },
+ {
+  "clave": "vertebra-C4",
+  "estructura": "vertebra-C4",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA12522"
+  ]
+ },
+ {
+  "clave": "vertebra-C5",
+  "estructura": "vertebra-C5",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA12523"
+  ]
+ },
+ {
+  "clave": "vertebra-C6",
+  "estructura": "vertebra-C6",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA12524"
+  ]
+ },
+ {
+  "clave": "vertebra-C7",
+  "estructura": "vertebra-C7",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA12525"
+  ]
+ },
+ {
+  "clave": "vertebra-T1",
+  "estructura": "vertebra-T1",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA9165"
+  ]
+ },
+ {
+  "clave": "vertebra-T2",
+  "estructura": "vertebra-T2",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA9187"
+  ]
+ },
+ {
+  "clave": "vertebra-T3",
+  "estructura": "vertebra-T3",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA9209"
+  ]
+ },
+ {
+  "clave": "vertebra-T4",
+  "estructura": "vertebra-T4",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA9248"
+  ]
+ },
+ {
+  "clave": "vertebra-T5",
+  "estructura": "vertebra-T5",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA9922"
+  ]
+ },
+ {
+  "clave": "vertebra-T6",
+  "estructura": "vertebra-T6",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA9945"
+  ]
+ },
+ {
+  "clave": "vertebra-T7",
+  "estructura": "vertebra-T7",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA9968"
+  ]
+ },
+ {
+  "clave": "vertebra-T8",
+  "estructura": "vertebra-T8",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA9991"
+  ]
+ },
+ {
+  "clave": "vertebra-T9",
+  "estructura": "vertebra-T9",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA10014"
+  ]
+ },
+ {
+  "clave": "vertebra-T10",
+  "estructura": "vertebra-T10",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA10037"
+  ]
+ },
+ {
+  "clave": "vertebra-T11",
+  "estructura": "vertebra-T11",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA10059"
+  ]
+ },
+ {
+  "clave": "vertebra-T12",
+  "estructura": "vertebra-T12",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA10081"
+  ]
+ },
+ {
+  "clave": "vertebra-L1",
+  "estructura": "vertebra-L1",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA13072"
+  ]
+ },
+ {
+  "clave": "vertebra-L2",
+  "estructura": "vertebra-L2",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA13073"
+  ]
+ },
+ {
+  "clave": "vertebra-L3",
+  "estructura": "vertebra-L3",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA13074"
+  ]
+ },
+ {
+  "clave": "vertebra-L4",
+  "estructura": "vertebra-L4",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA13075"
+  ]
+ },
+ {
+  "clave": "vertebra-L5",
+  "estructura": "vertebra-L5",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA13076"
+  ]
+ },
+ {
+  "clave": "sacro",
+  "estructura": "sacro",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "hueso",
+  "region": "columna",
+  "fma": [
+   "FMA16202"
+  ]
+ },
+ {
+  "clave": "disco-C2-C3",
+  "estructura": "disco-C2-C3",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA25058"
+  ]
+ },
+ {
+  "clave": "disco-C3-C4",
+  "estructura": "disco-C3-C4",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13896"
+  ]
+ },
+ {
+  "clave": "disco-C4-C5",
+  "estructura": "disco-C4-C5",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13897"
+  ]
+ },
+ {
+  "clave": "disco-C5-C6",
+  "estructura": "disco-C5-C6",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13898"
+  ]
+ },
+ {
+  "clave": "disco-C6-C7",
+  "estructura": "disco-C6-C7",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13899"
+  ]
+ },
+ {
+  "clave": "disco-C7-T1",
+  "estructura": "disco-C7-T1",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13900"
+  ]
+ },
+ {
+  "clave": "disco-T1-T2",
+  "estructura": "disco-T1-T2",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA10458"
+  ]
+ },
+ {
+  "clave": "disco-T2-T3",
+  "estructura": "disco-T2-T3",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13495"
+  ]
+ },
+ {
+  "clave": "disco-T3-T4",
+  "estructura": "disco-T3-T4",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13500"
+  ]
+ },
+ {
+  "clave": "disco-T4-T5",
+  "estructura": "disco-T4-T5",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13501"
+  ]
+ },
+ {
+  "clave": "disco-T5-T6",
+  "estructura": "disco-T5-T6",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13502"
+  ]
+ },
+ {
+  "clave": "disco-T6-T7",
+  "estructura": "disco-T6-T7",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13503"
+  ]
+ },
+ {
+  "clave": "disco-T7-T8",
+  "estructura": "disco-T7-T8",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13504"
+  ]
+ },
+ {
+  "clave": "disco-T8-T9",
+  "estructura": "disco-T8-T9",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13505"
+  ]
+ },
+ {
+  "clave": "disco-T9-T10",
+  "estructura": "disco-T9-T10",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13506"
+  ]
+ },
+ {
+  "clave": "disco-T10-T11",
+  "estructura": "disco-T10-T11",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13507"
+  ]
+ },
+ {
+  "clave": "disco-T11-T12",
+  "estructura": "disco-T11-T12",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA13508"
+  ]
+ },
+ {
+  "clave": "disco-L1-L2",
+  "estructura": "disco-L1-L2",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA16033"
+  ]
+ },
+ {
+  "clave": "disco-L2-L3",
+  "estructura": "disco-L2-L3",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA16034"
+  ]
+ },
+ {
+  "clave": "disco-L3-L4",
+  "estructura": "disco-L3-L4",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA16035"
+  ]
+ },
+ {
+  "clave": "disco-L4-L5",
+  "estructura": "disco-L4-L5",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA16036"
+  ]
+ },
+ {
+  "clave": "disco-L5-S1",
+  "estructura": "disco-L5-S1",
+  "parteDe": null,
+  "capa": "columna",
+  "tejido": "disco",
+  "region": "columna",
+  "fma": [
+   "FMA16037"
+  ]
+ }
+]
