@@ -129,6 +129,12 @@ Todos los cambios notables de Cortex. Formato basado en
 - La barrera de error raíz envuelve también la sesión y el enrutador: un fallo al
   armar `AuthProvider` o `HashRouter` desmontaba toda la aplicación (React 19) y se
   veía en blanco, porque la barrera de `App` vive por dentro de ellos.
+- Neuro 3D: la columna tiene sus curvas fisiológicas medibles (lordosis cervical,
+  cifosis torácica, lordosis lumbar de 52° y pendiente sacra de 36°) y el sacro mide
+  11 cm con un cóccix corto; antes bajaba como una cola larga por debajo de la pelvis.
+  «Separar vértebras» abre cada disco a lo largo de la curva y ya no deja vértebras
+  lumbares corridas a un lado del conducto. La raíz L5 baja por delante del ala del
+  sacro y la vista «Columna completa» ya alcanza el cóccix.
 
 ### Quitado
 - La pantalla **Triage** del menú de recepción. Los signos vitales se toman desde la

@@ -41,7 +41,8 @@ const construirCraneo = () => {
 const construirPiel = (modelo: ModeloColumna) => {
   const ySacro = modelo.punto(24.4).y
   const arriba = 9.4
-  const abajo = ySacro - 10
+  // Hasta debajo del cóccix: la pelvis envuelve al sacro entero.
+  const abajo = ySacro - 13
   const puntos = Array.from({ length: 40 }, (_, k) => v3(0, arriba + ((abajo - arriba) * k) / 39, 0))
   const yEn = (t: number) => arriba + (abajo - arriba) * t
   // Medio fondo (z) y relación ancho/fondo, por altura.

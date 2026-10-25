@@ -84,8 +84,10 @@ export const VISTAS: Vista[] = [
     nombre: 'Columna completa',
     tecla: '5',
     descripcion: 'Del cráneo al sacro, desde atrás y de lado.',
-    posicion: [78, -40, -112],
-    objetivo: [0, -44, -2],
+    // Un poco más abajo y más lejos que el centro del tronco: entran el
+    // agujero magno arriba y el cóccix abajo.
+    posicion: [82, -44, -118],
+    objetivo: [0, -47, -2],
   },
   {
     id: 'base',
