@@ -23,8 +23,8 @@ describe('plan de marcado', () => {
     // T4–L5 son 14 vértebras.
     expect(plan).toHaveLength(14 * 4 + 2 + 2)
     expect(plan[0]).toMatchObject({ clave: 'T4.sa', titulo: 'T4 · platillo superior, esquina anterior' })
-    expect(plan.at(-3)?.titulo).toMatch(/S1 · platillo de S1, esquina posterior/)
-    expect(plan.at(-1)?.clave).toBe('cadera.1')
+    expect(plan[plan.length - 3]?.titulo).toMatch(/S1 · platillo de S1, esquina posterior/)
+    expect(plan[plan.length - 1]?.clave).toBe('cadera.1')
   })
 
   it('sin pelvis no pide caderas', () => {

@@ -62,6 +62,8 @@ export const ICONOS_DE_MODULO: Record<string, string[]> = {
     // Neuro 3D (tramo C).
     '/imagen/neuro-3d': cil3d,
     '/pacientes/:patientId/neuro-3d': cil3d,
+    // Columna desde radiografías (feat/columna-desde-radiografias).
+    '/pacientes/:patientId/neuro-3d/radiografia': cil3d,
     // base-modulos-extra (tramo A): los mismos íconos que el menú.
     '/sistema/servicios': cilApplications,
     '/sistema/modulos': cilSettings,

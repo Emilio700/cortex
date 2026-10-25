@@ -465,6 +465,25 @@ export const textoDeEscala = (c: Calibracion): string => {
   return 'Sin escala: una foto no la trae. Se muestran ángulos y proporciones; para ver milímetros, marca una distancia conocida.'
 }
 
+/**
+ * Discos claramente más bajos que los demás marcados: menos del 70 % de la
+ * mediana del resto (umbral de este sistema, verificar). Con menos de tres
+ * discos no hay contra qué comparar.
+ */
+export const discosBajos = (discos: AlturaDiscal[]): string[] => {
+  if (discos.length < 3) return []
+  return discos
+    .filter((d) => {
+      const otros = discos.filter((o) => o !== d).map((o) => o.indice).sort((a, b) => a - b)
+      const m = otros.length % 2 ? otros[(otros.length - 1) / 2] : (otros[otros.length / 2 - 1] + otros[otros.length / 2]) / 2
+      return d.indice < 0.7 * m
+    })
+    .map((d) => d.nivel)
+}
+
+/** ¿Fuera del rango de referencia? Sólo se avisa (ámbar), nunca se decide. */
+export const fueraDeReferencia = (grados: number, ref: { min: number; max: number }) => grados < ref.min || grados > ref.max
+
 export const textoDeListesis = (l: Listesis): string => {
   if (!l.apreciable) return `${l.nivel}: sin desplazamiento apreciable (${l.porcentaje} %)`
   if (l.grado === null) return `${l.nivel}: retrolistesis de ${Math.abs(l.porcentaje)} %`

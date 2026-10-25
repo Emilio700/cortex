@@ -20,9 +20,9 @@ describe('paridad de las mediciones de radiografía', () => {
   for (const caso of paridad.casos) {
     it(caso.nota, () => {
       const r = calcularRx(
-        caso.marcas as MarcasRx,
-        caso.calibraciones as CalibracionesRx,
-        (caso.opciones as OpcionesRx | null) ?? OPCIONES_POR_OMISION,
+        caso.marcas as unknown as MarcasRx,
+        caso.calibraciones as unknown as CalibracionesRx,
+        (caso.opciones as unknown as OpcionesRx | null) ?? OPCIONES_POR_OMISION,
       )
       expect(JSON.parse(JSON.stringify(r))).toEqual(caso.esperado)
     })

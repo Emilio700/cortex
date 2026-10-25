@@ -3,6 +3,9 @@ import {
   ajusteDelEje,
   calcularRx,
   cobbCoronalDe,
+  discosBajos,
+  fueraDeReferencia,
+  REFERENCIAS_RX,
   escalaDe,
   gradoDeMeyerding,
   indiceDeVertebra,
@@ -140,6 +143,17 @@ describe('altura discal relativa', () => {
     const r = calcularRx(m, SIN_ESCALA)
     expect(r.discos.find((x) => x.nivel === 'L4-L5')!.indice).toBe(0.12)
     expect(r.discos.find((x) => x.nivel === 'L3-L4')!.indice).toBe(0.4)
+  })
+
+  it('señala el disco más bajo que sus vecinos, sin decidir nada', () => {
+    const r = calcularRx(lateralSintetica({ alturaCuerpo: 25, alturaDisco: 10, discos: { 'L4-L5': 3 } }), SIN_ESCALA)
+    expect(discosBajos(r.discos)).toEqual(['L4-L5'])
+    expect(discosBajos(r.discos.slice(0, 2))).toEqual([])
+  })
+
+  it('fuera de la referencia sólo es un aviso', () => {
+    expect(fueraDeReferencia(65, REFERENCIAS_RX.lordosisLumbar)).toBe(true)
+    expect(fueraDeReferencia(50, REFERENCIAS_RX.lordosisLumbar)).toBe(false)
   })
 
   it('en mm sólo con escala', () => {
