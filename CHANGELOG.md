@@ -105,6 +105,7 @@ Todos los cambios notables de Cortex. Formato basado en
 - Puertos, contenedores y nombres de producción propios para convivir con GEMS.
 
 ### Corregido
+- La sección «Escalas neurológicas» de la consulta usa un ícono de CoreUI en lugar de un emoji, como el resto de las secciones.
 - Las mediciones trazadas **nunca llegaban al panel**: el visor escuchaba el fin del
   trazo en el elemento de la imagen, pero Cornerstone lo avisa en su `eventTarget`
   global. Se vio al probar de verdad con una resonancia: se dibujaba «69.1 mm» y el

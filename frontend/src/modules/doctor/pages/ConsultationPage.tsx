@@ -29,6 +29,7 @@ import {
   cilUser,
   cilCalendar,
   cilPhone,
+  cilChartLine,
 } from '@coreui/icons'
 
 import { useCargaDeConsulta, type ResultadoCobro } from '../hooks/useCargaDeConsulta'
@@ -719,7 +720,7 @@ const ConsultationPage = () => {
               <ConsultationSection
                 step={4}
                 stepColor="info"
-                icon={<span className="fs-5" aria-hidden="true">🧠</span>}
+                icon={<CIcon icon={cilChartLine} className="text-primary" width={20} />}
                 title="Escalas neurológicas"
                 subtitle="Glasgow, NIHSS, ASIA, Rankin, ODI y más; el puntaje se calcula mientras respondes."
                 summary={escalasSummaryBadge}
