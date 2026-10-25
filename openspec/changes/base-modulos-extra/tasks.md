@@ -29,4 +29,4 @@
 - [x] 5.1 Perfiles `imagen` e `ia` en `docker-compose.yml`
 - [x] 5.2 `docs/DESIGN.md`: patrón de módulo opcional
 - [x] 5.3 Línea en `CHANGELOG.md`
-- [ ] 5.4 `npx tsc --noEmit`, `npm test` y `pytest` en verde
+- [x] 5.4 `npx tsc --noEmit`, `npm test` y `pytest` en verde
