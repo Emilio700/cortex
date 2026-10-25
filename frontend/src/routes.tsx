@@ -47,6 +47,8 @@ const ExpedientePage = React.lazy(() => import('./modules/expediente/ExpedienteP
 // El visor se carga aparte: quien no abre un estudio no descarga el motor de
 // imagen (Cornerstone y sus decodificadores pesan más que el resto de la app).
 const VisorEstudioPage = React.lazy(() => import('./modules/imagen/paginas/VisorEstudioPage'))
+// Render volumétrico (feat/render-volumetrico): en su propio paquete, como el visor.
+const Volumen3DPage = React.lazy(() => import('./modules/imagen/paginas/Volumen3DPage'))
 const ResultsInboxPage = React.lazy(() => import('./modules/doctor/pages/ResultsInboxPage'))
 // ── Neuro 3D (tramo C) ──
 // En su propio paquete: three.js (vendor-three) sólo lo descarga quien abre el atlas.
@@ -139,6 +141,15 @@ const routes: Route[] = [
     requires: ['clinical_images.read'],
     name: 'Visor de estudios',
     element: VisorEstudioPage,
+    roles: orMaster(Role.DOCTOR, Role.ADMIN),
+  },
+  // Render volumétrico (feat/render-volumetrico): la serie va en la ruta porque
+  // las pestañas recortan el `?…`. Mismo permiso y roles que el visor.
+  {
+    path: '/pacientes/:patientId/estudios/:studyId/3d/:serieId',
+    requires: ['clinical_images.read'],
+    name: '3D del estudio',
+    element: Volumen3DPage,
     roles: orMaster(Role.DOCTOR, Role.ADMIN),
   },
   // ── Neuro 3D (tramo C) ──
