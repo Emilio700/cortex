@@ -82,6 +82,8 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
     label: 'Imagen y señales',
     submodules: [
       { label: 'Neuro 3D', actions: ['neuro3d.read'] },
+      // Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc)
+      { label: 'Modelo 3D del paciente', actions: ['neuro3d.generar_modelo'] },
     ],
   },
   {

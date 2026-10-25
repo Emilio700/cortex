@@ -4,15 +4,17 @@
  *
  * Se abre desde el menú («Imagen y señales») o desde la pestaña Imágenes del
  * expediente; en ese caso trae al paciente en contexto y permite guardar la
- * captura en su expediente. El modelo es esquemático y la pantalla lo dice
- * siempre, a la vista.
+ * captura en su expediente. La pantalla dice siempre, a la vista, de dónde
+ * sale lo que se ve: el modelo esquemático o, con el paciente en contexto y el
+ * módulo `neuro3d_paciente`, la reconstrucción desde su TC («Origen del
+ * modelo»). El aviso cambia sólo cuando la escena ya muestra ese origen.
  *
  * three.js se descarga sólo aquí (paquete `vendor-three`) y la escena se carga
  * aparte, después de comprobar que el equipo puede dibujar en 3D: sin WebGL,
  * un mensaje claro en vez de una pantalla en blanco.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { CAlert, CBadge, CButton, CSpinner } from '@coreui/react-pro'
 import { cil3d } from '@coreui/icons'
 
@@ -28,6 +30,12 @@ import BarraVistas from '../componentes/BarraVistas'
 import BuscadorEstructuras from '../componentes/BuscadorEstructuras'
 import FichaEstructura from '../componentes/FichaEstructura'
 import ModalGuardarExpediente from '../componentes/ModalGuardarExpediente'
+import SelectorOrigen, { type OpcionDeOrigen } from '../componentes/SelectorOrigen'
+import { AVISO_ORIGEN, type OrigenModelo } from '../dominio/origenModelo'
+import { AVISO_SINTETICO, describirModelo, opcionDeTc, textoDeRevision, type Modelo3D } from '../dominio/modeloPaciente'
+import { useOrigenRadiografia } from '../servicios/origenRadiografia'
+import type { CapaAnatomica } from '../servicios/anatomia/tipos'
+import { mensajeDeFallo } from '../../imagen/servicios/mensajes'
 import PanelCapas from '../componentes/PanelCapas'
 import PanelExplicar from '../componentes/PanelExplicar'
 import { atlasApi } from '../servicios/atlasApi'
@@ -37,8 +45,14 @@ import { hayWebGL } from '../servicios/webgl'
 import type { EscenaAtlas, Resaltado } from '../servicios/escena'
 import '../ui/atlas.css'
 
-export const AVISO_ESQUEMATICO =
-  'Modelo esquemático con fines educativos; no representa la anatomía de este paciente ni sustituye su estudio de imagen.'
+export const AVISO_ESQUEMATICO = AVISO_ORIGEN.esquematico
+
+/** Encabezado de la descripción al guardar la captura, según el origen. */
+const TITULO_DE_CAPTURA: Record<OrigenModelo, string> = {
+  esquematico: 'ATLAS NEURO 3D (MODELO ESQUEMÁTICO)',
+  radiografia: 'NEURO 3D (APROXIMACIÓN DESDE RADIOGRAFÍA)',
+  tc: 'NEURO 3D (RECONSTRUCCIÓN AUTOMÁTICA DESDE TC; REVISAR CONTRA EL ESTUDIO)',
+}
 
 type EstadoEscena = { tipo: 'cargando' } | { tipo: 'lista' } | { tipo: 'sin-webgl' } | { tipo: 'error'; mensaje: string }
 
@@ -48,7 +62,8 @@ const esCampoDeTexto = (el: EventTarget | null) =>
 export default function AtlasNeuroPage() {
   const { patientId: patientIdTexto } = useParams<{ patientId?: string }>()
   const patientId = patientIdTexto ? Number(patientIdTexto) : null
-  const { can } = useAuth()
+  const { can, tieneModulo } = useAuth()
+  const [parametros] = useSearchParams()
   const reducirMovimiento = useReducirMovimiento()
 
   const contenedorRef = useRef<HTMLDivElement>(null)
@@ -73,6 +88,19 @@ export default function AtlasNeuroPage() {
   const [capturando, setCapturando] = useState(false)
   const [guardar, setGuardar] = useState<{ imagen: Blob; descripcion: string } | null>(null)
   const animacionPelado = useRef(0)
+
+  // ── Origen del modelo (feat/modelo-3d-desde-tc) ──
+  // `origen` es lo que la escena YA muestra: el aviso se lee de aquí.
+  const [origen, setOrigen] = useState<OrigenModelo>('esquematico')
+  const [cambiandoOrigen, setCambiandoOrigen] = useState(false)
+  const [modelos, setModelos] = useState<Modelo3D[] | null | undefined>(undefined)
+  const [modeloMostrado, setModeloMostrado] = useState<Modelo3D | null>(null)
+  const [revisando, setRevisando] = useState(false)
+  const capaPacienteRef = useRef<CapaAnatomica | null>(null)
+  const preferido = Number(parametros.get('modelo')) || null
+  const autoAbierto = useRef(false)
+  const conModuloPaciente = patientId !== null && tieneModulo('neuro3d_paciente') && can('clinical_images.read')
+  const radiografia = useOrigenRadiografia(patientId)
 
   const puedeGuardar = patientId !== null && can('clinical_images.upload')
 
@@ -134,6 +162,97 @@ export default function AtlasNeuroPage() {
     }
   }, [patientId])
 
+  // ── Modelos del paciente ─────────────────────────────────────────────────
+  useEffect(() => {
+    if (!conModuloPaciente || patientId === null) return
+    let vigente = true
+    atlasApi
+      .modelosDelPaciente(patientId)
+      .then((m) => vigente && setModelos(m))
+      .catch(() => vigente && setModelos(null))
+    return () => {
+      vigente = false
+    }
+  }, [conModuloPaciente, patientId])
+
+  const tc = useMemo(() => (modelos === undefined ? null : opcionDeTc(modelos, preferido)), [modelos, preferido])
+  const opcionesDeOrigen = useMemo(() => {
+    const o: Partial<Record<OrigenModelo, OpcionDeOrigen>> = {
+      esquematico: { disponible: true },
+      radiografia: radiografia.opcion,
+    }
+    if (conModuloPaciente) o.tc = tc?.opcion ?? { disponible: false, motivo: 'Consultando los modelos del paciente…' }
+    return o
+  }, [conModuloPaciente, tc, radiografia.opcion])
+
+  const cambiarOrigen = useCallback(
+    async (nuevo: OrigenModelo) => {
+      const escena = escenaRef.current
+      if (!escena) return
+      setCambiandoOrigen(true)
+      setAviso(null)
+      try {
+        if (nuevo === 'tc') {
+          const modelo = tc?.modelo
+          if (!modelo) throw new Error('No hay un modelo listo de este paciente.')
+          const [datos, { crearCapaPaciente }] = await Promise.all([
+            atlasApi.mallasDelModelo(modelo.id),
+            import('../servicios/anatomia/capaPaciente'),
+          ])
+          const capa = crearCapaPaciente(datos)
+          await escena.fijarCapaPaciente(capa)
+          capaPacienteRef.current = capa
+          setModeloMostrado(modelo)
+        } else {
+          await escena.fijarCapaPaciente(null)
+          capaPacienteRef.current = null
+          setModeloMostrado(null)
+        }
+        // Sólo ahora, con la escena ya cambiada, cambia lo que dice el aviso.
+        setOrigen(nuevo)
+        setRotacion(false)
+        escena.enfocar(['vertebra-C1', 'sacro'])
+      } catch (err) {
+        setAviso({
+          color: 'danger',
+          texto: `No se pudo mostrar ese modelo: ${mensajeDeFallo(err)} Se sigue viendo el anterior.`,
+        })
+      } finally {
+        setCambiandoOrigen(false)
+      }
+    },
+    [tc],
+  )
+
+  // Si la escena se vuelve a crear (p. ej. al cambiar el ajuste de la columna),
+  // la capa del paciente se vuelve a poner sola.
+  useEffect(() => {
+    if (lista && capaPacienteRef.current) void escenaRef.current?.fijarCapaPaciente(capaPacienteRef.current)
+  }, [lista])
+
+  // Desde el visor («Ver en Neuro 3D») llega `?modelo=`: se abre ese modelo,
+  // porque es lo que el médico acaba de pedir.
+  useEffect(() => {
+    if (autoAbierto.current || !lista || !preferido || !tc?.modelo || tc.modelo.id !== preferido) return
+    autoAbierto.current = true
+    void cambiarOrigen('tc')
+  }, [lista, preferido, tc, cambiarOrigen])
+
+  const marcarRevisado = async () => {
+    if (!modeloMostrado) return
+    setRevisando(true)
+    try {
+      const actualizado = await atlasApi.marcarRevisado(modeloMostrado.id)
+      setModeloMostrado(actualizado)
+      setModelos((ms) => ms?.map((m) => (m.id === actualizado.id ? actualizado : m)) ?? ms)
+      setAviso({ color: 'success', texto: 'Quedó registrado que revisaste la reconstrucción.' })
+    } catch (err) {
+      setAviso({ color: 'danger', texto: `No se pudo registrar la revisión: ${mensajeDeFallo(err)}` })
+    } finally {
+      setRevisando(false)
+    }
+  }
+
   // ── Lo que React decide y la escena pinta ────────────────────────────────
   const efectivas = useMemo(() => capasEfectivas(capas, pelado), [capas, pelado])
   useEffect(() => {
@@ -159,7 +278,9 @@ export default function AtlasNeuroPage() {
   const conexion = useMemo(() => (seleccion ? conexionDe(seleccion) : null), [seleccion])
 
   const resaltado = useMemo<Resaltado>(() => {
-    const sel = seleccion ? mallasDe(seleccion) : []
+    // La estructura misma también va: la médula del paciente es una sola malla
+    // con el id de la compuesta («medula-espinal»).
+    const sel = seleccion ? [...new Set([...mallasDe(seleccion), seleccion])] : []
     const afectados = marcas.flatMap(mallasAfectadas)
     const etiquetas: Resaltado['etiquetas'] = []
     if (estructura) etiquetas.push({ id: sel[0], texto: estructura.nombre, tono: 'seleccion' })
@@ -291,7 +412,7 @@ export default function AtlasNeuroPage() {
       silueta: explicar ? siluetaMarcasRef.current : siluetaFichaRef.current,
       titulo: 'Neuro 3D · Cortex',
       lineas,
-      leyenda: AVISO_ESQUEMATICO,
+      leyenda: modeloMostrado?.sintetico ? `${AVISO_ORIGEN[origen]} ${AVISO_SINTETICO}` : AVISO_ORIGEN[origen],
       fondo: estilo.getPropertyValue('--cx-anat-fondo').trim() || '#040a18',
       texto: estilo.getPropertyValue('--cx-anat-texto').trim() || '#e4ecfb',
       textoSecundario: estilo.getPropertyValue('--cx-anat-texto-2').trim() || '#9fb2d6',
@@ -320,7 +441,7 @@ export default function AtlasNeuroPage() {
       const blob = await capturar()
       if (!blob) throw new Error('sin escena')
       const lineas = textoDeMarcasParaCaptura(marcas)
-      const descripcion = ['ATLAS NEURO 3D (MODELO ESQUEMÁTICO)', ...lineas.map((l) => l.toUpperCase()), estructura ? estructura.nombre.toUpperCase() : '']
+      const descripcion = [TITULO_DE_CAPTURA[origen], ...lineas.map((l) => l.toUpperCase()), estructura ? estructura.nombre.toUpperCase() : '']
         .filter(Boolean)
         .join('. ')
       setGuardar({ imagen: blob, descripcion })
@@ -372,9 +493,45 @@ export default function AtlasNeuroPage() {
         data-tour="atlas-encabezado"
       />
 
-      <p className="atlas-aviso" role="note" data-tour="atlas-aviso">
-        {AVISO_ESQUEMATICO}
-      </p>
+      {patientId !== null && (
+        <SelectorOrigen
+          valor={origen}
+          opciones={opcionesDeOrigen}
+          alCambiar={(o) => void cambiarOrigen(o)}
+          ocupado={cambiandoOrigen || !lista}
+        />
+      )}
+
+      <div className={`atlas-aviso${origen === 'tc' ? ' atlas-aviso--paciente' : ''}`} role="note" data-tour="atlas-aviso">
+        <p className="mb-0">{AVISO_ORIGEN[origen]}</p>
+        {cambiandoOrigen && (
+          <p className="mb-0 mt-1" role="status">
+            <CSpinner size="sm" className="me-2" />
+            Cargando el modelo…
+          </p>
+        )}
+        {origen === 'tc' && modeloMostrado && (
+          <>
+            {modeloMostrado.sintetico && <p className="atlas-aviso__sintetico mb-0 mt-1">{AVISO_SINTETICO}</p>}
+            <p className="atlas-aviso__detalle mb-0 mt-1" data-tour="atlas-modelo-paciente">
+              {describirModelo(modeloMostrado)}. Las raíces, los discos y el encéfalo siguen siendo esquemáticos.{' '}
+              <span className={modeloMostrado.confirmado_en ? undefined : 'atlas-aviso__pendiente'}>{textoDeRevision(modeloMostrado)}</span>
+              {!modeloMostrado.confirmado_en && can('neuro3d.generar_modelo') && (
+                <CButton
+                  size="sm"
+                  color="primary"
+                  variant="outline"
+                  className="ms-2"
+                  disabled={revisando}
+                  onClick={() => void marcarRevisado()}
+                >
+                  {revisando ? 'Registrando…' : 'Marcar como revisada'}
+                </CButton>
+              )}
+            </p>
+          </>
+        )}
+      </div>
 
       {aviso && (
         <CAlert color={aviso.color} dismissible onClose={() => setAviso(null)} className="py-2">
