@@ -1,0 +1,510 @@
+/**
+ * Escalas de función y seguimiento: discapacidad global, médula espinal,
+ * mielopatía cervical, columna (ODI, NDI), dolor y dependencia.
+ *
+ * Son las que se repiten antes y después de una cirugía y se grafican en el
+ * expediente. Misma regla que `catalogoAgudo.ts`: fuente citada y «(verificar)»
+ * en lo que no se pudo confirmar.
+ */
+import type { Escala, Item, Opcion } from './tipos'
+
+const num = (pares: [number, string][]): Opcion[] =>
+  pares.map(([puntos, texto]) => ({ codigo: String(puntos), puntos, texto }))
+
+/** Seis enunciados de 0 a 5, como las secciones del ODI y el NDI. */
+const seccion = (id: string, titulo: string, textos: string[], ayuda?: string): Item => ({
+  id,
+  titulo,
+  opcional: true,
+  verificar: true,
+  ayuda,
+  opciones: num(textos.map((t, i) => [i, t])),
+})
+
+export const RANKIN_MODIFICADA: Escala = {
+  id: 'rankin',
+  version: '1',
+  nombre: 'Rankin modificada',
+  titulo: 'Escala de Rankin modificada (mRS)',
+  descripcion: 'Discapacidad global y dependencia en la vida diaria.',
+  fuente: 'Rankin J. Scott Med J 1957;2:200-15. van Swieten JC et al. Stroke 1988;19:604-7.',
+  items: [
+    {
+      id: 'grado',
+      titulo: 'Situación del paciente',
+      opciones: num([
+        [0, '0. Sin síntomas'],
+        [1, '1. Sin discapacidad significativa a pesar de los síntomas: hace todas sus actividades habituales'],
+        [2, '2. Discapacidad leve: no hace todas sus actividades previas, pero atiende sus asuntos sin ayuda'],
+        [3, '3. Discapacidad moderada: necesita alguna ayuda, pero camina sin ayuda'],
+        [4, '4. Discapacidad moderadamente grave: no camina sin ayuda ni atiende sus necesidades corporales sin ayuda'],
+        [5, '5. Discapacidad grave: encamado, incontinente, necesita cuidados constantes de enfermería'],
+        [6, '6. Muerte'],
+      ]),
+    },
+  ],
+  calculo: 'suma',
+  min: 0,
+  max: 6,
+  presentacion: 'puntos',
+  bandas: [
+    { hasta: 0, texto: 'Sin síntomas', tono: 'ok' },
+    { hasta: 1, texto: 'Sin discapacidad significativa', tono: 'ok' },
+    { hasta: 2, texto: 'Discapacidad leve', tono: 'aviso' },
+    { hasta: 3, texto: 'Discapacidad moderada', tono: 'aviso' },
+    { hasta: 4, texto: 'Discapacidad moderadamente grave', tono: 'alerta' },
+    { hasta: 5, texto: 'Discapacidad grave', tono: 'alerta' },
+    { hasta: 6, texto: 'Muerte', tono: 'alerta' },
+  ],
+}
+
+export const ASIA: Escala = {
+  id: 'asia',
+  version: '1',
+  nombre: 'ASIA (AIS)',
+  titulo: 'Escala de deterioro de la ASIA (AIS)',
+  descripcion: 'Grado de la lesión de la médula espinal, de A (completa) a E (normal).',
+  instrucciones:
+    'Solo el grado. El examen ISNCSCI completo (puntajes motores y sensitivos por dermatoma, niveles y zonas de preservación parcial) se registra en la nota.',
+  fuente:
+    'Kirshblum SC et al. J Spinal Cord Med 2011;34:535-46. American Spinal Injury Association, ISNCSCI (revisión 2019).',
+  items: [
+    {
+      id: 'grado',
+      titulo: 'Grado AIS',
+      opciones: [
+        { codigo: 'A', puntos: 1, texto: 'A. Completa: sin función sensitiva ni motora preservada en los segmentos sacros S4-S5' },
+        { codigo: 'B', puntos: 2, texto: 'B. Sensitiva incompleta: sensibilidad preservada por debajo del nivel neurológico, incluidos S4-S5, sin función motora más de tres niveles por debajo del nivel motor de ningún lado' },
+        { codigo: 'C', puntos: 3, texto: 'C. Motora incompleta: función motora preservada por debajo del nivel neurológico y menos de la mitad de los músculos clave bajo ese nivel con fuerza de 3 o más' },
+        { codigo: 'D', puntos: 4, texto: 'D. Motora incompleta: función motora preservada por debajo del nivel neurológico y al menos la mitad de los músculos clave bajo ese nivel con fuerza de 3 o más' },
+        { codigo: 'E', puntos: 5, texto: 'E. Normal: sensibilidad y función motora normales en todos los segmentos, en un paciente con déficit previo' },
+      ],
+    },
+  ],
+  calculo: 'suma',
+  min: 1,
+  max: 5,
+  presentacion: 'letra',
+  mayorEsMejor: true,
+  bandas: [
+    { hasta: 1, texto: 'AIS A: lesión completa', tono: 'alerta' },
+    { hasta: 2, texto: 'AIS B: sensitiva incompleta', tono: 'alerta' },
+    { hasta: 3, texto: 'AIS C: motora incompleta', tono: 'aviso' },
+    { hasta: 4, texto: 'AIS D: motora incompleta', tono: 'aviso' },
+    { hasta: 5, texto: 'AIS E: normal', tono: 'ok' },
+  ],
+}
+
+export const KARNOFSKY: Escala = {
+  id: 'karnofsky',
+  version: '1',
+  nombre: 'Karnofsky',
+  titulo: 'Escala de desempeño de Karnofsky (KPS)',
+  descripcion: 'Capacidad funcional, de 100 (normal) a 0.',
+  fuente: 'Karnofsky DA, Burchenal JH. En: MacLeod CM (ed.). Evaluation of Chemotherapeutic Agents. Columbia University Press; 1949. p. 191-205.',
+  items: [
+    {
+      id: 'kps',
+      titulo: 'Capacidad funcional',
+      opciones: num([
+        [100, '100. Normal, sin quejas ni evidencia de enfermedad'],
+        [90, '90. Capaz de actividad normal; signos o síntomas menores'],
+        [80, '80. Actividad normal con esfuerzo; algunos signos o síntomas'],
+        [70, '70. Cuida de sí mismo; incapaz de actividad normal o de trabajar'],
+        [60, '60. Necesita ayuda ocasional, pero atiende la mayoría de sus necesidades'],
+        [50, '50. Necesita ayuda considerable y atención médica frecuente'],
+        [40, '40. Discapacitado; necesita cuidados y asistencia especiales'],
+        [30, '30. Gravemente discapacitado; está indicada la hospitalización, aunque la muerte no es inminente'],
+        [20, '20. Muy enfermo; necesita hospitalización y tratamiento de soporte activo'],
+        [10, '10. Moribundo'],
+        [0, '0. Muerte'],
+      ]),
+    },
+  ],
+  calculo: 'suma',
+  min: 0,
+  max: 100,
+  presentacion: 'puntos',
+  mayorEsMejor: true,
+  bandas: [
+    { hasta: 40, texto: 'Incapaz de cuidarse; necesita cuidados institucionales o equivalentes (0–40)', tono: 'alerta' },
+    { hasta: 70, texto: 'Incapaz de trabajar; vive en casa con ayuda variable (50–70)', tono: 'aviso' },
+    { hasta: 100, texto: 'Actividad normal y trabajo sin cuidados especiales (80–100)', tono: 'ok' },
+  ],
+}
+
+export const MJOA: Escala = {
+  id: 'mjoa',
+  version: '1',
+  nombre: 'mJOA',
+  titulo: 'Escala modificada de la Asociación Japonesa de Ortopedia (mJOA)',
+  descripcion: 'Gravedad de la mielopatía cervical degenerativa, de 0 a 18.',
+  fuente:
+    'Benzel EC et al. J Spinal Disord 1991;4:286-95. Kopjar B et al. Spine 2015;40:E23-8. Rangos: Tetreault L et al. Eur Spine J 2017;26:78-84.',
+  verificar: ['Textos de los ítems: traducción libre del original en inglés.'],
+  items: [
+    {
+      id: 'motor_superior',
+      titulo: 'Función motora de las extremidades superiores',
+      verificar: true,
+      opciones: num([
+        [0, 'No puede mover las manos'],
+        [1, 'Mueve las manos, pero no puede comer con cuchara'],
+        [2, 'Come con cuchara, pero no puede abotonarse la camisa'],
+        [3, 'Se abotona la camisa con gran dificultad'],
+        [4, 'Se abotona la camisa con poca dificultad'],
+        [5, 'Sin alteración'],
+      ]),
+    },
+    {
+      id: 'motor_inferior',
+      titulo: 'Función motora de las extremidades inferiores',
+      verificar: true,
+      opciones: num([
+        [0, 'Pérdida completa de la función motora y sensitiva'],
+        [1, 'Conserva la sensibilidad, pero no mueve las piernas'],
+        [2, 'Mueve las piernas, pero no camina'],
+        [3, 'Camina en terreno plano con ayuda (bastón o muleta)'],
+        [4, 'Sube y baja escaleras con pasamanos'],
+        [5, 'Inestabilidad moderada a grave, pero camina sin ayuda'],
+        [6, 'Inestabilidad leve; camina sin ayuda'],
+        [7, 'Sin alteración'],
+      ]),
+    },
+    {
+      id: 'sensibilidad',
+      titulo: 'Sensibilidad de las extremidades superiores',
+      verificar: true,
+      opciones: num([
+        [0, 'Pérdida completa de la sensibilidad de las manos'],
+        [1, 'Pérdida grave de la sensibilidad o dolor'],
+        [2, 'Pérdida leve de la sensibilidad'],
+        [3, 'Sin pérdida de la sensibilidad'],
+      ]),
+    },
+    {
+      id: 'esfinter',
+      titulo: 'Función vesical',
+      verificar: true,
+      opciones: num([
+        [0, 'No puede orinar voluntariamente'],
+        [1, 'Dificultad marcada para orinar'],
+        [2, 'Dificultad leve a moderada para orinar'],
+        [3, 'Micción normal'],
+      ]),
+    },
+  ],
+  calculo: 'suma',
+  min: 0,
+  max: 18,
+  presentacion: 'puntos',
+  mayorEsMejor: true,
+  bandas: [
+    { hasta: 11, texto: 'Mielopatía grave (0–11)', tono: 'alerta' },
+    { hasta: 14, texto: 'Mielopatía moderada (12–14)', tono: 'aviso' },
+    { hasta: 17, texto: 'Mielopatía leve (15–17)', tono: 'aviso' },
+    { hasta: 18, texto: 'Sin alteración (18)', tono: 'ok' },
+  ],
+}
+
+export const OSWESTRY: Escala = {
+  id: 'oswestry',
+  version: '1',
+  nombre: 'Oswestry (ODI)',
+  titulo: 'Índice de discapacidad de Oswestry (ODI)',
+  descripcion: 'Discapacidad por dolor lumbar, en porcentaje. Se puede omitir una sección (p. ej. vida sexual).',
+  instrucciones:
+    'El paciente elige en cada sección el enunciado que mejor lo describe hoy. Las secciones sin responder no cuentan: el porcentaje se calcula sobre las respondidas.',
+  fuente:
+    'Fairbank JC et al. Physiotherapy 1980;66:271-3. Fairbank JC, Pynsent PB. Spine 2000;25:2940-52 (versión 2.1a).',
+  verificar: [
+    'Textos: traducción libre de la versión 2.1a; la validada en español es la de Flórez MT et al. Rehabilitación 1995;29:138-45.',
+    'Las distancias de «Caminar» se pasaron de millas y yardas a metros.',
+    'Cuántas secciones se pueden omitir sin invalidar el resultado: se avisa desde tres.',
+  ],
+  items: [
+    seccion('dolor', '1. Intensidad del dolor', [
+      'No tengo dolor en este momento',
+      'El dolor es muy leve en este momento',
+      'El dolor es moderado en este momento',
+      'El dolor es bastante fuerte en este momento',
+      'El dolor es muy fuerte en este momento',
+      'El dolor es el peor imaginable en este momento',
+    ]),
+    seccion('cuidado', '2. Cuidados personales (lavarse, vestirse)', [
+      'Me cuido normalmente sin que aumente el dolor',
+      'Me cuido normalmente, pero me aumenta el dolor',
+      'Cuidarme me duele; lo hago despacio y con cuidado',
+      'Necesito algo de ayuda, pero hago la mayor parte de mi cuidado',
+      'Necesito ayuda todos los días en la mayoría de mis cuidados',
+      'No me visto, me lavo con dificultad y me quedo en cama',
+    ]),
+    seccion('levantar', '3. Levantar peso', [
+      'Puedo levantar objetos pesados sin que aumente el dolor',
+      'Puedo levantar objetos pesados, pero me aumenta el dolor',
+      'El dolor no me deja levantar objetos pesados del suelo, pero puedo si están en un lugar cómodo (p. ej. una mesa)',
+      'El dolor no me deja levantar objetos pesados, pero puedo levantar objetos ligeros o medianos si están en un lugar cómodo',
+      'Solo puedo levantar objetos muy ligeros',
+      'No puedo levantar ni cargar nada',
+    ]),
+    seccion('caminar', '4. Caminar', [
+      'El dolor no me impide caminar cualquier distancia',
+      'El dolor me impide caminar más de 1.5 km',
+      'El dolor me impide caminar más de 400 m',
+      'El dolor me impide caminar más de 100 m',
+      'Solo puedo caminar con bastón o muletas',
+      'Paso la mayor parte del tiempo en cama',
+    ]),
+    seccion('sentado', '5. Estar sentado', [
+      'Puedo estar sentado en cualquier silla el tiempo que quiera',
+      'Puedo estar sentado en mi silla favorita el tiempo que quiera',
+      'El dolor me impide estar sentado más de una hora',
+      'El dolor me impide estar sentado más de media hora',
+      'El dolor me impide estar sentado más de 10 minutos',
+      'El dolor me impide estar sentado',
+    ]),
+    seccion('de_pie', '6. Estar de pie', [
+      'Puedo estar de pie el tiempo que quiera sin que aumente el dolor',
+      'Puedo estar de pie el tiempo que quiera, pero me aumenta el dolor',
+      'El dolor me impide estar de pie más de una hora',
+      'El dolor me impide estar de pie más de media hora',
+      'El dolor me impide estar de pie más de 10 minutos',
+      'El dolor me impide estar de pie',
+    ]),
+    seccion('dormir', '7. Dormir', [
+      'El dolor nunca me interrumpe el sueño',
+      'El dolor me interrumpe el sueño de vez en cuando',
+      'Por el dolor duermo menos de 6 horas',
+      'Por el dolor duermo menos de 4 horas',
+      'Por el dolor duermo menos de 2 horas',
+      'El dolor me impide dormir',
+    ]),
+    seccion(
+      'sexual',
+      '8. Vida sexual',
+      [
+        'Mi vida sexual es normal y no me aumenta el dolor',
+        'Mi vida sexual es normal, pero me aumenta algo el dolor',
+        'Mi vida sexual es casi normal, pero muy dolorosa',
+        'Mi vida sexual está muy limitada por el dolor',
+        'Mi vida sexual casi no existe por el dolor',
+        'El dolor me impide cualquier vida sexual',
+      ],
+      'Si no aplica, déjala sin responder.',
+    ),
+    seccion('social', '9. Vida social', [
+      'Mi vida social es normal y no me aumenta el dolor',
+      'Mi vida social es normal, pero me aumenta el dolor',
+      'El dolor no afecta mi vida social, salvo las actividades más enérgicas (p. ej. deporte)',
+      'El dolor ha limitado mi vida social y salgo menos',
+      'El dolor ha limitado mi vida social a mi casa',
+      'No tengo vida social por el dolor',
+    ]),
+    seccion('viajar', '10. Viajar', [
+      'Puedo viajar a cualquier lugar sin dolor',
+      'Puedo viajar a cualquier lugar, pero me aumenta el dolor',
+      'El dolor es fuerte, pero aguanto viajes de más de dos horas',
+      'El dolor me limita a viajes de menos de una hora',
+      'El dolor me limita a viajes cortos y necesarios de menos de 30 minutos',
+      'El dolor me impide viajar, salvo para recibir tratamiento',
+    ]),
+  ],
+  calculo: 'porcentaje',
+  avisarOmitidasDesde: 3,
+  min: 0,
+  max: 100,
+  presentacion: 'porcentaje',
+  bandas: [
+    { hasta: 20, texto: 'Discapacidad mínima (0–20 %)', tono: 'ok' },
+    { hasta: 40, texto: 'Discapacidad moderada (21–40 %)', tono: 'aviso' },
+    { hasta: 60, texto: 'Discapacidad grave (41–60 %)', tono: 'alerta' },
+    { hasta: 80, texto: 'Discapacidad incapacitante (61–80 %)', tono: 'alerta' },
+    { hasta: 100, texto: 'Postrado en cama o magnifica sus síntomas (81–100 %)', tono: 'alerta' },
+  ],
+}
+
+export const NDI: Escala = {
+  id: 'ndi',
+  version: '1',
+  nombre: 'NDI',
+  titulo: 'Índice de discapacidad cervical (NDI)',
+  descripcion: 'Discapacidad por dolor de cuello, de 0 a 50.',
+  instrucciones:
+    'El paciente elige en cada sección el enunciado que mejor lo describe hoy. Con secciones sin responder, el puntaje se prorratea a 50.',
+  fuente: 'Vernon H, Mior S. J Manipulative Physiol Ther 1991;14:409-15. Rangos: Vernon H. J Manipulative Physiol Ther 2008;31:491-502.',
+  verificar: [
+    'Textos: traducción libre del original; la validada en español es la de Andrade Ortega JA et al. Med Clin (Barc) 2008;130:85-9.',
+    'Prorrateo con secciones sin responder: se aplica la misma regla que en el ODI.',
+  ],
+  items: [
+    seccion('dolor', '1. Intensidad del dolor de cuello', [
+      'No tengo dolor en este momento',
+      'El dolor es muy leve en este momento',
+      'El dolor es moderado en este momento',
+      'El dolor es bastante fuerte en este momento',
+      'El dolor es muy fuerte en este momento',
+      'El dolor es el peor imaginable en este momento',
+    ]),
+    seccion('cuidado', '2. Cuidados personales (lavarse, vestirse)', [
+      'Me cuido normalmente sin que aumente el dolor',
+      'Me cuido normalmente, pero me aumenta el dolor',
+      'Cuidarme me duele; lo hago despacio y con cuidado',
+      'Necesito algo de ayuda, pero hago la mayor parte de mi cuidado',
+      'Necesito ayuda todos los días en la mayoría de mis cuidados',
+      'No me visto, me lavo con dificultad y me quedo en cama',
+    ]),
+    seccion('levantar', '3. Levantar peso', [
+      'Puedo levantar objetos pesados sin que aumente el dolor',
+      'Puedo levantar objetos pesados, pero me aumenta el dolor',
+      'El dolor no me deja levantar objetos pesados del suelo, pero puedo si están en un lugar cómodo (p. ej. una mesa)',
+      'El dolor no me deja levantar objetos pesados, pero puedo levantar objetos ligeros o medianos si están en un lugar cómodo',
+      'Solo puedo levantar objetos muy ligeros',
+      'No puedo levantar ni cargar nada',
+    ]),
+    seccion('lectura', '4. Lectura', [
+      'Puedo leer todo lo que quiera sin dolor de cuello',
+      'Puedo leer todo lo que quiera con dolor leve de cuello',
+      'Puedo leer todo lo que quiera con dolor moderado de cuello',
+      'No puedo leer todo lo que quiera por dolor moderado de cuello',
+      'Casi no puedo leer por dolor fuerte de cuello',
+      'No puedo leer nada',
+    ]),
+    seccion('cefalea', '5. Dolor de cabeza', [
+      'No tengo dolor de cabeza',
+      'Tengo dolores de cabeza leves y poco frecuentes',
+      'Tengo dolores de cabeza moderados y poco frecuentes',
+      'Tengo dolores de cabeza moderados y frecuentes',
+      'Tengo dolores de cabeza fuertes y frecuentes',
+      'Tengo dolor de cabeza casi todo el tiempo',
+    ]),
+    seccion('concentracion', '6. Concentración', [
+      'Me concentro por completo cuando quiero, sin dificultad',
+      'Me concentro por completo cuando quiero, con poca dificultad',
+      'Me cuesta algo concentrarme cuando quiero',
+      'Me cuesta mucho concentrarme cuando quiero',
+      'Me cuesta muchísimo concentrarme cuando quiero',
+      'No me puedo concentrar',
+    ]),
+    seccion('trabajo', '7. Trabajo', [
+      'Puedo hacer todo el trabajo que quiero',
+      'Solo puedo hacer mi trabajo habitual, nada más',
+      'Puedo hacer la mayor parte de mi trabajo habitual, nada más',
+      'No puedo hacer mi trabajo habitual',
+      'Casi no puedo trabajar',
+      'No puedo trabajar en absoluto',
+    ]),
+    seccion('conducir', '8. Manejar', [
+      'Puedo manejar sin dolor de cuello',
+      'Puedo manejar el tiempo que quiera con dolor leve de cuello',
+      'Puedo manejar el tiempo que quiera con dolor moderado de cuello',
+      'No puedo manejar el tiempo que quiera por dolor moderado de cuello',
+      'Casi no puedo manejar por dolor fuerte de cuello',
+      'No puedo manejar',
+    ]),
+    seccion('dormir', '9. Dormir', [
+      'Duermo sin problema',
+      'El sueño se altera un poco (menos de 1 hora sin dormir)',
+      'El sueño se altera levemente (1 a 2 horas sin dormir)',
+      'El sueño se altera moderadamente (2 a 3 horas sin dormir)',
+      'El sueño se altera mucho (3 a 5 horas sin dormir)',
+      'El sueño se altera por completo (5 a 7 horas sin dormir)',
+    ]),
+    seccion('recreacion', '10. Recreación', [
+      'Hago todas mis actividades recreativas sin dolor de cuello',
+      'Hago todas mis actividades recreativas con algo de dolor de cuello',
+      'Hago la mayoría, pero no todas mis actividades recreativas, por el dolor',
+      'Solo hago algunas de mis actividades recreativas por el dolor',
+      'Casi no hago actividades recreativas por el dolor',
+      'No hago ninguna actividad recreativa',
+    ]),
+  ],
+  calculo: 'prorrateo',
+  avisarOmitidasDesde: 3,
+  min: 0,
+  max: 50,
+  presentacion: 'puntos',
+  bandas: [
+    { hasta: 4, texto: 'Sin discapacidad (0–4)', tono: 'ok' },
+    { hasta: 14, texto: 'Discapacidad leve (5–14)', tono: 'ok' },
+    { hasta: 24, texto: 'Discapacidad moderada (15–24)', tono: 'aviso' },
+    { hasta: 34, texto: 'Discapacidad grave (25–34)', tono: 'alerta' },
+    { hasta: 50, texto: 'Discapacidad completa (35–50)', tono: 'alerta' },
+  ],
+}
+
+export const ENA_DOLOR: Escala = {
+  id: 'ena_dolor',
+  version: '1',
+  nombre: 'ENA de dolor',
+  titulo: 'Escala numérica análoga de dolor (ENA / EVA)',
+  descripcion: 'Intensidad del dolor de 0 (sin dolor) a 10 (el peor imaginable).',
+  instrucciones: 'Pregunta al paciente: de 0 a 10, ¿cuánto le duele ahora?',
+  fuente: 'Hawker GA et al. Arthritis Care Res 2011;63 Suppl 11:S240-52.',
+  verificar: ['Rangos leve, moderado e intenso: hay cortes publicados distintos (p. ej. 1–4, 5–6, 7–10; Serlin RC et al. Pain 1995).'],
+  bandasPorVerificar: true,
+  items: [
+    {
+      id: 'dolor',
+      titulo: 'Intensidad del dolor',
+      opciones: num([
+        [0, '0 · Sin dolor'],
+        [1, '1'],
+        [2, '2'],
+        [3, '3'],
+        [4, '4'],
+        [5, '5'],
+        [6, '6'],
+        [7, '7'],
+        [8, '8'],
+        [9, '9'],
+        [10, '10 · El peor imaginable'],
+      ]),
+    },
+  ],
+  calculo: 'suma',
+  min: 0,
+  max: 10,
+  presentacion: 'puntos',
+  bandas: [
+    { hasta: 0, texto: 'Sin dolor', tono: 'ok' },
+    { hasta: 3, texto: 'Dolor leve (1–3)', tono: 'ok' },
+    { hasta: 6, texto: 'Dolor moderado (4–6)', tono: 'aviso' },
+    { hasta: 10, texto: 'Dolor intenso (7–10)', tono: 'alerta' },
+  ],
+}
+
+/** Portada de MediSuite (`escalas.ts`), con los mismos ítems y puntos. */
+export const BARTHEL: Escala = {
+  id: 'barthel',
+  version: '1',
+  nombre: 'Barthel',
+  titulo: 'Índice de Barthel',
+  descripcion: 'Independencia en las actividades básicas de la vida diaria, de 0 a 100.',
+  fuente: 'Mahoney FI, Barthel DW. Md State Med J 1965;14:61-5. Cid-Ruzafa J, Damián-Moreno J. Rev Esp Salud Pública 1997;71:127-37.',
+  verificar: ['Rangos de dependencia: vienen de MediSuite; existen otros cortes en uso.'],
+  bandasPorVerificar: true,
+  items: [
+    { id: 'comer', titulo: 'Comer', opciones: num([[10, 'Independiente'], [5, 'Necesita ayuda para cortar, untar, etc.'], [0, 'Dependiente']]) },
+    { id: 'banarse', titulo: 'Bañarse', opciones: num([[5, 'Independiente'], [0, 'Dependiente']]) },
+    { id: 'arreglo', titulo: 'Arreglarse (lavarse la cara, peinarse, afeitarse, dientes)', opciones: num([[5, 'Independiente'], [0, 'Necesita ayuda']]) },
+    { id: 'vestir', titulo: 'Vestirse', opciones: num([[10, 'Independiente (incluye botones, cierres y agujetas)'], [5, 'Necesita ayuda; hace al menos la mitad'], [0, 'Dependiente']]) },
+    { id: 'heces', titulo: 'Deposiciones', opciones: num([[10, 'Continente'], [5, 'Accidente ocasional (una vez por semana o menos)'], [0, 'Incontinente o necesita enemas']]) },
+    { id: 'orina', titulo: 'Micción', opciones: num([[10, 'Continente (o maneja solo la sonda)'], [5, 'Accidente ocasional (una vez al día o menos)'], [0, 'Incontinente o sondado sin autonomía']]) },
+    { id: 'retrete', titulo: 'Uso del retrete', opciones: num([[10, 'Independiente'], [5, 'Necesita alguna ayuda'], [0, 'Dependiente']]) },
+    { id: 'traslado', titulo: 'Trasladarse (cama a sillón)', opciones: num([[15, 'Independiente'], [10, 'Ayuda mínima o supervisión'], [5, 'Gran ayuda, pero puede sentarse'], [0, 'Incapaz']]) },
+    { id: 'deamb', titulo: 'Deambulación', opciones: num([[15, 'Independiente más de 50 m (puede usar bastón)'], [10, 'Camina más de 50 m con ayuda de una persona'], [5, 'Independiente en silla de ruedas más de 50 m'], [0, 'Inmóvil o menos de 50 m']]) },
+    { id: 'escal', titulo: 'Subir y bajar escaleras', opciones: num([[10, 'Independiente'], [5, 'Necesita ayuda o supervisión'], [0, 'Incapaz']]) },
+  ],
+  calculo: 'suma',
+  min: 0,
+  max: 100,
+  presentacion: 'puntos',
+  mayorEsMejor: true,
+  bandas: [
+    { hasta: 20, texto: 'Dependencia total (0–20)', tono: 'alerta' },
+    { hasta: 60, texto: 'Dependencia grave (21–60)', tono: 'alerta' },
+    { hasta: 90, texto: 'Dependencia moderada (61–90)', tono: 'aviso' },
+    { hasta: 99, texto: 'Dependencia escasa (91–99)', tono: 'ok' },
+    { hasta: 100, texto: 'Independiente (100)', tono: 'ok' },
+  ],
+}
