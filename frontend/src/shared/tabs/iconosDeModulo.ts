@@ -43,6 +43,8 @@ export const ICONOS_DE_MODULO: Record<string, string[]> = {
     '/secretaria/pacientes': cilPeople,
     '/pacientes/:patientId/expediente': cilFolderOpen,
     '/pacientes/:patientId/estudios/:studyId': cilImage,
+    // Render volumétrico (feat/render-volumetrico).
+    '/pacientes/:patientId/estudios/:studyId/3d/:serieId': cil3d,
     '/secretaria/resultados': cilCloudUpload,
     '/doctor/appointments': cilCalendar,
     '/doctor/consultation/:appointmentId': cilMedicalCross,
