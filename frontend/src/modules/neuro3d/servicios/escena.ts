@@ -26,6 +26,7 @@ import { construirEncefalo } from './anatomia/encefalo'
 import { construirEnvolturas } from './anatomia/envolturas'
 import { construirVasos } from './anatomia/vasos'
 import { construirVentriculos } from './anatomia/ventriculos'
+import { desplazamientoHaciaAtlas } from './anatomia/capaPaciente'
 import { construirVias } from './anatomia/vias'
 import { hayWebGL } from './webgl'
 
@@ -74,6 +75,13 @@ export interface EscenaAtlas {
   fijarFlujo(activo: boolean): void
   fijarRotacion(activo: boolean): void
   fijarReducirMovimiento(activo: boolean): void
+  /**
+   * Pone (o quita, con `null`) las mallas del paciente. Las piezas del atlas de
+   * las mismas capas se ocultan mientras tanto, sin borrarse: al quitarla, el
+   * atlas vuelve igual. Resuelve cuando la capa ya está en la escena; si falla,
+   * rechaza y la escena queda como estaba.
+   */
+  fijarCapaPaciente(capa: CapaAnatomica | null): Promise<{ piezas: number }>
   /** PNG de lo que se ve, sin rótulos (se dibujan aparte en la captura). */
   capturar(): { dataUrl: string; ancho: number; alto: number }
   liberar(): void
@@ -97,6 +105,10 @@ interface Registro {
   capaOpacidad: number
   halo?: THREE.Mesh
   flujo?: THREE.Mesh
+  /** Pieza de la capa del paciente (se quita al cambiar de origen). */
+  paciente?: boolean
+  /** Pieza del atlas tapada por la del paciente: no se ve ni se elige. */
+  oculta?: boolean
 }
 
 const OPACIDAD_BASE: Partial<Record<Acabado, number>> = { disco: 0.9, liquido: 0.88, envoltura: 0.5 }
@@ -399,6 +411,38 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
     await new Promise((r) => setTimeout(r, 0))
   }
 
+  /** Lo elegible por id: sin las piezas del atlas ocultas, con las del paciente primero. */
+  const reindexar = () => {
+    porEstructura.clear()
+    const orden = [...registros.filter((r) => r.paciente), ...registros.filter((r) => !r.paciente)]
+    for (const r of orden) {
+      if (!r.pieza.estructura || r.oculta) continue
+      if (!porEstructura.has(r.pieza.estructura)) porEstructura.set(r.pieza.estructura, [])
+      porEstructura.get(r.pieza.estructura)!.push(r)
+    }
+  }
+
+  const quitarPaciente = () => {
+    for (let i = registros.length - 1; i >= 0; i--) {
+      const r = registros[i]
+      if (r.oculta) r.oculta = false
+      if (!r.paciente) continue
+      r.malla.removeFromParent()
+      r.pieza.geometria.dispose()
+      r.material.dispose()
+      geometriasPropias.delete(r.pieza.geometria)
+      materialesPropios.delete(r.material)
+      registros.splice(i, 1)
+    }
+  }
+
+  const centroDe = (g: THREE.BufferGeometry) => {
+    if (!g.boundingBox) g.computeBoundingBox()
+    return g.boundingBox!.getCenter(new THREE.Vector3())
+  }
+  let ultimasCapas: Record<CapaId, CapaEfectiva> | null = null
+  let turnoPaciente = 0
+
   // ── Estado visual ────────────────────────────────────────────────────────
   let resaltado: Resaltado = { seleccion: [], conexion: [], afectados: [], etiquetas: [], atenuarColumna: false, rayosX: false }
   let hover: string | null = null
@@ -432,7 +476,7 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
         opacidad *= capa === 'columna' ? 0.2 : 0.3
       }
       if (resaltado.rayosX && !involucrada && capa === 'encefalo') opacidad *= 0.18
-      const visible = r.capaVisible && opacidad > 0.01
+      const visible = r.capaVisible && !r.oculta && opacidad > 0.01
       r.malla.visible = visible
       if (r.pieza.acabado === 'envoltura' || r.pieza.acabado === 'via') {
         fijarTransparencia(r.material, opacidad, true)
@@ -673,6 +717,7 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   // ── API ──────────────────────────────────────────────────────────────────
   return {
     aplicarCapas(capas) {
+      ultimasCapas = capas
       for (const r of registros) {
         const c = capas[r.pieza.capa]
         r.capaVisible = c.visible
@@ -793,6 +838,52 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
         }
       }
       refrescar()
+    },
+
+    async fijarCapaPaciente(capa) {
+      const turno = ++turnoPaciente
+      // Se construye antes de tocar la escena: si el archivo falla, lo que se
+      // ve no cambia.
+      const piezas = capa ? await capa.construir({ columna: modelo }) : []
+      if (turno !== turnoPaciente) {
+        for (const p of piezas) p.geometria.dispose()
+        return { piezas: 0 }
+      }
+      quitarPaciente()
+      if (piezas.length > 0) {
+        // Alineación: los centros de las vértebras en común caen donde están
+        // las del atlas (sólo se traslada; la forma y el tamaño son los suyos).
+        const centrosPaciente = new Map<string, THREE.Vector3>()
+        for (const p of piezas) if (p.estructura) centrosPaciente.set(p.estructura, centroDe(p.geometria))
+        const centrosAtlas = new Map<string, THREE.Vector3>()
+        const cajaAtlas = new THREE.Box3()
+        for (const r of registros) {
+          if (r.pieza.capa !== 'columna') continue
+          if (r.pieza.estructura) centrosAtlas.set(r.pieza.estructura, centroDe(r.pieza.geometria))
+          cajaAtlas.union(r.pieza.geometria.boundingBox ?? new THREE.Box3().setFromBufferAttribute(r.pieza.geometria.getAttribute('position') as THREE.BufferAttribute))
+        }
+        const d = desplazamientoHaciaAtlas(centrosPaciente, centrosAtlas, cajaAtlas.isEmpty() ? new THREE.Vector3() : cajaAtlas.getCenter(new THREE.Vector3()))
+        const capasDelPaciente = new Set(piezas.map((p) => p.capa))
+        for (const r of registros) if (capasDelPaciente.has(r.pieza.capa)) r.oculta = true
+        const desde = registros.length
+        for (const p of piezas) {
+          p.geometria.translate(d.x, d.y, d.z)
+          p.geometria.computeBoundingBox()
+          p.geometria.computeBoundingSphere()
+          agregarPieza(p)
+        }
+        for (const r of registros.slice(desde)) {
+          r.paciente = true
+          if (ultimasCapas) {
+            r.capaVisible = ultimasCapas[r.pieza.capa].visible
+            r.capaOpacidad = ultimasCapas[r.pieza.capa].opacidad
+          }
+        }
+      }
+      reindexar()
+      rehacerEtiquetas()
+      refrescar()
+      return { piezas: piezas.length }
     },
 
     capturar() {

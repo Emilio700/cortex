@@ -224,6 +224,10 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         # Delta deliberado (tramo C, Neuro 3D): modelo esquemático educativo;
         # no abre datos clínicos (test_permiso_neuro3d.py).
         "neuro3d.read",
+        # Delta deliberado (Cortex, feat/modelo-3d-desde-tc): pedir y revisar el
+        # modelo 3D de su paciente; el router lo acota a su expediente
+        # (test_modelo_3d.py).
+        "neuro3d.generar_modelo",
         "medications.search",
         "notifications.read",
         "patient_care_team.manage",

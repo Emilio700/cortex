@@ -1,0 +1,7 @@
+# Base: lo que necesita el servicio para arrancar y mallar (también en modo falso).
+fastapi==0.115.12
+uvicorn==0.34.3
+numpy==2.2.6
+scipy==1.15.3
+scikit-image==0.25.2
+nibabel==5.3.2

@@ -4,6 +4,11 @@
  * Como todos, no arranca solo: se pide desde el centro de ayuda. Los pasos de
  * la escena (vistas, separar vértebras) sólo aparecen cuando el modelo terminó
  * de cargar; si el equipo no tiene gráficos 3D, esos pasos se saltan solos.
+ *
+ * Modelo 3D desde TC (feat/modelo-3d-desde-tc): el paso «Origen del modelo»
+ * sólo aparece con un paciente en contexto, y el del modelo del paciente sólo
+ * cuando su TC ya se ve; si no, se saltan solos. El recorrido del visor
+ * («Modelo 3D desde la tomografía») vive aquí porque termina en Neuro 3D.
  */
 import { Role } from '../../types'
 import type { Recorrido } from '../tipos'
@@ -13,7 +18,7 @@ const CLINICO = [Role.DOCTOR, Role.ADMIN, Role.MASTER]
 export const RECORRIDOS_NEURO3D: Recorrido[] = [
   {
     id: 'neuro-3d',
-    version: 1,
+    version: 2,
     titulo: 'Neuro 3D',
     resumen:
       'Encéfalo y columna en 3D para explicarle al paciente su lesión: capas, vistas, raíces con su dermatoma y captura.',
@@ -27,7 +32,21 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         elemento: 'atlas-aviso',
         titulo: 'Un modelo para explicar',
         texto:
-          'Neuro 3D es un modelo <b>esquemático</b>: no es la anatomía de tu paciente ni sustituye su estudio de imagen. Sirve para enseñarle dónde está su lesión y qué hace la cirugía.',
+          'Este aviso dice siempre de dónde sale lo que ves. Por omisión es un modelo <b>esquemático</b>: no es la anatomía de tu paciente ni sustituye su estudio de imagen. Sirve para enseñarle dónde está su lesión y qué hace la cirugía.',
+        lado: 'bottom',
+      },
+      {
+        elemento: 'atlas-origen',
+        titulo: 'Origen del modelo',
+        texto:
+          'Con un paciente en contexto eliges de dónde sale la columna: el modelo <b>esquemático</b>, el ajustado desde su <b>radiografía</b> o la <b>tomografía del paciente</b> (una reconstrucción automática de su TC). Lo que no está disponible aparece deshabilitado y dice por qué.',
+        lado: 'bottom',
+      },
+      {
+        elemento: 'atlas-modelo-paciente',
+        titulo: 'La tomografía del paciente',
+        texto:
+          'Dice de qué estudio salió, con qué motor y si alguien ya la revisó. Es una reconstrucción automática: compárala con las imágenes originales y usa <b>Marcar como revisada</b> cuando lo hayas hecho. Tocar una raíz enciende la vértebra <b>del paciente</b>; las raíces, los discos y el encéfalo siguen siendo esquemáticos.',
         lado: 'bottom',
       },
       {
@@ -90,7 +109,30 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         elemento: 'atlas-capturar',
         titulo: 'Captura',
         texto:
-          'Descarga un PNG con la vista, la silueta y el aviso de modelo esquemático, sin el nombre del paciente. Si abriste Neuro 3D desde la pestaña <b>Imágenes</b> del expediente, también puedes <b>guardarla en el expediente</b> (con su consentimiento); solo dice «guardado» cuando el sistema lo confirmó.',
+          'Descarga un PNG con la vista, la silueta y el aviso del origen del modelo (esquemático o reconstrucción de su TC), sin el nombre del paciente. Si abriste Neuro 3D desde la pestaña <b>Imágenes</b> del expediente, también puedes <b>guardarla en el expediente</b> (con su consentimiento); solo dice «guardado» cuando el sistema lo confirmó.',
+        lado: 'bottom',
+      },
+    ],
+  },
+  {
+    id: 'modelo-3d-desde-tc',
+    version: 1,
+    titulo: 'Modelo 3D desde la tomografía',
+    resumen: 'Arma la columna 3D del paciente desde su TC y ábrela en Neuro 3D.',
+    grupo: 'Consulta médica',
+    ruta: '/pacientes/:patientId/estudios/:studyId',
+    // El mismo permiso que abre el visor. Generar pide además
+    // neuro3d.generar_modelo; sin él, el paso muestra sólo el estado.
+    requiere: ['clinical_images.read'],
+    roles: [Role.DOCTOR, Role.ADMIN, Role.MASTER],
+    comoLlegar:
+      'Abre una tomografía del paciente desde la pestaña Imágenes de su expediente. Requiere que el consultorio tenga encendido el módulo «Neuro 3D del paciente».',
+    pasos: [
+      {
+        elemento: 'visor-modelo-3d',
+        titulo: 'Generar modelo 3D',
+        texto:
+          'Si tienes permiso, <b>Generar modelo 3D</b> manda la serie que estás viendo al segmentador, que arma las vértebras C1 a S1, la médula y el conducto. Tarda unos minutos: mientras tanto dice <b>Procesando…</b> y puedes seguir trabajando. Sólo dice <b>listo</b> cuando el servidor lo confirmó; si no se pudo, dice por qué. Con el modelo listo, <b>Ver en Neuro 3D</b> lo abre.',
         lado: 'bottom',
       },
     ],

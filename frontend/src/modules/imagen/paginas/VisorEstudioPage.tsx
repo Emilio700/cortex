@@ -34,7 +34,9 @@ import {
 
 import { mensajeDeFallo } from '../servicios/mensajes'
 import { rutaDelExpediente } from '../../expediente/rutas'
+import { useAuth } from '../../../shared/context/AuthContext'
 import AyudaDeAtajos from '../componentes/AyudaDeAtajos'
+import BotonModelo3D from '../componentes/BotonModelo3D'
 import BarraDelVisor from '../componentes/BarraDelVisor'
 import ModalCaptura from '../componentes/ModalCaptura'
 import ModalCompartir from '../componentes/ModalCompartir'
@@ -92,6 +94,8 @@ const HERRAMIENTA_DE_ACCION: Partial<Record<AccionDelVisor, Herramienta>> = {
 
 export default function VisorEstudioPage() {
   const { patientId, studyId } = useParams<{ patientId: string; studyId: string }>()
+  // Modelo 3D desde TC (feat/modelo-3d-desde-tc): sólo con el módulo encendido.
+  const { can, tieneModulo } = useAuth()
   const [estudio, setEstudio] = useState<EstudioDicom | null>(null)
   const [nombreDelPaciente, setNombreDelPaciente] = useState<string | null>(null)
   const [candidatos, setCandidatos] = useState<CandidatoComparacion[]>([])
@@ -613,19 +617,31 @@ export default function VisorEstudioPage() {
           </h2>
           <div className="visor-encabezado__meta">{resumenDeEstudio(estudio)}</div>
         </div>
-        {estado && (
-          // Etiqueta corta: el detalle de qué falta va en el aviso de abajo. Si
-          // se repite el mismo texto dos veces, el médico deja de leerlo.
-          <CBadge
-            color={estado.tono === 'ok' ? 'success' : estado.tono === 'aviso' ? 'warning' : 'danger'}
-          >
-            {estado.tono === 'ok'
-              ? 'Estudio completo'
-              : estado.tono === 'error'
-                ? 'No se pudo leer'
-                : 'Estudio incompleto'}
-          </CBadge>
-        )}
+        <div className="visor-encabezado__lado">
+          {tieneModulo('neuro3d_paciente') &&
+            serieActiva &&
+            ['CT', 'MR'].includes((serieActiva.modality || estudio.modality || '').toUpperCase()) && (
+              <BotonModelo3D
+                patientId={patientId ?? ''}
+                estudioId={estudio.id}
+                serieId={serieActiva.id}
+                puedeGenerar={can('neuro3d.generar_modelo')}
+              />
+            )}
+          {estado && (
+            // Etiqueta corta: el detalle de qué falta va en el aviso de abajo. Si
+            // se repite el mismo texto dos veces, el médico deja de leerlo.
+            <CBadge
+              color={estado.tono === 'ok' ? 'success' : estado.tono === 'aviso' ? 'warning' : 'danger'}
+            >
+              {estado.tono === 'ok'
+                ? 'Estudio completo'
+                : estado.tono === 'error'
+                  ? 'No se pudo leer'
+                  : 'Estudio incompleto'}
+            </CBadge>
+          )}
+        </div>
       </div>
 
       {(estudio.warnings ?? []).map((aviso) => (

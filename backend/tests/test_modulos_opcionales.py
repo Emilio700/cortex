@@ -7,8 +7,8 @@ Lo que no puede fallar:
 - apagarlo no borra nada de lo que el módulo guardó;
 - la pantalla solo ofrece módulos ya construidos (``disponible``).
 
-Ningún módulo real está construido todavía, así que las pruebas inyectan uno
-ficticio en el catálogo.
+Las pruebas inyectan módulos ficticios en el catálogo para no depender de uno
+real. El único real construido es ``neuro3d_paciente`` (feat/modelo-3d-desde-tc).
 """
 from typing import Annotated
 
@@ -74,14 +74,18 @@ def _cambiar(client, cabeceras, modulo, activo):
 # ── El catálogo ─────────────────────────────────────────────────────────────
 
 
-def test_el_catalogo_trae_los_modulos_acordados_y_ninguno_esta_construido():
+# Construidos, cada uno en la rama que lo hizo.
+CONSTRUIDOS = {"neuro3d_paciente"}  # feat/modelo-3d-desde-tc
+
+
+def test_el_catalogo_trae_los_modulos_acordados_y_solo_los_construidos_estan_disponibles():
     reales = {k: v for k, v in catalogo.MODULOS_OPCIONALES.items() if k not in ("ficticio", "con_servicio")}
     assert set(reales) == {
         "inventario", "tareas", "encuestas", "interoperabilidad", "patologia", "ecg",
         "goniometro", "telemedicina", "whatsapp",
         "pacs_orthanc", "dictado", "asistente_ia", "laboratorios_ocr", "neuro3d_paciente",
     }
-    assert all(not m.disponible for m in reales.values())
+    assert {k for k, m in reales.items() if m.disponible} == CONSTRUIDOS
     assert all(not m.activo_por_defecto for m in reales.values())
     for requiere in ("pacs_orthanc", "dictado", "asistente_ia", "neuro3d_paciente"):
         assert reales[requiere].servicio_requerido
@@ -93,7 +97,7 @@ def test_la_lista_solo_ofrece_modulos_construidos(client, db_session, escenario)
     respuesta = client.get(f"{PREFIX}/modulos", headers=cabeceras)
     assert respuesta.status_code == 200
     ids = {m["id"] for m in respuesta.json()["modulos"]}
-    assert ids == {"ficticio", "con_servicio"}
+    assert ids == {"ficticio", "con_servicio"} | CONSTRUIDOS
     assert respuesta.json()["activos"] == []
 
 

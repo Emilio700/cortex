@@ -1,6 +1,7 @@
 /**
- * Lo único que el atlas le pide al servidor: el nombre del paciente en
- * contexto y guardar una captura en su expediente.
+ * Lo que el atlas le pide al servidor: el nombre del paciente en contexto,
+ * guardar una captura en su expediente y, con el módulo `neuro3d_paciente`,
+ * los modelos 3D armados desde sus estudios (feat/modelo-3d-desde-tc).
  *
  * Guardar usa el endpoint de imágenes clínicas que ya existe
  * (`POST /clinical-images/upload`), con su consentimiento obligatorio: el
@@ -8,6 +9,9 @@
  * esta llamada regresa bien.
  */
 import { apiClient } from '../../../shared/services/api'
+import type { Modelo3D } from '../dominio/modeloPaciente'
+
+export type { Modelo3D }
 
 export interface ImagenGuardada {
   id: number
@@ -40,6 +44,23 @@ export const atlasApi = {
     const { data } = await apiClient.post<ImagenGuardada>('/clinical-images/upload', form, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
+    return data
+  },
+
+  // ── Modelo 3D del paciente (feat/modelo-3d-desde-tc) ──
+  async modelosDelPaciente(patientId: number): Promise<Modelo3D[]> {
+    const { data } = await apiClient.get<Modelo3D[]>(`/patients/${patientId}/modelos-3d`)
+    return data
+  },
+
+  /** El GLB del modelo (mm, LPS). Sólo existe si el servidor lo dio por listo. */
+  async mallasDelModelo(modeloId: number): Promise<ArrayBuffer> {
+    const { data } = await apiClient.get<ArrayBuffer>(`/imaging/modelos-3d/${modeloId}/mallas`, { responseType: 'arraybuffer' })
+    return data
+  },
+
+  async marcarRevisado(modeloId: number): Promise<Modelo3D> {
+    const { data } = await apiClient.post<Modelo3D>(`/imaging/modelos-3d/${modeloId}/revisado`)
     return data
   },
 }

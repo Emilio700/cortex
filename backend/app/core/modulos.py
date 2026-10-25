@@ -102,8 +102,11 @@ _CATALOGO = (
     ),
     ModuloOpcional(
         "neuro3d_paciente", "Neuro 3D del paciente",
-        "Modelo 3D del encéfalo o la columna armado con los estudios del paciente.",
+        "Modelo 3D de la columna armado con la tomografía del paciente, para revisarlo "
+        "en Neuro 3D. El encéfalo llegará en una fase posterior.",
         servicio_requerido="segmentador",
+        # feat/modelo-3d-desde-tc: construido.
+        disponible=True,
     ),
 )
 
