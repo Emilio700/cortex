@@ -201,3 +201,89 @@ class ImagingAnnotation(Base):
     study = relationship("ImagingStudy", back_populates="annotations")
     series = relationship("ImagingSeries")
     created_by = relationship("User", foreign_keys=[created_by_user_id])
+
+
+class ImagingKeyImage(Base):
+    """Un corte marcado como clave, con su nota y, si se pidió, su captura.
+
+    «Clave» es lo que el médico quiere volver a ver o enseñar: la lesión, el
+    corte donde se mide, el que se compara con el previo. Se guarda dónde está
+    (serie y posición en la pila) y cómo se veía (ventana, zoom, giro), para
+    reabrirlo exactamente igual. La captura es un derivado: el original DICOM no
+    se toca.
+
+    Una sola marca por corte: marcar otra vez el mismo corte actualiza la nota y
+    la captura, no crea un duplicado.
+    """
+
+    __tablename__ = "imaging_key_images"
+    __table_args__ = (
+        UniqueConstraint(
+            "series_id", "instance_index", name="uq_imaging_key_images_series_instance"
+        ),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
+    study_id = Column(
+        Integer, ForeignKey("imaging_studies.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    series_id = Column(
+        Integer, ForeignKey("imaging_series.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    created_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    # Posición (desde 0) en el orden que muestra el visor, y el UID del corte,
+    # que es lo que no cambia si la serie se vuelve a indexar.
+    instance_index = Column(Integer, nullable=False)
+    sop_instance_uid = Column(String(64), nullable=True)
+
+    label = Column(String(120), nullable=True)
+    notes = Column(Text, nullable=True)
+    # Ventana, zoom, giro e inversión con los que se marcó.
+    view_state = Column(JSON, nullable=False, default=dict)
+    # Captura PNG en el almacenamiento; ``None`` si sólo se marcó el corte.
+    image_path = Column(String(500), nullable=True)
+
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
+
+    study = relationship("ImagingStudy")
+    series = relationship("ImagingSeries")
+    created_by = relationship("User", foreign_keys=[created_by_user_id])
+
+
+class ImagingShareLink(Base):
+    """Enlace temporal para que alguien más vea el estudio, sin entrar al sistema.
+
+    Pensado para la interconsulta: un colega abre el estudio desde un enlace que
+    vence, sin expediente ni datos de identidad. Del token sólo se guarda su hash:
+    el enlace completo se muestra una vez, al crearlo, y si se pierde se revoca y
+    se crea otro.
+
+    ``consent_confirmed_at`` registra que quien lo creó confirmó contar con el
+    consentimiento del paciente; no se puede crear un enlace sin eso.
+    """
+
+    __tablename__ = "imaging_share_links"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
+    study_id = Column(
+        Integer, ForeignKey("imaging_studies.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    created_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    token_hash = Column(String(64), nullable=False, unique=True, index=True)
+    recipient_note = Column(String(160), nullable=True)
+
+    expires_at = Column(DateTime, nullable=False)
+    revoked_at = Column(DateTime, nullable=True)
+    consent_confirmed_at = Column(DateTime, nullable=False)
+
+    access_count = Column(Integer, nullable=False, default=0)
+    last_access_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+
+    study = relationship("ImagingStudy")
+    created_by = relationship("User", foreign_keys=[created_by_user_id])

@@ -32,6 +32,7 @@ from app.routers import (
     doctor_profile,
     doctor_schedule,
     imaging,
+    imaging_compartir,
     medical_certificates,
     medications,
     notifications,
@@ -214,6 +215,8 @@ app.include_router(expediente.router, prefix=settings.API_V1_PREFIX)
 app.include_router(estudios_externos.router, prefix=settings.API_V1_PREFIX)
 app.include_router(imagenes.router, prefix=settings.API_V1_PREFIX)
 app.include_router(imaging.router, prefix=settings.API_V1_PREFIX)
+app.include_router(imaging_compartir.router, prefix=settings.API_V1_PREFIX)
+app.include_router(imaging_compartir.router_publico, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/health")

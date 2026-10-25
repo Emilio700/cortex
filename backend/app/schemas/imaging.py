@@ -110,3 +110,97 @@ class ImagingUploadResult(BaseModel):
 class ComparisonCandidateOut(BaseModel):
     study: ImagingStudyOut
     avisos: list[str] = []
+
+
+# ── Cortes clave ────────────────────────────────────────────────────────────
+
+
+class KeyImageViewState(BaseModel):
+    """Cómo se veía el corte al marcarlo. Los campos desconocidos se descartan."""
+
+    wc: Optional[float] = None
+    ww: Optional[float] = Field(default=None, gt=0)
+    zoom: Optional[float] = Field(default=None, gt=0, le=100)
+    rotation: Optional[float] = Field(default=None, ge=-360, le=360)
+    flip_h: bool = False
+    flip_v: bool = False
+    invert: bool = False
+
+
+class ImagingKeyImageOut(BaseModel):
+    id: int
+    study_id: int
+    series_id: int
+    series_description: Optional[str] = None
+    instance_index: int
+    sop_instance_uid: Optional[str] = None
+    label: Optional[str] = None
+    notes: Optional[str] = None
+    view_state: dict = {}
+    has_image: bool = False
+    created_at: datetime
+    updated_at: datetime
+    created_by: Optional[str] = None
+
+
+class ImagingKeyImageUpdate(BaseModel):
+    label: Optional[str] = Field(default=None, max_length=120)
+    notes: Optional[str] = Field(default=None, max_length=2000)
+
+
+class ExportPdfRequest(BaseModel):
+    # Vacío = todos los cortes clave que tengan captura.
+    key_image_ids: list[int] = []
+    # Sin nombre ni fecha de nacimiento, para mandarla a un colega.
+    anonimo: bool = False
+
+
+# ── Enlaces temporales ──────────────────────────────────────────────────────
+
+
+class ShareLinkCreate(BaseModel):
+    # Hasta una semana: un enlace que no vence deja de ser «temporal».
+    hours: int = Field(ge=1, le=168)
+    note: Optional[str] = Field(default=None, max_length=160)
+    # Sin esta confirmación no se crea: queda registrada con fecha y autor.
+    consent_confirmed: bool
+
+
+class ShareLinkOut(BaseModel):
+    id: int
+    recipient_note: Optional[str] = None
+    created_at: datetime
+    expires_at: datetime
+    revoked_at: Optional[datetime] = None
+    access_count: int = 0
+    last_access_at: Optional[datetime] = None
+    created_by: Optional[str] = None
+    # activo | vencido | revocado
+    estado: str
+
+
+class ShareLinkCreatedOut(ShareLinkOut):
+    # El token en claro sólo existe en esta respuesta; en la base queda su hash.
+    token: str
+    avisos: list[str] = []
+
+
+class SharedSeriesOut(BaseModel):
+    id: int
+    series_number: int
+    series_description: Optional[str] = None
+    sequence_label: Optional[str] = None
+    modality: str
+    instance_count: int
+
+
+class SharedStudyOut(BaseModel):
+    """Lo único que ve quien abre el enlace. Sin paciente, sin institución."""
+
+    modality: str
+    study_date: datetime
+    study_description: Optional[str] = None
+    body_part: Optional[str] = None
+    series: list[SharedSeriesOut] = []
+    expires_at: datetime
+    aviso: str
