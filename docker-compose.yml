@@ -92,11 +92,80 @@ services:
     profiles:
       - tools
 
+  # ── base-modulos-extra: servicios auxiliares en perfiles ──
+  # No arrancan con `docker compose up -d postgres` ni con un `up` sin perfil.
+  # Imagen: docker compose --profile imagen up -d
+  # IA:     docker compose --profile ia up -d
+  # Las versiones van fijas: una actualización se decide, no llega sola.
+
+  # PACS: recibe por C-STORE lo que mandan los equipos (AET CORTEX, puerto 4242)
+  # y lo expone por DICOMweb. Autenticación siempre activa: guarda estudios con
+  # datos del paciente. Las credenciales salen del .env (ORTHANC_USUARIO,
+  # ORTHANC_PASSWORD), que no se versiona; el valor por defecto es solo local.
+  orthanc:
+    image: orthancteam/orthanc:24.10.3
+    container_name: cortex_orthanc
+    environment:
+      ORTHANC__NAME: "CORTEX"
+      ORTHANC__DICOM_AET: "CORTEX"
+      ORTHANC__REMOTE_ACCESS_ALLOWED: "true"
+      ORTHANC__AUTHENTICATION_ENABLED: "true"
+      ORTHANC__REGISTERED_USERS: '{"${ORTHANC_USUARIO:-cortex}": "${ORTHANC_PASSWORD:-cambia-esta-clave-local}"}'
+      DICOM_WEB_PLUGIN_ENABLED: "true"
+      ORTHANC__DICOM_WEB__ENABLE: "true"
+      ORTHANC__DICOM_WEB__ROOT: "/dicom-web/"
+      ORTHANC__DICOM_WEB__ENABLE_WADO: "true"
+      ORTHANC__DICOM_WEB__WADO_ROOT: "/wado"
+      VERBOSE_ENABLED: "false"
+    ports:
+      - "${ORTHANC_DICOM_PORT:-4242}:4242"
+      - "${ORTHANC_HTTP_PORT:-8042}:8042"
+    volumes:
+      - cortex_orthanc_data:/var/lib/orthanc/db
+    networks:
+      - cortex_network
+    profiles:
+      - imagen
+
+  # Whisper con API compatible con OpenAI (POST /v1/audio/transcriptions), en
+  # CPU. El audio del dictado no sale del servidor.
+  whisper:
+    image: ghcr.io/speaches-ai/speaches:0.8.2-cpu
+    container_name: cortex_whisper
+    environment:
+      WHISPER__INFERENCE_DEVICE: "cpu"
+    ports:
+      - "${WHISPER_PORT:-8020}:8000"
+    volumes:
+      - cortex_whisper_models:/home/ubuntu/.cache/huggingface/hub
+    networks:
+      - cortex_network
+    profiles:
+      - ia
+
+  # Presidio: detecta datos personales para quitarlos antes de enviar texto a
+  # un proveedor de IA externo.
+  presidio-analyzer:
+    image: mcr.microsoft.com/presidio-analyzer:2.2.358
+    container_name: cortex_presidio_analyzer
+    ports:
+      - "${PRESIDIO_PORT:-5020}:3000"
+    networks:
+      - cortex_network
+    profiles:
+      - ia
+  # ── fin base-modulos-extra ──
+
 volumes:
   cortex_postgres_data:
     name: cortex_postgres_data
   cortex_pgadmin_data:
     name: cortex_pgadmin_data
+  # base-modulos-extra
+  cortex_orthanc_data:
+    name: cortex_orthanc_data
+  cortex_whisper_models:
+    name: cortex_whisper_models
 
 networks:
   cortex_network:
