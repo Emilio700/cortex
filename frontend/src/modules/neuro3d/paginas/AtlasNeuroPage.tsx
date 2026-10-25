@@ -242,6 +242,9 @@ export default function AtlasNeuroPage() {
     const e = estructuraPorId(id)
     // Si su capa estaba apagada, se enciende: buscar algo y no verlo confunde.
     if (e && !capas[e.capa].visible) cambiarCapa(e.capa, { visible: true })
+    // Un corte podría dejar fuera justo lo buscado (la raíz derecha con el
+    // sagital medio): se quita para que se vea entero.
+    setCorte((c) => (c.plano === 'ninguno' ? c : { plano: 'ninguno', posicion: 0 }))
     // Lo buscado puede estar fuera de cuadro: la cámara va hacia ello y su camino.
     const piezas = conexionDe(id)?.piezas.map((p) => p.id) ?? []
     escenaRef.current?.enfocar([...mallasDe(id), ...piezas.filter((p) => !p.startsWith('sacro'))])

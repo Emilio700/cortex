@@ -131,7 +131,7 @@ describe('Atlas Neuro 3D', () => {
     abrir()
     await userEvent.click(await screen.findByRole('button', { name: 'Ver la raíz L5 derecha' }))
     expect(screen.getByRole('heading', { name: 'Raíz L5 derecha' })).toBeInTheDocument()
-    const resaltado = escena.fijarResaltado.mock.calls.at(-1)![0]
+    const resaltado = escena.fijarResaltado.mock.calls[escena.fijarResaltado.mock.calls.length - 1][0]
     expect(resaltado.seleccion).toEqual(['raiz-L5-der'])
     expect(resaltado.conexion.map((c: { id: string }) => c.id)).toEqual(
       expect.arrayContaining(['segmento-L5', 'disco-L4-L5', 'vertebra-L5', 'sacro']),
@@ -149,7 +149,7 @@ describe('Atlas Neuro 3D', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Marcar nivel' }))
     expect(screen.getByText('Hernia L4-L5 paracentral derecha · raíz L5')).toBeInTheDocument()
     expect(escena.fijarHernias).toHaveBeenLastCalledWith([{ disco: 'L4-L5', posicion: 'paracentral', lado: 'derecho' }])
-    const resaltado = escena.fijarResaltado.mock.calls.at(-1)![0]
+    const resaltado = escena.fijarResaltado.mock.calls[escena.fijarResaltado.mock.calls.length - 1][0]
     expect(resaltado.afectados).toEqual(['disco-L4-L5', 'raiz-L5-der'])
   })
 
