@@ -15,6 +15,7 @@ const post = vi.hoisted(() => vi.fn())
 vi.mock('../../../shared/services/api', () => ({ apiClient: { get, post }, default: { get, post } }))
 
 import BotonModelo3D, { INTERVALO_DE_CONSULTA_MS } from './BotonModelo3D'
+import { tomarModeloPedido } from '../../neuro3d/servicios/modeloPedido'
 
 const RUTA = '/imaging/studies/3/series/11/modelo-3d'
 const base = {
@@ -91,6 +92,14 @@ describe('BotonModelo3D', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Generar modelo 3D' }))
     expect(await screen.findByText(/muy pocos cortes/)).toBeInTheDocument()
     expect(screen.queryByText(/Procesando/)).toBeNull()
+  })
+
+  it('«Ver en Neuro 3D» deja pedido el modelo (las pestañas pierden el ?modelo=)', async () => {
+    get.mockResolvedValue({ data: { ...base, estado: 'listo' } })
+    montar()
+    await userEvent.click(await screen.findByRole('link', { name: 'Ver en Neuro 3D' }))
+    expect(tomarModeloPedido()).toBe(9)
+    expect(tomarModeloPedido()).toBeNull()
   })
 
   it('un modelo sintético se dice sintético', async () => {

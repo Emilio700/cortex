@@ -34,6 +34,7 @@ import SelectorOrigen, { type OpcionDeOrigen } from '../componentes/SelectorOrig
 import { AVISO_ORIGEN, type OrigenModelo } from '../dominio/origenModelo'
 import { AVISO_SINTETICO, describirModelo, opcionDeTc, textoDeRevision, type Modelo3D } from '../dominio/modeloPaciente'
 import { useOrigenRadiografia } from '../servicios/origenRadiografia'
+import { EVENTO_MODELO_PEDIDO, tomarModeloPedido } from '../servicios/modeloPedido'
 import type { CapaAnatomica } from '../servicios/anatomia/tipos'
 import { mensajeDeFallo } from '../../imagen/servicios/mensajes'
 import PanelCapas from '../componentes/PanelCapas'
@@ -97,7 +98,13 @@ export default function AtlasNeuroPage() {
   const [modeloMostrado, setModeloMostrado] = useState<Modelo3D | null>(null)
   const [revisando, setRevisando] = useState(false)
   const capaPacienteRef = useRef<CapaAnatomica | null>(null)
-  const preferido = Number(parametros.get('modelo')) || null
+  // El modelo que pidió el visor («Ver en Neuro 3D»). Llega por
+  // `modeloPedido` porque las pestañas pierden el `?modelo=`; la URL queda
+  // como respaldo (un enlace pegado, las pruebas).
+  const [preferido, setPreferido] = useState<number | null>(
+    () => tomarModeloPedido() ?? (Number(parametros.get('modelo')) || null),
+  )
+  const [recargaModelos, setRecargaModelos] = useState(0)
   const autoAbierto = useRef(false)
   const conModuloPaciente = patientId !== null && tieneModulo('neuro3d_paciente') && can('clinical_images.read')
   const radiografia = useOrigenRadiografia(patientId)
@@ -173,7 +180,21 @@ export default function AtlasNeuroPage() {
     return () => {
       vigente = false
     }
-  }, [conModuloPaciente, patientId])
+  }, [conModuloPaciente, patientId, recargaModelos])
+
+  // Con Neuro 3D ya abierto en otra pestaña, «Ver en Neuro 3D» llega como
+  // evento: se relee la lista (el modelo es nuevo) y se abre ése.
+  useEffect(() => {
+    const alPedir = () => {
+      const id = tomarModeloPedido()
+      if (!id) return
+      autoAbierto.current = false
+      setPreferido(id)
+      setRecargaModelos((n) => n + 1)
+    }
+    window.addEventListener(EVENTO_MODELO_PEDIDO, alPedir)
+    return () => window.removeEventListener(EVENTO_MODELO_PEDIDO, alPedir)
+  }, [])
 
   const tc = useMemo(() => (modelos === undefined ? null : opcionDeTc(modelos, preferido)), [modelos, preferido])
   const opcionesDeOrigen = useMemo(() => {
@@ -505,10 +526,10 @@ export default function AtlasNeuroPage() {
       <div className={`atlas-aviso${origen === 'tc' ? ' atlas-aviso--paciente' : ''}`} role="note" data-tour="atlas-aviso">
         <p className="mb-0">{AVISO_ORIGEN[origen]}</p>
         {cambiandoOrigen && (
-          <p className="mb-0 mt-1" role="status">
+          <div className="mt-1" role="status">
             <CSpinner size="sm" className="me-2" />
             Cargando el modelo…
-          </p>
+          </div>
         )}
         {origen === 'tc' && modeloMostrado && (
           <>

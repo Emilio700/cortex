@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom'
 import { CBadge, CButton, CSpinner } from '@coreui/react-pro'
 
 import type { Modelo3D } from '../../neuro3d/dominio/modeloPaciente'
+import { pedirModelo } from '../../neuro3d/servicios/modeloPedido'
 import { modelo3dApi } from '../servicios/estudiosApi'
 import { mensajeDeFallo } from '../servicios/mensajes'
 
@@ -109,16 +110,20 @@ export default function BotonModelo3D({ patientId, estudioId, serieId, puedeGene
     const m = vista.modelo
     if (enCurso(m)) {
       contenido = (
-        <span className="visor-modelo3d__texto" role="status">
+        <div className="visor-modelo3d__texto" role="status">
           <CSpinner size="sm" className="me-2" />
           Procesando el modelo 3D… puede tardar varios minutos.
-        </span>
+        </div>
       )
     } else if (m.estado === 'listo') {
       contenido = (
         <>
           <CBadge color="success">Modelo 3D listo{m.sintetico ? ' (sintético, de prueba)' : ''}</CBadge>
-          <Link className="btn btn-sm btn-primary" to={`/pacientes/${patientId}/neuro-3d?modelo=${m.id}`}>
+          <Link
+            className="btn btn-sm btn-primary"
+            to={`/pacientes/${patientId}/neuro-3d?modelo=${m.id}`}
+            onClick={() => pedirModelo(m.id)}
+          >
             Ver en Neuro 3D
           </Link>
         </>

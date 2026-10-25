@@ -78,7 +78,8 @@ export function describirModelo(m: Modelo3D): string {
 /** Si alguien ya la revisó contra las imágenes, quién y cuándo; si no, que falta. */
 export function textoDeRevision(m: Modelo3D): string {
   if (m.confirmado_en) return `Revisada por ${m.confirmado_por ?? 'el médico'} el ${fecha(m.confirmado_en)}.`
-  return 'Sin revisar: compárala con las imágenes originales antes de usarla.'
+  // El aviso de arriba ya pide compararla con las imágenes: no se repite.
+  return 'Sin revisar.'
 }
 
 export const AVISO_SINTETICO =
