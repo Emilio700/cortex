@@ -3,6 +3,7 @@
  */
 import { apiClient } from './api'
 import type { AuthResponse, LoginCredentials, MFASetupResponse, User } from '../types'
+import { olvidarPestanas } from '../tabs/almacenPestanas'
 
 /**
  * Login with email and password
@@ -78,6 +79,8 @@ export const logout = (): void => {
   localStorage.removeItem('access_token')
   localStorage.removeItem('refresh_token')
   localStorage.removeItem('user')
+  // Las pestañas de esta cuenta no pasan a la siguiente que entre aquí.
+  olvidarPestanas()
   window.location.href = '/#/login'
 }
 

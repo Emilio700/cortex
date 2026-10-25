@@ -2,6 +2,7 @@
  * Axios HTTP client configuration
  */
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import { olvidarPestanas } from '../tabs/almacenPestanas'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
@@ -86,6 +87,8 @@ function redirectToLogin(): void {
   localStorage.removeItem('access_token')
   localStorage.removeItem('refresh_token')
   localStorage.removeItem('user')
+  // Las pestañas de esta cuenta no pasan a la siguiente que entre aquí.
+  olvidarPestanas()
   window.location.href = '/#/login'
 }
 
