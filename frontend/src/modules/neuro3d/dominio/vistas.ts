@@ -84,16 +84,17 @@ export const VISTAS: Vista[] = [
     nombre: 'Columna completa',
     tecla: '5',
     descripcion: 'Del cráneo al sacro, desde atrás y de lado.',
-    posicion: [104, -40, -150],
-    objetivo: [0, -46, -2],
+    posicion: [78, -40, -112],
+    objetivo: [0, -44, -2],
   },
   {
     id: 'base',
     nombre: 'Base (polígono de Willis)',
     tecla: '6',
     descripcion: 'Desde abajo: el polígono de Willis en la base del encéfalo.',
-    // Un poco por delante del objetivo: la frente queda arriba de la pantalla.
-    posicion: [0, -34, 1.8],
+    // Desde abajo y por delante: la mirada pasa frente a la columna cervical y
+    // la frente queda arriba de la pantalla.
+    posicion: [0, -30, 17],
     objetivo: [0, -1.2, 0.6],
   },
   {

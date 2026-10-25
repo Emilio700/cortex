@@ -483,7 +483,12 @@ export default function AtlasNeuroPage() {
             <PanelExplicar
               ref={siluetaMarcasRef}
               marcas={marcas}
-              alAgregar={(m) => setMarcas((ms) => [...ms, m])}
+              alAgregar={(m) => {
+                setMarcas((ms) => [...ms, m])
+                setRotacion(false)
+                // La cámara va a la marca: el disco y la raíz que comprime.
+                escenaRef.current?.enfocar(mallasAfectadas(m).slice(0, 4))
+              }}
               alQuitar={(id) => setMarcas((ms) => ms.filter((m) => m.id !== id))}
             />
           )}

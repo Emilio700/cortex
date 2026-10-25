@@ -9,6 +9,7 @@
  */
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CAlert, CBadge, CButton, CFormSelect, CSpinner } from '@coreui/react-pro'
+import { Link } from 'react-router-dom'
 
 import { apiClient } from '../../shared/services/api'
 import { mensajeDeError } from '../../shared/utils/errors'
@@ -58,6 +59,9 @@ export default function PestanaImagenes({ patientId, appointmentId }: { patientI
   // los documentos del paciente, pero no los estudios: si se pintara el panel,
   // lo único que vería es un error de permiso en medio del expediente.
   const veEstudios = can('clinical_images.read')
+  // Atlas Neuro 3D (tramo C): se abre con el paciente en contexto, para marcar
+  // su lesión y guardar la captura aquí mismo.
+  const veAtlas = can('neuro3d.read')
   const [items, setItems] = useState<ImagenDePaciente[] | null>(null)
   const [total, setTotal] = useState(0)
   const [error, setError] = useState<string | null>(null)
@@ -99,6 +103,23 @@ export default function PestanaImagenes({ patientId, appointmentId }: { patientI
 
   return (
     <div className="d-flex flex-column gap-3">
+      {veAtlas && (
+        <div className="expediente-atlas d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <div>
+            <div className="fw-semibold">Atlas Neuro 3D</div>
+            <div className="small text-body-secondary">
+              Explícale al paciente su lesión sobre un modelo 3D del encéfalo y la columna.
+            </div>
+          </div>
+          <Link
+            to={`/pacientes/${patientId}/atlas-neuro`}
+            className="btn btn-primary btn-sm"
+            data-tour="expediente-atlas-neuro"
+          >
+            Atlas Neuro 3D
+          </Link>
+        </div>
+      )}
       {veEstudios && <EstudiosDelPaciente patientId={patientId} />}
       {subeFotos && (
         <ClinicalImagesPanel

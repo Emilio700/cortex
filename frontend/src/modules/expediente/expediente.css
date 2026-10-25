@@ -179,6 +179,15 @@ button.expediente-senal:focus-visible { outline: 3px solid var(--cui-primary, #2
 }
 
 /* Galería combinada de imágenes (plan 32, punto 6). */
+/* Atlas Neuro 3D (tramo C): la entrada desde la pestaña Imágenes, con un filo
+   del azul de la marca para que se encuentre sin buscarla. */
+.expediente-atlas {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--cx-borde);
+  border-left: 4px solid var(--cx-azul);
+  border-radius: 14px;
+  background: var(--cx-superficie);
+}
 .expediente-galeria { padding: 0.9rem 1rem; border: 1px solid var(--ex-borde, #dbe1ea); border-radius: 14px; background: var(--cui-body-bg, #fff); }
 .expediente-galeria__filtros { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
 .expediente-galeria__filtros .form-select { width: auto; }

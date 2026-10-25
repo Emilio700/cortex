@@ -5,6 +5,9 @@
  * El botón queda en «Guardando…» hasta la respuesta; sólo con ella aparece
  * «Guardado en el expediente». Si falla, se dice por qué y la captura no se
  * pierde: se puede reintentar o descargar.
+ *
+ * La pantalla la monta al abrirla y la desmonta al cerrarla: cada vez empieza
+ * sin el consentimiento marcado.
  */
 import { useEffect, useState } from 'react'
 import {
@@ -38,13 +41,6 @@ export default function ModalGuardarExpediente(p: Props) {
   const [consentimiento, setConsentimiento] = useState(false)
   const [estado, setEstado] = useState<Estado>({ tipo: 'editando' })
   const [vista, setVista] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!p.visible) return
-    setDescripcion(p.descripcionInicial)
-    setConsentimiento(false)
-    setEstado({ tipo: 'editando' })
-  }, [p.visible, p.descripcionInicial])
 
   useEffect(() => {
     if (!p.imagen) {

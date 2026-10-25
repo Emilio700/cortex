@@ -198,7 +198,7 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   }
 
   const crearMaterial = (acabado: Acabado, color: THREE.Color): THREE.MeshStandardMaterial => {
-    const comun = { color, clippingPlanes: planos, side: THREE.FrontSide as THREE.Side }
+    const comun = { color, clippingPlanes: planos, side: THREE.FrontSide as THREE.Side, transparent: true }
     switch (acabado) {
       case 'organo':
         return new THREE.MeshPhysicalMaterial({
@@ -409,12 +409,12 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   const herniasMallas: THREE.Mesh[] = []
   let sucio = true
 
+  /**
+   * Todos los materiales nacen transparentes y se quedan así: cambiar
+   * `transparent` obliga a recompilar el sombreador, y el pelado lo haría en
+   * cada cuadro. Lo opaco se distingue sólo por escribir profundidad.
+   */
   const fijarTransparencia = (m: THREE.Material, opacidad: number, forzar = false) => {
-    const transparente = forzar || opacidad < 0.995
-    if (m.transparent !== transparente) {
-      m.transparent = transparente
-      m.needsUpdate = true
-    }
     m.opacity = opacidad
     m.depthWrite = forzar ? false : opacidad > 0.55
   }
