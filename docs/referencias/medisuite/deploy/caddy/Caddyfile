@@ -1,0 +1,80 @@
+# Caddy de borde: HTTPS automático (Let's Encrypt) para ${DOMINIO}.
+#   /api/*            → api:3000   (Fastify)
+#   /orthanc/* etc.   → perfil "servicios" (con usuario y contraseña), ver servicios.caddy
+#   todo lo demás     → web:8080   (la imagen web pone CSP y demás encabezados)
+{
+	email {$ACME_EMAIL}
+	# Descomenta para probar contra el entorno de pruebas de Let's Encrypt (sin límites de emisión):
+	# acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+	servers {
+		# Tiempo máximo razonable para subir estudios/audios grandes.
+		timeouts {
+			read_body 10m
+			read_header 30s
+			idle 5m
+		}
+	}
+}
+
+{$DOMINIO} {
+	encode zstd gzip
+
+	# Bitácora de acceso en JSON (stdout → docker logs). Caddy oculta Cookie y Authorization.
+	# Se borra la cadena de consulta: puede contener tokens de verificación de receta.
+	log {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>uri query {
+					delete t
+				}
+			}
+		}
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	# Métricas Prometheus: nunca públicas. Prometheus las lee por la red interna de Docker
+	# (http://api:3000/api/metrics con "Authorization: Bearer $METRICS_TOKEN"). El matcher de ruta de Caddy no
+	# distingue mayúsculas y compara la ruta ya decodificada (%2F, %6D…), así que no se puede rodear con variantes.
+	#
+	# /api/webhooks/whatsapp (Meta): pasa por el mismo reverse_proxy, que reenvía el cuerpo SIN modificarlo
+	# (la API verifica la firma HMAC X-Hub-Signature-256 sobre el cuerpo crudo). No agregues aquí filtros que
+	# reescriban o descompriman el cuerpo de la petición.
+	handle /api/* {
+		# Métricas: 404 hacia Internet. "respond" se evalúa antes que "reverse_proxy" (orden de directivas de Caddy).
+		@metrics path /api/metrics /api/metrics/*
+		respond @metrics 404
+
+		request_body {
+			max_size 30MB
+		}
+		reverse_proxy api:3000 {
+			# Si la API no responde: 502 rápido (el frontend muestra el error en la pantalla de inicio de sesión).
+			lb_try_duration 2s
+		}
+		header {
+			X-Content-Type-Options "nosniff"
+			Referrer-Policy "strict-origin-when-cross-origin"
+			X-Frame-Options "DENY"
+			# Solo si la API no envía la suya (helmet): nada ejecutable en respuestas de la API
+			# (protege archivos subidos que se sirven inline en /api/files/:id).
+			?Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; sandbox"
+			?Cache-Control "no-store"
+		}
+	}
+
+	# Perfil "servicios" (Orthanc, Whisper, Presidio). Si no está levantado, responde 502.
+	import /etc/caddy/servicios.caddy
+
+	handle {
+		reverse_proxy web:8080
+	}
+}
+
+# Sitios adicionales opcionales (p. ej. OHIF en su propio subdominio): archivos *.caddy en extra/.
+import /etc/caddy/extra/*.caddy

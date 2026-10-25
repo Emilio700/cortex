@@ -1,0 +1,30 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: America/Mexico_City
+    open-pull-requests-limit: 10
+    groups:
+      menores:
+        update-types: [minor, patch]
+  - package-ecosystem: npm
+    directory: /api
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: America/Mexico_City
+    open-pull-requests-limit: 10
+    groups:
+      menores:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directories: [/, /api, /deploy/backup]
+    schedule:
+      interval: weekly

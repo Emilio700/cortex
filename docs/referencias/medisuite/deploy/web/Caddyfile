@@ -1,0 +1,73 @@
+# Caddy de la imagen "web": sirve dist/ (sin TLS; el TLS lo pone el Caddy de borde en deploy/caddy/).
+# También puede usarse sola detrás de cualquier proxy con HTTPS: reenvía /api/* a API_UPSTREAM.
+{
+	admin off
+	auto_https off
+	persist_config off
+	servers {
+		# Confía en X-Forwarded-* solo si vienen de redes privadas (el Caddy de borde en la red de Docker).
+		trusted_proxies static private_ranges
+	}
+}
+
+import /etc/caddy/security-headers.caddy
+
+:{$WEB_PORT:8080} {
+	# Salud del contenedor (healthcheck de Docker).
+	handle /healthz {
+		respond "ok" 200
+	}
+
+	# API en el mismo origen (si se usa esta imagen sin el Caddy de borde).
+	handle /api/* {
+		# Métricas: 404 hacia Internet. "respond" se evalúa antes que "reverse_proxy" (orden de directivas de Caddy).
+		@metrics path /api/metrics /api/metrics/*
+		respond @metrics 404
+
+		request_body {
+			max_size 30MB
+		}
+		reverse_proxy {$API_UPSTREAM:api:3000}
+		header {
+			Strict-Transport-Security "max-age=31536000; includeSubDomains"
+			X-Content-Type-Options "nosniff"
+			Referrer-Policy "strict-origin-when-cross-origin"
+			# Si la API no manda su propia CSP: nada ejecutable (protege archivos subidos que se sirven inline).
+			?Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; sandbox"
+			-Server
+		}
+	}
+
+	handle {
+		root * /srv
+		import security_headers
+
+		# Archivos con hash en el nombre: caché de 1 año.
+		@hashed path /assets/*
+		header @hashed Cache-Control "public, max-age=31536000, immutable"
+
+		# Todo lo demás (index.html, manifest, modelos y WASM de /public sin hash): revalidar siempre (ETag).
+		@nohash not path /assets/*
+		header @nohash Cache-Control "no-cache"
+
+		# Tipos MIME explícitos (no dependemos de /etc/mime.types).
+		@wasm path *.wasm
+		header @wasm Content-Type "application/wasm"
+		@mjs path *.mjs
+		header @mjs Content-Type "text/javascript; charset=utf-8"
+		@modelos path *.task *.tflite *.onnx *.bin
+		header @modelos Content-Type "application/octet-stream"
+		# El .traineddata.gz se sirve TAL CUAL como archivo gzip (tesseract.js lo descomprime).
+		# Nunca con Content-Encoding: gzip, o el navegador lo descomprimiría antes y tesseract fallaría.
+		@tessdata path *.traineddata.gz
+		header @tessdata Content-Type "application/gzip"
+		@manifest path *.webmanifest
+		header @manifest Content-Type "application/manifest+json"
+
+		# Comprimidos en la construcción de la imagen (.zst/.gz junto al original) y, si no, al vuelo.
+		encode zstd gzip
+		file_server {
+			precompressed zstd gzip
+		}
+	}
+}

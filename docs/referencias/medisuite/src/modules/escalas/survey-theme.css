@@ -1,0 +1,44 @@
+/* Adapta SurveyJS v3 a los tokens de MediSuite (claro/oscuro automáticos vía variables). */
+.ms-survey .sd-theme-root,
+.ms-survey .sd-root-modern {
+  --sjs2-color-project-brand-600: var(--color-brand);
+  --sjs2-color-bg-basic-primary: var(--color-surface);
+  --sjs2-color-bg-basic-primary-dim: var(--color-surface-2);
+  --sjs2-color-bg-basic-secondary: transparent;
+  --sjs2-color-bg-basic-secondary-dim: var(--color-surface-2);
+  --sjs2-color-bg-basic-tertiary: var(--color-surface-2);
+  --sjs2-color-fg-basic-primary: var(--color-ink);
+  --sjs2-color-fg-brand-primary: var(--color-brand-strong);
+  --sjs2-color-fg-brand-on-primary: #fff;
+  --sjs2-color-border-basic-secondary: var(--color-line);
+  --sjs2-color-border-basic-primary: var(--color-ink);
+  --sjs2-typography-font-family-text: var(--font-sans);
+  --sjs2-palette-gray-000: var(--color-surface);
+  --sjs2-palette-gray-100: var(--color-surface-2);
+  --sjs2-palette-gray-150: var(--color-surface-2);
+  --sjs2-palette-gray-250: var(--color-line);
+  --sjs2-palette-gray-900: var(--color-ink);
+  --sjs2-palette-red-600: var(--color-danger);
+  --sjs2-palette-red-700: var(--color-danger);
+  --sjs2-color-utility-surface-survey: transparent;
+  --sjs2-color-utility-body: transparent;
+  --sjs2-color-utility-shadow-surface-default: var(--color-line);
+  --sjs2-palette-gray-999: #000;
+  --sjs2-base-unit-size: 6px;
+  --sjs2-base-unit-spacing: 6px;
+  background: transparent;
+}
+.dark .ms-survey .sd-theme-root,
+.dark .ms-survey .sd-root-modern {
+  --sjs2-color-fg-brand-on-primary: #000;
+}
+.ms-survey .sd-root-modern {
+  background: transparent !important;
+}
+.ms-survey .sd-container-modern {
+  margin-bottom: 0;
+}
+.ms-survey .sd-body.sd-body--static {
+  max-width: none;
+  padding: 0;
+}

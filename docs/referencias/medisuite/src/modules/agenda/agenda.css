@@ -1,0 +1,76 @@
+/* FullCalendar (tema classic) mapeado a los tokens de MediSuite; cambia solo con .dark */
+.agenda-cal {
+  --fc-classic-button: var(--color-surface);
+  --fc-classic-button-border: var(--color-line);
+  --fc-classic-button-strong: var(--color-brand);
+  --fc-classic-button-strong-border: var(--color-brand);
+  --fc-classic-button-outline: color-mix(in srgb, var(--color-brand) 35%, transparent);
+  --fc-classic-button-foreground: var(--color-ink);
+  --fc-classic-primary: var(--color-brand);
+  --fc-classic-primary-foreground: #fff;
+  --fc-classic-highlight: color-mix(in srgb, var(--color-brand) 18%, transparent);
+  --fc-classic-today: color-mix(in srgb, var(--color-brand) 7%, transparent);
+  --fc-classic-now: var(--color-danger);
+  --fc-classic-background: var(--color-surface);
+  --fc-classic-faint: color-mix(in srgb, var(--color-ink) 3%, transparent);
+  --fc-classic-muted: color-mix(in srgb, var(--color-ink) 6%, transparent);
+  --fc-classic-strong: color-mix(in srgb, var(--color-ink) 12%, transparent);
+  --fc-classic-foreground: var(--color-ink);
+  --fc-classic-faint-foreground: var(--color-muted);
+  --fc-classic-muted-foreground: var(--color-muted);
+  --fc-classic-border: var(--color-line);
+  --fc-classic-strong-border: var(--color-line);
+}
+.agenda-cal [data-color-scheme] {
+  font-size: 13px;
+}
+/* Botón activo de la barra (Mes/Semana/Día) con texto legible en ambos temas */
+.agenda-cal button[aria-pressed='true'],
+.agenda-cal button[aria-selected='true'],
+.agenda-cal button.fc-button-active {
+  color: #fff;
+}
+.dark .agenda-cal button[aria-pressed='true'],
+.dark .agenda-cal button[aria-selected='true'] {
+  color: #000;
+}
+.agenda-cal button {
+  border-radius: 8px;
+  font-size: 13px;
+  text-transform: none;
+}
+/* Barra de herramientas: que se acomode en pantallas angostas */
+.agenda-cal [role='toolbar'],
+.agenda-cal .fc-header-toolbar {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.agenda-cal h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.ag-ev {
+  overflow: hidden;
+  line-height: 1.25;
+  padding: 1px 2px;
+  font-size: 12px;
+}
+.ag-ev-t {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ag-ev-m {
+  opacity: 0.85;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ag-inactiva {
+  opacity: 0.55;
+}
+.ag-inactiva .ag-ev-t {
+  text-decoration: line-through;
+}

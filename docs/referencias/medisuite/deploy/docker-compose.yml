@@ -1,0 +1,314 @@
+# MediSuite — producción en un servidor (VPS) con HTTPS automático.
+#   cd deploy && cp .env.example .env   (y edítalo)
+#   docker compose up -d --build
+#   docker compose --profile servicios up -d --build     # + Orthanc, Whisper, Presidio (opcional)
+# Guía completa: docs/operacion/despliegue.md
+name: medisuite
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+# Endurecimiento común: ningún proceso puede ganar privilegios (setuid/capabilities) dentro del contenedor.
+x-hardening: &hardening
+  security_opt:
+    - no-new-privileges:true
+
+services:
+  # Borde: TLS (Let's Encrypt), HTTP/2-3, /api → api, resto → web.
+  caddy:
+    image: caddy:2.11-alpine
+    restart: unless-stopped
+    <<: *hardening
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE] # puertos 80/443
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    environment:
+      DOMINIO: ${DOMINIO:?Define DOMINIO en .env}
+      ACME_EMAIL: ${ACME_EMAIL:?Define ACME_EMAIL en .env}
+      OHIF_DOMINIO: ${OHIF_DOMINIO:-}
+      SERVICIOS_USUARIO: ${SERVICIOS_USUARIO:-servicios}
+      SERVICIOS_HASH: ${SERVICIOS_HASH:-}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/servicios.caddy:/etc/caddy/servicios.caddy:ro
+      - ./caddy/extra:/etc/caddy/extra:ro
+      - caddy-data:/data # certificados: ¡no lo borres o pedirá certificados nuevos!
+      - caddy-config:/config
+    depends_on:
+      - web
+      - api
+    networks: [frontal]
+    logging: *logging
+
+  # Frontend estático (Dockerfile de la raíz): CSP y encabezados de seguridad.
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        # Producción: siempre modo servidor. Si la API no responde se muestra el login con el error,
+        # nunca el modo demo local (que guardaría datos en el navegador sin control de acceso).
+        VITE_MODE: server
+    image: ${REGISTRO:-medisuite}/web:${VERSION:-latest}
+    restart: unless-stopped
+    <<: *hardening
+    cap_drop: [ALL]
+    read_only: true
+    volumes:
+      - type: tmpfs
+        target: /data
+        tmpfs: { mode: 01777 }
+      - type: tmpfs
+        target: /config
+        tmpfs: { mode: 01777 }
+    environment:
+      CSP_CONNECT_EXTRA: ${CSP_CONNECT_EXTRA:-}
+      CSP_FRAME_EXTRA: ${CSP_FRAME_EXTRA:-}
+      CSP_ORT_SRC: ${CSP_ORT_SRC:-}
+      PP_JITSI: ${PP_JITSI:-https://meet.jit.si}
+    networks: [frontal]
+    logging: *logging
+
+  # API (Fastify). Su Dockerfile vive en api/.
+  api:
+    build:
+      context: ../api
+    image: ${REGISTRO:-medisuite}/api:${VERSION:-latest}
+    restart: unless-stopped
+    <<: *hardening
+    cap_drop: [ALL]
+    read_only: true # solo escribe en el volumen /data/files y en /tmp
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      # Privilegios mínimos: la app se conecta con el rol restringido (sin DDL, sin DELETE/UPDATE en la bitácora);
+      # las migraciones usan el dueño del esquema (POSTGRES_USER). Ver db/initdb/10-medisuite-roles.sh.
+      DATABASE_URL: postgres://${APP_DB_ROLE:-medisuite_app}:${APP_DB_PASSWORD:?Define APP_DB_PASSWORD (openssl rand -hex 24)}@db:5432/${POSTGRES_DB:-medisuite}
+      DATABASE_URL_MIGRATIONS: postgres://${POSTGRES_USER:-medisuite}:${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-medisuite}
+      APP_DB_ROLE: ${APP_DB_ROLE:-medisuite_app}
+      MASTER_KEY: ${MASTER_KEY:?Define MASTER_KEY (openssl rand -base64 32)}
+      FILES_DIR: /data/files
+      COOKIE_SECURE: "true"
+      TRUST_PROXY: ${TRUST_PROXY:-1}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      ORG_NAME: ${ORG_NAME:-Mi clínica}
+      SEED_DEMO: ${SEED_DEMO:-false}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-}
+      PUBLIC_URL: https://${DOMINIO}
+      TZ: ${TZ:-America/Mexico_City}
+      TZ_CLINICA: ${TZ:-America/Mexico_City}
+      # Opcionales: sin valor = se toman de .env solo si están definidas ahí (si no, la API usa su default).
+      # La API trata "VAR=" (vacía) igual que no definida.
+      LOG_LEVEL:
+      CORS_ORIGIN:
+      RATE_LIMIT_GLOBAL:
+      RATE_LIMIT_LOGIN:
+      RATE_LIMIT_RECUPERAR:
+      METRICS_TOKEN:
+      # Programador de recordatorios (desactívalo con SCHEDULER=false si corres varias réplicas sin necesidad)
+      SCHEDULER:
+      SCHEDULER_INTERVAL_MS:
+      RECORDATORIO_HORAS:
+      # Almacenamiento de archivos: disk (volumen api-files, por defecto) o s3
+      STORAGE:
+      S3_ENDPOINT:
+      S3_BUCKET:
+      S3_REGION:
+      S3_ACCESS_KEY:
+      S3_SECRET_KEY:
+      S3_FORCE_PATH_STYLE:
+      # Correo (recuperación de contraseña, avisos)
+      SMTP_URL:
+      SMTP_HOST:
+      SMTP_PORT:
+      SMTP_SECURE:
+      SMTP_USER:
+      SMTP_PASS:
+      MAIL_FROM:
+      # WhatsApp Cloud API (recordatorios)
+      WHATSAPP_TOKEN:
+      WHATSAPP_PHONE_NUMBER_ID:
+      WHATSAPP_TEMPLATE:
+      WHATSAPP_TEMPLATE_LANG:
+      WHATSAPP_VERIFY_TOKEN:
+      WHATSAPP_APP_SECRET:
+      WHATSAPP_API_BASE:
+      # Timbrado CFDI (Facturapi)
+      FACTURAPI_KEY:
+      FACTURAPI_BASE:
+    volumes:
+      - api-files:/data/files
+    depends_on:
+      db:
+        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    # "frontal": Caddy → api y salida a Internet (WhatsApp, Facturapi, SMTP, S3). "datos": solo db.
+    networks: [frontal, datos]
+    logging: *logging
+
+  # PostgreSQL: solo en la red interna "datos" (sin puertos publicados).
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    <<: *hardening
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-medisuite}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-medisuite}
+      POSTGRES_INITDB_ARGS: "--data-checksums --auth-host=scram-sha-256"
+      # Rol de la app que crea db/initdb/10-medisuite-roles.sh al inicializar un volumen nuevo.
+      APP_DB_ROLE: ${APP_DB_ROLE:-medisuite_app}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Define APP_DB_PASSWORD (openssl rand -hex 24)}
+      TZ: ${TZ:-America/Mexico_City}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    shm_size: 256mb
+    networks: [datos]
+    logging: *logging
+
+  # Tarea de una sola vez en cada "up": crea/actualiza el rol de la app (volúmenes ya inicializados,
+  # rotación de APP_DB_PASSWORD). La API espera a que termine bien. Manual: docker compose run --rm db-init
+  db-init:
+    image: postgres:17-alpine
+    restart: "no"
+    <<: *hardening
+    cap_drop: [ALL]
+    read_only: true
+    user: "70:70" # usuario postgres de la imagen alpine; solo ejecuta psql por red
+    entrypoint: ["sh", "/initdb/10-medisuite-roles.sh"]
+    environment:
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER:-medisuite}
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB:-medisuite}
+      APP_DB_ROLE: ${APP_DB_ROLE:-medisuite_app}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Define APP_DB_PASSWORD (openssl rand -hex 24)}
+    volumes:
+      - ./db/initdb:/initdb:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [datos]
+    logging: *logging
+
+  # Respaldos diarios: pg_dump + archivos, retención, cifrado age y copia S3 opcionales.
+  backup:
+    build:
+      context: ./backup
+    image: ${REGISTRO:-medisuite}/backup:${VERSION:-latest}
+    restart: unless-stopped
+    <<: *hardening
+    environment:
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER:-medisuite}
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB:-medisuite}
+      FILES_DIR: /data/files
+      BACKUP_TIME: ${BACKUP_TIME:-03:15}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
+      BACKUP_AGE_RECIPIENTS: ${BACKUP_AGE_RECIPIENTS:-}
+      BACKUP_RCLONE_REMOTE: ${BACKUP_RCLONE_REMOTE:-}
+      BACKUP_ON_START: ${BACKUP_ON_START:-false}
+      # Remoto rclone "s3" (configurado por variables; usa BACKUP_RCLONE_REMOTE=s3:bucket/carpeta)
+      RCLONE_CONFIG_S3_TYPE: s3
+      RCLONE_CONFIG_S3_PROVIDER: ${BACKUP_S3_PROVIDER:-Other}
+      RCLONE_CONFIG_S3_ENDPOINT: ${BACKUP_S3_ENDPOINT:-}
+      RCLONE_CONFIG_S3_REGION: ${BACKUP_S3_REGION:-}
+      RCLONE_CONFIG_S3_ACCESS_KEY_ID: ${BACKUP_S3_ACCESS_KEY_ID:-}
+      RCLONE_CONFIG_S3_SECRET_ACCESS_KEY: ${BACKUP_S3_SECRET_ACCESS_KEY:-}
+      RCLONE_CONFIG_S3_NO_CHECK_BUCKET: "true"
+      TZ: ${TZ:-America/Mexico_City}
+    volumes:
+      - ${BACKUP_HOST_DIR:-./respaldos}:/backups
+      - api-files:/data/files:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [datos, salida] # "salida": acceso a Internet para subir a S3
+    logging: *logging
+
+  # ---------- Perfil opcional "servicios" (servidor/docker-compose.yml) ----------
+  # Detrás de Caddy en /orthanc, /whisper, /presidio-analyzer, /presidio-anonymizer con usuario y contraseña.
+  orthanc:
+    extends:
+      file: ../servidor/docker-compose.yml
+      service: orthanc
+    profiles: [servicios]
+    # DICOM C-STORE desde equipos de imagen: por defecto solo en localhost. Para la red de la clínica usa
+    # ORTHANC_DICOM_BIND=IP-privada (nunca 0.0.0.0 en un VPS público; usa VPN).
+    ports: !override
+      - "${ORTHANC_DICOM_BIND:-127.0.0.1}:4242:4242"
+    networks: [frontal]
+    logging: *logging
+
+  ohif:
+    extends:
+      file: ../servidor/docker-compose.yml
+      service: ohif
+    profiles: [servicios]
+    ports: !reset []
+    volumes: !override
+      - ./servicios/ohif-app-config.js:/usr/share/nginx/html/app-config.js:ro
+    networks: [frontal]
+    logging: *logging
+
+  whisper:
+    extends:
+      file: ../servidor/docker-compose.yml
+      service: whisper
+    profiles: [servicios]
+    networks: [frontal]
+    logging: *logging
+
+  presidio-analyzer:
+    extends:
+      file: ../servidor/docker-compose.yml
+      service: presidio-analyzer
+    profiles: [servicios]
+    networks: [frontal]
+    logging: *logging
+
+  presidio-anonymizer:
+    extends:
+      file: ../servidor/docker-compose.yml
+      service: presidio-anonymizer
+    profiles: [servicios]
+    networks: [frontal]
+    logging: *logging
+
+networks:
+  frontal:
+  datos:
+    internal: true # sin salida a Internet: solo api, db y backup
+  salida:
+
+volumes:
+  caddy-data:
+  caddy-config:
+  db-data:
+  api-files:
+  orthanc-db:
+  whisper-models:
