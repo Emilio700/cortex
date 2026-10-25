@@ -15,6 +15,7 @@
  * 20° a 50°, lordosis lumbar L1–S1 de 40° a 60° y pendiente sacra de 30° a 40°.
  */
 import * as THREE from 'three'
+import type { AjusteDelEje } from '../../dominio/ajusteRadiografico'
 
 /** Lo que el eje necesita saber de cada nivel: cuánto mide a lo largo del conducto. */
 export interface AlturaDeNivel {
@@ -115,21 +116,141 @@ export const crearLongitud = (niveles: AlturaDeNivel[]) => {
  * Puntos del eje del conducto cada `paso` cm, integrando la inclinación desde
  * el agujero magno (regla del punto medio). Salen tan juntos que una curva que
  * pase por ellos mide lo mismo que el eje.
+ *
+ * Con un `eje` ajustado (radiografía del paciente) se integra también la
+ * inclinación coronal. Sin él, el cálculo es exactamente el de siempre. La
+ * listesis no entra aquí: si se integrara, el escalón del disco torcería la
+ * tangente y con ella las vértebras vecinas; se suma después, a las posiciones
+ * (`EjeAjustado.desplazamiento`).
  */
-export const trazarEje = (niveles: AlturaDeNivel[], paso = 0.5): THREE.Vector3[] => {
+export const trazarEje = (
+  niveles: AlturaDeNivel[],
+  paso = 0.5,
+  eje?: Pick<EjeAjustado, 'sagital' | 'coronal'>,
+): THREE.Vector3[] => {
   const { largo, vDeS } = crearLongitud(niveles)
   const puntos = [ORIGEN_DEL_EJE.clone()]
   const n = Math.ceil(largo / paso)
   const ds = largo / n
+  let x = ORIGEN_DEL_EJE.x
   let y = ORIGEN_DEL_EJE.y
   let z = ORIGEN_DEL_EJE.z
   for (let k = 0; k < n; k++) {
-    const a = THREE.MathUtils.degToRad(inclinacionEn(vDeS((k + 0.5) * ds)))
-    y -= ds * Math.cos(a)
-    z += ds * Math.sin(a)
-    puntos.push(new THREE.Vector3(0, y, z))
+    const v = vDeS((k + 0.5) * ds)
+    if (!eje) {
+      const a = THREE.MathUtils.degToRad(inclinacionEn(v))
+      y -= ds * Math.cos(a)
+      z += ds * Math.sin(a)
+    } else {
+      // Las dos radiografías miden la inclinación proyectada: la lateral, la de
+      // (z, y); la AP, la de (x, y). La dirección que cumple las dos es (tan b, −1, tan a).
+      const a = THREE.MathUtils.degToRad(eje.sagital(v))
+      const b = THREE.MathUtils.degToRad(eje.coronal(v))
+      const ta = Math.tan(a)
+      const tb = Math.tan(b)
+      const f = ds / Math.sqrt(1 + ta * ta + tb * tb)
+      x += f * tb
+      y -= f
+      z += f * ta
+    }
+    puntos.push(new THREE.Vector3(x, y, z))
   }
   return puntos
+}
+
+// ── Ajuste a las medidas del paciente (radiografía) ────────────────────────
+
+/** Un perfil de inclinación, en grados, por coordenada vertebral. */
+export type Perfil = (v: number) => number
+
+/** El eje ya resuelto: perfiles sagital y coronal, y desplazamiento por listesis. */
+export interface EjeAjustado {
+  sagital: Perfil
+  coronal: Perfil
+  /**
+   * Cuánto se corre el conducto hacia delante (cm, en el marco del eje) en una
+   * coordenada: cero arriba de la listesis y, cruzando su disco, lo de abajo se
+   * va hacia atrás. Las vértebras se trasladan enteras, sin girar.
+   */
+  desplazamiento: (v: number) => number
+}
+
+/** Cuántas vértebras tarda en desvanecerse la corrección más allá de lo medido. */
+export const TRANSICION_DEL_AJUSTE = 1.5
+
+/**
+ * El perfil `base` corregido para pasar por los `puntos` medidos.
+ *
+ * Entre dos puntos la corrección (medido − base) se interpola en línea recta,
+ * así que la forma esquemática se conserva entre ellos; fuera de lo medido se
+ * desvanece en `TRANSICION_DEL_AJUSTE` vértebras. Donde no se marcó nada manda
+ * el modelo: no se inventa una curva que la radiografía no mostró.
+ */
+export const crearPerfilAjustado = (base: Perfil, puntos: { v: number; grados: number }[]): Perfil => {
+  if (puntos.length === 0) return base
+  // Un mismo punto marcado dos veces (p. ej. sin disco entre medias) se promedia.
+  const porV = new Map<number, number[]>()
+  for (const p of puntos) porV.set(p.v, [...(porV.get(p.v) ?? []), p.grados])
+  const nudos = [...porV.entries()]
+    .map(([v, g]) => ({ v, d: g.reduce((t, x) => t + x, 0) / g.length - base(v) }))
+    .sort((a, b) => a.v - b.v)
+  const primero = nudos[0]
+  const ultimo = nudos[nudos.length - 1]
+  const correccion = (v: number): number => {
+    if (v <= primero.v) return primero.d * Math.max(0, 1 - (primero.v - v) / TRANSICION_DEL_AJUSTE)
+    if (v >= ultimo.v) return ultimo.d * Math.max(0, 1 - (v - ultimo.v) / TRANSICION_DEL_AJUSTE)
+    let k = 0
+    while (v > nudos[k + 1].v) k++
+    const a = nudos[k]
+    const b = nudos[k + 1]
+    return a.d + ((b.d - a.d) * (v - a.v)) / (b.v - a.v)
+  }
+  return (v) => base(v) + correccion(v)
+}
+
+const suave = (t: number) => {
+  const u = Math.min(1, Math.max(0, t))
+  return u * u * (3 - 2 * u)
+}
+
+/** Nivel con su fondo (largo del platillo, cm), para pasar la listesis de fracción a cm. */
+export type NivelConFondo = AlturaDeNivel & { fondo?: number }
+
+/** Las alturas de los discos medidos, a la proporción del paciente. Los demás quedan igual. */
+export const ajustarAlturas = <T extends AlturaDeNivel>(niveles: T[], ajuste: AjusteDelEje): T[] =>
+  niveles.map((n, i) => {
+    const d = ajuste.discos.find((x) => x.nivel === i)
+    if (!d || n.disco <= 0 || n.cuerpo <= 0) return n
+    // Se acota: un punto mal puesto no debe volver un disco una losa ni hacerlo desaparecer.
+    const disco = Math.min(3, Math.max(0.1, d.indice)) * n.cuerpo
+    return { ...n, disco }
+  })
+
+/** Resuelve un `AjusteDelEje` (por platillo y nivel) a perfiles por coordenada vertebral. */
+export const resolverAjuste = (niveles: NivelConFondo[], ajuste: AjusteDelEje): EjeAjustado => {
+  const fc = (i: number) => niveles[i].cuerpo / (niveles[i].cuerpo + niveles[i].disco)
+  const vDe = (p: { nivel: number; platillo: 'superior' | 'inferior' }) => (p.platillo === 'superior' ? p.nivel : p.nivel + fc(p.nivel))
+  const valido = (p: { nivel: number }) => p.nivel >= 0 && p.nivel < niveles.length
+  const sagital = crearPerfilAjustado(
+    inclinacionEn,
+    ajuste.sagital.filter(valido).map((p) => ({ v: vDe(p), grados: p.grados })),
+  )
+  const coronal = crearPerfilAjustado(
+    () => 0,
+    ajuste.coronal.filter(valido).map((p) => ({ v: vDe(p), grados: p.grados })),
+  )
+  const saltos = ajuste.listesis
+    .filter((l) => l.nivel >= 0 && l.nivel < niveles.length - 1)
+    .map((l) => {
+      const abajo = niveles[l.nivel + 1]
+      // El platillo del sacro no es su «fondo» entero: se usa el de L5.
+      const fondo = (l.nivel + 1 === niveles.length - 1 ? niveles[l.nivel].fondo : abajo.fondo) ?? 3
+      const inicio = l.nivel + fc(l.nivel)
+      // Al bajar se cruza el disco: lo de abajo queda atrás de lo de arriba.
+      return { inicio, largo: 1 - fc(l.nivel), cm: -l.fraccion * fondo }
+    })
+  const desplazamiento = (v: number) => saltos.reduce((t, s) => t + s.cm * suave((v - s.inicio) / s.largo), 0)
+  return { sagital, coronal, desplazamiento }
 }
 
 // ── Despiece ───────────────────────────────────────────────────────────────
