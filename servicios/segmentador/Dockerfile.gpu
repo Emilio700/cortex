@@ -15,8 +15,8 @@
 #   torch 2.7.1+cu126 y torchvision 0.22.1+cu126 (BSD-3) · TotalSegmentator 2.18.0 (Apache-2.0)
 #   nnU-Net v2 (Apache-2.0) · dcm2niix 1.0.20260724 (BSD-2)
 #   trimesh 5.2.0 (MIT) · fast-simplification 0.2.0 (MIT)
-# El resto de dependencias del motor queda fijo en constraints-motor.txt
-# (sacado con «pip freeze» de la imagen que se probó).
+# constraints-motor.txt fija torch y torchvision para que pip no los cambie;
+# pendiente: llenarlo con el «pip freeze» de esta imagen ya probada.
 FROM python:3.12.11-slim-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
