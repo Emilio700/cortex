@@ -3,7 +3,9 @@
  *
  * - Al tocar, aparece la **lupa** con una cruz; mientras el dedo no se levanta,
  *   el punto se puede afinar. Al soltar, se coloca el punto que toca.
- * - Tocar cerca de un punto ya puesto lo **arrastra** para corregirlo.
+ * - Tocar cerca de un punto ya puesto y **arrastrar** lo corrige. Un toque sin
+ *   arrastrar pone el punto que toca aunque haya otro cerca: en un disco
+ *   estrecho, a 390 px, las esquinas vecinas quedan a pocos píxeles.
  * - En modo «Mover» el dedo desplaza la imagen y no marca nada.
  *
  * Las coordenadas son píxeles de la imagen original (el `viewBox` del SVG), así
@@ -26,12 +28,19 @@ interface Props {
   /** Extremos de la distancia conocida, si se está calibrando. */
   referencia: (Punto | null)[]
   zoom: number
-  alColocar: (clave: string, p: Punto) => void
+  /**
+   * Coloca un punto. `null` es «el que toca»: lo resuelve la pantalla con su
+   * estado más reciente, porque dos toques rápidos llegan antes de que este
+   * componente reciba el siguiente `pendiente`.
+   */
+  alColocar: (clave: string | null, p: Punto) => void
   alColocarReferencia: (indice: 0 | 1, p: Punto) => void
 }
 
 /** Radio (en píxeles de pantalla) para tomar un punto ya puesto. */
 const RADIO_DE_TOQUE = 18
+/** Cuánto (px de pantalla) hay que mover el dedo para que un toque sea arrastre. */
+const UMBRAL_DE_ARRASTRE = 6
 const AUMENTO_LUPA = 3
 const LADO_LUPA = 150
 
@@ -40,12 +49,29 @@ const PLATILLOS: Record<VistaRx, [string, string][]> = {
   ap: [['si', 'sd'], ['ii', 'id']],
 }
 
+interface Arrastre {
+  /** Lo que se mueve si el dedo se arrastra: un punto ya puesto o el que toca. */
+  clave: string
+  p: Punto
+  inicio: Punto
+  /** Tomó un punto ya puesto (sólo cuenta si el dedo se arrastra). */
+  existente: boolean
+  movido: boolean
+}
+
 export default function MarcadorRadiografia(props: Props) {
   const { src, ancho, alto, vista, puntos, pendiente, modo, referencia, zoom, alColocar, alColocarReferencia } = props
   const svgRef = useRef<SVGSVGElement>(null)
   const [escala, setEscala] = useState(1)
   const [cursor, setCursor] = useState<Punto | null>(null)
-  const [arrastre, setArrastre] = useState<{ clave: string; p: Punto } | null>(null)
+  // En una ref y no sólo en el estado: un toque rápido dispara «bajar» y «soltar»
+  // sin que React vuelva a pintar entre los dos, y con el estado el punto se perdía.
+  const arrastreRef = useRef<Arrastre | null>(null)
+  const [arrastre, setArrastreVisible] = useState<Arrastre | null>(null)
+  const fijarArrastre = (a: Arrastre | null) => {
+    arrastreRef.current = a
+    setArrastreVisible(a)
+  }
   const apuntando = useRef(false)
 
   // Píxeles de pantalla por píxel de imagen: el tamaño de los puntos no cambia con el zoom.
@@ -73,6 +99,12 @@ export default function MarcadorRadiografia(props: Props) {
     return { x: Math.round(Math.min(ancho, Math.max(0, x)) * 10) / 10, y: Math.round(Math.min(alto, Math.max(0, y)) * 10) / 10 }
   }
 
+  /** La escala del momento (el zoom pudo cambiar sin que el observador avisara aún). */
+  const escalaReal = () => {
+    const w = svgRef.current?.getBoundingClientRect().width ?? 0
+    return w > 0 ? w / ancho : escala
+  }
+
   const alBajar = (e: EventoPuntero<SVGSVGElement>) => {
     if (modo === 'mover') return
     const p = aImagen(e)
@@ -85,16 +117,16 @@ export default function MarcadorRadiografia(props: Props) {
     }
     apuntando.current = true
     setCursor(p)
-    const radio = RADIO_DE_TOQUE / Math.max(escala, 1e-6)
+    const radio = RADIO_DE_TOQUE / Math.max(escalaReal(), 1e-6)
     if (modo === 'referencia') {
       const refs = Object.fromEntries(referencia.flatMap((q, i) => (q ? [[String(i), q]] : [])))
       const cerca = puntoCercano(refs, p, radio)
-      setArrastre({ clave: cerca ?? `ref.${referencia[0] ? 1 : 0}`, p })
+      fijarArrastre({ clave: cerca ?? `ref.${referencia[0] ? 1 : 0}`, p, inicio: p, existente: cerca !== null, movido: false })
       return
     }
     const cerca = puntoCercano(puntos, p, radio)
-    if (cerca) setArrastre({ clave: cerca, p })
-    else if (pendiente) setArrastre({ clave: pendiente.clave, p })
+    if (cerca) fijarArrastre({ clave: cerca, p, inicio: p, existente: true, movido: false })
+    else fijarArrastre({ clave: pendiente?.clave ?? '', p, inicio: p, existente: false, movido: false })
   }
 
   const alMover = (e: EventoPuntero<SVGSVGElement>) => {
@@ -103,28 +135,38 @@ export default function MarcadorRadiografia(props: Props) {
     if (!p) return
     // Con ratón, la lupa sigue al cursor aunque no se presione.
     if (apuntando.current || e.pointerType === 'mouse') setCursor(p)
-    if (arrastre) setArrastre({ ...arrastre, p })
+    const a = arrastreRef.current
+    if (!a) return
+    const umbral = UMBRAL_DE_ARRASTRE / Math.max(escalaReal(), 1e-6)
+    const movido = a.movido || Math.hypot(p.x - a.inicio.x, p.y - a.inicio.y) > umbral
+    fijarArrastre({ ...a, p, movido })
   }
 
   const alSoltar = (e: EventoPuntero<SVGSVGElement>) => {
     if (!apuntando.current) return
     apuntando.current = false
-    const p = aImagen(e) ?? arrastre?.p
-    if (arrastre && p) {
+    const a = arrastreRef.current
+    const p = aImagen(e) ?? a?.p
+    if (a && p) {
       if (modo === 'referencia') {
-        const indice = arrastre.clave.endsWith('1') ? 1 : 0
-        alColocarReferencia(indice, p)
+        const clave = a.existente && !a.movido ? `ref.${referencia[0] ? 1 : 0}` : a.clave
+        alColocarReferencia(clave.endsWith('1') ? 1 : 0, p)
+      } else if (a.existente && !a.movido) {
+        // Un toque (sin arrastrar) junto a un punto ya puesto: es el punto que toca.
+        alColocar(null, p)
       } else {
-        alColocar(arrastre.clave, p)
+        alColocar(a.existente ? a.clave : null, p)
       }
     }
-    setArrastre(null)
+    fijarArrastre(null)
     if (e.pointerType !== 'mouse') setCursor(null)
   }
 
+  // Un punto ya puesto sólo se ve moverse cuando de verdad se arrastra.
+  const moviendo = arrastre && (!arrastre.existente || arrastre.movido) ? arrastre : null
   const visibles: Record<string, Punto> = { ...puntos }
-  if (arrastre && modo !== 'referencia') visibles[arrastre.clave] = arrastre.p
-  const refs = referencia.map((q, i) => (arrastre && modo === 'referencia' && arrastre.clave.endsWith(String(i)) ? arrastre.p : q))
+  if (moviendo && modo !== 'referencia') visibles[moviendo.clave] = moviendo.p
+  const refs = referencia.map((q, i) => (moviendo && modo === 'referencia' && moviendo.clave.endsWith(String(i)) ? moviendo.p : q))
 
   const u = 1 / Math.max(escala, 1e-6)
   const vertebras = [...new Set(Object.keys(visibles).filter((k) => !k.startsWith('cadera.')).map((k) => k.split('.')[0]))]
@@ -153,7 +195,7 @@ export default function MarcadorRadiografia(props: Props) {
             cy={p.y}
             r={5 * s}
             strokeWidth={1.5 * s}
-            className={`rx-marcador__punto${arrastre?.clave === clave ? ' rx-marcador__punto--activo' : ''}`}
+            className={`rx-marcador__punto${moviendo?.clave === clave ? ' rx-marcador__punto--activo' : ''}`}
           />
         ),
       )}
@@ -191,7 +233,7 @@ export default function MarcadorRadiografia(props: Props) {
             onPointerUp={alSoltar}
             onPointerCancel={() => {
               apuntando.current = false
-              setArrastre(null)
+              fijarArrastre(null)
               setCursor(null)
             }}
             onPointerLeave={(e) => {

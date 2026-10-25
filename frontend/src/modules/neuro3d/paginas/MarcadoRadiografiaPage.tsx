@@ -68,6 +68,7 @@ import MarcadorRadiografia, { type ModoMarcado } from '../componentes/MarcadorRa
 import PanelMedicionesRx from '../componentes/PanelMedicionesRx'
 import { atlasApi } from '../servicios/atlasApi'
 import { columnaRxApi, type AjusteRxGuardado, type FuenteRx } from '../servicios/columnaRxApi'
+import { pedirOrigen } from '../servicios/origenPedido'
 import '../ui/atlas.css'
 import '../ui/radiografia.css'
 
@@ -181,14 +182,20 @@ export default function MarcadoRadiografiaPage() {
   const puntosDeVista = estado.puntos[vista]
   const hayPuntos = (v: VistaRx) => Object.keys(estado.puntos[v]).length > 0
 
-  const cambiarEstado = (siguiente: EstadoMarcado) => {
-    setEstado(siguiente)
+  // Siempre sobre el estado más reciente: dos toques rápidos llegan antes de que
+  // la pantalla vuelva a pintar, y con el estado del cierre el segundo pisaba
+  // al primero (un punto se perdía y los siguientes caían en otra esquina).
+  const cambiarEstado = (cambio: (e: EstadoMarcado) => EstadoMarcado) => {
+    setEstado(cambio)
     setResultadoGuardado(null)
   }
 
   const borrarVista = (v: VistaRx) => {
-    const puntos = { ...estado.puntos, [v]: {} }
-    cambiarEstado({ puntos, saltados: estado.saltados.filter((s) => !s.startsWith(`${v}:`)), historial: estado.historial.filter((h) => h.vista !== v) })
+    cambiarEstado((e) => ({
+      puntos: { ...e.puntos, [v]: {} },
+      saltados: e.saltados.filter((s) => !s.startsWith(`${v}:`)),
+      historial: e.historial.filter((h) => h.vista !== v),
+    }))
   }
 
   // ── Escala ───────────────────────────────────────────────────────────────
@@ -259,7 +266,12 @@ export default function MarcadoRadiografiaPage() {
           </CBadge>
         }
         acciones={
-          <Link to={`/pacientes/${patientId}/neuro-3d?origen=radiografia`} className="btn btn-light" data-tour="rx-ver-3d">
+          <Link
+            to={`/pacientes/${patientId}/neuro-3d?origen=radiografia`}
+            className="btn btn-light"
+            data-tour="rx-ver-3d"
+            onClick={() => pedirOrigen(patientId, 'radiografia')}
+          >
             Ver en Neuro 3D
           </Link>
         }
@@ -414,10 +426,13 @@ export default function MarcadoRadiografiaPage() {
           </div>
 
           <div className="rx-herramientas" data-tour="rx-herramientas">
-            <CButton size="sm" color="secondary" disabled={estado.historial.length === 0} onClick={() => cambiarEstado(deshacer(estado))}>
+            <CButton size="sm" color="secondary" disabled={estado.historial.length === 0} onClick={() => cambiarEstado(deshacer)}>
               Deshacer
             </CButton>
-            <CButton size="sm" color="secondary" disabled={!pendiente || img.tipo !== 'lista'} onClick={() => pendiente && cambiarEstado(saltar(estado, vista, pendiente.clave))}>
+            <CButton size="sm" color="secondary" disabled={!pendiente || img.tipo !== 'lista'} onClick={() => cambiarEstado((e) => {
+              const paso = pasoPendiente(plan, e)
+              return paso ? saltar(e, vista, paso.clave) : e
+            })}>
               Saltar punto
             </CButton>
             <CButton
@@ -443,7 +458,12 @@ export default function MarcadoRadiografiaPage() {
               modo={modo}
               referencia={escala[vista] === 'referencia' ? [ref.a, ref.b] : []}
               zoom={zoom}
-              alColocar={(clave, p) => cambiarEstado(colocar(estado, vista, clave, p))}
+              alColocar={(clave, p) =>
+                cambiarEstado((e) => {
+                  const destino = clave ?? pasoPendiente(plan, e)?.clave
+                  return destino ? colocar(e, vista, destino, p) : e
+                })
+              }
               alColocarReferencia={(i, p) => setReferencia((x) => ({ ...x, [vista]: { ...x[vista], [i === 0 ? 'a' : 'b']: p } }))}
             />
           ) : (
@@ -484,7 +504,10 @@ export default function MarcadoRadiografiaPage() {
                 {guardando ? 'Guardando…' : resultadoGuardado ? 'Guardado' : 'Guardar ajuste'}
               </CButton>
               {resultadoGuardado && (
-                <CButton color="primary" variant="outline" className="w-100 mt-2" onClick={() => navigate(`/pacientes/${patientId}/neuro-3d?origen=radiografia`)}>
+                <CButton color="primary" variant="outline" className="w-100 mt-2" onClick={() => {
+                    pedirOrigen(patientId, 'radiografia')
+                    navigate(`/pacientes/${patientId}/neuro-3d?origen=radiografia`)
+                  }}>
                   Ver en Neuro 3D
                 </CButton>
               )}

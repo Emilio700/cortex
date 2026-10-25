@@ -46,7 +46,11 @@
   gap: 8px;
 }
 
+/* Alto fijo: si el texto del paso cambia de una a dos líneas, la placa no se
+   mueve bajo el dedo entre un punto y el siguiente. */
 .rx-paso {
+  min-height: 96px;
+  align-content: flex-start;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -305,6 +309,9 @@
   }
   .rx-marcador__lienzo {
     height: 62vh;
+  }
+  .rx-paso {
+    min-height: 132px;
   }
   .rx-marcador__lupa {
     width: 120px;

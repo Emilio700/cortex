@@ -68,13 +68,13 @@ describe('marcar sobre la radiografía', () => {
   it('al soltar el dedo coloca el punto que toca, en píxeles de la imagen', () => {
     const { svg, alColocar } = montar()
     tocar(svg, 100, 200)
-    expect(alColocar).toHaveBeenCalledWith('L1.sa', { x: 200, y: 400 })
+    expect(alColocar).toHaveBeenCalledWith(null, { x: 200, y: 400 })
   })
 
   it('mientras el dedo no se levanta, el punto se afina (cuenta donde se suelta)', () => {
     const { svg, alColocar } = montar()
     tocar(svg, 100, 200, 103, 201)
-    expect(alColocar).toHaveBeenCalledWith('L1.sa', { x: 206, y: 402 })
+    expect(alColocar).toHaveBeenCalledWith(null, { x: 206, y: 402 })
   })
 
   it('tocar cerca de un punto ya puesto lo arrastra en vez de poner otro', () => {
@@ -84,16 +84,30 @@ describe('marcar sobre la radiografía', () => {
     expect(alColocar).toHaveBeenCalledWith('T12.ip', { x: 240, y: 440 })
   })
 
+  it('un toque sin arrastrar junto a un punto ya puesto pone el que toca (disco estrecho)', () => {
+    const { svg, alColocar } = montar({ puntos: { 'T12.ip': { x: 200, y: 400 } } })
+    tocar(svg, 104, 203)
+    expect(alColocar).toHaveBeenCalledTimes(1)
+    expect(alColocar).toHaveBeenCalledWith(null, { x: 208, y: 406 })
+  })
+
+  it('un toque rápido (bajar y soltar sin moverse) no se pierde', () => {
+    const { svg, alColocar } = montar()
+    fireEvent.pointerDown(svg, { clientX: 50, clientY: 60, pointerType: 'touch' })
+    fireEvent.pointerUp(svg, { clientX: 50, clientY: 60, pointerType: 'touch' })
+    expect(alColocar).toHaveBeenCalledWith(null, { x: 100, y: 120 })
+  })
+
   it('en modo «Mover» el dedo no marca', () => {
     const { svg, alColocar } = montar({ modo: 'mover' })
     tocar(svg, 100, 200)
     expect(alColocar).not.toHaveBeenCalled()
   })
 
-  it('sin punto pendiente, tocar lejos no hace nada', () => {
+  it('el punto nuevo lo resuelve la pantalla con su estado más reciente (null = el que toca)', () => {
     const { svg, alColocar } = montar({ pendiente: null })
     tocar(svg, 100, 200)
-    expect(alColocar).not.toHaveBeenCalled()
+    expect(alColocar).toHaveBeenCalledWith(null, { x: 200, y: 400 })
   })
 
   it('en la distancia conocida pone primero un extremo y luego el otro', () => {
