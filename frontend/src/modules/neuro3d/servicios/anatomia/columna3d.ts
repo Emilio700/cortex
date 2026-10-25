@@ -25,7 +25,8 @@ import {
 import { idDeRaiz } from '../../dominio/catalogo'
 import type { PiezaAnatomica } from './tipos'
 import { aMarco, campana, elipsoide, fusionar, limitar, pasoSuave, tuboVariable } from './geometria'
-import { crearDesplazamiento, crearJuntas, crearLongitud, trazarEje } from './ejeColumna'
+import { ajustarAlturas, crearDesplazamiento, crearJuntas, crearLongitud, resolverAjuste, trazarEje } from './ejeColumna'
+import { ajusteVacio, type AjusteDelEje } from '../../dominio/ajusteRadiografico'
 
 const v3 = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z)
 
@@ -91,9 +92,17 @@ export interface ModeloColumna {
   radioMedular(v: number): number
 }
 
-export const crearModeloColumna = (): ModeloColumna => {
-  const m = medidas()
-  const curva = new THREE.CatmullRomCurve3(trazarEje(m), false, 'catmullrom', 0.5)
+/**
+ * La columna del modelo. Con un `ajuste` (las medidas de una radiografía del
+ * paciente) el eje se dobla a sus curvas, se desvía de lado en la escoliosis, se
+ * corre en la listesis y los discos medidos toman su altura; las vértebras
+ * conservan la forma del modelo. Sin ajuste, es la columna esquemática de siempre.
+ */
+export const crearModeloColumna = (ajuste?: AjusteDelEje | null): ModeloColumna => {
+  const conAjuste = ajuste && !ajusteVacio(ajuste) ? ajuste : null
+  const m = conAjuste ? ajustarAlturas(medidas(), conAjuste) : medidas()
+  const eje = conAjuste ? resolverAjuste(m, conAjuste) : undefined
+  const curva = new THREE.CatmullRomCurve3(trazarEje(m, 0.5, eje), false, 'catmullrom', 0.5)
   const largo = curva.getLength()
   const { sDeV } = crearLongitud(m)
 
@@ -101,8 +110,19 @@ export const crearModeloColumna = (): ModeloColumna => {
     const u = limitar(sDeV(v) / largo)
     const centro = curva.getPointAt(u)
     const tangente = curva.getTangentAt(u).normalize()
-    const adelante = v3(0, tangente.z, -tangente.y).normalize()
-    return { centro, tangente, adelante, arriba: tangente.clone().negate(), lateral: v3(1, 0, 0) }
+    if (!eje) {
+      const adelante = v3(0, tangente.z, -tangente.y).normalize()
+      return { centro, tangente, adelante, arriba: tangente.clone().negate(), lateral: v3(1, 0, 0) }
+    }
+    // Adelante: la dirección del paciente hacia delante, perpendicular al eje.
+    // Sin desviación coronal coincide con la fórmula de arriba; con ella, la
+    // vértebra se inclina de lado sin girar sobre su eje (eso la AP no lo mide).
+    const adelante = v3(0, 0, 1).addScaledVector(tangente, -tangente.z).normalize()
+    const arriba = tangente.clone().negate()
+    const lateral = new THREE.Vector3().crossVectors(arriba, adelante).normalize()
+    // La listesis traslada; no gira la vértebra ni tuerce la tangente.
+    centro.addScaledVector(adelante, eje.desplazamiento(v))
+    return { centro, tangente, adelante, arriba, lateral }
   }
 
   const punto = (v: number, lateral = 0, adelante = 0) => {

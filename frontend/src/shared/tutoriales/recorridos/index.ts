@@ -16,6 +16,8 @@ import { RECORRIDOS_NEURO3D } from './neuro3d'
 import { RECORRIDOS_IMAGEN_3D } from './imagen3d'
 // base-modulos-extra (tramo A)
 import { RECORRIDOS_SISTEMA } from './sistema'
+// Columna desde radiografías (feat/columna-desde-radiografias)
+import { RECORRIDOS_COLUMNA_RX } from './columnaRx'
 
 export const CATALOGO: Recorrido[] = [
   ...RECORRIDOS_GENERALES,
@@ -30,4 +32,6 @@ export const CATALOGO: Recorrido[] = [
   ...RECORRIDOS_IMAGEN_3D,
   // base-modulos-extra (tramo A)
   ...RECORRIDOS_SISTEMA,
+  // Columna desde radiografías (feat/columna-desde-radiografias)
+  ...RECORRIDOS_COLUMNA_RX,
 ]

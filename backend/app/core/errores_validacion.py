@@ -221,6 +221,14 @@ ETIQUETAS: Dict[str, str] = {
     "aplicada_en": "Fecha en que se aplicó",
     "notas": "Notas de la escala",
     "incluir_anuladas": "Incluir anuladas",
+    # Columna desde radiografías (Cortex, feat/columna-desde-radiografias)
+    "puntos": "Puntos marcados",
+    "calibracion": "Escala de la radiografía",
+    "opciones": "Opciones del ajuste",
+    "lateral": "Radiografía lateral",
+    "ap": "Radiografía AP",
+    "tipo": "Tipo de imagen",
+    "incluir_anulados": "Incluir anulados",
 }
 
 # --- Cómo se llaman los valores que acepta cada lista -----------------------

@@ -29,11 +29,14 @@ class SeccionClinica:
     RESUMEN_CLINICO = "resumen_clinico"
     # Escalas neurológicas (Cortex, feat/escalas-neuro)
     ESCALAS = "escalas"
+    # Columna desde radiografías (Cortex, feat/columna-desde-radiografias)
+    COLUMNA_RX = "columna_rx"
 
     TODAS = (
         CONSULTAS, RECETAS, CERTIFICADOS, ESTUDIOS, IMAGENES, DOCUMENTOS,
         EMBARAZO, EPISODIOS, CONSENTIMIENTOS, RESUMEN_CLINICO,
         ESCALAS,
+        COLUMNA_RX,
     )
 
 

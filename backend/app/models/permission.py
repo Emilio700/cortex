@@ -172,6 +172,11 @@ ALL_PERMISSIONS: dict[str, str] = {
     # equivale a escribir la nota.
     "clinical_scales.read":  "Ver escalas neurológicas y su evolución",
     "clinical_scales.write": "Aplicar o anular escalas neurológicas",
+    # Columna desde radiografías (Cortex, feat/columna-desde-radiografias): los
+    # puntos y ángulos medidos sobre las radiografías del paciente. Aparte de
+    # neuro3d.read, que sólo abre el modelo educativo y no datos clínicos.
+    "spine_rx.read":  "Ver los ajustes de columna desde radiografía",
+    "spine_rx.write": "Marcar radiografías de columna y anular ajustes",
     # ── base-modulos-extra (tramo A): módulos opcionales y servicios ──
     # Encender o apagar un módulo cambia lo que ve todo el consultorio; por eso
     # es un permiso propio y no viene con settings.global ni con users.update.
@@ -322,6 +327,9 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         # Escalas neurológicas (Cortex, feat/escalas-neuro). El router las acota
         # a los pacientes de su expediente, como el resto de lo clínico.
         "clinical_scales.read", "clinical_scales.write",
+        # Columna desde radiografías (Cortex, feat/columna-desde-radiografias).
+        # El router los acota a los pacientes de su expediente.
+        "spine_rx.read", "spine_rx.write",
     ],
 }
 
