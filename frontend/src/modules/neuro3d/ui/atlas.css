@@ -24,6 +24,7 @@
   --cx-anat-tronco: #c9d4e6;
   --cx-anat-lcr: #38bdf8;
   --cx-anat-arteria: #e5575c;
+  --cx-anat-vena: #6f8ff0;
   --cx-anat-disco: #9fd2ec;
   --cx-anat-medula: #f1dcae;
   --cx-anat-raiz: #f3c75f;
@@ -37,6 +38,25 @@
   --cx-anat-texto-2: #9fb2d6;
   /* Texto sobre el azul de acción. */
   --cx-anat-sobre-azul: #ffffff;
+
+  /*
+   * Modo Realista: el color de cada tejido como se ve en una pieza fresca o en
+   * un atlas de anatomía (no el código didáctico de arriba). Los lee la
+   * biblioteca de tejidos (`servicios/materiales/`); la luz y el tone mapping
+   * AgX los apagan un poco, por eso van algo más claros que la referencia.
+   */
+  --cx-anat-real-hueso: #eadcbf;
+  --cx-anat-real-corteza: #cca39a;
+  --cx-anat-real-blanca: #e9d3c6;
+  --cx-anat-real-medula: #f0e0c8;
+  --cx-anat-real-nervio: #ecd08a;
+  --cx-anat-real-nervio-brillo: #fff2c6;
+  --cx-anat-real-arteria: #b8262d;
+  --cx-anat-real-vena: #34428a;
+  --cx-anat-real-disco: #bcd4e6;
+  --cx-anat-real-lcr: #a6dcf2;
+  --cx-anat-real-piel: #e6b8a0;
+  --cx-anat-real-brillo: #ffffff;
 }
 
 /* ── Página ─────────────────────────────────────────────────────────────── */
@@ -250,6 +270,7 @@
   z-index: 2;
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
   gap: 8px;
 }
 .atlas-escena__boton.btn {
@@ -265,10 +286,86 @@
   background: var(--cx-azul);
   color: var(--cx-anat-sobre-azul);
 }
+/* Calidad «Estándar | Realista»: un par segmentado de vidrio oscuro (feat/neuro3d-realista). */
+.atlas-calidad {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid color-mix(in srgb, var(--cx-cian-claro) 24%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--cx-anat-fondo) 72%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.atlas-calidad__opcion {
+  min-height: 27px;
+  padding: 3px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--cx-anat-texto);
+  font-size: 0.8rem;
+  line-height: 1.2;
+  transition: background-color 0.15s, color 0.15s;
+}
+.atlas-calidad__opcion:hover:not(:disabled):not(.is-activa) {
+  background: color-mix(in srgb, var(--cx-azul) 40%, transparent);
+}
+.atlas-calidad__opcion.is-activa {
+  background: var(--cx-azul);
+  color: var(--cx-anat-sobre-azul);
+}
+.atlas-calidad__opcion:disabled {
+  color: var(--cx-anat-texto-2);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.atlas-calidad__opcion:focus-visible {
+  outline: 2px solid var(--cx-cian);
+  outline-offset: 2px;
+}
+/* Leyenda: qué calidad puede este equipo (y si se bajó sola, por qué). */
+.atlas-calidad-bloque {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  max-width: 270px;
+}
+.atlas-calidad__leyenda {
+  margin: 0;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--cx-anat-fondo) 72%, transparent);
+  color: var(--cx-anat-texto-2);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.atlas-calidad__leyenda--ok { color: var(--cx-anat-texto); }
+/* La caída es aviso, no alarma: ámbar como lo afectado. */
+.atlas-calidad__leyenda--caida { color: var(--cx-anat-afectado); }
+.atlas-calidad__reintentar {
+  margin-left: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cx-cian-claro);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.atlas-calidad__reintentar:focus-visible {
+  outline: 2px solid var(--cx-cian);
+  outline-offset: 2px;
+}
 .atlas-escena__ayuda {
   position: absolute;
   right: 14px;
   bottom: 14px;
+  /* Junto a la leyenda de calidad: que se acomode en renglones y no la tape. */
+  max-width: 36%;
+  text-align: right;
   margin: 0;
   color: var(--cx-anat-texto-2);
   font-size: 0.75rem;
@@ -522,9 +619,11 @@
 @media (prefers-reduced-motion: reduce) {
   .atlas-silueta__region,
   .atlas-rotulo { animation: none; }
+  .atlas-calidad__opcion { transition: none; }
 }
 .reduce-motion .atlas-silueta__region,
 .reduce-motion .atlas-rotulo { animation: none; }
+.reduce-motion .atlas-calidad__opcion { transition: none; }
 
 /* ── Anchos ─────────────────────────────────────────────────────────────── */
 @media (max-width: 1280px) {
