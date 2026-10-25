@@ -16,6 +16,9 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { PiezaAnatomica } from './tipos'
 import { campana, crearRuido3, distanciaASegmento, maximoSuave, pasoSuave, tuboVariable } from './geometria'
 
+/** «realista» afina las circunvoluciones y sube la resolución de las mallas. */
+export type Detalle = 'estandar' | 'realista'
+
 type LadoHemisferio = { signo: 1 | -1; sufijo: 'izq' | 'der' }
 const LADOS: LadoHemisferio[] = [
   { signo: 1, sufijo: 'izq' },
@@ -68,16 +71,27 @@ const ruido = crearRuido3(11)
  * surcos caen donde el ruido cruza por cero; la potencia alta los afina.
  * Devuelve el relieve (cm, positivo hacia afuera) y cuán dentro de un surco
  * está el punto (0–1), para oscurecerlo.
+ *
+ * En Realista se suman surcos terciarios (más finos y menos hondos) que parten
+ * cada circunvolución, como en la corteza real.
  */
-const circunvoluciones = (x: number, y: number, z: number): [number, number] => {
+const circunvoluciones = (x: number, y: number, z: number, detalle: Detalle): [number, number] => {
   // Un poco de deformación del dominio vuelve los surcos sinuosos.
   const wx = x + 1.1 * ruido(x * 0.19 + 3, y * 0.19, z * 0.19)
   const wy = y + 1.1 * ruido(x * 0.19, y * 0.19 + 7, z * 0.19)
   const wz = z + 1.1 * ruido(x * 0.19, y * 0.19, z * 0.19 + 13)
   const n = ruido(wx * 0.55, wy * 0.55, wz * 0.55)
-  const surco = Math.pow(1 - Math.abs(n), 7)
-  const fino = ruido(x * 1.6 + 21, y * 1.6, z * 1.6) * 0.03
-  return [0.1 - 0.42 * surco + fino, surco]
+  if (detalle === 'estandar') {
+    const surco = Math.pow(1 - Math.abs(n), 7)
+    const fino = ruido(x * 1.6 + 21, y * 1.6, z * 1.6) * 0.03
+    return [0.1 - 0.42 * surco + fino, surco]
+  }
+  const surco = Math.pow(1 - Math.abs(n), 9)
+  const n2 = ruido(wx * 1.25 + 40, wy * 1.25, wz * 1.25)
+  // Los terciarios no cruzan el fondo de un surco mayor: se apagan cerca de él.
+  const terciario = Math.pow(1 - Math.abs(n2), 12) * (1 - pasoSuave(0.15, 0.6, surco)) * pasoSuave(0.1, 0.5, Math.abs(n) + 0.2)
+  const fino = ruido(x * 2.4 + 21, y * 2.4, z * 2.4) * 0.018
+  return [0.12 - 0.46 * surco - 0.17 * terciario + fino, Math.max(surco, 0.6 * terciario)]
 }
 
 interface Hemisferio {
@@ -92,8 +106,37 @@ interface Hemisferio {
  */
 const sombraDeCavidad = (hondo: number) => 1 - 0.55 * Math.min(1, hondo)
 
-const construirHemisferio = (signo: 1 | -1): Hemisferio => {
-  let base: THREE.BufferGeometry = new THREE.SphereGeometry(1, 200, 132)
+/**
+ * En Realista la sombra del surco no es gris: el fondo de los surcos tira a
+ * rojo pardo (la piamadre y sus vasos), como en una pieza fresca.
+ */
+const sombraTenida = (hondo: number): [number, number, number] => {
+  const h = Math.min(1, hondo)
+  return [1 - 0.55 * h, 1 - 0.74 * h, 1 - 0.7 * h]
+}
+
+/**
+ * Forma base de un hemisferio sin surcos (silueta, lóbulo temporal y cara
+ * interna plana), en su lado +x. `dx, dy, dz` es un punto de la esfera unidad.
+ * La usan las venas puenteantes y el seno sagital para apoyarse en la
+ * superficie.
+ */
+export const formaDelHemisferio = (dx: number, dy: number, dz: number): THREE.Vector3 => {
+  let x = CX + RX * dx * (1 - 0.14 * pasoSuave(0.35, 1, -dz))
+  let y = CY + RY * dy * (dy < 0 ? 0.6 : 1) * (1 - 0.1 * pasoSuave(0.5, 1, dz))
+  const z = CZ + RZ * dz
+  const lateral = pasoSuave(0.05, 0.65, dx)
+  const franja = campana(z + 0.4, 2.5)
+  const abajo = pasoSuave(0.25, -0.55, dy)
+  const temporal = lateral * franja * abajo
+  y -= 1.95 * temporal
+  x += 0.4 * temporal
+  x = maximoSuave(x, 0.13, 0.06)
+  return new THREE.Vector3(x, y, z)
+}
+
+const construirHemisferio = (signo: 1 | -1, detalle: Detalle): Hemisferio => {
+  let base: THREE.BufferGeometry = detalle === 'realista' ? new THREE.SphereGeometry(1, 300, 200) : new THREE.SphereGeometry(1, 200, 132)
   base.deleteAttribute('normal')
   base.deleteAttribute('uv')
   base = mergeVertices(base)
@@ -108,21 +151,8 @@ const construirHemisferio = (signo: 1 | -1): Hemisferio => {
     const dy = pos.getY(i)
     const dz = pos.getZ(i)
 
-    // 1. Silueta: polo occipital más angosto, base aplanada.
-    let x = CX + RX * dx * (1 - 0.14 * pasoSuave(0.35, 1, -dz))
-    let y = CY + RY * dy * (dy < 0 ? 0.6 : 1) * (1 - 0.1 * pasoSuave(0.5, 1, dz))
-    let z = CZ + RZ * dz
-
-    // 2. Lóbulo temporal: baja por fuera y por debajo, de la punta hasta atrás.
-    const lateral = pasoSuave(0.05, 0.65, dx)
-    const franja = campana(z + 0.4, 2.5)
-    const abajo = pasoSuave(0.25, -0.55, dy)
-    const temporal = lateral * franja * abajo
-    y -= 1.95 * temporal
-    x += 0.4 * temporal
-
-    // 3. Cara interna plana, contra la hoz del cerebro.
-    x = maximoSuave(x, 0.13, 0.06)
+    // 1–3. Silueta, lóbulo temporal y cara interna plana, contra la hoz.
+    const { x, y, z } = formaDelHemisferio(dx, dy, dz)
 
     const yb = y
     const zb = z
@@ -139,10 +169,14 @@ const construirHemisferio = (signo: 1 | -1): Hemisferio => {
     hundir += 0.12 * campana(zb - zDelOccipital(yb), 0.15) * cara
 
     // 5. Circunvoluciones, más suaves en la cara interna.
-    const [r0, surco] = circunvoluciones(x, y, z)
+    const [r0, surco] = circunvoluciones(x, y, z, detalle)
     const relieve = r0 * (1 - 0.45 * interna)
-    const c = sombraDeCavidad(surco * (1 - 0.4 * interna) + hundir * 1.6)
-    colores.set([c, c, c], i * 3)
+    const hondo = surco * (1 - 0.4 * interna) + hundir * 1.6
+    if (detalle === 'realista') colores.set(sombraTenida(hondo), i * 3)
+    else {
+      const c = sombraDeCavidad(hondo)
+      colores.set([c, c, c], i * 3)
+    }
 
     haciaDentro.set(-dx / RX, -dy / RY, -dz / RZ).normalize()
     v.set(x, y, z).addScaledVector(haciaDentro, hundir - relieve)
@@ -249,8 +283,8 @@ const construirInsula = (signo: 1 | -1) => {
 }
 
 /** Cerebelo: dos hemisferios y el vermis, con folias horizontales. */
-const construirCerebelo = () => {
-  let g: THREE.BufferGeometry = new THREE.SphereGeometry(1, 140, 96)
+const construirCerebelo = (detalle: Detalle) => {
+  let g: THREE.BufferGeometry = detalle === 'realista' ? new THREE.SphereGeometry(1, 220, 150) : new THREE.SphereGeometry(1, 140, 96)
   g.deleteAttribute('normal')
   g.deleteAttribute('uv')
   g = mergeVertices(g)
@@ -272,10 +306,13 @@ const construirCerebelo = () => {
     z -= 1.25 * campana(x, 1.1) * delante
     // Folias: surcos finos y paralelos, alrededor del eje transversal.
     const a = Math.atan2(dy, dz)
-    const onda = Math.sin(a * 30 + 0.6 * Math.sin(dx * 3))
-    const folia = 0.075 * onda + 0.035 * ruido(x * 0.8, y * 0.8, z * 0.8)
-    const sombra = 1 - 0.4 * Math.pow(Math.max(0, -onda), 2) - 0.35 * medio * atras
-    colores.set([sombra, sombra, sombra], i * 3)
+    // En Realista, folias más apretadas y algo irregulares.
+    const folias = detalle === 'realista' ? 46 : 30
+    const onda = Math.sin(a * folias + 0.6 * Math.sin(dx * 3) + (detalle === 'realista' ? 0.5 * ruido(dx * 2, dy * 2, dz * 2) : 0))
+    const folia = (detalle === 'realista' ? 0.06 : 0.075) * onda + 0.035 * ruido(x * 0.8, y * 0.8, z * 0.8)
+    const hondo = 0.4 * Math.pow(Math.max(0, -onda), 2) + 0.35 * medio * atras
+    if (detalle === 'realista') colores.set(sombraTenida(hondo * 1.6), i * 3)
+    else colores.set([1 - hondo, 1 - hondo, 1 - hondo], i * 3)
     const r = Math.hypot(dx, dy, dz) || 1
     x += (dx / r) * folia
     y += (dy / r) * folia
@@ -340,10 +377,10 @@ const construirTronco = (): PiezaAnatomica[] => [
   },
 ]
 
-export const construirEncefalo = (): PiezaAnatomica[] => {
+export const construirEncefalo = (detalle: Detalle = 'estandar'): PiezaAnatomica[] => {
   const piezas: PiezaAnatomica[] = []
   for (const { signo, sufijo } of LADOS) {
-    const { geometria, lobulo } = construirHemisferio(signo)
+    const { geometria, lobulo } = construirHemisferio(signo, detalle)
     const lobulos = separarPorEtiqueta(geometria, (a, b, c) => {
       // El lóbulo que comparten dos de tres vértices; si no, el del primero.
       if (lobulo[b] === lobulo[c]) return lobulo[b]
@@ -380,7 +417,7 @@ export const construirEncefalo = (): PiezaAnatomica[] => {
     capa: 'encefalo',
     color: '--cx-anat-cerebelo',
     acabado: 'organo',
-    geometria: construirCerebelo(),
+    geometria: construirCerebelo(detalle),
     ancla: v3(4.6, -4.6, -5.6),
   })
   piezas.push(...construirTronco())

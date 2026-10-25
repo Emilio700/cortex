@@ -8,20 +8,27 @@
  */
 import * as THREE from 'three'
 import type { PiezaAnatomica } from './tipos'
+import type { Detalle } from './encefalo'
 import { tuboVariable } from './geometria'
 
 const v3 = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z)
 
-const arteria = (estructura: string, puntos: THREE.Vector3[], r0: number, r1 = r0, ancla?: THREE.Vector3): PiezaAnatomica => ({
-  estructura,
-  capa: 'vasos',
-  color: '--cx-anat-arteria',
-  acabado: 'vaso',
-  geometria: tuboVariable({ puntos, radio: (t) => r0 + (r1 - r0) * t, segmentos: Math.max(24, puntos.length * 14), radiales: 14 }),
-  ancla: ancla ?? puntos[Math.floor(puntos.length / 2)].clone(),
-})
-
-export const construirVasos = (): PiezaAnatomica[] => {
+export const construirVasos = (detalle: Detalle = 'estandar'): PiezaAnatomica[] => {
+  // En Realista los tubos son más redondos y siguen mejor las curvas.
+  const fino = detalle === 'realista'
+  const arteria = (estructura: string, puntos: THREE.Vector3[], r0: number, r1 = r0, ancla?: THREE.Vector3): PiezaAnatomica => ({
+    estructura,
+    capa: 'vasos',
+    color: '--cx-anat-arteria',
+    acabado: 'vaso',
+    geometria: tuboVariable({
+      puntos,
+      radio: (t) => r0 + (r1 - r0) * t,
+      segmentos: Math.max(24, puntos.length * (fino ? 24 : 14)),
+      radiales: fino ? 24 : 14,
+    }),
+    ancla: ancla ?? puntos[Math.floor(puntos.length / 2)].clone(),
+  })
   const piezas: PiezaAnatomica[] = []
   for (const [s, sufijo] of [[1, 'izq'], [-1, 'der']] as const) {
     const terminal = v3(s * 1.35, -1.42, 1.3)
