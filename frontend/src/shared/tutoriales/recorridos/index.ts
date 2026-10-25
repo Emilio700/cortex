@@ -12,6 +12,8 @@ import { RECORRIDOS_COBROS } from './cobros'
 import { RECORRIDOS_ADMINISTRACION } from './administracion'
 // Tramo C: Neuro 3D.
 import { RECORRIDOS_NEURO3D } from './neuro3d'
+// Render volumétrico del estudio (feat/render-volumetrico).
+import { RECORRIDOS_IMAGEN_3D } from './imagen3d'
 // base-modulos-extra (tramo A)
 import { RECORRIDOS_SISTEMA } from './sistema'
 
@@ -24,6 +26,8 @@ export const CATALOGO: Recorrido[] = [
   ...RECORRIDOS_ADMINISTRACION,
   // Tramo C: Neuro 3D.
   ...RECORRIDOS_NEURO3D,
+  // Render volumétrico del estudio (feat/render-volumetrico).
+  ...RECORRIDOS_IMAGEN_3D,
   // base-modulos-extra (tramo A)
   ...RECORRIDOS_SISTEMA,
 ]
