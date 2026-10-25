@@ -45,9 +45,12 @@ export class AtlasInvalido extends Error {
 }
 
 /**
- * Acabado (material) de cada tejido. Es el único lugar que decide cómo se ve el
- * atlas: cuando la biblioteca de tejidos del modo Realista esté en la rama, la
- * pieza también llevará su `tejido` (ver COORDINACION.md).
+ * Acabado de cada tejido: decide cómo se ve el atlas en Estándar (y su
+ * opacidad y orden de pintado). En Realista manda el `tejido` de la pieza: la
+ * escena le pide a la biblioteca el material físico de ese tejido. Los nombres
+ * del manifiesto son los de `Tejido` (`materiales/tejidos.ts`), así que no hace
+ * falta traducirlos; si el script agregara uno que no existe, `tsc` lo diría
+ * aquí y en `piezasDelAtlas`.
  */
 export const ACABADO_DE_TEJIDO: Record<TejidoDelAtlas, Acabado> = {
   hueso: 'hueso',
@@ -265,7 +268,6 @@ export async function piezasDelAtlas(manifiesto: ManifiestoDelAtlas, datos: Arra
     geometria.computeBoundingBox()
     geometria.computeBoundingSphere()
     geometria.userData.claveDelAtlas = entrada.clave
-    geometria.userData.tejido = entrada.tejido
     const par = entrada.region === 'columna' && lugar.estructura ? procedurales.get(lugar.estructura)?.[0] : undefined
     piezas.push({
       estructura: lugar.estructura,
@@ -274,6 +276,9 @@ export async function piezasDelAtlas(manifiesto: ManifiestoDelAtlas, datos: Arra
       geometria,
       color: lugar.color,
       acabado: ACABADO_DE_TEJIDO[entrada.tejido],
+      // En Realista, el material físico de su tejido: hueso, corteza, arteria…
+      // Sin él, el cuerpo calloso («sustancia-blanca») saldría como corteza.
+      tejido: entrada.tejido,
       ancla: par?.ancla?.clone(),
       desplazamientoDespiece: par?.desplazamientoDespiece?.clone(),
       anclaDespiece: par?.anclaDespiece?.clone(),

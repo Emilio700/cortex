@@ -1,8 +1,8 @@
 /**
  * La escena en modo Realista, sin GPU: el renderizador y el posproceso se
  * sustituyen y se revisa lo que la escena arma. Que cada pieza (también las del
- * paciente) lleve el material de su tejido, que Estándar siga sin posproceso y
- * que al salir se libere todo. Lo que se dibuja se revisa a mano en el navegador.
+ * paciente y las del atlas detallado) lleve el material de su tejido, que
+ * Estándar siga sin posproceso y que al salir se libere todo. Lo que se dibuja se revisa a mano en el navegador.
  */
 import * as THREE from 'three'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -52,6 +52,8 @@ vi.mock('./posproceso', () => ({
 }))
 
 import { crearEscena, type EscenaAtlas } from './escena'
+import { crearCapaAtlas } from './anatomia/capaAtlas'
+import { caja, entrada, glb, manifiesto } from './anatomia/atlasDePrueba'
 
 const tejidosPorEstructura = (escena: THREE.Scene) => {
   const mapa = new Map<string, string | undefined>()
@@ -148,6 +150,67 @@ describe('escena en modo Estándar', () => {
     const escena = await abrir('estandar')
     expect(escena.calidad).toBe('estandar')
     expect(posproceso.crear).not.toHaveBeenCalled()
+    escena.liberar()
+  }, 120_000)
+})
+
+describe('atlas detallado (BodyParts3D) en modo Realista', () => {
+  // Un tejido de cada tipo que trae el manifiesto real. El cuerpo calloso y el
+  // cráneo son los que no se deducirían bien sin el tejido del manifiesto
+  // (saldrían como corteza y como piel).
+  const estructuras = [
+    entrada({ clave: 'giro-precentral-izq', parteDe: 'lobulo-frontal-izq', tejido: 'corteza' }),
+    entrada({ clave: 'cuerpo-calloso', tejido: 'sustancia-blanca' }),
+    entrada({ clave: 'hueso-frontal', capa: 'craneo', tejido: 'craneo', parteDe: 'craneo' }),
+    entrada({ clave: 'basilar', capa: 'vasos', tejido: 'arteria' }),
+    entrada({ clave: 'nervio-optico-izq', tejido: 'nervio' }),
+    entrada({ clave: 'tercer-ventriculo', capa: 'ventriculos', tejido: 'liquido' }),
+    entrada({ clave: 'vertebra-L4', capa: 'columna', tejido: 'hueso', region: 'columna' }),
+    entrada({ clave: 'vertebra-L5', capa: 'columna', tejido: 'hueso', region: 'columna' }),
+    entrada({ clave: 'disco-L4-L5', capa: 'columna', tejido: 'disco', region: 'columna' }),
+  ]
+  const cabeza = glb([
+    { nombre: 'giro-precentral-izq', posiciones: caja([40, -100, 1600], [20, 10, 20]) },
+    { nombre: 'cuerpo-calloso', posiciones: caja([0, -80, 1560], [8, 30, 5]) },
+    { nombre: 'hueso-frontal', posiciones: caja([0, -140, 1580], [60, 10, 40]) },
+    { nombre: 'basilar', posiciones: caja([0, -90, 1500], [2, 2, 15]) },
+    { nombre: 'nervio-optico-izq', posiciones: caja([15, -130, 1530], [2, 15, 2]) },
+    { nombre: 'tercer-ventriculo', posiciones: caja([0, -85, 1540], [2, 10, 8]) },
+  ])
+  const columna = glb([
+    { nombre: 'vertebra-L4', posiciones: caja([0, -50, 980], [25, 20, 15]) },
+    { nombre: 'vertebra-L5', posiciones: caja([0, -50, 930], [25, 20, 15]) },
+    { nombre: 'disco-L4-L5', posiciones: caja([0, -60, 955], [20, 15, 5]) },
+  ])
+
+  it('cada malla del atlas recibe el material físico de su tejido', async () => {
+    const escena = await abrir('realista')
+    const escena3d = posproceso.escena!
+    const r = await escena.fijarCapaAtlas(crearCapaAtlas(manifiesto(estructuras), [cabeza, columna]))
+    expect(r.piezas).toBe(estructuras.length)
+
+    const materiales = new Map<string, THREE.Material>()
+    escena3d.traverse((o) => {
+      const m = o as THREE.Mesh
+      const clave = m.isMesh ? (m.geometry.userData?.claveDelAtlas as string | undefined) : undefined
+      // Sólo la malla de la pieza: el halo y el flujo comparten su geometría.
+      if (clave && m.userData.estructura !== undefined && !materiales.has(clave)) materiales.set(clave, m.material as THREE.Material)
+    })
+    expect([...materiales.keys()].sort()).toEqual(estructuras.map((e) => e.clave).sort())
+    for (const e of estructuras) {
+      const material = materiales.get(e.clave) as THREE.MeshPhysicalMaterial
+      expect(material.isMeshPhysicalMaterial, e.clave).toBe(true)
+      expect(material.userData.tejido, e.clave).toBe(e.tejido)
+    }
+    // El mismo tejido, el mismo color base: la vértebra del atlas se ve como la simplificada.
+    const hueso = (materiales.get('vertebra-L5') as THREE.MeshPhysicalMaterial).color
+    let huesoSimplificado: THREE.Color | null = null
+    escena3d.traverse((o) => {
+      const m = o as THREE.Mesh
+      if (m.isMesh && m.userData.estructura === 'sacro' && !huesoSimplificado) huesoSimplificado = (m.material as THREE.MeshPhysicalMaterial).color
+    })
+    expect(huesoSimplificado).not.toBeNull()
+    expect(hueso.getHexString()).toBe(huesoSimplificado!.getHexString())
     escena.liberar()
   }, 120_000)
 })
