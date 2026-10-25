@@ -1,0 +1,26 @@
+# OHIF en su propio subdominio (renombra a ohif.caddy y define OHIF_DOMINIO en .env; crea el registro DNS).
+# OHIF y Orthanc quedan en el mismo origen (ohif.tudominio/orthanc → Orthanc), así no hace falta CORS.
+{$OHIF_DOMINIO} {
+	encode zstd gzip
+	basic_auth {
+		{$SERVICIOS_USUARIO:servicios} {$SERVICIOS_HASH:$2a$14$96mnD7WzS4VlFdkuVyGhjeS84eEp1FWVZzvUuXVCpNFsxhSfnlp9C}
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "DENY"
+		-Server
+	}
+	handle_path /orthanc/* {
+		request_body {
+			max_size 2GB
+		}
+		reverse_proxy orthanc:8042 {
+			header_up -Authorization
+		}
+	}
+	handle {
+		reverse_proxy ohif:80
+	}
+}

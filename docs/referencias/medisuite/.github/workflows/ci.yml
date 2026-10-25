@@ -1,0 +1,153 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend (tipos, pruebas, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Revisión de tipos
+        run: npx tsc -b
+      - name: Lint
+        run: npm run lint
+      - name: Pruebas unitarias
+        run: npm test
+      - name: Build
+        run: npx vite build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  api:
+    name: API (tipos y pruebas con PostgreSQL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: api
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: medisuite_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # La suite crea sus propias bases a partir de esta URL (ver api/test/global-setup.ts).
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/medisuite_test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/medisuite_test
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+      - run: npm ci
+      - name: Datos demo del servidor generados desde el frontend (api/src/demo/seed.gen.ts al día)
+        run: npm run check:seed
+      - name: Revisión de tipos
+        run: npm run typecheck
+      - name: Pruebas (integración, PostgreSQL real; incluye regresiones de la revisión de seguridad)
+        run: npm test
+      - name: Build
+        run: npm run build
+      # Roles de BD del despliegue: el script de deploy/db/initdb debe crear el rol de la app sin privilegios
+      # y ser idempotente (es lo que corre db-init en cada "docker compose up").
+      - name: Script de roles de BD (deploy/db/initdb)
+        working-directory: .
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: medisuite_test
+          APP_DB_ROLE: medisuite_app
+          APP_DB_PASSWORD: ci-app-password-1
+        run: |
+          sh deploy/db/initdb/10-medisuite-roles.sh
+          APP_DB_PASSWORD=ci-app-password-2 sh deploy/db/initdb/10-medisuite-roles.sh
+          test "$(psql -tAc "SELECT rolsuper OR rolcreatedb OR rolcreaterole OR rolbypassrls FROM pg_roles WHERE rolname = 'medisuite_app'")" = f
+          PGUSER=medisuite_app PGPASSWORD=ci-app-password-2 psql -tAc 'SELECT 1' | grep -qx 1
+          if PGUSER=medisuite_app PGPASSWORD=ci-app-password-2 psql -c 'CREATE TABLE ci_x (a int)' 2>/dev/null; then echo "el rol de la app puede crear tablas" >&2; exit 1; fi
+
+  docker:
+    name: Imágenes Docker (sin publicar)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [frontend, api]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: web
+            context: .
+            file: Dockerfile
+          - name: api
+            context: api
+            file: api/Dockerfile
+          - name: backup
+            context: deploy/backup
+            file: deploy/backup/Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          push: false
+          tags: medisuite/${{ matrix.name }}:ci
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+  compose:
+    name: Validar docker-compose
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: docker compose config
+        working-directory: deploy
+        run: |
+          cp .env.example .env
+          docker compose config -q
+          docker compose --profile servicios config -q
+          # La API usa el rol restringido y las migraciones el dueño
+          docker compose config --format json | jq -e '.services.api.environment.DATABASE_URL | startswith("postgres://medisuite_app:")'
+          docker compose config --format json | jq -e '.services.api.environment.APP_DB_ROLE == "medisuite_app"'
+      - name: Sintaxis de scripts de shell
+        run: for f in deploy/db/initdb/*.sh deploy/backup/*.sh deploy/web/*.sh; do sh -n "$f"; done
+      - name: Validar Caddyfiles
+        run: |
+          docker run --rm -v "$PWD/deploy/web:/w:ro" caddy:2.11-alpine sh -c 'cp /w/security-headers.caddy /etc/caddy/ && caddy validate --config /w/Caddyfile --adapter caddyfile'
+          docker run --rm -e DOMINIO=ejemplo.mx -e ACME_EMAIL=ci@ejemplo.mx \
+            -v "$PWD/deploy/caddy:/etc/caddy:ro" caddy:2.11-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile

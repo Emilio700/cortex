@@ -1,0 +1,40 @@
+# Encabezados de seguridad de MediSuite (fuente única: la usa la imagen web y la prueba local de CSP).
+#
+# Variables de entorno opcionales (se leen al arrancar Caddy; vacías = sin agregar nada):
+#   CSP_CONNECT_EXTRA  orígenes extra para fetch/XHR/WebSocket, separados por espacio
+#                      (p. ej. servicios en otro dominio: "https://pacs.miclinica.mx https://ia.miclinica.mx")
+#   CSP_FRAME_EXTRA    orígenes extra para iframes (p. ej. un Jitsi propio "https://meet.miclinica.mx")
+#   CSP_SCRIPT_EXTRA   orígenes extra para scripts (no recomendado)
+#   CSP_ORT_SRC        ruta exacta de onnxruntime-web en jsDelivr que usa @huggingface/transformers
+#                      (Whisper en el navegador). La calcula docker-entrypoint.sh a partir de la versión
+#                      instalada; pon CSP_ORT_SRC=off para quitarla si no usas Whisper en el navegador.
+#   PP_JITSI           origen del Jitsi para Permissions-Policy (por defecto https://meet.jit.si)
+#
+# Por qué cada fuente:
+#   script-src 'wasm-unsafe-eval'  MediaPipe, tesseract.js, onnxruntime y NiiVue compilan WebAssembly.
+#   script-src blob:               onnxruntime-web importa su módulo .mjs desde un blob: cuando viene de
+#                                  otro origen (CDN). Solo puede crear blob: código que ya corre en la app.
+#   worker-src 'self' blob:        tesseract.js crea su worker desde un blob: (importScripts del worker local);
+#                                  el dictado usa un module worker propio.
+#   connect-src data: blob:        Documentos/receta hacen fetch() de data: y blob: URL (modo local).
+#   connect-src huggingface        descarga de modelos Whisper (transformers.js) la primera vez.
+#   connect-src api.anthropic.com  Asistente IA (texto desidentificado).
+#   frame-src 'self' blob:         visor de PDF e impresión de recetas usan iframes con blob:.
+#   frame-src https://meet.jit.si  Telemedicina.
+#   font-src esm.sh/@excalidraw/   Excalidraw declara esm.sh como respaldo en cada @font-face; las fuentes
+#                                  salen de /excalidraw-assets (local), pero sin esto Chrome reporta cientos
+#                                  de violaciones. Solo afecta fuentes.
+#   style-src 'unsafe-inline'      React/Excalidraw/uPlot/OpenSeadragon usan estilos en línea.
+(security_headers) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Cross-Origin-Opener-Policy "same-origin"
+		Cross-Origin-Resource-Policy "same-origin"
+		Permissions-Policy "camera=(self \"{$PP_JITSI:https://meet.jit.si}\"), microphone=(self \"{$PP_JITSI:https://meet.jit.si}\"), display-capture=(self \"{$PP_JITSI:https://meet.jit.si}\"), fullscreen=(self \"{$PP_JITSI:https://meet.jit.si}\"), autoplay=(self \"{$PP_JITSI:https://meet.jit.si}\"), xr-spatial-tracking=(self), geolocation=(), payment=(), usb=(), serial=(), hid=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()"
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob: {$CSP_ORT_SRC} {$CSP_SCRIPT_EXTRA}; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; font-src 'self' data: https://esm.sh/@excalidraw/; connect-src 'self' data: blob: https://huggingface.co https://*.huggingface.co https://cdn-lfs.huggingface.co https://*.hf.co https://api.anthropic.com {$CSP_ORT_SRC} {$CSP_CONNECT_EXTRA}; frame-src 'self' blob: https://meet.jit.si {$CSP_FRAME_EXTRA}; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+		-Server
+	}
+}

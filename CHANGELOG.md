@@ -94,6 +94,9 @@ Todos los cambios notables de Cortex. Formato basado en
   `servicios.read`, variables opcionales de esos servicios, perfiles de Docker
   `imagen` e `ia`, y la carpeta `openspec/` con su primer cambio. Todavía no hay
   ningún módulo opcional instalado.
+- Material de referencia en `docs/referencias/`: MediSuite (imagen DICOM con Orthanc
+  y OHIF, anonimización con Presidio, voz a texto, receta con QR), de solo lectura y
+  sin binarios de terceros. No es código de Cortex.
 
 ### Cambiado
 - El visor ocupa la altura de la pantalla en vez de ser un cuadrado, y su barra se

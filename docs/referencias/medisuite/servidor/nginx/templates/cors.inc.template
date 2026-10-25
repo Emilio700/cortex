@@ -1,0 +1,11 @@
+# Encabezados CORS comunes (incluido en cada location). ${CORS_ALLOW_ORIGIN} viene de docker-compose.
+proxy_hide_header Access-Control-Allow-Origin;
+proxy_hide_header Access-Control-Allow-Methods;
+proxy_hide_header Access-Control-Allow-Headers;
+proxy_hide_header Access-Control-Allow-Credentials;
+add_header Access-Control-Allow-Origin "${CORS_ALLOW_ORIGIN}" always;
+add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
+add_header Access-Control-Allow-Headers "Authorization, Content-Type, Accept, Range, X-Requested-With" always;
+add_header Access-Control-Expose-Headers "Content-Length, Content-Range, Content-Type, Content-Disposition" always;
+add_header Access-Control-Max-Age 86400 always;
+if ($request_method = OPTIONS) { return 204; }

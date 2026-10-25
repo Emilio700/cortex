@@ -1,0 +1,47 @@
+{
+  "name": "medisuite-api",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend de producción de MediSuite (Fastify + PostgreSQL)",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env --import tsx --watch src/server.ts",
+    "predev": "node scripts/gen-seed.mjs",
+    "gen:seed": "node scripts/gen-seed.mjs",
+    "check:seed": "node scripts/gen-seed.mjs --check",
+    "prebuild": "node scripts/gen-seed.mjs",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node --env-file-if-exists=.env dist/server.js",
+    "migrate": "node --env-file-if-exists=.env dist/migrate-cli.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "pretest": "node scripts/gen-seed.mjs",
+    "test": "vitest run",
+    "purgar-archivos": "node --env-file-if-exists=.env dist/purgar-archivos.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1156.0",
+    "@fastify/cookie": "^11.1.3",
+    "@fastify/helmet": "^13.2.0",
+    "@fastify/multipart": "^10.1.6",
+    "@fastify/rate-limit": "^11.2.1",
+    "fastify": "^5.12.7",
+    "jose": "^6.2.13",
+    "nodemailer": "^10.2.1",
+    "otplib": "^13.5.0",
+    "pg": "^8.23.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/nodemailer": "^8.0.2",
+    "@types/pg": "^8.23.1",
+    "embedded-postgres": "^18.4.0-beta.17",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5"
+  }
+}

@@ -1,0 +1,21 @@
+# Contexto de la imagen web (Dockerfile en la raíz). La API tiene su propio contexto (api/).
+.git
+.github
+**/node_modules
+dist
+dist-ssr
+api
+servidor
+docs
+coverage
+*.log
+*.local
+.env
+.env.*
+deploy/*
+!deploy/web
+**/*.test.ts
+**/*.test.tsx
+.vscode
+.idea
+.DS_Store

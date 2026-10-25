@@ -1,0 +1,52 @@
+# Rutas del perfil "servicios" (docker compose --profile servicios up -d).
+# Mismo origen que la app: en MediSuite → Servicios usa https://TU-DOMINIO/orthanc, /whisper, /presidio-analyzer.
+# Protegidas con usuario y contraseña (HTTP Basic sobre HTTPS). Genera el hash con:
+#   docker compose exec caddy caddy hash-password
+# y ponlo en .env entre comillas simples: SERVICIOS_HASH='$2a$14$...'
+# Sin SERVICIOS_HASH queda un hash aleatorio cuya contraseña nadie conoce (rutas bloqueadas).
+@servicios path /orthanc /orthanc/* /whisper/* /presidio-analyzer/* /presidio-anonymizer/*
+basic_auth @servicios {
+	{$SERVICIOS_USUARIO:servicios} {$SERVICIOS_HASH:$2a$14$96mnD7WzS4VlFdkuVyGhjeS84eEp1FWVZzvUuXVCpNFsxhSfnlp9C}
+}
+
+handle_path /orthanc/* {
+	request_body {
+		max_size 2GB
+	}
+	reverse_proxy orthanc:8042 {
+		# Orthanc no debe ver la credencial del proxy.
+		header_up -Authorization
+	}
+}
+redir /orthanc /orthanc/ui/app/ 302
+
+handle_path /whisper/* {
+	request_body {
+		max_size 200MB
+	}
+	reverse_proxy whisper:8000 {
+		header_up -Authorization
+		transport http {
+			read_timeout 15m
+			write_timeout 15m
+		}
+	}
+}
+
+handle_path /presidio-analyzer/* {
+	request_body {
+		max_size 2MB
+	}
+	reverse_proxy presidio-analyzer:3000 {
+		header_up -Authorization
+	}
+}
+
+handle_path /presidio-anonymizer/* {
+	request_body {
+		max_size 2MB
+	}
+	reverse_proxy presidio-anonymizer:3000 {
+		header_up -Authorization
+	}
+}

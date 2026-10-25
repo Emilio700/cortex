@@ -1,0 +1,51 @@
+supported_languages:
+  - es
+  - en
+global_regex_flags: 26
+recognizers:
+  - name: SpacyRecognizer
+    type: predefined
+    supported_languages: [es, en]
+  - name: EmailRecognizer
+    type: predefined
+    supported_languages: [es, en]
+  - name: PhoneRecognizer
+    type: predefined
+    supported_languages: [es, en]
+  - name: CreditCardRecognizer
+    type: predefined
+    supported_languages: [es, en]
+  - name: IpRecognizer
+    type: predefined
+    supported_languages: [es, en]
+  - name: UrlRecognizer
+    type: predefined
+    supported_languages: [es, en]
+  # Identificadores mexicanos
+  - name: CurpRecognizer
+    type: custom
+    supported_language: es
+    supported_entity: MX_CURP
+    patterns:
+      - name: curp
+        regex: "\\b[A-Z][AEIOUX][A-Z]{2}\\d{6}[HM][A-Z]{5}[A-Z0-9]\\d\\b"
+        score: 0.9
+    context: [curp]
+  - name: RfcRecognizer
+    type: custom
+    supported_language: es
+    supported_entity: MX_RFC
+    patterns:
+      - name: rfc
+        regex: "\\b[A-ZÑ&]{3,4}\\d{6}[A-Z0-9]{3}\\b"
+        score: 0.7
+    context: [rfc]
+  - name: TelefonoMxRecognizer
+    type: custom
+    supported_language: es
+    supported_entity: PHONE_NUMBER
+    patterns:
+      - name: telefono_mx
+        regex: "(?<!\\d)(\\+?52[\\s-]?)?\\(?\\d{2,3}\\)?[\\s.-]?\\d{3,4}[\\s.-]?\\d{4}(?!\\d)"
+        score: 0.6
+    context: [tel, telefono, celular, cel, whatsapp]

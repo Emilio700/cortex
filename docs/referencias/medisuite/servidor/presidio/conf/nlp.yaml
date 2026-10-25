@@ -1,0 +1,18 @@
+nlp_engine_name: spacy
+models:
+  - lang_code: es
+    model_name: es_core_news_md
+  - lang_code: en
+    model_name: en_core_web_lg
+ner_model_configuration:
+  model_to_presidio_entity_mapping:
+    PER: PERSON
+    PERSON: PERSON
+    LOC: LOCATION
+    GPE: LOCATION
+    ORG: ORGANIZATION
+  low_confidence_score_multiplier: 0.4
+  low_score_entity_names:
+    - ORGANIZATION
+  labels_to_ignore:
+    - MISC

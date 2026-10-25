@@ -1,0 +1,46 @@
+# Proxy inverso de MediSuite: un solo puerto con CORS para todos los servicios.
+server {
+    listen 80;
+    server_name _;
+    client_max_body_size 2g;          # estudios DICOM y audios grandes
+    proxy_read_timeout 900s;          # transcripciones largas
+    proxy_send_timeout 900s;
+    proxy_request_buffering off;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    location = / {
+        default_type text/plain;
+        include /etc/nginx/conf.d/cors.inc;
+        return 200 "MediSuite servidor OK\n";
+    }
+
+    location /orthanc/ {
+        include /etc/nginx/conf.d/cors.inc;
+        proxy_pass http://orthanc:8042/;
+    }
+
+    location /whisper/ {
+        include /etc/nginx/conf.d/cors.inc;
+        proxy_pass http://whisper:8000/;
+    }
+
+    location /presidio-analyzer/ {
+        include /etc/nginx/conf.d/cors.inc;
+        proxy_pass http://presidio-analyzer:3000/;
+    }
+
+    location /presidio-anonymizer/ {
+        include /etc/nginx/conf.d/cors.inc;
+        proxy_pass http://presidio-anonymizer:3000/;
+    }
+
+    # OHIF bajo /ohif/ requiere una compilación de OHIF con PUBLIC_URL=/ohif/ (ver README).
+    # Por defecto usa OHIF directamente en el puerto 3000.
+    location /ohif/ {
+        include /etc/nginx/conf.d/cors.inc;
+        proxy_pass http://ohif:80/;
+    }
+}

@@ -1,0 +1,79 @@
+# MediSuite — servicios opcionales de servidor (PACS, visor, transcripción y desidentificación).
+# Uso:  docker compose up -d     (ver README.md)
+name: medisuite
+
+services:
+  # Proxy inverso: agrega CORS para que la app web (otro origen) pueda llamar a los servicios.
+  proxy:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "${PROXY_PORT:-8080}:80"
+    environment:
+      CORS_ALLOW_ORIGIN: "${CORS_ALLOW_ORIGIN:-*}"
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates:ro
+    depends_on:
+      - orthanc
+      - ohif
+      - whisper
+      - presidio-analyzer
+      - presidio-anonymizer
+
+  # PACS DICOM con DICOMweb (QIDO/WADO/STOW).
+  orthanc:
+    image: orthancteam/orthanc:latest
+    restart: unless-stopped
+    ports:
+      - "${ORTHANC_DICOM_PORT:-4242}:4242" # DICOM C-STORE desde equipos de rayos X/US/TAC
+    environment:
+      ORTHANC__NAME: "MediSuite"
+      ORTHANC__DICOM_AET: "MEDISUITE"
+      ORTHANC__REMOTE_ACCESS_ALLOWED: "true"
+      # Solo para red local de pruebas. En producción activa autenticación (ver README).
+      ORTHANC__AUTHENTICATION_ENABLED: "false"
+      DICOM_WEB_PLUGIN_ENABLED: "true"
+      ORTHANC__DICOM_WEB__ENABLE: "true"
+      ORTHANC__DICOM_WEB__ROOT: "/dicom-web/"
+      ORTHANC__DICOM_WEB__ENABLE_WADO: "true"
+      ORTHANC__DICOM_WEB__WADO_ROOT: "/wado"
+      ORTHANC__DICOM_WEB__PUBLIC_ROOT: "/orthanc/dicom-web/"
+      ORTHANC__STORAGE_COMPRESSION: "false"
+      VERBOSE_ENABLED: "false"
+    volumes:
+      - orthanc-db:/var/lib/orthanc/db
+
+  # Visor radiológico OHIF v3 conectado a Orthanc vía DICOMweb a través del proxy.
+  ohif:
+    image: ohif/app:latest
+    restart: unless-stopped
+    ports:
+      - "${OHIF_PORT:-3000}:80"
+    volumes:
+      - ./ohif/app-config.js:/usr/share/nginx/html/app-config.js:ro
+
+  # Whisper con API compatible con OpenAI (POST /v1/audio/transcriptions). Imagen CPU.
+  # Verifica la etiqueta vigente en https://github.com/speaches-ai/speaches (p. ej. latest-cpu / latest-cuda).
+  whisper:
+    image: ghcr.io/speaches-ai/speaches:latest-cpu
+    restart: unless-stopped
+    environment:
+      WHISPER__INFERENCE_DEVICE: "cpu"
+    volumes:
+      - whisper-models:/home/ubuntu/.cache/huggingface/hub
+
+  # Presidio: detección de datos personales. Se construye sobre la imagen oficial agregando
+  # el modelo de spaCy en español y una configuración es/en (ver presidio/).
+  # Si solo necesitas inglés usa directamente: image: mcr.microsoft.com/presidio-analyzer:latest
+  presidio-analyzer:
+    build: ./presidio
+    image: medisuite/presidio-analyzer-es:latest
+    restart: unless-stopped
+
+  presidio-anonymizer:
+    image: mcr.microsoft.com/presidio-anonymizer:latest
+    restart: unless-stopped
+
+volumes:
+  orthanc-db:
+  whisper-models:

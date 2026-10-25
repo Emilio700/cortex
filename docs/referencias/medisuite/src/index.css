@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/* Tokens de diseño: usar estas clases (bg-surface, text-muted, border-line, bg-brand...) en todos los módulos */
+@theme {
+  --color-brand: #0f766e;
+  --color-brand-strong: #115e59;
+  --color-brand-soft: #ccfbf1;
+  --color-bg: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f3f5;
+  --color-ink: #111827;
+  --color-muted: #596170; /* ≥ 4.5:1 sobre surface, surface-2 y brand-soft (WCAG AA) */
+  --color-line: #e5e7eb;
+  /* tonos de estado oscurecidos: el texto pasa AA también sobre su propio tinte (bg-ok/15…) */
+  --color-danger: #b91c1c;
+  --color-warn: #92400e;
+  --color-ok: #166534;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-brand: #2dd4bf;
+  --color-brand-strong: #5eead4;
+  --color-brand-soft: #134e4a;
+  --color-bg: #0b0f14;
+  --color-surface: #121820;
+  --color-surface-2: #1a222c;
+  --color-ink: #e5e7eb;
+  --color-muted: #b0b8c4;
+  --color-line: #263040;
+  --color-danger: #f87171;
+  --color-warn: #fbbf24;
+  --color-ok: #4ade80;
+}
+
+html, body, #root { height: 100%; }
+body { background: var(--color-bg); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+
+/* Foco visible para teclado en todos los controles (WCAG 2.4.7) */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+.sr-only:focus,
+.sr-only:focus-visible {
+  outline-offset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+@media print {
+  .no-print { display: none !important; }
+}
