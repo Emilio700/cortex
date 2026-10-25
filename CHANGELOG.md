@@ -121,6 +121,18 @@ Todos los cambios notables de Cortex. Formato basado en
   permisos `spine_rx.read`/`write` para el médico. En Neuro 3D, el origen
   «Radiografía» del mismo selector que la TC dobla la columna esquemática a esas
   medidas con su aviso de aproximación. Lo marcado «(verificar)» espera revisión médica.
+<!-- Atlas detallado (feat/neuro3d-atlas) -->
+- **Atlas detallado en Neuro 3D**: «Modelo: Simplificado | Atlas detallado» cambia
+  el modelo esquemático por mallas reales de BodyParts3D 4.0 (DBCLS, CC BY 4.0) de
+  una persona de referencia: huesos del cráneo, giros por lóbulo, ínsula, tálamo,
+  cuerpo calloso, cerebelo y tronco, ventrículos, polígono de Willis, nervios óptico
+  y troclear, y vértebras C1–sacro con sus discos. Mismos ids del catálogo: tocar la
+  raíz L5 enciende su vértebra real. Se descarga al elegirlo (con avance), sólo con
+  el origen esquemático y con su propio aviso; raíces, médula y vías siguen siendo
+  esquemáticas. Los modelos no van en git: cada servidor los prepara con
+  `scripts/atlas/preparar_atlas.py` (≈10 MB); sin ellos la opción sale deshabilitada
+  y dice por qué. Pie «Créditos» con la atribución de cada fuente a la vista, también
+  en la captura.
 
 ### Cambiado
 - El visor ocupa la altura de la pantalla en vez de ser un cuadrado, y su barra se

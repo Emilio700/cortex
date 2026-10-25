@@ -12,8 +12,8 @@ elige las estructuras de cabeza y columna por id FMA y deja en
 | `CREDITOS.json` | Fuente, versión, licencia, texto de crédito exacto, URL y fecha |
 
 Los modelos **no se guardan en git** (`frontend/public/atlas/` está en
-`.gitignore`). Cada servidor los genera una vez; Vite los copia a `dist/` al
-compilar. Sin ellos, Neuro 3D muestra la opción «Atlas detallado» deshabilitada
+`.gitignore`). Cada servidor los genera una vez; Vite los copia a la salida al
+compilar (a `frontend/build/`). Sin ellos, Neuro 3D muestra la opción «Atlas detallado» deshabilitada
 con el motivo «El atlas detallado no está instalado en este servidor».
 
 ## Licencia
@@ -50,7 +50,7 @@ en `ARCHIVOS_ESPERADOS`). Si DBCLS publica otra cosa con el mismo nombre, se
 detiene: hay que revisar la fuente antes de cambiar el hash.
 
 Después de generarlo, vuelve a compilar el frontend (`npm run build`) para que
-`dist/` lleve la carpeta.
+`frontend/build/` lleve la carpeta.
 
 ## Qué trae y qué no
 
