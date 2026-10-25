@@ -32,7 +32,7 @@
 
 ## 5. Cierre
 - [x] 5.1 Recorrido guiado, DESIGN §4.14, CHANGELOG
-- [ ] 5.2 Verificación: tsc, vitest, build, pytest, capturas
+- [x] 5.2 Verificación: tsc, vitest, build, pytest, capturas
 
 ## Notas
 - 2.2: el modo real (torch + TotalSegmentator) **no se probó** en la máquina de

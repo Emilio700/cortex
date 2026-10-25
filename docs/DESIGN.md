@@ -422,6 +422,9 @@ botón del visor ni la opción del selector se pintan.
   minutos» (consulta sola cada 5 s), «Modelo 3D listo» con «Ver en Neuro 3D», o
   «No se pudo: motivo» con «Intentar de nuevo». Mandar la petición **no** es
   «listo». Sin el permiso `neuro3d.generar_modelo` sólo se ve el estado.
+  «Ver en Neuro 3D» pasa el modelo con `servicios/modeloPedido.ts`, no sólo con
+  `?modelo=`: las pestañas reemplazan la URL por la ruta limpia y el parámetro se
+  perdía.
 - **Origen del modelo.** Con el paciente en contexto, debajo del encabezado va el
   selector (`componentes/SelectorOrigen.tsx`): grupo de radio con «Esquemático»,
   «Radiografía» y «Tomografía del paciente». Lo que no se puede elegir queda
