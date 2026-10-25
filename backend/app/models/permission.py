@@ -111,6 +111,11 @@ ALL_PERMISSIONS: dict[str, str] = {
     "clinical_images.read":   "Ver imágenes clínicas",
     "clinical_images.upload": "Capturar o subir imágenes clínicas",
     "clinical_images.update": "Actualizar o archivar imágenes clínicas",
+    # ── Atlas Neuro 3D (tramo C, feat/atlas-neuro-3d) ──
+    # Modelo anatómico esquemático para explicarle al paciente su lesión. No
+    # lee ni escribe datos clínicos: guardar una captura en el expediente sigue
+    # pidiendo clinical_images.upload, y su consentimiento, aparte.
+    "neuro3d.read":           "Ver el atlas Neuro 3D",
     # Digital informed consents
     "clinical_consents.read":   "Ver consentimientos informados",
     "clinical_consents.create": "Crear borradores de consentimiento",
@@ -203,6 +208,8 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         "clinical_tracking.follow_up",
         "clinical_images.read",
         "clinical_consents.read",
+        # Atlas Neuro 3D (tramo C): educativo, sin datos del paciente.
+        "neuro3d.read",
     ],
 
     "secretaria": [
@@ -267,6 +274,8 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         "clinical_tracking.deliver_order", "clinical_tracking.follow_up",
         "clinical_images.read", "clinical_images.upload", "clinical_images.update",
         "clinical_consents.read", "clinical_consents.create", "clinical_consents.sign", "clinical_consents.revoke",
+        # Atlas Neuro 3D (tramo C): para explicarle al paciente su lesión.
+        "neuro3d.read",
         # Sube documentos (decisión de Emilio, plan 32 punto 6): antes veía el
         # botón y al guardar recibía un 403 (C7).
         "documents.read", "documents.upload",

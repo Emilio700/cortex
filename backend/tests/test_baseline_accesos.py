@@ -94,6 +94,9 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "documents.upload",
         "medical_certificates.read",
         "medical_history.read",
+        # Delta deliberado (tramo C, Atlas Neuro 3D): modelo esquemático educativo;
+        # no abre datos clínicos (test_permiso_neuro3d.py).
+        "neuro3d.read",
         "notifications.read",
         "patients.create",
         "patients.read",
@@ -209,6 +212,9 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "medical_certificates.read",
         "medical_certificates.send_email",
         "medical_history.read",
+        # Delta deliberado (tramo C, Atlas Neuro 3D): modelo esquemático educativo;
+        # no abre datos clínicos (test_permiso_neuro3d.py).
+        "neuro3d.read",
         "medications.search",
         "notifications.read",
         "patient_care_team.manage",
