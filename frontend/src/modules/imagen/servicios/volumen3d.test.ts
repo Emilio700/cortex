@@ -26,7 +26,7 @@ vi.mock('@cornerstonejs/core', () => ({
   CONSTANTS: {
     VIEWPORT_PRESETS: [{ name: 'CT-Bone', colorTransfer: '4 0 0 0 0', scalarOpacity: '2 0 0' }],
   },
-  Enums: { ViewportType: { VOLUME_3D: 'volume3d' } },
+  Enums: { ViewportType: { VOLUME_3D: 'volume3d' }, OrientationAxis: { CORONAL: 'coronal' } },
   canRenderFloatTextures: () => true,
   cornerstoneStreamingImageVolumeLoader: () => undefined,
   cache: {
@@ -131,8 +131,8 @@ describe('crearVolumen3D', () => {
     })
     expect(cs.cargar).toHaveBeenCalledTimes(5)
     expect(cs.cargar).toHaveBeenCalledWith('http://api/c/0', undefined, 'wadouri:http://api/c/0')
-    expect(avances.filter((p) => p.fase === 'descargando').at(-1)).toEqual({ fase: 'descargando', hechos: 5, total: 5 })
-    expect(avances.at(-1)).toEqual({ fase: 'armando', hechos: 5, total: 5 })
+    expect(avances.filter((p) => p.fase === 'descargando').slice(-1)[0]).toEqual({ fase: 'descargando', hechos: 5, total: 5 })
+    expect(avances.slice(-1)[0]).toEqual({ fase: 'armando', hechos: 5, total: 5 })
 
     volumen.destruir()
     expect(cs.quitarVolumen).toHaveBeenCalledTimes(1)

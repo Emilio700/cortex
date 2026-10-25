@@ -276,7 +276,9 @@ export async function crearVolumen3D(opciones: OpcionesDeVolumen): Promise<Volum
       viewportId,
       element: elemento,
       type: Enums.ViewportType.VOLUME_3D,
-      defaultOptions: { background: [0, 0, 0] as Types.Point3 },
+      // De frente (coronal), cabeza arriba: así se mira a un paciente. Sin esto
+      // Cornerstone abre mirando por el eje de los cortes, desde los pies.
+      defaultOptions: { background: [0, 0, 0] as Types.Point3, orientation: Enums.OrientationAxis.CORONAL },
     })
     const viewport = motor.getViewport(viewportId) as Types.IVolumeViewport
 
