@@ -1,0 +1,5 @@
+# Fija las dependencias del motor que TotalSegmentator y nnU-Net piden sin versión.
+# torch y torchvision se instalan antes, desde el índice de PyTorch; aquí se
+# fijan para que pip no los reemplace por los de PyPI.
+torch==2.7.1+cu126
+torchvision==0.22.1+cu126

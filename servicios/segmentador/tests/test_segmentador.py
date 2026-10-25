@@ -50,6 +50,9 @@ def test_health_dice_el_modo(cliente):
     assert r.status_code == 200
     assert r.json()["modo"] == "falso"
     assert r.json()["motor"] == "sintetico"
+    # En modo falso no hay dispositivo que reportar, y se dice.
+    assert r.json()["dispositivo"] == "ninguno"
+    assert [x["region"] for x in r.json()["regiones"]] == ["columna", "columna"]
 
 
 def test_devuelve_un_glb_con_las_estructuras_etiquetadas(cliente):
@@ -144,9 +147,9 @@ def test_encefalo_aun_no_esta_disponible(cliente):
     assert "encéfalo" in r.json()["detail"]
 
 
-def test_en_modo_real_la_resonancia_se_rechaza_con_motivo(monkeypatch):
+def test_una_region_con_otra_modalidad_se_rechaza_con_motivo(monkeypatch):
     monkeypatch.setenv("SEGMENTADOR_FALSO", "0")
-    r = _segmentar(TestClient(main.app), _zip_dicom(), modalidad="MR")
+    r = _segmentar(TestClient(main.app), _zip_dicom(), region="craneo", modalidad="MR")
     assert r.status_code == 422
     assert "tomografía" in r.json()["detail"]
 

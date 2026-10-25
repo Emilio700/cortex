@@ -17,7 +17,9 @@ WORKDIR /servicio
 COPY requirements.txt requirements-motor.txt ./
 # torch de CPU por omisión. Para GPU: --build-arg TORCH_INDEX=https://download.pytorch.org/whl/cu126
 ARG TORCH_INDEX=https://download.pytorch.org/whl/cpu
-RUN pip install --index-url ${TORCH_INDEX} torch==2.7.1 \
+# torchvision del mismo índice: nnU-Net la pide (vía timm) sin versión y, si
+# llega de PyPI, arrastra otro torch (para CUDA 13, ~3 GB) encima de éste.
+RUN pip install --index-url ${TORCH_INDEX} torch==2.7.1 torchvision==0.22.1 \
  && pip install -r requirements.txt -r requirements-motor.txt
 
 # Los pesos (tarea «total», licencia abierta) se bajan la primera vez y quedan

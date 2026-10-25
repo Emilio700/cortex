@@ -5,3 +5,6 @@ numpy==2.2.6
 scipy==1.15.3
 scikit-image==0.25.2
 nibabel==5.3.2
+# Calidad de malla: suavizado Taubin (no encoge) y decimación cuádrica. MIT las dos.
+trimesh==5.2.0
+fast-simplification==0.2.0

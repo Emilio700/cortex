@@ -160,6 +160,16 @@ Todos los cambios notables de Cortex. Formato basado en
   yugulares internas y venas superficiales, con ficha y búsqueda. Trayectos
   típicos marcados «(verificar)».
 
+<!-- Segmentador con GPU (feat/segmentador-gpu) -->
+- **Segmentador con GPU NVIDIA** (perfil `ia-gpu`, `Dockerfile.gpu`, mismo puerto y
+  nombre que el de CPU) y regiones nuevas con tareas abiertas de TotalSegmentator:
+  columna en resonancia, discos por nivel, cráneo, carótidas y yugulares, y
+  hemorragia intracerebral (con aviso: modelo entrenado con pocos casos). `/health`
+  dice si usa `cuda` o `cpu` y qué GPU. Si falta la GPU, la VRAM o la RAM, responde
+  un error claro y, si se configura, repite con el modelo rápido o en CPU; el modelo
+  dice con qué resolución salió. Mallas sin escalones (Taubin y decimación) que
+  conservan el volumen: la médula ya no adelgaza a la mitad.
+
 ### Cambiado
 - Neuro 3D: el interruptor de flujo dice «Flujo en arterias, venas y vías» (las venas
   también lo muestran). <!-- feat/neuro3d-realista -->
