@@ -586,7 +586,7 @@ modelo más realista sigue siendo esquemático o aproximado.
   `EffectComposer`: GTAO a media resolución sólo sobre lo opaco (la piel translúcida
   no ensombrece lo de adentro), SMAA y `OutputPass`. Al girar o mover la cámara se
   apaga el GTAO; al soltar se pinta completo. La captura PNG usa el pintado completo.
-- **Para capas nuevas** (mallas detalladas, tramo ATLAS): una `CapaAnatomica`
+- **Para capas nuevas** (como el atlas detallado, §4.18): una `CapaAnatomica`
   entrega piezas con `acabado`, `capa` y, si hace falta, `tejido`; la escena pide el
   material a la biblioteca. No se crean materiales sueltos.
 - **Venas y senos** son una capa más (`venas`, también en Estándar), con ficha y
@@ -624,6 +624,17 @@ Cortex dibuja en código. Es una **persona de referencia**, no el paciente.
   buscador sólo ofrece giros con el atlas a la vista. El cráneo es translúcido
   (acabado `envoltura`), como la bóveda simplificada. Colores: los tokens
   `--cx-anat-*` de su estructura.
+- **Con la calidad (§4.17).** Cada pieza lleva el `tejido` del manifiesto (los
+  mismos nombres que `Tejido`): en Realista toma el material físico de su tejido
+  (hueso, cráneo, corteza, sustancia blanca, arteria, nervio, disco, líquido), así
+  que la vértebra real se ve igual que la simplificada a su lado. Cambiar de
+  calidad rehace la escena y el atlas vuelve solo, sin descargarse otra vez; si
+  cambia a media descarga, llega a la escena nueva.
+- **Orden en la pantalla.** En el encabezado, «Ver el estudio en 3D» (§4.16),
+  «Explicar al paciente» y la captura; debajo, «Origen del modelo» (con paciente,
+  §4.14), luego «Modelo» y el aviso (el del origen y, abajo, el del atlas); el
+  interruptor de calidad con su leyenda, abajo a la izquierda de la escena (§4.17);
+  y el pie de créditos al final de la página.
 - **Escena.** Entra como `CapaAnatomica` (`servicios/anatomia/capaAtlas.ts`) con
   `escena.fijarCapaAtlas`; lo simplificado que reemplaza se oculta sin borrarse.
   Alineación: la cabeza, con escala uniforme limitada (0.8–1.25) a la caja de los

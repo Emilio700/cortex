@@ -141,7 +141,9 @@ Todos los cambios notables de Cortex. Formato basado en
   esquemáticas. Los modelos no van en git: cada servidor los prepara con
   `scripts/atlas/preparar_atlas.py` (≈10 MB); sin ellos la opción sale deshabilitada
   y dice por qué. Pie «Créditos» con la atribución de cada fuente a la vista, también
-  en la captura.
+  en la captura. En Realista cada malla del atlas toma el material de su tejido
+  (hueso, cráneo, corteza, sustancia blanca, arteria, nervio, disco, líquido), y al
+  cambiar de calidad el atlas vuelve solo.
 
 <!-- Neuro 3D realista (feat/neuro3d-realista) -->
 - **Neuro 3D realista**: interruptor «Estándar | Realista» en la escena, recordado
