@@ -12,6 +12,7 @@
  */
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { etiquetasSinGuardar, hayCambiosSinGuardar, pestanasSinGuardar, suscribir } from './cambiosSinGuardar'
+import { guardarPestanas, leerPestanas, olvidarPestanas } from './almacenPestanas'
 
 export interface Tab {
     key: string          // unique identifier (usually the path)
@@ -38,29 +39,12 @@ interface TabsContextType {
 }
 
 const MAX_TABS = 8
-const STORAGE_KEY = 'gems_tabs'
 
 const TabsContext = createContext<TabsContextType | null>(null)
 
-function loadFromStorage(): { tabs: Tab[]; activeTabKey: string | null } {
-    try {
-        const raw = sessionStorage.getItem(STORAGE_KEY)
-        if (raw) {
-            const data = JSON.parse(raw)
-            return {
-                tabs: data.tabs || [],
-                activeTabKey: data.activeTabKey || null,
-            }
-        }
-    } catch { /* corrupt storage, start fresh */ }
-    return { tabs: [], activeTabKey: null }
-}
-
-function saveToStorage(tabs: Tab[], activeTabKey: string | null) {
-    try {
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ tabs, activeTabKey }))
-    } catch { /* storage full — non-critical */ }
-}
+// Las pestañas se guardan con su dueño: ver `almacenPestanas.ts`.
+const loadFromStorage = () => leerPestanas<Tab>()
+const saveToStorage = (tabs: Tab[], activeTabKey: string | null) => guardarPestanas(tabs, activeTabKey)
 
 /** Enumera en palabras lo que se va a perder: "Notas de consulta y Receta 1". */
 function enumerar(etiquetas: string[]): string {
@@ -224,7 +208,7 @@ export const TabsProvider: React.FC<{
         guardarTabs([])
         setActiveTabKeyState(null)
         setCierrePorLimite(null)
-        try { sessionStorage.removeItem(STORAGE_KEY) } catch {}
+        olvidarPestanas()
     }, [guardarTabs])
 
     /**
