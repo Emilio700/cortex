@@ -59,6 +59,7 @@ from app.models.service import Service
 from app.models.soap_note import SOAPNote
 from app.models.specialty import Specialty
 from app.models.tenant import Tenant
+from app.models.tenant_modulo import TenantModulo
 from app.models.triage import Triage
 from app.models.user import Role, User
 from app.models.user_session import UserSession
@@ -133,4 +134,5 @@ __all__ = [
     "Permission",
     "AccesoClinico",
     "FolioEmitido",
+    "TenantModulo",
 ]

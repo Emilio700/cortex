@@ -156,6 +156,12 @@ ALL_PERMISSIONS: dict[str, str] = {
     # Global settings (MASTER only)
     "settings.global":   "Configuración global del sistema",
     "permissions.manage": "Gestionar permisos de usuarios",
+    # ── base-modulos-extra (tramo A): módulos opcionales y servicios ──
+    # Encender o apagar un módulo cambia lo que ve todo el consultorio; por eso
+    # es un permiso propio y no viene con settings.global ni con users.update.
+    "modulos.manage":  "Activar o desactivar módulos opcionales del consultorio",
+    "servicios.read":  "Ver el estado de los servicios auxiliares (Orthanc, dictado, IA)",
+    # ── fin base-modulos-extra ──
 }
 # fmt: on
 
@@ -203,6 +209,8 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         "clinical_tracking.follow_up",
         "clinical_images.read",
         "clinical_consents.read",
+        # base-modulos-extra (tramo A): administración enciende módulos y ve servicios.
+        "modulos.manage", "servicios.read",
     ],
 
     "secretaria": [

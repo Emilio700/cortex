@@ -10,6 +10,8 @@ import { RECORRIDOS_DOCTORA } from './doctora'
 import { RECORRIDOS_RECEPCION } from './recepcion'
 import { RECORRIDOS_COBROS } from './cobros'
 import { RECORRIDOS_ADMINISTRACION } from './administracion'
+// base-modulos-extra (tramo A)
+import { RECORRIDOS_SISTEMA } from './sistema'
 
 export const CATALOGO: Recorrido[] = [
   ...RECORRIDOS_GENERALES,
@@ -18,4 +20,6 @@ export const CATALOGO: Recorrido[] = [
   ...RECORRIDOS_RECEPCION,
   ...RECORRIDOS_COBROS,
   ...RECORRIDOS_ADMINISTRACION,
+  // base-modulos-extra (tramo A)
+  ...RECORRIDOS_SISTEMA,
 ]

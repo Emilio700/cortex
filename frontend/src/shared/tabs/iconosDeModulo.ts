@@ -26,6 +26,9 @@ import {
     cilUserFollow,
     cilUserPlus,
     cilWallet,
+    // base-modulos-extra
+    cilApplications,
+    cilSettings,
 } from '@coreui/icons'
 import { buildRouteEntries, matchRoutePath } from './routeMatch'
 
@@ -55,6 +58,9 @@ export const ICONOS_DE_MODULO: Record<string, string[]> = {
     '/master/permisos': cilShieldAlt,
     '/master/roles': cilUserFollow,
     '/master/sucursales': cilBuilding,
+    // base-modulos-extra (tramo A): los mismos íconos que el menú.
+    '/sistema/servicios': cilApplications,
+    '/sistema/modulos': cilSettings,
 }
 
 const entradas = buildRouteEntries()

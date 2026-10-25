@@ -1,5 +1,6 @@
 import React, { LazyExoticComponent, FC, ReactNode } from 'react'
 import { Role } from './shared/types'
+import { moduloPermitido } from './shared/utils/modulos'
 
 export type Route = {
   element?: LazyExoticComponent<FC>
@@ -20,6 +21,12 @@ export type Route = {
    * marcador o una pestaña guardada llegan a donde vive ahora lo que buscaban.
    */
   redirigeA?: string
+  /**
+   * base-modulos-extra: id de un módulo opcional. La ruta solo abre si el
+   * módulo está encendido en el consultorio, además del permiso. Debe ser el
+   * mismo `modulo` de su ítem en `_nav.tsx`.
+   */
+  modulo?: string
 }
 
 // Helper: returns the given roles plus MASTER (who can see everything)
@@ -53,6 +60,10 @@ const AuditLogsPage = React.lazy(() => import('./modules/admin/pages/AuditLogsPa
 // Finanzas Module
 const FinanzasDashboard = React.lazy(() => import('./modules/finanzas/pages/FinanzasDashboard'))
 const PagosPage = React.lazy(() => import('./modules/finanzas/pages/PagosPage'))
+
+// base-modulos-extra (tramo A): pantallas del grupo «Sistema».
+const EstadoServiciosPage = React.lazy(() => import('./modules/sistema/paginas/EstadoServiciosPage'))
+const ModulosPage = React.lazy(() => import('./modules/sistema/paginas/ModulosPage'))
 
 // Master Module
 const MasterDashboard = React.lazy(() => import('./modules/master/pages/MasterDashboard'))
@@ -277,6 +288,29 @@ const routes: Route[] = [
     element: TenantsPage,
     roles: [Role.MASTER],
   },
+  // ── base-modulos-extra (tramo A): Sistema ──
+  {
+    path: '/sistema/servicios',
+    requires: ['servicios.read'],
+    name: 'Estado de servicios',
+    element: EstadoServiciosPage,
+    roles: orMaster(Role.ADMIN),
+  },
+  {
+    path: '/sistema/modulos',
+    requires: ['modulos.manage'],
+    name: 'Módulos',
+    element: ModulosPage,
+    roles: orMaster(Role.ADMIN),
+  },
+  // ── fin base-modulos-extra ──
 ]
+
+/**
+ * base-modulos-extra: ¿la ruta puede abrirse con estos módulos encendidos?
+ * Lo del núcleo (sin `modulo`) siempre; lo opcional, solo si está activo.
+ */
+export const rutaConModuloActivo = (route: Pick<Route, 'modulo'>, modulosActivos: string[]): boolean =>
+  moduloPermitido(route.modulo, modulosActivos)
 
 export default routes
