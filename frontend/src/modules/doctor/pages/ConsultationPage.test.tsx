@@ -210,6 +210,43 @@ describe('ConsultationPage · el botón de finalizar queda a la vista (U-07)', (
   })
 })
 
+// Escalas neurológicas (Cortex, feat/escalas-neuro)
+describe('ConsultationPage · escalas neurológicas', () => {
+  it('con el permiso, la sección va después del plan clínico, cerrada y con su insignia', async () => {
+    permisos.actuales = ['triage.create', 'clinical_scales.read', 'clinical_scales.write']
+    get.mockImplementation(async (ruta: string) =>
+      ruta === '/patients/4/escalas'
+        ? { data: [{ id: 1, escala: 'glasgow', appointment_id: 10, anulado_at: null, aplicada_en: '2026-09-23T10:00:00' }] }
+        : { data: [] },
+    )
+    await abrirConsulta()
+
+    const seccion = document.querySelector('[data-tour="consulta-seccion-escalas-neurologicas"]') as HTMLElement
+    expect(seccion).not.toBeNull()
+    expect(within(seccion).getByRole('heading', { name: 'Escalas neurológicas' })).toBeInTheDocument()
+    expect(await within(seccion).findByText('1 en esta consulta')).toBeInTheDocument()
+    expect(within(seccion).getByRole('button', { expanded: false })).toBeInTheDocument()
+    // Orden del flujo: plan (3), escalas (4), consentimiento (5), certificado (6).
+    const pasos = [...document.querySelectorAll('[data-tour^="consulta-seccion-"]')].map((n) =>
+      n.getAttribute('data-tour'),
+    )
+    expect(pasos).toEqual([
+      'consulta-seccion-plan-clinico',
+      'consulta-seccion-escalas-neurologicas',
+      'consulta-seccion-consentimiento-informado',
+      'consulta-seccion-certificado-medico',
+    ])
+    expect(within(seccion).getByText('4')).toHaveClass('badge')
+  })
+
+  it('sin el permiso no se pinta ni se pide nada', async () => {
+    get.mockResolvedValue({ data: [] })
+    await abrirConsulta()
+    expect(document.querySelector('[data-tour="consulta-seccion-escalas-neurologicas"]')).toBeNull()
+    expect(get).not.toHaveBeenCalledWith('/patients/4/escalas', expect.anything())
+  })
+})
+
 describe('ConsultationPage · finalizar sin perder la nota', () => {
   it('guarda la nota ANTES de marcar la cita como atendida', async () => {
     const usuario = userEvent.setup()

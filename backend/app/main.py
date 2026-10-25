@@ -57,6 +57,10 @@ from app.routers import (
     users,
     catalogo_estudios,
 )
+# Escalas neurológicas (Cortex, feat/escalas-neuro)
+from app.routers import escalas as escalas_router
+# base-modulos-extra (tramo A): módulos opcionales y estado de servicios.
+from app.routers import modulos as modulos_router
 
 
 @asynccontextmanager
@@ -217,6 +221,11 @@ app.include_router(imagenes.router, prefix=settings.API_V1_PREFIX)
 app.include_router(imaging.router, prefix=settings.API_V1_PREFIX)
 app.include_router(imaging_compartir.router, prefix=settings.API_V1_PREFIX)
 app.include_router(imaging_compartir.router_publico, prefix=settings.API_V1_PREFIX)
+# Escalas neurológicas (Cortex, feat/escalas-neuro)
+app.include_router(escalas_router.router, prefix=settings.API_V1_PREFIX)
+# base-modulos-extra (tramo A): módulos opcionales y estado de servicios.
+app.include_router(modulos_router.router, prefix=settings.API_V1_PREFIX)
+app.include_router(modulos_router.router_servicios, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/health")

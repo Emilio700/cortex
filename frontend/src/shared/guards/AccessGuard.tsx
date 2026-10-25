@@ -17,6 +17,7 @@ import { cilLockLocked } from '@coreui/icons'
 import { useAuth } from '../context/AuthContext'
 import type { Role } from '../types'
 import { rutaDeInicioPermitida } from '../utils/inicio'
+import { moduloPermitido } from '../utils/modulos'
 
 /**
  * «Acceso denegado» dentro de la pestaña (plan 29, lote 5).
@@ -54,16 +55,43 @@ interface AccessGuardProps {
    * redirigir a /403 (las pestañas deshacen la redirección).
    */
   alNegar?: 'redirigir' | 'pestana'
+  /**
+   * base-modulos-extra: módulo opcional que debe estar encendido. Se suma al
+   * permiso: con el módulo apagado nadie pasa, ni master.
+   */
+  modulo?: string
 }
 
-export const AccessGuard = ({ children, requires, allowedRoles, alNegar = 'redirigir' }: AccessGuardProps) => {
-  const { user, permissions, loading } = useAuth()
+/**
+ * base-modulos-extra: la pantalla de un módulo apagado. No dice «sin permiso»
+ * porque no es eso: el consultorio no lo usa, y lo enciende la administración.
+ */
+const ModuloInactivo = () => {
+  const navigate = useNavigate()
+  const { user, permissions } = useAuth()
+  return (
+    <div className="text-center py-5" role="alert">
+      <CIcon icon={cilLockLocked} size="3xl" className="text-body-secondary mb-3" />
+      <h4>Este módulo no está activo</h4>
+      <p className="text-body-secondary">
+        El consultorio no lo tiene encendido. La administración puede activarlo en Sistema → Módulos.
+      </p>
+      <CButton color="primary" onClick={() => navigate(rutaDeInicioPermitida(user?.role, permissions))}>
+        Volver al inicio
+      </CButton>
+    </div>
+  )
+}
+
+export const AccessGuard = ({ children, requires, allowedRoles, alNegar = 'redirigir', modulo }: AccessGuardProps) => {
+  const { user, permissions, loading, modulosActivos, modulosCargados } = useAuth()
   // Defensivo: un contexto de prueba o una sesión antigua pueden no traer el campo.
   const efectivos = permissions ?? []
 
   // Esperar a que hidrate el perfil antes de decidir: redirigir a /403 mientras
   // carga sería echar a alguien que sí tiene acceso.
-  if (loading) {
+  // base-modulos-extra: tampoco se decide un módulo antes de saber cuáles hay.
+  if (loading || (modulo && !modulosCargados)) {
     return (
       <div className="text-center py-5">
         <CSpinner color="primary" />
@@ -73,6 +101,12 @@ export const AccessGuard = ({ children, requires, allowedRoles, alNegar = 'redir
 
   if (!user) {
     return <Navigate to="/login" replace />
+  }
+
+  // base-modulos-extra: el módulo apagado se dice en el lugar en ambos modos;
+  // /403 diría «sin permiso», que no es lo que pasa.
+  if (!moduloPermitido(modulo, modulosActivos)) {
+    return <ModuloInactivo />
   }
 
   // Sin restricción declarada, cualquier sesión autenticada pasa.

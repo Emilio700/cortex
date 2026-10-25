@@ -27,6 +27,9 @@ import {
     cilUserFollow,
     cilUserPlus,
     cilWallet,
+    // base-modulos-extra
+    cilApplications,
+    cilSettings,
 } from '@coreui/icons'
 import { buildRouteEntries, matchRoutePath } from './routeMatch'
 
@@ -59,6 +62,9 @@ export const ICONOS_DE_MODULO: Record<string, string[]> = {
     // Neuro 3D (tramo C).
     '/imagen/neuro-3d': cil3d,
     '/pacientes/:patientId/neuro-3d': cil3d,
+    // base-modulos-extra (tramo A): los mismos íconos que el menú.
+    '/sistema/servicios': cilApplications,
+    '/sistema/modulos': cilSettings,
 }
 
 const entradas = buildRouteEntries()

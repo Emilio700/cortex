@@ -27,7 +27,7 @@ const RUTA_BANDEJA = '/doctor/results'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
-  const { user, permissions } = useAuth()
+  const { user, permissions, modulosActivos } = useAuth()
   const unfoldable = useSelector((state: State) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state: State) => state.sidebarShow)
   // El menú se arma por permiso; el rol queda de respaldo para las sesiones
@@ -37,6 +37,8 @@ const AppSidebar = () => {
     filterNavByAccess(navigation, {
       role: user?.role,
       permissions: user?.permissions,
+      // base-modulos-extra: lo opcional solo si el consultorio lo encendió.
+      modulos: modulosActivos,
     }),
     inicio,
   )

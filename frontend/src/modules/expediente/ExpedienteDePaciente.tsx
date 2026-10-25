@@ -14,6 +14,7 @@ import { CAlert, CButton, CSpinner } from '@coreui/react-pro'
 import CIcon from '@coreui/icons-react'
 import {
   cilBaby,
+  cilChartLine,
   cilDescription,
   cilFolderOpen,
   cilHistory,
@@ -35,6 +36,8 @@ import HistorialEstudios from '../doctor/components/HistorialEstudios'
 import GraficaValoraciones from '../doctor/components/GraficaValoraciones'
 import PatientDocuments from '../doctor/components/PatientDocuments'
 import PestanaImagenes from './PestanaImagenes'
+// Escalas neurológicas (Cortex, feat/escalas-neuro)
+import { EvolucionEscalas } from '../escalas'
 import ClinicalRecordPanel from '../doctor/components/ClinicalRecordPanel'
 import EncabezadoClinico from './EncabezadoClinico'
 import SubirArchivoModal from './SubirArchivoModal'
@@ -53,10 +56,12 @@ const PESTANAS: Record<PestanaExpediente, { nombre: string; icono: string[] }> =
   embarazo: { nombre: 'Embarazo', icono: cilBaby },
   consentimientos: { nombre: 'Consentimientos', icono: cilShieldAlt },
   equipo: { nombre: 'Equipo', icono: cilPeople },
+  escalas: { nombre: 'Escalas', icono: cilChartLine },
 }
 // Sin «Embarazo»: es de GEMS (ginecología). El servidor aún la ofrece a quien
 // tiene prenatal.read, pero en neurocirugía no se muestra.
-const ORDEN: PestanaExpediente[] = ['resumen', 'consultas', 'estudios', 'documentos', 'imagenes', 'consentimientos', 'equipo']
+// «Escalas» va junto a «Estudios»: las dos son evolución clínica en el tiempo.
+const ORDEN: PestanaExpediente[] = ['resumen', 'consultas', 'estudios', 'escalas', 'documentos', 'imagenes', 'consentimientos', 'equipo']
 
 const llave = (patientId: number) => `gems.expediente.pestana.${patientId}`
 const leerPestana = (patientId: number): PestanaExpediente | null => {
@@ -187,6 +192,8 @@ export default function ExpedienteDePaciente({ patientId, appointmentId, enConsu
         ) : (
           <ConsentimientosDeRecepcion patientId={patientId} />
         )
+      case 'escalas':
+        return <EvolucionEscalas patientId={patientId} />
       case 'equipo':
         return <ClinicalRecordPanel patientId={patientId} ownerDoctorId={datos.owner_doctor_id} secciones={['equipo']} />
     }

@@ -293,7 +293,71 @@ del paciente: el detalle es el mensaje del error, no el expediente.
 
 Referencia: `frontend/src/shared/components/BarreraDeError.tsx` y `frontend/index.html`.
 
-### 4.11 Neuro 3D
+<!-- base-modulos-extra (tramo A) -->
+### 4.11 Módulos opcionales
+
+Los permisos dicen **quién** usa algo; los módulos dicen **si el consultorio lo
+usa**. Un módulo opcional (inventario, tareas, recepción desde equipos, dictado,
+IA…) se instala para todos y se enciende por consultorio en **Sistema → Módulos**.
+
+- **Backend:** el catálogo vive en `app/core/modulos.py` (`MODULOS_OPCIONALES`).
+  Los routers del módulo llevan `Depends(require_modulo("<id>"))`: apagado,
+  responde **404**, no 403, para que su información no se asome por otro camino.
+- **Frontend:** el ítem del menú y su ruta llevan el mismo `modulo: '<id>'`
+  (`_nav.tsx`, `routes.tsx`). El criterio es uno solo, `moduloPermitido`
+  (`shared/utils/modulos.ts`), y se suma al permiso: ningún permiso ni rol abre
+  un módulo apagado. Lo del núcleo no lleva `modulo`.
+- Si un módulo aparece dentro de otra pantalla (expediente, consulta), se
+  pregunta con `useAuth().tieneModulo('<id>')` y, apagado, **no se pinta**: no
+  quedan huecos ni botones que lleven a «no está activo».
+- **No se ofrece lo que no existe.** Un módulo entra a la pantalla de Módulos
+  solo con `disponible=True`, en la misma rama que lo construye. Sin ninguno, la
+  pantalla dice «Aún no hay módulos opcionales instalados».
+- **Apagar no borra.** Solo oculta; al volver a encenderlo, todo sigue ahí. Cada
+  cambio queda en la bitácora (`modulo.activado` / `modulo.desactivado`).
+- Un módulo que necesita un servicio (Orthanc, Whisper, IA, segmentador) no se
+  deja encender hasta que esté configurado; el interruptor queda deshabilitado
+  y dice cuál falta. Apagarlo siempre se puede.
+- El interruptor muestra lo que **confirmó el servidor**; «Guardado» aparece
+  solo después de su respuesta. Si falla, se queda como estaba y dice por qué.
+- **Estado de servicios** solo muestra lo que averigua el backend. La IA sale
+  «Configurado, sin probar» (ámbar): no se le hace una consulta de prueba porque
+  cuesta, y no se pinta en verde lo que nadie comprobó.
+
+Referencia: `frontend/src/modules/sistema/`.
+<!-- fin base-modulos-extra -->
+
+### 4.12 Escalas clínicas: sugerir en pantalla, calcular en el servidor
+
+<!-- Escalas neurológicas (Cortex, feat/escalas-neuro) -->
+
+Una escala es **datos**, no código: ítems, opciones con sus puntos, forma de cálculo
+(suma, porcentaje o prorrateo) y rangos de interpretación, con su **fuente** (autor y
+año) siempre visible. Así el servidor repite la definición en Python y una prueba
+compartida (`paridad.json`) vigila que digan lo mismo.
+
+- **Opciones como botones grandes**, no un desplegable: se responde mirando al
+  paciente. A la izquierda de cada opción, sus puntos. Grupo de radio accesible
+  (flechas dentro del ítem, Tab entre ítems); la elegida se rellena en sólido.
+- **El puntaje sugerido** se ve mientras se llena, con la interpretación pintada por
+  tono (verde, ámbar, rojo). Es una sugerencia: el que se guarda lo calcula el
+  servidor, y el aviso de guardado anuncia **ese**. Si no coincide, se dice.
+- **«No valorable»** se distingue de cero: en el Glasgow anula el total y se registra
+  por componentes (`O3 VT M5`); en el NIHSS cuenta 0 y queda anotado.
+- **Secciones omitidas** (ODI, NDI) se permiten y se dicen («1 sección sin
+  responder»); desde tres se avisa sin impedir guardar.
+- **«(verificar)»** en ámbar marca el contenido clínico que falta confirmar contra la
+  fuente validada. No se quita sin revisión médica.
+- Una escala mal capturada **se anula con motivo**: queda tachada en el historial y
+  fuera de la gráfica, nunca se borra.
+- **Evolución**: una escala por gráfica (sus ejes no se comparan), con la tabla
+  debajo y el cambio escrito en texto según la dirección de la escala (en el ODI
+  bajar es mejorar; en el Glasgow, subir). Empeorar se pinta como **aviso**, no como
+  alarma.
+
+Referencia: `frontend/src/modules/escalas/` y `backend/app/services/escalas.py`.
+
+### 4.13 Neuro 3D
 
 <!-- Tramo C · Neuro 3D -->
 Modelo anatómico 3D para **explicarle al paciente** su lesión y su cirugía. Ruta
@@ -374,6 +438,11 @@ src/modules/<área>/
 `servicios/estudiosApi.ts`, `servicios/cornerstone.ts`, los paneles y
 `paginas/VisorEstudioPage.tsx`. La pestaña Imágenes del expediente solo monta
 `EstudiosDelPaciente`; el visor vive en su propia ruta.
+
+**Un módulo sin `paginas/`: escalas.** `modules/escalas` no tiene pantalla propia:
+vive dentro de la consulta (`EscalasEnConsulta`, una sección más) y del expediente
+(`EvolucionEscalas`, la pestaña «Escalas»), que ya son las pantallas. Su `dominio/`
+es el catálogo como datos y el motor; `paridad.json` es el contrato con el servidor.
 
 ---
 

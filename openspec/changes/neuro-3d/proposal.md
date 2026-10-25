@@ -34,7 +34,7 @@ médicos (plan maestro, fila «Neuro 3D»).
   `MODULE_HIERARCHY` bajo «Imagen y señales». Sólo por permiso, sin respaldo por
   rol.
 - **Dependencia** `three` 0.186.1 (versión exacta) en su paquete `vendor-three`.
-- Recorrido guiado `atlas-neuro-3d` (no arranca solo), sección 4.11 de DESIGN y
+- Recorrido guiado `neuro-3d` (no arranca solo), sección 4.13 de DESIGN y
   línea en el CHANGELOG.
 
 ## Impacto

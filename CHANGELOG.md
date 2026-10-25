@@ -78,6 +78,22 @@ Todos los cambios notables de Cortex. Formato basado en
   contexto y su consentimiento, guardado en el expediente. Aviso fijo de modelo
   esquemático; sin WebGL lo dice. Permiso nuevo `neuro3d.read` (médico,
   administración y master). Dependencia `three` 0.186.1, en su propio paquete.
+- **Escalas neurológicas** en la consulta (sección junto a «Plan clínico») y su
+  evolución en la pestaña «Escalas» del expediente: Glasgow (con «no valorable»),
+  NIHSS, Hunt y Hess, WFNS, Fisher modificada, Spetzler-Martin, Rankin modificada,
+  ASIA (grado AIS), Karnofsky, mJOA, Oswestry, NDI, ENA de dolor y Barthel, cada una
+  con su fuente. El puntaje se sugiere mientras se llena y lo calcula el servidor al
+  guardar; una escala mal capturada se anula con motivo, no se borra. Permisos
+  `clinical_scales.read`/`write` para el médico. Migración 0052. Lo marcado
+  «(verificar)» espera revisión médica.
+<!-- base-modulos-extra (tramo A) -->
+- Base para los módulos extra: módulos opcionales que se encienden por consultorio
+  en **Sistema → Módulos** (tabla `tenant_modulos`, migración 0051; apagar no borra
+  datos y cada cambio queda en la bitácora), pantalla **Estado de servicios**
+  (Orthanc, Whisper, Presidio, segmentador e IA), permisos `modulos.manage` y
+  `servicios.read`, variables opcionales de esos servicios, perfiles de Docker
+  `imagen` e `ia`, y la carpeta `openspec/` con su primer cambio. Todavía no hay
+  ningún módulo opcional instalado.
 
 ### Cambiado
 - El visor ocupa la altura de la pantalla en vez de ser un cuadrado, y su barra se

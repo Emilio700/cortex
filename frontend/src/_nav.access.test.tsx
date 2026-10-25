@@ -94,11 +94,17 @@ const PERMISOS_POR_DEFECTO: Record<Role, string[]> = {
  * PIERDA un destino —la única baja deliberada es «Consultas» de administración
  * (2026-10-04), cuya puerta el servidor negaba; hay prueba de eso abajo—.
  */
+/** Neuro 3D va justo antes del grupo «Sistema», o al final si no está. */
+const conNeuro3d = (menu: string[]): string[] => {
+  const i = menu.indexOf('/sistema/servicios')
+  return i < 0 ? [...menu, '/imagen/neuro-3d'] : [...menu.slice(0, i), '/imagen/neuro-3d', ...menu.slice(i)]
+}
+
 const MENU_CON_PERMISOS: Record<Role, string[]> = {
   ...MENU_VIGENTE,
   // Tramo C: el Neuro 3D («Imagen y señales») llega por neuro3d.read.
-  [Role.MASTER]: [...MENU_VIGENTE[Role.MASTER], '/imagen/neuro-3d'],
-  [Role.ADMIN]: [...MENU_VIGENTE[Role.ADMIN], '/imagen/neuro-3d'],
+  [Role.MASTER]: conNeuro3d(MENU_VIGENTE[Role.MASTER]),
+  [Role.ADMIN]: conNeuro3d(MENU_VIGENTE[Role.ADMIN]),
   [Role.DOCTOR]: [
     '/',
     '/secretaria/agenda',

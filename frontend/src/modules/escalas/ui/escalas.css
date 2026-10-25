@@ -1,0 +1,126 @@
+/**
+ * Escalas neurológicas: formulario, resultado sugerido e historial.
+ *
+ * Solo tokens (`--cx-*`, `--hf-*`): el color de la interpretación comunica
+ * (verde, ámbar, rojo; DESIGN.md §2) y la opción elegida se rellena en sólido
+ * (DESIGN.md §3, regla 3).
+ */
+.escala-item {
+  border: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.escala-item__titulo {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.15rem;
+  color: var(--cx-texto);
+}
+
+.escala-item__ayuda {
+  font-size: 0.8rem;
+  color: var(--cx-texto-2);
+  margin-bottom: 0.35rem;
+}
+
+.escala-verificar {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--hf-amber);
+  white-space: nowrap;
+}
+
+.escala-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.escala-opcion {
+  text-align: left;
+  border: 2px solid var(--cx-borde-fuerte);
+  background: var(--cx-superficie);
+  color: var(--cx-texto);
+  border-radius: 10px;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.escala-opcion:hover:not(:disabled) {
+  border-color: var(--cx-azul);
+}
+
+.escala-opcion:focus-visible {
+  outline: 3px solid var(--cx-azul-vivo);
+  outline-offset: 1px;
+}
+
+.escala-opcion[aria-checked='true'] {
+  background: var(--cx-azul);
+  border-color: var(--cx-azul);
+  color: #fff;
+}
+
+.escala-opcion:disabled {
+  opacity: 0.65;
+}
+
+.escala-opcion__puntos {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  min-width: 1.6rem;
+}
+
+.escala-resultado {
+  border-radius: var(--cx-radio);
+  border: 2px solid var(--cx-borde-fuerte);
+  background: var(--cx-superficie-2);
+  padding: 0.75rem 1rem;
+}
+
+.escala-resultado--ok {
+  border-color: var(--hf-green-border);
+  background: var(--hf-green-light);
+}
+
+.escala-resultado--aviso {
+  border-color: var(--hf-amber-border);
+  background: var(--hf-amber-light);
+}
+
+.escala-resultado--alerta {
+  border-color: var(--hf-red-border);
+  background: var(--hf-red-light);
+}
+
+.escala-resultado__puntaje {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--cx-texto);
+}
+
+.escala-fuente {
+  font-size: 0.78rem;
+  color: var(--cx-texto-2);
+}
+
+.escala-historial__anulada {
+  color: var(--cx-texto-3);
+}
+
+.escala-historial__anulada .escala-historial__valor {
+  text-decoration: line-through;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .escala-opcion {
+    transition: none;
+  }
+}

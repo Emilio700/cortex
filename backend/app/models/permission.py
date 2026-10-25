@@ -161,6 +161,17 @@ ALL_PERMISSIONS: dict[str, str] = {
     # Global settings (MASTER only)
     "settings.global":   "Configuración global del sistema",
     "permissions.manage": "Gestionar permisos de usuarios",
+    # Escalas neurológicas (Cortex, feat/escalas-neuro). Aparte de soap_notes:
+    # la escala es dato clínico estructurado que se grafica, y aplicarla no
+    # equivale a escribir la nota.
+    "clinical_scales.read":  "Ver escalas neurológicas y su evolución",
+    "clinical_scales.write": "Aplicar o anular escalas neurológicas",
+    # ── base-modulos-extra (tramo A): módulos opcionales y servicios ──
+    # Encender o apagar un módulo cambia lo que ve todo el consultorio; por eso
+    # es un permiso propio y no viene con settings.global ni con users.update.
+    "modulos.manage":  "Activar o desactivar módulos opcionales del consultorio",
+    "servicios.read":  "Ver el estado de los servicios auxiliares (Orthanc, dictado, IA)",
+    # ── fin base-modulos-extra ──
 }
 # fmt: on
 
@@ -210,6 +221,8 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         "clinical_consents.read",
         # Neuro 3D (tramo C): educativo, sin datos del paciente.
         "neuro3d.read",
+        # base-modulos-extra (tramo A): administración enciende módulos y ve servicios.
+        "modulos.manage", "servicios.read",
     ],
 
     "secretaria": [
@@ -297,6 +310,9 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         # ingreso que es suyo: estos permisos no le abren el dinero de la
         # sucursal, sólo el propio.
         "payments.read", "payments.create", "payments.cashcut", "payments.send_receipt",
+        # Escalas neurológicas (Cortex, feat/escalas-neuro). El router las acota
+        # a los pacientes de su expediente, como el resto de lo clínico.
+        "clinical_scales.read", "clinical_scales.write",
     ],
 }
 

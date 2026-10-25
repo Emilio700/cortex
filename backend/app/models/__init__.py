@@ -25,6 +25,8 @@ from app.models.doctor_profile import DoctorProfile
 from app.models.doctor_schedule import DoctorWorkingHours, ScheduleBlock
 from app.models.document import Document
 from app.models.espejo_legacy import VinculoLegacy
+# Escalas neurológicas (Cortex, feat/escalas-neuro)
+from app.models.escala_aplicada import EscalaAplicada
 from app.models.imaging import (
     ImagingAnnotation,
     ImagingKeyImage,
@@ -59,6 +61,7 @@ from app.models.service import Service
 from app.models.soap_note import SOAPNote
 from app.models.specialty import Specialty
 from app.models.tenant import Tenant
+from app.models.tenant_modulo import TenantModulo
 from app.models.triage import Triage
 from app.models.user import Role, User
 from app.models.user_session import UserSession
@@ -133,4 +136,7 @@ __all__ = [
     "Permission",
     "AccesoClinico",
     "FolioEmitido",
+    # Escalas neurológicas (Cortex, feat/escalas-neuro)
+    "EscalaAplicada",
+    "TenantModulo",
 ]

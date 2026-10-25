@@ -1,0 +1,2955 @@
+{
+  "_nota": "Generado por generarParidad.ts. Lo leen paridad.test.ts (vitest) y backend/tests/test_escalas_paridad.py (pytest). No lo edites a mano.",
+  "estructura": [
+    {
+      "id": "glasgow",
+      "version": "1",
+      "nombre": "Glasgow",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 3,
+      "max": 15,
+      "items": [
+        {
+          "id": "ocular",
+          "titulo": "Apertura ocular (O)",
+          "abreviatura": "O",
+          "opcional": false,
+          "opciones": [
+            [
+              "4",
+              4
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "C",
+              null
+            ]
+          ]
+        },
+        {
+          "id": "verbal",
+          "titulo": "Respuesta verbal (V)",
+          "abreviatura": "V",
+          "opcional": false,
+          "opciones": [
+            [
+              "5",
+              5
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "T",
+              null
+            ],
+            [
+              "NT",
+              null
+            ]
+          ]
+        },
+        {
+          "id": "motora",
+          "titulo": "Respuesta motora (M)",
+          "abreviatura": "M",
+          "opcional": false,
+          "opciones": [
+            [
+              "6",
+              6
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "NT",
+              null
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          8,
+          "Grave (3–8)",
+          "alerta"
+        ],
+        [
+          12,
+          "Moderado (9–12)",
+          "aviso"
+        ],
+        [
+          15,
+          "Leve (13–15)",
+          "ok"
+        ]
+      ]
+    },
+    {
+      "id": "nihss",
+      "version": "1",
+      "nombre": "NIHSS",
+      "calculo": "suma",
+      "no_valorable": "cero",
+      "avisar_omitidas_desde": null,
+      "min": 0,
+      "max": 42,
+      "items": [
+        {
+          "id": "1a",
+          "titulo": "1a. Nivel de conciencia",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ]
+          ]
+        },
+        {
+          "id": "1b",
+          "titulo": "1b. Preguntas: mes y edad",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ]
+          ]
+        },
+        {
+          "id": "1c",
+          "titulo": "1c. Órdenes: abrir y cerrar los ojos, apretar y soltar la mano",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ]
+          ]
+        },
+        {
+          "id": "2",
+          "titulo": "2. Mirada",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ]
+          ]
+        },
+        {
+          "id": "3",
+          "titulo": "3. Campos visuales",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ]
+          ]
+        },
+        {
+          "id": "4",
+          "titulo": "4. Parálisis facial",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ]
+          ]
+        },
+        {
+          "id": "5a",
+          "titulo": "5a. Motor del brazo izquierdo",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "UN",
+              null
+            ]
+          ]
+        },
+        {
+          "id": "5b",
+          "titulo": "5b. Motor del brazo derecho",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "UN",
+              null
+            ]
+          ]
+        },
+        {
+          "id": "6a",
+          "titulo": "6a. Motor de la pierna izquierda",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "UN",
+              null
+            ]
+          ]
+        },
+        {
+          "id": "6b",
+          "titulo": "6b. Motor de la pierna derecha",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "UN",
+              null
+            ]
+          ]
+        },
+        {
+          "id": "7",
+          "titulo": "7. Ataxia de las extremidades",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "UN",
+              null
+            ]
+          ]
+        },
+        {
+          "id": "8",
+          "titulo": "8. Sensibilidad",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ]
+          ]
+        },
+        {
+          "id": "9",
+          "titulo": "9. Lenguaje",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ]
+          ]
+        },
+        {
+          "id": "10",
+          "titulo": "10. Disartria",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "UN",
+              null
+            ]
+          ]
+        },
+        {
+          "id": "11",
+          "titulo": "11. Extinción e inatención",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          0,
+          "Sin déficit medible",
+          "ok"
+        ],
+        [
+          4,
+          "Déficit menor (1–4)",
+          "ok"
+        ],
+        [
+          15,
+          "Déficit moderado (5–15)",
+          "aviso"
+        ],
+        [
+          20,
+          "Déficit moderado a grave (16–20)",
+          "alerta"
+        ],
+        [
+          42,
+          "Déficit grave (21–42)",
+          "alerta"
+        ]
+      ]
+    },
+    {
+      "id": "hunt_hess",
+      "version": "1",
+      "nombre": "Hunt y Hess",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 1,
+      "max": 5,
+      "items": [
+        {
+          "id": "grado",
+          "titulo": "Cuadro clínico",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "I",
+              1
+            ],
+            [
+              "II",
+              2
+            ],
+            [
+              "III",
+              3
+            ],
+            [
+              "IV",
+              4
+            ],
+            [
+              "V",
+              5
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          1,
+          "Grado I",
+          "ok"
+        ],
+        [
+          2,
+          "Grado II",
+          "ok"
+        ],
+        [
+          3,
+          "Grado III",
+          "aviso"
+        ],
+        [
+          4,
+          "Grado IV",
+          "alerta"
+        ],
+        [
+          5,
+          "Grado V",
+          "alerta"
+        ]
+      ]
+    },
+    {
+      "id": "wfns",
+      "version": "1",
+      "nombre": "WFNS",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 1,
+      "max": 5,
+      "items": [
+        {
+          "id": "grado",
+          "titulo": "Glasgow y déficit motor",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "I",
+              1
+            ],
+            [
+              "II",
+              2
+            ],
+            [
+              "III",
+              3
+            ],
+            [
+              "IV",
+              4
+            ],
+            [
+              "V",
+              5
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          1,
+          "Grado I",
+          "ok"
+        ],
+        [
+          2,
+          "Grado II",
+          "ok"
+        ],
+        [
+          3,
+          "Grado III",
+          "aviso"
+        ],
+        [
+          4,
+          "Grado IV",
+          "alerta"
+        ],
+        [
+          5,
+          "Grado V",
+          "alerta"
+        ]
+      ]
+    },
+    {
+      "id": "fisher_modificada",
+      "version": "1",
+      "nombre": "Fisher modificada",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 0,
+      "max": 4,
+      "items": [
+        {
+          "id": "grado",
+          "titulo": "Hallazgo en la tomografía",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          0,
+          "Grado 0",
+          "ok"
+        ],
+        [
+          1,
+          "Grado 1",
+          "aviso"
+        ],
+        [
+          2,
+          "Grado 2",
+          "aviso"
+        ],
+        [
+          3,
+          "Grado 3",
+          "alerta"
+        ],
+        [
+          4,
+          "Grado 4",
+          "alerta"
+        ]
+      ]
+    },
+    {
+      "id": "spetzler_martin",
+      "version": "1",
+      "nombre": "Spetzler-Martin",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 1,
+      "max": 5,
+      "items": [
+        {
+          "id": "tamano",
+          "titulo": "Tamaño del nido",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ]
+          ]
+        },
+        {
+          "id": "elocuencia",
+          "titulo": "Elocuencia del cerebro adyacente",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ]
+          ]
+        },
+        {
+          "id": "drenaje",
+          "titulo": "Drenaje venoso",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          1,
+          "Grado I · clase A",
+          "ok"
+        ],
+        [
+          2,
+          "Grado II · clase A",
+          "ok"
+        ],
+        [
+          3,
+          "Grado III · clase B",
+          "aviso"
+        ],
+        [
+          4,
+          "Grado IV · clase C",
+          "alerta"
+        ],
+        [
+          5,
+          "Grado V · clase C",
+          "alerta"
+        ]
+      ]
+    },
+    {
+      "id": "rankin",
+      "version": "1",
+      "nombre": "Rankin modificada",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 0,
+      "max": 6,
+      "items": [
+        {
+          "id": "grado",
+          "titulo": "Situación del paciente",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "6",
+              6
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          0,
+          "Sin síntomas",
+          "ok"
+        ],
+        [
+          1,
+          "Sin discapacidad significativa",
+          "ok"
+        ],
+        [
+          2,
+          "Discapacidad leve",
+          "aviso"
+        ],
+        [
+          3,
+          "Discapacidad moderada",
+          "aviso"
+        ],
+        [
+          4,
+          "Discapacidad moderadamente grave",
+          "alerta"
+        ],
+        [
+          5,
+          "Discapacidad grave",
+          "alerta"
+        ],
+        [
+          6,
+          "Muerte",
+          "alerta"
+        ]
+      ]
+    },
+    {
+      "id": "asia",
+      "version": "1",
+      "nombre": "ASIA (AIS)",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 1,
+      "max": 5,
+      "items": [
+        {
+          "id": "grado",
+          "titulo": "Grado AIS",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ],
+            [
+              "D",
+              4
+            ],
+            [
+              "E",
+              5
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          1,
+          "AIS A: lesión completa",
+          "alerta"
+        ],
+        [
+          2,
+          "AIS B: sensitiva incompleta",
+          "alerta"
+        ],
+        [
+          3,
+          "AIS C: motora incompleta",
+          "aviso"
+        ],
+        [
+          4,
+          "AIS D: motora incompleta",
+          "aviso"
+        ],
+        [
+          5,
+          "AIS E: normal",
+          "ok"
+        ]
+      ]
+    },
+    {
+      "id": "karnofsky",
+      "version": "1",
+      "nombre": "Karnofsky",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 0,
+      "max": 100,
+      "items": [
+        {
+          "id": "kps",
+          "titulo": "Capacidad funcional",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "100",
+              100
+            ],
+            [
+              "90",
+              90
+            ],
+            [
+              "80",
+              80
+            ],
+            [
+              "70",
+              70
+            ],
+            [
+              "60",
+              60
+            ],
+            [
+              "50",
+              50
+            ],
+            [
+              "40",
+              40
+            ],
+            [
+              "30",
+              30
+            ],
+            [
+              "20",
+              20
+            ],
+            [
+              "10",
+              10
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          40,
+          "Incapaz de cuidarse; necesita cuidados institucionales o equivalentes (0–40)",
+          "alerta"
+        ],
+        [
+          70,
+          "Incapaz de trabajar; vive en casa con ayuda variable (50–70)",
+          "aviso"
+        ],
+        [
+          100,
+          "Actividad normal y trabajo sin cuidados especiales (80–100)",
+          "ok"
+        ]
+      ]
+    },
+    {
+      "id": "mjoa",
+      "version": "1",
+      "nombre": "mJOA",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 0,
+      "max": 18,
+      "items": [
+        {
+          "id": "motor_superior",
+          "titulo": "Función motora de las extremidades superiores",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "motor_inferior",
+          "titulo": "Función motora de las extremidades inferiores",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "6",
+              6
+            ],
+            [
+              "7",
+              7
+            ]
+          ]
+        },
+        {
+          "id": "sensibilidad",
+          "titulo": "Sensibilidad de las extremidades superiores",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ]
+          ]
+        },
+        {
+          "id": "esfinter",
+          "titulo": "Función vesical",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          11,
+          "Mielopatía grave (0–11)",
+          "alerta"
+        ],
+        [
+          14,
+          "Mielopatía moderada (12–14)",
+          "aviso"
+        ],
+        [
+          17,
+          "Mielopatía leve (15–17)",
+          "aviso"
+        ],
+        [
+          18,
+          "Sin alteración (18)",
+          "ok"
+        ]
+      ]
+    },
+    {
+      "id": "oswestry",
+      "version": "1",
+      "nombre": "Oswestry (ODI)",
+      "calculo": "porcentaje",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": 3,
+      "min": 0,
+      "max": 100,
+      "items": [
+        {
+          "id": "dolor",
+          "titulo": "1. Intensidad del dolor",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "cuidado",
+          "titulo": "2. Cuidados personales (lavarse, vestirse)",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "levantar",
+          "titulo": "3. Levantar peso",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "caminar",
+          "titulo": "4. Caminar",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "sentado",
+          "titulo": "5. Estar sentado",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "de_pie",
+          "titulo": "6. Estar de pie",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "dormir",
+          "titulo": "7. Dormir",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "sexual",
+          "titulo": "8. Vida sexual",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "social",
+          "titulo": "9. Vida social",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "viajar",
+          "titulo": "10. Viajar",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          20,
+          "Discapacidad mínima (0–20 %)",
+          "ok"
+        ],
+        [
+          40,
+          "Discapacidad moderada (21–40 %)",
+          "aviso"
+        ],
+        [
+          60,
+          "Discapacidad grave (41–60 %)",
+          "alerta"
+        ],
+        [
+          80,
+          "Discapacidad incapacitante (61–80 %)",
+          "alerta"
+        ],
+        [
+          100,
+          "Postrado en cama o magnifica sus síntomas (81–100 %)",
+          "alerta"
+        ]
+      ]
+    },
+    {
+      "id": "ndi",
+      "version": "1",
+      "nombre": "NDI",
+      "calculo": "prorrateo",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": 3,
+      "min": 0,
+      "max": 50,
+      "items": [
+        {
+          "id": "dolor",
+          "titulo": "1. Intensidad del dolor de cuello",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "cuidado",
+          "titulo": "2. Cuidados personales (lavarse, vestirse)",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "levantar",
+          "titulo": "3. Levantar peso",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "lectura",
+          "titulo": "4. Lectura",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "cefalea",
+          "titulo": "5. Dolor de cabeza",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "concentracion",
+          "titulo": "6. Concentración",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "trabajo",
+          "titulo": "7. Trabajo",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "conducir",
+          "titulo": "8. Manejar",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "dormir",
+          "titulo": "9. Dormir",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        },
+        {
+          "id": "recreacion",
+          "titulo": "10. Recreación",
+          "abreviatura": null,
+          "opcional": true,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          4,
+          "Sin discapacidad (0–4)",
+          "ok"
+        ],
+        [
+          14,
+          "Discapacidad leve (5–14)",
+          "ok"
+        ],
+        [
+          24,
+          "Discapacidad moderada (15–24)",
+          "aviso"
+        ],
+        [
+          34,
+          "Discapacidad grave (25–34)",
+          "alerta"
+        ],
+        [
+          50,
+          "Discapacidad completa (35–50)",
+          "alerta"
+        ]
+      ]
+    },
+    {
+      "id": "ena_dolor",
+      "version": "1",
+      "nombre": "ENA de dolor",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 0,
+      "max": 10,
+      "items": [
+        {
+          "id": "dolor",
+          "titulo": "Intensidad del dolor",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "0",
+              0
+            ],
+            [
+              "1",
+              1
+            ],
+            [
+              "2",
+              2
+            ],
+            [
+              "3",
+              3
+            ],
+            [
+              "4",
+              4
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "6",
+              6
+            ],
+            [
+              "7",
+              7
+            ],
+            [
+              "8",
+              8
+            ],
+            [
+              "9",
+              9
+            ],
+            [
+              "10",
+              10
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          0,
+          "Sin dolor",
+          "ok"
+        ],
+        [
+          3,
+          "Dolor leve (1–3)",
+          "ok"
+        ],
+        [
+          6,
+          "Dolor moderado (4–6)",
+          "aviso"
+        ],
+        [
+          10,
+          "Dolor intenso (7–10)",
+          "alerta"
+        ]
+      ]
+    },
+    {
+      "id": "barthel",
+      "version": "1",
+      "nombre": "Barthel",
+      "calculo": "suma",
+      "no_valorable": "anula",
+      "avisar_omitidas_desde": null,
+      "min": 0,
+      "max": 100,
+      "items": [
+        {
+          "id": "comer",
+          "titulo": "Comer",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "10",
+              10
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        },
+        {
+          "id": "banarse",
+          "titulo": "Bañarse",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        },
+        {
+          "id": "arreglo",
+          "titulo": "Arreglarse (lavarse la cara, peinarse, afeitarse, dientes)",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        },
+        {
+          "id": "vestir",
+          "titulo": "Vestirse",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "10",
+              10
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        },
+        {
+          "id": "heces",
+          "titulo": "Deposiciones",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "10",
+              10
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        },
+        {
+          "id": "orina",
+          "titulo": "Micción",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "10",
+              10
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        },
+        {
+          "id": "retrete",
+          "titulo": "Uso del retrete",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "10",
+              10
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        },
+        {
+          "id": "traslado",
+          "titulo": "Trasladarse (cama a sillón)",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "15",
+              15
+            ],
+            [
+              "10",
+              10
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        },
+        {
+          "id": "deamb",
+          "titulo": "Deambulación",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "15",
+              15
+            ],
+            [
+              "10",
+              10
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        },
+        {
+          "id": "escal",
+          "titulo": "Subir y bajar escaleras",
+          "abreviatura": null,
+          "opcional": false,
+          "opciones": [
+            [
+              "10",
+              10
+            ],
+            [
+              "5",
+              5
+            ],
+            [
+              "0",
+              0
+            ]
+          ]
+        }
+      ],
+      "bandas": [
+        [
+          20,
+          "Dependencia total (0–20)",
+          "alerta"
+        ],
+        [
+          60,
+          "Dependencia grave (21–60)",
+          "alerta"
+        ],
+        [
+          90,
+          "Dependencia moderada (61–90)",
+          "aviso"
+        ],
+        [
+          99,
+          "Dependencia escasa (91–99)",
+          "ok"
+        ],
+        [
+          100,
+          "Independiente (100)",
+          "ok"
+        ]
+      ]
+    }
+  ],
+  "casos": [
+    {
+      "escala": "glasgow",
+      "nota": "O4 V5 M6 = 15",
+      "respuestas": {
+        "ocular": "4",
+        "verbal": "5",
+        "motora": "6"
+      },
+      "esperado": {
+        "puntaje": 15,
+        "interpretacion": "Leve (13–15)",
+        "tono": "ok",
+        "detalle": "O4 V5 M6",
+        "avisos": []
+      }
+    },
+    {
+      "escala": "glasgow",
+      "nota": "O3 V4 M5 = 12, moderado",
+      "respuestas": {
+        "ocular": "3",
+        "verbal": "4",
+        "motora": "5"
+      },
+      "esperado": {
+        "puntaje": 12,
+        "interpretacion": "Moderado (9–12)",
+        "tono": "aviso",
+        "detalle": "O3 V4 M5",
+        "avisos": []
+      }
+    },
+    {
+      "escala": "glasgow",
+      "nota": "O2 V2 M4 = 8, grave",
+      "respuestas": {
+        "ocular": "2",
+        "verbal": "2",
+        "motora": "4"
+      },
+      "esperado": {
+        "puntaje": 8,
+        "interpretacion": "Grave (3–8)",
+        "tono": "alerta",
+        "detalle": "O2 V2 M4",
+        "avisos": []
+      }
+    },
+    {
+      "escala": "glasgow",
+      "nota": "mínimo 3",
+      "respuestas": {
+        "ocular": "1",
+        "verbal": "1",
+        "motora": "1"
+      },
+      "esperado": {
+        "puntaje": 3,
+        "interpretacion": "Grave (3–8)",
+        "tono": "alerta",
+        "detalle": "O1 V1 M1",
+        "avisos": []
+      }
+    },
+    {
+      "escala": "glasgow",
+      "nota": "intubado: sin total, O3 VT M5",
+      "respuestas": {
+        "ocular": "3",
+        "verbal": "T",
+        "motora": "5"
+      },
+      "esperado": {
+        "puntaje": null,
+        "interpretacion": "Sin total: hay un componente no valorable. Se registra por componentes.",
+        "tono": "neutral",
+        "detalle": "O3 VT M5",
+        "avisos": []
+      }
+    },
+    {
+      "escala": "glasgow",
+      "nota": "ojos cerrados por edema",
+      "respuestas": {
+        "ocular": "C",
+        "verbal": "4",
+        "motora": "6"
+      },
+      "esperado": {
+        "puntaje": null,
+        "interpretacion": "Sin total: hay un componente no valorable. Se registra por componentes.",
+        "tono": "neutral",
+        "detalle": "OC V4 M6",
+        "avisos": []
+      }
+    },
+    {
+      "escala": "nihss",
+      "nota": "sin déficit",
+      "respuestas": {
+        "2": "0",
+        "3": "0",
+        "4": "0",
+        "7": "0",
+        "8": "0",
+        "9": "0",
+        "10": "0",
+        "11": "0",
+        "1a": "0",
+        "1b": "0",
+        "1c": "0",
+        "5a": "0",
+        "5b": "0",
+        "6a": "0",
+        "6b": "0"
+      },
+      "esperado": {
+        "puntaje": 0,
+        "interpretacion": "Sin déficit medible",
+        "tono": "ok",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "nihss",
+      "nota": "máximo 42",
+      "respuestas": {
+        "2": "2",
+        "3": "3",
+        "4": "3",
+        "7": "2",
+        "8": "2",
+        "9": "3",
+        "10": "2",
+        "11": "2",
+        "1a": "3",
+        "1b": "2",
+        "1c": "2",
+        "5a": "4",
+        "5b": "4",
+        "6a": "4",
+        "6b": "4"
+      },
+      "esperado": {
+        "puntaje": 42,
+        "interpretacion": "Déficit grave (21–42)",
+        "tono": "alerta",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "nihss",
+      "nota": "hemiparesia derecha con afasia; brazo izquierdo amputado (UN cuenta 0): 1+2+3+2+2+1 = 11",
+      "respuestas": {
+        "2": "0",
+        "3": "0",
+        "4": "2",
+        "7": "0",
+        "8": "0",
+        "9": "2",
+        "10": "1",
+        "11": "0",
+        "1a": "0",
+        "1b": "1",
+        "1c": "0",
+        "5a": "UN",
+        "5b": "3",
+        "6a": "0",
+        "6b": "2"
+      },
+      "esperado": {
+        "puntaje": 11,
+        "interpretacion": "Déficit moderado (5–15)",
+        "tono": "aviso",
+        "detalle": "No valorable: 5a",
+        "avisos": [
+          "No valorable (cuenta 0): 5a. Motor del brazo izquierdo."
+        ]
+      }
+    },
+    {
+      "escala": "hunt_hess",
+      "nota": "grado III",
+      "respuestas": {
+        "grado": "III"
+      },
+      "esperado": {
+        "puntaje": 3,
+        "interpretacion": "Grado III",
+        "tono": "aviso",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "fisher_modificada",
+      "nota": "grado 4",
+      "respuestas": {
+        "grado": "4"
+      },
+      "esperado": {
+        "puntaje": 4,
+        "interpretacion": "Grado 4",
+        "tono": "alerta",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "wfns",
+      "nota": "grado II",
+      "respuestas": {
+        "grado": "II"
+      },
+      "esperado": {
+        "puntaje": 2,
+        "interpretacion": "Grado II",
+        "tono": "ok",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "spetzler_martin",
+      "nota": "grado I",
+      "respuestas": {
+        "tamano": "1",
+        "elocuencia": "0",
+        "drenaje": "0"
+      },
+      "esperado": {
+        "puntaje": 1,
+        "interpretacion": "Grado I · clase A",
+        "tono": "ok",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "spetzler_martin",
+      "nota": "grado III: mediano, elocuente, superficial",
+      "respuestas": {
+        "tamano": "2",
+        "elocuencia": "1",
+        "drenaje": "0"
+      },
+      "esperado": {
+        "puntaje": 3,
+        "interpretacion": "Grado III · clase B",
+        "tono": "aviso",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "spetzler_martin",
+      "nota": "grado V",
+      "respuestas": {
+        "tamano": "3",
+        "elocuencia": "1",
+        "drenaje": "1"
+      },
+      "esperado": {
+        "puntaje": 5,
+        "interpretacion": "Grado V · clase C",
+        "tono": "alerta",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "rankin",
+      "nota": "mRS 3",
+      "respuestas": {
+        "grado": "3"
+      },
+      "esperado": {
+        "puntaje": 3,
+        "interpretacion": "Discapacidad moderada",
+        "tono": "aviso",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "asia",
+      "nota": "AIS D",
+      "respuestas": {
+        "grado": "D"
+      },
+      "esperado": {
+        "puntaje": 4,
+        "interpretacion": "AIS D: motora incompleta",
+        "tono": "aviso",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "asia",
+      "nota": "AIS A",
+      "respuestas": {
+        "grado": "A"
+      },
+      "esperado": {
+        "puntaje": 1,
+        "interpretacion": "AIS A: lesión completa",
+        "tono": "alerta",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "karnofsky",
+      "nota": "KPS 70",
+      "respuestas": {
+        "kps": "70"
+      },
+      "esperado": {
+        "puntaje": 70,
+        "interpretacion": "Incapaz de trabajar; vive en casa con ayuda variable (50–70)",
+        "tono": "aviso",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "karnofsky",
+      "nota": "KPS 80",
+      "respuestas": {
+        "kps": "80"
+      },
+      "esperado": {
+        "puntaje": 80,
+        "interpretacion": "Actividad normal y trabajo sin cuidados especiales (80–100)",
+        "tono": "ok",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "mjoa",
+      "nota": "sin alteración: 18",
+      "respuestas": {
+        "motor_superior": "5",
+        "motor_inferior": "7",
+        "sensibilidad": "3",
+        "esfinter": "3"
+      },
+      "esperado": {
+        "puntaje": 18,
+        "interpretacion": "Sin alteración (18)",
+        "tono": "ok",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "mjoa",
+      "nota": "4+5+2+3 = 14, moderada",
+      "respuestas": {
+        "motor_superior": "4",
+        "motor_inferior": "5",
+        "sensibilidad": "2",
+        "esfinter": "3"
+      },
+      "esperado": {
+        "puntaje": 14,
+        "interpretacion": "Mielopatía moderada (12–14)",
+        "tono": "aviso",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "mjoa",
+      "nota": "3+4+2+2 = 11, grave",
+      "respuestas": {
+        "motor_superior": "3",
+        "motor_inferior": "4",
+        "sensibilidad": "2",
+        "esfinter": "2"
+      },
+      "esperado": {
+        "puntaje": 11,
+        "interpretacion": "Mielopatía grave (0–11)",
+        "tono": "alerta",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "oswestry",
+      "nota": "todas en 5: 100 %",
+      "respuestas": {
+        "dolor": "5",
+        "cuidado": "5",
+        "levantar": "5",
+        "caminar": "5",
+        "sentado": "5",
+        "de_pie": "5",
+        "dormir": "5",
+        "sexual": "5",
+        "social": "5",
+        "viajar": "5"
+      },
+      "esperado": {
+        "puntaje": 100,
+        "interpretacion": "Postrado en cama o magnifica sus síntomas (81–100 %)",
+        "tono": "alerta",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "oswestry",
+      "nota": "Fairbank: 16 de 50 = 32 %",
+      "respuestas": {
+        "dolor": "2",
+        "cuidado": "2",
+        "levantar": "2",
+        "caminar": "2",
+        "sentado": "2",
+        "de_pie": "2",
+        "dormir": "2",
+        "sexual": "2",
+        "social": "0",
+        "viajar": "0"
+      },
+      "esperado": {
+        "puntaje": 32,
+        "interpretacion": "Discapacidad moderada (21–40 %)",
+        "tono": "aviso",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "oswestry",
+      "nota": "Fairbank: una omitida, 16 de 45 = 35.6 % (el ejemplo publicado trunca a 35.5)",
+      "respuestas": {
+        "dolor": "2",
+        "cuidado": "2",
+        "levantar": "2",
+        "caminar": "2",
+        "sentado": "2",
+        "de_pie": "2",
+        "dormir": "2",
+        "social": "2",
+        "viajar": "0"
+      },
+      "esperado": {
+        "puntaje": 35.6,
+        "interpretacion": "Discapacidad moderada (21–40 %)",
+        "tono": "aviso",
+        "detalle": "1 sección sin responder",
+        "avisos": []
+      }
+    },
+    {
+      "escala": "oswestry",
+      "nota": "tres omitidas: avisa",
+      "respuestas": {
+        "dolor": "3",
+        "cuidado": "3",
+        "levantar": "3",
+        "caminar": "3",
+        "sentado": "3",
+        "de_pie": "3",
+        "dormir": "3"
+      },
+      "esperado": {
+        "puntaje": 60,
+        "interpretacion": "Discapacidad grave (41–60 %)",
+        "tono": "alerta",
+        "detalle": "3 secciones sin responder",
+        "avisos": [
+          "Con 3 secciones sin responder el resultado puede no ser válido (verificar)."
+        ]
+      }
+    },
+    {
+      "escala": "ndi",
+      "nota": "14 de 50: leve",
+      "respuestas": {
+        "dolor": "2",
+        "cuidado": "1",
+        "levantar": "2",
+        "lectura": "1",
+        "cefalea": "2",
+        "concentracion": "1",
+        "trabajo": "2",
+        "conducir": "1",
+        "dormir": "1",
+        "recreacion": "1"
+      },
+      "esperado": {
+        "puntaje": 14,
+        "interpretacion": "Discapacidad leve (5–14)",
+        "tono": "ok",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "ndi",
+      "nota": "una omitida: 12 en 9 secciones, prorrateado a 13.3",
+      "respuestas": {
+        "dolor": "2",
+        "cuidado": "1",
+        "levantar": "2",
+        "lectura": "1",
+        "cefalea": "2",
+        "concentracion": "1",
+        "trabajo": "2",
+        "dormir": "1",
+        "recreacion": "0"
+      },
+      "esperado": {
+        "puntaje": 13.3,
+        "interpretacion": "Discapacidad leve (5–14)",
+        "tono": "ok",
+        "detalle": "1 sección sin responder",
+        "avisos": []
+      }
+    },
+    {
+      "escala": "ndi",
+      "nota": "35: completa",
+      "respuestas": {
+        "dolor": "4",
+        "cuidado": "3",
+        "levantar": "4",
+        "lectura": "3",
+        "cefalea": "4",
+        "concentracion": "4",
+        "trabajo": "4",
+        "conducir": "3",
+        "dormir": "3",
+        "recreacion": "3"
+      },
+      "esperado": {
+        "puntaje": 35,
+        "interpretacion": "Discapacidad completa (35–50)",
+        "tono": "alerta",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "ena_dolor",
+      "nota": "sin dolor",
+      "respuestas": {
+        "dolor": "0"
+      },
+      "esperado": {
+        "puntaje": 0,
+        "interpretacion": "Sin dolor",
+        "tono": "ok",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "ena_dolor",
+      "nota": "5: moderado",
+      "respuestas": {
+        "dolor": "5"
+      },
+      "esperado": {
+        "puntaje": 5,
+        "interpretacion": "Dolor moderado (4–6)",
+        "tono": "aviso",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "ena_dolor",
+      "nota": "7: intenso",
+      "respuestas": {
+        "dolor": "7"
+      },
+      "esperado": {
+        "puntaje": 7,
+        "interpretacion": "Dolor intenso (7–10)",
+        "tono": "alerta",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "barthel",
+      "nota": "independiente: 100",
+      "respuestas": {
+        "comer": "10",
+        "banarse": "5",
+        "arreglo": "5",
+        "vestir": "10",
+        "heces": "10",
+        "orina": "10",
+        "retrete": "10",
+        "traslado": "15",
+        "deamb": "15",
+        "escal": "10"
+      },
+      "esperado": {
+        "puntaje": 100,
+        "interpretacion": "Independiente (100)",
+        "tono": "ok",
+        "detalle": null,
+        "avisos": []
+      }
+    },
+    {
+      "escala": "barthel",
+      "nota": "60: dependencia grave",
+      "respuestas": {
+        "comer": "10",
+        "banarse": "0",
+        "arreglo": "5",
+        "vestir": "5",
+        "heces": "10",
+        "orina": "10",
+        "retrete": "10",
+        "traslado": "5",
+        "deamb": "5",
+        "escal": "0"
+      },
+      "esperado": {
+        "puntaje": 60,
+        "interpretacion": "Dependencia grave (21–60)",
+        "tono": "alerta",
+        "detalle": null,
+        "avisos": []
+      }
+    }
+  ],
+  "invalidos": [
+    {
+      "escala": "glasgow",
+      "nota": "falta la motora",
+      "respuestas": {
+        "ocular": "4",
+        "verbal": "5"
+      },
+      "errores": [
+        "Falta responder «Respuesta motora (M)»."
+      ]
+    },
+    {
+      "escala": "glasgow",
+      "nota": "opción que no existe",
+      "respuestas": {
+        "ocular": "4",
+        "verbal": "9",
+        "motora": "6"
+      },
+      "errores": [
+        "La respuesta de «Respuesta verbal (V)» no es una opción de Glasgow."
+      ]
+    },
+    {
+      "escala": "mjoa",
+      "nota": "ítem ajeno",
+      "respuestas": {
+        "motor_superior": "5",
+        "motor_inferior": "7",
+        "sensibilidad": "3",
+        "esfinter": "3",
+        "extra": "1"
+      },
+      "errores": [
+        "La respuesta «extra» no pertenece a mJOA."
+      ]
+    },
+    {
+      "escala": "oswestry",
+      "nota": "ninguna sección",
+      "respuestas": {},
+      "errores": [
+        "Responde al menos una sección."
+      ]
+    }
+  ]
+}

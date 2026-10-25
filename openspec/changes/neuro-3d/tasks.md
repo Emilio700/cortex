@@ -38,7 +38,7 @@
 - [x] 5.5 Menú «Imagen y señales», rutas por permiso y botón en la pestaña Imágenes
 - [x] 5.6 `vendor-three` en `vite.config.mts`
 - [x] 5.7 Recorrido guiado y anclas válidas
-- [x] 5.8 DESIGN §4.11 y CHANGELOG
+- [x] 5.8 DESIGN §4.13 y CHANGELOG
 
 ## 6. Pendiente (fase «modelo del paciente»)
 - [ ] 6.1 Capa glTF que cargue las mallas del segmentador con `CapaAnatomica`

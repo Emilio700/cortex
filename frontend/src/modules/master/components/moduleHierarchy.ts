@@ -73,6 +73,8 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
       { label: 'Recetas', actions: ['prescriptions.read', 'prescriptions.create', 'prescriptions.send_email'] },
       { label: 'Certificados', actions: ['medical_certificates.read', 'medical_certificates.create', 'medical_certificates.send_email'] },
       { label: 'Perfil Médico', actions: ['doctor_profile.read', 'doctor_profile.update'] },
+      // Escalas neurológicas (Cortex, feat/escalas-neuro)
+      { label: 'Escalas neurológicas', actions: ['clinical_scales.read', 'clinical_scales.write'] },
     ],
   },
   // ── Imagen y señales (tramo C: Neuro 3D) ──
@@ -96,6 +98,9 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
       { label: 'Notificaciones', actions: ['notifications.read'] },
       { label: 'Configuración Global', actions: ['settings.global'] },
       { label: 'Gestión de Permisos', actions: ['permissions.manage'] },
+      // base-modulos-extra (tramo A)
+      { label: 'Módulos opcionales', actions: ['modulos.manage'] },
+      { label: 'Estado de servicios', actions: ['servicios.read'] },
     ],
   },
 ]
