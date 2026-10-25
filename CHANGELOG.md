@@ -65,6 +65,19 @@ Todos los cambios notables de Cortex. Formato basado en
   carga o algo truena antes de que exista la primera barrera de React, la pantalla
   dice qué pasó y ofrece recargar. Antes ese caso se veía como una página en blanco,
   sin mensaje y sin forma de saber por qué.
+<!-- Tramo C · Atlas Neuro 3D -->
+- **Atlas Neuro 3D** (`/imagen/atlas-neuro`, grupo «Imagen y señales» del menú, y
+  botón en la pestaña Imágenes del expediente): encéfalo con lóbulos, ínsula,
+  cerebelo y tronco; ventrículos; polígono de Willis; vértebras C1 a sacro con
+  discos, médula por segmentos y raíces, generados en código. Capas con opacidad,
+  pelado animado, cortes sagital/axial/coronal, columna despiezada, vías
+  esquemáticas y flujo opcional en las arterias. Al tocar una raíz se encienden su
+  segmento medular, el disco que cruza, las vértebras de su agujero y su dermatoma
+  (con el punto clave de ASIA). Modo «Explicar al paciente» con marcas de nivel
+  (hernia, estenosis foraminal) y de región; captura PNG y, con el paciente en
+  contexto y su consentimiento, guardado en el expediente. Aviso fijo de modelo
+  esquemático; sin WebGL lo dice. Permiso nuevo `neuro3d.read` (médico,
+  administración y master). Dependencia `three` 0.186.1, en su propio paquete.
 
 ### Cambiado
 - El visor ocupa la altura de la pantalla en vez de ser un cuadrado, y su barra se
