@@ -10,7 +10,7 @@ import type { Recorrido } from '../tipos'
 export const RECORRIDOS_COLUMNA_RX: Recorrido[] = [
   {
     id: 'columna-radiografia',
-    version: 1,
+    version: 2,
     titulo: 'Columna desde radiografía',
     resumen:
       'Marca puntos sobre la lateral y la AP del paciente para medir sus curvas y ajustar la columna de Neuro 3D a ellas.',
@@ -74,7 +74,7 @@ export const RECORRIDOS_COLUMNA_RX: Recorrido[] = [
         elemento: 'rx-guardar',
         titulo: 'Guardar y verlo en 3D',
         texto:
-          'Al guardar, el servidor vuelve a calcular las mediciones; solo dice «Guardado» cuando lo confirmó, y te avisa si sus números no coinciden con la sugerencia. Luego <b>Ver en Neuro 3D</b> abre el modelo con el origen «Desde radiografía».',
+          'Al guardar, el servidor vuelve a calcular las mediciones; solo dice «Guardado» cuando lo confirmó, y te avisa si sus números no coinciden con la sugerencia. Luego <b>Ver en Neuro 3D</b> abre el modelo con el origen «Radiografía».',
         lado: 'left',
       },
     ],

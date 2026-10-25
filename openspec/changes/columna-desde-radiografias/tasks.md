@@ -38,6 +38,7 @@
 - [x] 6.1 Origen «radiografía»: columna deformada y aviso del origen
 - [x] 6.2 Mediciones junto al modelo
 - [x] 6.3 Entrada temporal del origen (se reemplaza por `SelectorOrigen` de TC al integrar)
+- [x] 6.4 Integración con TC: opción «Radiografía» en `SelectorOrigen` (`servicios/origenRadiografia.ts`), migración 0054 detrás de la 0053 y un solo «origen pedido» (`servicios/origenPedido.ts`) para la radiografía y el visor de TC
 
 ## 7. Cierre
 - [x] 7.1 Recorrido guiado y `anclas.test.ts`

@@ -118,9 +118,9 @@ Todos los cambios notables de Cortex. Formato basado en
   cada una con su fuente. Sin escala sólo hay ángulos y proporciones; los mm salen
   del DICOM o de una distancia conocida, y se dice cuál. El servidor recalcula y
   guarda (tabla `columna_ajustes_rx`, migración 0054, anulación con motivo);
-  permisos `spine_rx.read`/`write` para el médico. En Neuro 3D, el origen «Desde
-  radiografía» dobla la columna esquemática a esas medidas con su aviso de
-  aproximación. Lo marcado «(verificar)» espera revisión médica.
+  permisos `spine_rx.read`/`write` para el médico. En Neuro 3D, el origen
+  «Radiografía» del mismo selector que la TC dobla la columna esquemática a esas
+  medidas con su aviso de aproximación. Lo marcado «(verificar)» espera revisión médica.
 
 ### Cambiado
 - El visor ocupa la altura de la pantalla en vez de ser un cuadrado, y su barra se
