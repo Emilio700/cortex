@@ -31,6 +31,8 @@ export const NOMBRE_DE_SECCION: Record<string, string> = {
   episodios: 'Episodios',
   consentimientos: 'Consentimientos',
   resumen_clinico: 'Resumen clínico',
+  // Escalas neurológicas (Cortex, feat/escalas-neuro)
+  escalas: 'Escalas neurológicas',
 }
 
 const hora = (iso: string) => formatearInstante(iso, { dateStyle: 'medium', timeStyle: 'short' })

@@ -158,9 +158,9 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
   },
   {
     id: 'doctora-consulta',
-    version: 15,
+    version: 16,
     titulo: 'La consulta, paso a paso',
-    resumen: 'Signos vitales, nota, receta, plan, certificado y cómo finalizar sin perder nada.',
+    resumen: 'Signos vitales, nota, receta, plan, escalas, certificado y cómo finalizar sin perder nada.',
     grupo: 'Consulta médica',
     ruta: '/doctor/consultation/:appointmentId',
     requiere: ['doctor.appointments.read'],
@@ -185,7 +185,7 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'consulta-pestanas',
         titulo: 'Pestañas del paciente',
         texto:
-          '<b>Consulta</b> es la atención de hoy. <b>Expediente</b> es el mismo expediente del paciente, con sus secciones (Resumen, Consultas, Estudios, Documentos, Imágenes, Consentimientos…), y se consulta sin salir: lo que llevas escrito en la nota no se pierde al cambiar de pestaña. En su sección <b>Estudios</b> está la gráfica de cómo han ido las valoraciones de sus resultados.',
+          '<b>Consulta</b> es la atención de hoy. <b>Expediente</b> es el mismo expediente del paciente, con sus secciones (Resumen, Consultas, Estudios, Escalas, Documentos, Imágenes, Consentimientos…), y se consulta sin salir: lo que llevas escrito en la nota no se pierde al cambiar de pestaña. En su sección <b>Estudios</b> está la gráfica de cómo han ido las valoraciones de sus resultados, y en <b>Escalas</b>, la evolución de cada escala (por ejemplo, el ODI antes y después de la cirugía).',
         lado: 'bottom',
       },
       {
@@ -255,16 +255,46 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
           'Arriba, <b>Resultados pendientes del paciente</b> junta los resultados de consultas anteriores que siguen sin revisar o con un crítico abierto; <b>Revisar</b> los abre con la consulta de hoy. En los estudios de esta consulta, <b>Revisar resultado</b> abre el archivo y el formulario. Revisarlo aquí, con el paciente y en la consulta de hoy, cierra la incidencia si era <b>Crítico</b>. <b>Ver resultado</b> abre el PDF y las fotos en un carrusel. En el menú <b>⋯</b> puedes anexar un archivo (también a una ya revisada), registrar una nota rápida sin archivo o documentar que se lo comunicaste.',
         lado: 'left',
       },
+      // Escalas neurológicas (Cortex, feat/escalas-neuro)
+      {
+        elemento: 'consulta-seccion-escalas-neurologicas',
+        titulo: '4. Escalas neurológicas',
+        texto:
+          'Glasgow, NIHSS, Hunt y Hess, WFNS, Fisher modificada, Spetzler-Martin, Rankin, ASIA, Karnofsky, mJOA, ODI, NDI, dolor (ENA) y Barthel. Viene cerrada: ábrela con <b>Mostrar</b>. Con la sección cerrada, una insignia dice cuántas escalas lleva esta consulta.',
+        lado: 'top',
+      },
+      {
+        // Solo se ve con la sección abierta; si no, se salta.
+        elemento: 'escalas-selector',
+        titulo: 'Elegir la escala',
+        texto:
+          'En <b>¿Qué escala vas a aplicar?</b> eliges una. Cada ítem se responde tocando su opción; el número de la izquierda son sus puntos. Si cambias a otra escala, lo que llevabas respondido en la primera se queda guardado en pantalla hasta que regreses.',
+        lado: 'bottom',
+      },
+      {
+        elemento: 'escalas-resultado',
+        titulo: 'Puntaje sugerido',
+        texto:
+          'Se calcula mientras respondes, con su interpretación y la fuente de la escala. Es una sugerencia: el puntaje que queda en el expediente lo calcula el sistema al guardar. Lo marcado <b>(verificar)</b> está pendiente de revisión médica contra la fuente.',
+        lado: 'left',
+      },
+      {
+        elemento: 'escalas-guardar',
+        titulo: 'Guardar y ver el historial',
+        texto:
+          '<b>Guardar escala</b> se activa cuando no falta ningún ítem. Solo después de que el sistema la registra aparece el aviso verde con el puntaje guardado; si algo falla, tus respuestas se quedan y puedes reintentar. Abajo está el <b>Historial</b> de esa escala; una mal capturada se <b>Anula</b> con su motivo: no se borra, queda tachada.',
+        lado: 'left',
+      },
       {
         elemento: 'consulta-seccion-consentimiento-informado',
-        titulo: '4. Consentimiento informado',
+        titulo: '5. Consentimiento informado',
         texto:
           'Para procedimientos: lo preparas aquí y el paciente lo revisa y firma en la misma pantalla.',
         lado: 'top',
       },
       {
         elemento: 'consulta-seccion-certificado-medico',
-        titulo: '5. Certificado médico',
+        titulo: '6. Certificado médico',
         texto: 'Incapacidad, aptitud u otro. Ábrelo con <b>Mostrar</b> sólo si lo necesitas.',
         lado: 'top',
       },
@@ -438,9 +468,9 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
   },
   {
     id: 'doctora-expediente',
-    version: 8,
+    version: 9,
     titulo: 'El expediente de un paciente',
-    resumen: 'Todo lo de un paciente en un solo lugar: resumen, consultas, estudios, documentos, imágenes y consentimientos.',
+    resumen: 'Todo lo de un paciente en un solo lugar: resumen, consultas, estudios, escalas, documentos, imágenes y consentimientos.',
     grupo: 'Consulta médica',
     ruta: '/pacientes/:patientId/expediente',
     requiere: ['patients.read'],
@@ -475,13 +505,21 @@ export const RECORRIDOS_DOCTORA: Recorrido[] = [
         elemento: 'expediente-pestanas',
         titulo: 'Sus secciones',
         texto:
-          '<b>Resumen</b>, <b>Consultas</b> (cada cita con su nota, receta y certificado), <b>Estudios</b>, <b>Documentos</b>, <b>Imágenes</b>, <b>Consentimientos</b> y <b>Equipo</b>. Cada quien ve las que le tocan: recepción ve la ficha, las citas, los documentos de referencia y si sus estudios ya tienen resultado, sin lo clínico. Cada sección se carga al abrirla, y el expediente recuerda cuál dejaste abierta.',
+          '<b>Resumen</b>, <b>Consultas</b> (cada cita con su nota, receta y certificado), <b>Estudios</b>, <b>Escalas</b>, <b>Documentos</b>, <b>Imágenes</b>, <b>Consentimientos</b> y <b>Equipo</b>. Cada quien ve las que le tocan: recepción ve la ficha, las citas, los documentos de referencia y si sus estudios ya tienen resultado, sin lo clínico. Cada sección se carga al abrirla, y el expediente recuerda cuál dejaste abierta.',
         lado: 'bottom',
       },
       {
         elemento: 'expediente-fotografia',
         titulo: 'Cómo va hoy',
         texto: 'Su última consulta y el motivo, la próxima cita, cuántos estudios esperan resultado o tu revisión y sus últimos resultados con su valoración.',
+        lado: 'top',
+      },
+      // Escalas neurológicas (Cortex, feat/escalas-neuro)
+      {
+        elemento: 'expediente-escalas',
+        titulo: 'Evolución de las escalas',
+        texto:
+          'En <b>Escalas</b> eliges una de las que tiene aplicadas y ves su gráfica en el tiempo, con el cambio escrito desde la primera aplicación (en verde si mejoró, en ámbar si empeoró). Debajo, la tabla con todas, incluidas las anuladas, tachadas y con su motivo; las anuladas no entran en la gráfica.',
         lado: 'top',
       },
       {
