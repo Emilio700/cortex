@@ -31,6 +31,10 @@ export default defineConfig(() => {
             if (id.includes('@coreui/') || id.includes('@popperjs/')) return 'vendor-coreui'
             if (id.includes('i18next')) return 'vendor-i18n'
             if (id.includes('axios')) return 'vendor-http'
+            // El motor del visor solo lo descarga quien abre un estudio, pero
+            // cuando lo abre llega entero: en su propio paquete para que no
+            // arrastre al resto de la aplicación.
+            if (id.includes('@cornerstonejs')) return 'vendor-cornerstone'
             return undefined
           },
         },
@@ -54,6 +58,44 @@ export default defineConfig(() => {
     define: {
       __CORTEX_VERSION__: JSON.stringify(version),
     },
+    // El cargador DICOM crea sus propios workers con `new Worker(new URL(...))`.
+    // Si Vite lo pre-empaqueta, la URL del worker se rompe y el visor no
+    // decodifica nada: se excluye del optimizador y se dejan los workers en ESM.
+    //
+    // Pero al excluirlo, sus códecs —`@cornerstonejs/codec-*` son CommonJS y el
+    // cargador los importa con `import factory from '.../decodewasmjs'`— también
+    // quedaban fuera: Vite los servía tal cual, sin `default`, y el visor moría
+    // con «does not provide an export named 'default'». Se pre-empaquetan sólo
+    // ellos, que es lo que los convierte a ESM con su export por omisión.
+    //
+    // Solo para servir y compilar: dentro de vitest estas dos opciones no hacen
+    // falta y volvían la suite tres veces más lenta (las pruebas de otras
+    // pantallas empezaban a agotar su tiempo de espera).
+    ...(process.env.VITEST
+      ? {}
+      : {
+          optimizeDeps: {
+            exclude: ['@cornerstonejs/dicom-image-loader'],
+            // Los códecs, más los ayudantes CommonJS que también viajan detrás
+            // del cargador: al no pre-empaquetarlos, Vite los sirve crudos y
+            // mueren con «no exporta `default`» (los códecs) o con «no se puede
+            // leer `zlib` de undefined» (`dicom-parser`, un UMD que en modo
+            // módulo pierde `this`).
+            include: [
+              '@cornerstonejs/codec-charls/decodewasmjs',
+              '@cornerstonejs/codec-libjpeg-turbo-8bit/decodewasmjs',
+              '@cornerstonejs/codec-libjxl/decodewasmjs',
+              '@cornerstonejs/codec-openjpeg/decodewasmjs',
+              '@cornerstonejs/codec-openjph/wasmjs',
+              '@cornerstonejs/jpeg-lossless-decoder-js',
+              'dicom-parser',
+              'pako',
+            ],
+          },
+          worker: {
+            format: 'es' as const,
+          },
+        }),
     plugins: [react()],
     resolve: {
       alias: [

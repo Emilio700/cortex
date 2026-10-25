@@ -23,6 +23,9 @@ pyotp>=2.9.0
 qrcode[pil]>=7.4.2
 Pillow>=10.3.0
 boto3>=1.34.0
+# Lectura de cabeceras DICOM para indexar los estudios del paciente sin cargar
+# los píxeles (ver app/services/imagen_medica). MIT: se puede usar en producto.
+pydicom>=2.4.4
 
 
 # PDF Generation

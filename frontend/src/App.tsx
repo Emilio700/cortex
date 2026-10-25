@@ -11,6 +11,7 @@ import './scss/style.scss'
 
 // Auth
 import { AuthProvider } from './shared/context/AuthContext'
+import BarreraDeError from './shared/components/BarreraDeError'
 
 // Tabs
 import { TabsProvider } from './shared/tabs/TabsContext'
@@ -28,6 +29,8 @@ const Login = React.lazy(() => import('./views/pages/login/Login'))
 const ForgotPasswordPage = React.lazy(() => import('./views/pages/login/ForgotPasswordPage'))
 const ResetPasswordPage = React.lazy(() => import('./views/pages/login/ResetPasswordPage'))
 const ForceChangePasswordPage = React.lazy(() => import('./views/pages/login/ForceChangePasswordPage'))
+// El estudio visto desde un enlace temporal: pública a propósito (sin sesión).
+const VisorCompartidoPage = React.lazy(() => import('./modules/imagen/paginas/VisorCompartidoPage'))
 const Page403 = React.lazy(() => import('./views/pages/page403/Page403'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
@@ -58,33 +61,41 @@ const App = () => {
   return (
     <AuthProvider>
       <HashRouter>
-        <Suspense
-        fallback={
-          <div className="pt-3 text-center">
-            <CSpinner color="primary" variant="grow" />
-          </div>
-        }
-      >
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/force-change-password" element={<ForceChangePasswordPage />} />
-          <Route path="/403" element={<Page403 />} />
-          <Route path="/404" element={<Page404 />} />
-          <Route path="/500" element={<Page500 />} />
-          <Route
-            path="*"
-            element={
-              <ProtectedRoute>
-                <PestanasConInicio>
-                  <DefaultLayout />
-                </PestanasConInicio>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Suspense>
+        {/*
+          * Última barrera: si algo falla por encima de las pestañas (el armazón,
+          * el inicio de sesión, una descarga que no llega), se ve un mensaje con
+          * salida en vez de una página en blanco.
+          */}
+        <BarreraDeError>
+          <Suspense
+          fallback={
+            <div className="pt-3 text-center">
+              <CSpinner color="primary" variant="grow" />
+            </div>
+          }
+        >
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/force-change-password" element={<ForceChangePasswordPage />} />
+            <Route path="/compartido/:token" element={<VisorCompartidoPage />} />
+            <Route path="/403" element={<Page403 />} />
+            <Route path="/404" element={<Page404 />} />
+            <Route path="/500" element={<Page500 />} />
+            <Route
+              path="*"
+              element={
+                <ProtectedRoute>
+                  <PestanasConInicio>
+                    <DefaultLayout />
+                  </PestanasConInicio>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Suspense>
+        </BarreraDeError>
       </HashRouter>
     </AuthProvider>
   )

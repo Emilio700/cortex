@@ -37,6 +37,9 @@ const DoctorAppointmentsPage = React.lazy(() => import('./modules/doctor/pages/D
 const ConsultationPage = React.lazy(() => import('./modules/doctor/pages/ConsultationPage'))
 const DoctorProfilePage = React.lazy(() => import('./modules/doctor/pages/DoctorProfilePage'))
 const ExpedientePage = React.lazy(() => import('./modules/expediente/ExpedientePage'))
+// El visor se carga aparte: quien no abre un estudio no descarga el motor de
+// imagen (Cornerstone y sus decodificadores pesan más que el resto de la app).
+const VisorEstudioPage = React.lazy(() => import('./modules/imagen/paginas/VisorEstudioPage'))
 const ResultsInboxPage = React.lazy(() => import('./modules/doctor/pages/ResultsInboxPage'))
 
 // Admin Module
@@ -113,6 +116,16 @@ const routes: Route[] = [
     name: 'Expediente',
     element: ExpedientePage,
     roles: orMaster(Role.SECRETARIA, Role.ADMIN, Role.DOCTOR),
+  },
+  {
+    // Visor de estudios DICOM. Cuelga del paciente para que la imagen sea parte
+    // del expediente y no un archivo suelto. Carga los cortes del servidor con
+    // la sesión de la persona; no hay ninguna URL pública.
+    path: '/pacientes/:patientId/estudios/:studyId',
+    requires: ['clinical_images.read'],
+    name: 'Visor de estudios',
+    element: VisorEstudioPage,
+    roles: orMaster(Role.DOCTOR, Role.ADMIN),
   },
   {
     // Mostrador de órdenes: entregar la orden (O-09) y subir el resultado

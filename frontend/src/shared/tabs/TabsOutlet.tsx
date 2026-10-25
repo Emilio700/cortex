@@ -19,6 +19,7 @@ import React, { Suspense, useEffect, useRef } from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import { CSpinner } from '@coreui/react-pro'
 import { useTabs } from './TabsContext'
+import BarreraDeError from '../components/BarreraDeError'
 import { buildRouteEntries, matchRoutePath } from './routeMatch'
 import { AccessGuard } from '../guards/AccessGuard'
 import { TabKeyContext } from './cambiosSinGuardar'
@@ -86,26 +87,28 @@ const TabsOutlet: React.FC = () => {
                           * guardar en la pestaña correcta y no en la que esté al frente.
                           */}
                         <TabKeyContext.Provider value={tab.key}>
-                            <React.Suspense fallback={<CSpinner color="primary" />}>
-                                <Routes location={tabLocation}>
-                                    <Route
-                                        path={route.path}
-                                        element={
-                                            // Con permiso y rol a la vez: el menú ya
-                                            // ofrece la pantalla por permiso, y si aquí
-                                            // sólo se mirara el rol, conceder un permiso
-                                            // mostraría la opción pero la abriría en /403.
-                                            requires?.length || roles?.length ? (
-                                                <AccessGuard requires={requires} allowedRoles={roles} alNegar="pestana">
+                            <BarreraDeError key={tab.key}>
+                                <React.Suspense fallback={<CSpinner color="primary" />}>
+                                    <Routes location={tabLocation}>
+                                        <Route
+                                            path={route.path}
+                                            element={
+                                                // Con permiso y rol a la vez: el menú ya
+                                                // ofrece la pantalla por permiso, y si aquí
+                                                // sólo se mirara el rol, conceder un permiso
+                                                // mostraría la opción pero la abriría en /403.
+                                                requires?.length || roles?.length ? (
+                                                    <AccessGuard requires={requires} allowedRoles={roles} alNegar="pestana">
+                                                        <Element />
+                                                    </AccessGuard>
+                                                ) : (
                                                     <Element />
-                                                </AccessGuard>
-                                            ) : (
-                                                <Element />
-                                            )
-                                        }
-                                    />
-                                </Routes>
-                            </React.Suspense>
+                                                )
+                                            }
+                                        />
+                                    </Routes>
+                                </React.Suspense>
+                            </BarreraDeError>
                         </TabKeyContext.Provider>
                     </div>
                 )

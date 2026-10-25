@@ -28,6 +28,136 @@
       You need to enable JavaScript to run this app
     </noscript>
     <div id="root"></div>
+    <!--
+      Guardia de arranque.
+
+      Dos veces este año la aplicación se quedó en blanco y no hubo forma de
+      saber por qué: React no pinta nada, la consola queda en manos de quien
+      esté enfrente y el médico se queda sin expediente. Esta capa es HTML y
+      JavaScript puros, sin pasar por Vite ni por React, así que sobrevive
+      justo al caso que hay que explicar: el paquete no cargó, un módulo truena
+      al importarse, o algo revienta antes de que exista la primera barrera de
+      error. Si React monta, la capa desaparece sola.
+    -->
+    <div id="cortex-arranque" role="status" aria-live="polite">
+      <div class="ca-tarjeta">
+        <p class="ca-marca">CORTEX</p>
+        <p class="ca-titulo" id="ca-titulo">Cargando el sistema…</p>
+        <p class="ca-detalle" id="ca-detalle"></p>
+        <pre class="ca-error" id="ca-error" hidden></pre>
+        <button type="button" class="ca-boton" id="ca-recargar" hidden>Recargar la página</button>
+      </div>
+    </div>
+    <style>
+      #cortex-arranque {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: #040a18;
+        color: #e9eef9;
+        font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      }
+      #cortex-arranque .ca-tarjeta { max-width: 32rem; text-align: center; }
+      #cortex-arranque .ca-marca {
+        margin: 0 0 1.5rem;
+        font-size: 0.85rem;
+        letter-spacing: 0.42em;
+        text-indent: 0.42em;
+        text-transform: uppercase;
+        color: #7fa8e8;
+      }
+      #cortex-arranque .ca-titulo { margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 600; }
+      #cortex-arranque .ca-detalle { margin: 0; font-size: 0.9rem; line-height: 1.5; color: #9fb0cc; }
+      #cortex-arranque .ca-error {
+        margin: 1rem 0 0;
+        padding: 0.75rem;
+        max-height: 9rem;
+        overflow: auto;
+        border: 1px solid #24365a;
+        border-radius: 0.5rem;
+        background: #0a1428;
+        color: #d6e0f2;
+        font-size: 0.78rem;
+        line-height: 1.4;
+        text-align: left;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      #cortex-arranque .ca-boton {
+        margin-top: 1.25rem;
+        padding: 0.55rem 1.25rem;
+        border: 0;
+        border-radius: 0.5rem;
+        background: #2f6fed;
+        color: #fff;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      #cortex-arranque .ca-boton:hover { background: #2560d8; }
+    </style>
+    <script>
+      (function () {
+        var capa = document.getElementById('cortex-arranque')
+        var raiz = document.getElementById('root')
+        if (!capa || !raiz) return
+
+        var titulo = document.getElementById('ca-titulo')
+        var detalle = document.getElementById('ca-detalle')
+        var cajaError = document.getElementById('ca-error')
+        var boton = document.getElementById('ca-recargar')
+        var montado = false
+
+        boton.addEventListener('click', function () { window.location.reload() })
+
+        // En cuanto React pinta algo, esta capa sobra: se quita y se deja de
+        // escuchar. Un fallo posterior ya lo cuentan las barreras de React.
+        var vigilante = new MutationObserver(function () {
+          if (raiz.childElementCount === 0) return
+          montado = true
+          vigilante.disconnect()
+          capa.parentNode.removeChild(capa)
+        })
+        vigilante.observe(raiz, { childList: true })
+
+        var contar = function (mensaje) {
+          if (montado) return
+          titulo.textContent = 'CORTEX no terminó de abrir'
+          detalle.textContent =
+            'La página cargó pero la aplicación no llegó a dibujarse. Recarga; si vuelve a pasar, copia el detalle y pásalo a soporte.'
+          cajaError.textContent = mensaje
+          cajaError.hidden = false
+          boton.hidden = false
+        }
+
+        window.addEventListener('error', function (evento) {
+          // Los errores de un recurso (una imagen que no llega) no traen
+          // mensaje: esos no impiden abrir el sistema.
+          if (!evento || !evento.message) return
+          contar(evento.message)
+        })
+
+        window.addEventListener('unhandledrejection', function (evento) {
+          var motivo = evento && evento.reason
+          contar((motivo && (motivo.message || motivo)) || 'Promesa rechazada sin detalle')
+        })
+
+        // Un arranque en frío de Vite tarda; el aviso de fallo espera a que de
+        // verdad se haya agotado el tiempo.
+        window.setTimeout(function () {
+          if (montado) return
+          detalle.textContent = 'Está tardando más de lo normal…'
+        }, 8000)
+
+        window.setTimeout(function () {
+          contar('Sin contenido en la pantalla después de 25 segundos.')
+        }, 25000)
+      })()
+    </script>
     <script type="module" src="/src/index.tsx"></script>
     <!-- built files will be auto injected -->
   </body>

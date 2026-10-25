@@ -15,6 +15,7 @@ import { mensajeDeError } from '../../shared/utils/errors'
 import { formatearInstante } from '../../shared/utils/date'
 import VisorDocumentos, { type ArchivoVisor } from '../../shared/components/VisorDocumentos'
 import ClinicalImagesPanel from '../doctor/components/ClinicalImagesPanel'
+import EstudiosDelPaciente from '../imagen/componentes/EstudiosDelPaciente'
 import { useAuth } from '../../shared/context/AuthContext'
 
 export interface ImagenDePaciente {
@@ -51,8 +52,12 @@ const ORIGEN: Record<ImagenDePaciente['origen'], string> = {
 const POR_PAGINA = 30
 
 export default function PestanaImagenes({ patientId, appointmentId }: { patientId: number; appointmentId?: number }) {
-  const { user } = useAuth()
+  const { user, can } = useAuth()
   const subeFotos = user?.role === 'doctor' || user?.role === 'master'
+  // Las series DICOM se sirven con el permiso de imagen clínica. Recepción ve
+  // los documentos del paciente, pero no los estudios: si se pintara el panel,
+  // lo único que vería es un error de permiso en medio del expediente.
+  const veEstudios = can('clinical_images.read')
   const [items, setItems] = useState<ImagenDePaciente[] | null>(null)
   const [total, setTotal] = useState(0)
   const [error, setError] = useState<string | null>(null)
@@ -94,6 +99,7 @@ export default function PestanaImagenes({ patientId, appointmentId }: { patientI
 
   return (
     <div className="d-flex flex-column gap-3">
+      {veEstudios && <EstudiosDelPaciente patientId={patientId} />}
       {subeFotos && (
         <ClinicalImagesPanel
           patientId={patientId}

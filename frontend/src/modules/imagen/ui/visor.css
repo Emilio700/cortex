@@ -1,0 +1,780 @@
+/**
+ * El visor de estudios.
+ *
+ * La imagen va sobre negro fijo, no sobre el fondo del tema: así se lee una
+ * resonancia. El resto del cromo sí usa los tokens de la marca.
+ *
+ * Todo lo que se afirma del estudio está escrito en pantalla: fecha, modalidad,
+ * serie y estado. Si faltan series, se dice. La regla del sistema es la misma
+ * que en el resto del expediente: si no se hizo, no se puede decir que sí.
+ */
+.visor-pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.visor-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.visor-encabezado__titulo {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.visor-encabezado__meta {
+  color: var(--cx-texto-suave, #6b7280);
+  font-size: 0.85rem;
+}
+
+.visor-cuerpo {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) 1fr minmax(220px, 280px);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .visor-cuerpo {
+    grid-template-columns: 1fr;
+  }
+}
+
+.visor-panel {
+  border: 1px solid var(--cx-borde, #e3e6ea);
+  border-radius: 0.5rem;
+  background: var(--cx-superficie, #fff);
+  padding: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.visor-panel__titulo {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cx-texto-suave, #6b7280);
+  margin-bottom: 0.4rem;
+}
+
+.visor-series {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.visor-series__boton {
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  border-radius: 0.4rem;
+  background: transparent;
+  padding: 0.35rem 0.45rem;
+  cursor: pointer;
+  color: inherit;
+}
+
+.visor-series__boton:hover {
+  border-color: var(--cx-borde, #e3e6ea);
+}
+
+.visor-series__boton[aria-pressed='true'] {
+  border-color: var(--cx-acento, #0f766e);
+  background: var(--cx-acento-suave, rgba(15, 118, 110, 0.08));
+}
+
+.visor-series__nombre {
+  display: block;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.visor-series__detalle {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--cx-texto-suave, #6b7280);
+}
+
+/* Área de imagen: negro fijo, independiente del tema. */
+.visor-lienzo {
+  display: grid;
+  gap: 0.5rem;
+  background: #000;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  min-height: 420px;
+}
+
+.visor-lienzo[data-comparando='true'] {
+  grid-template-columns: 1fr 1fr;
+}
+
+.visor-viewport {
+  position: relative;
+  background: #000;
+  aspect-ratio: 1 / 1;
+  min-height: 380px;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.visor-viewport__etiqueta {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.5rem;
+  z-index: 2;
+  color: #e5e7eb;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}
+
+.visor-viewport__aviso {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.visor-barra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.visor-medidas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.visor-medida {
+  border: 1px solid var(--cx-borde, #e3e6ea);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.5rem;
+}
+
+.visor-medida__valor {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.visor-medida__pie {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+  font-size: 0.72rem;
+  color: var(--cx-texto-suave, #6b7280);
+}
+
+.visor-vacio {
+  color: #e5e7eb;
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Pestañas del panel derecho: mediciones, comparación y ficha del estudio. */
+.visor-pestanas {
+  font-size: 0.8rem;
+  margin-bottom: 0.6rem;
+}
+
+.visor-pestana-cuerpo {
+  padding-top: 0.2rem;
+}
+
+.visor-medida__evolucion {
+  font-size: 0.78rem;
+  margin-top: 0.15rem;
+}
+
+/* Crecimiento y reducción no son buenos ni malos por sí solos: en un tumor
+   pueden significar progresión o respuesta al tratamiento. Por eso no se
+   pintan de rojo ni de verde. */
+.visor-medida__evolucion[data-signo='sube'] {
+  color: var(--cx-aviso, #b45309);
+}
+
+.visor-medida__evolucion[data-signo='baja'] {
+  color: var(--cx-acento, #0f766e);
+}
+
+.visor-ficha {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.visor-ficha__fila {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.visor-ficha dt {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--cx-texto-suave, #6b7280);
+}
+
+.visor-ficha dd {
+  margin: 0;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Controles del visor: barra, deslizador, información sobre la imagen, cortes
+   clave, capturas, compartir, atajos, pantalla completa y presentación.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.visor-central {
+  min-width: 0;
+}
+
+/* El escenario mide su propio ancho: la barra se compacta según el espacio que
+   de verdad tiene entre las dos columnas, no según la ventana. */
+.visor-escenario {
+  position: relative;
+  container-type: inline-size;
+}
+
+/* La imagen ocupa la altura que queda en pantalla (menos la barra, el deslizador
+   y los encabezados), en vez de ser un cuadrado que obliga a bajar para verla
+   entera. */
+.visor-viewport {
+  aspect-ratio: auto;
+  height: clamp(380px, calc(100vh - 440px), 880px);
+}
+
+.visor-cuerpo {
+  grid-template-columns: minmax(170px, 200px) minmax(0, 1fr) minmax(240px, 270px);
+}
+
+@media (max-width: 992px) {
+  .visor-cuerpo {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Barra de herramientas ── */
+.visor-barra {
+  row-gap: 0.4rem;
+  column-gap: 0.6rem;
+}
+
+.visor-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.visor-boton__texto {
+  font-size: 0.78rem;
+}
+
+.visor-barra__ventana {
+  width: auto;
+  min-width: 9.5rem;
+  max-width: 13rem;
+}
+
+.visor-barra__fps {
+  width: auto;
+  min-width: 6.4rem;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+/* Con poco ancho los botones pierden su rótulo (el ícono y el tooltip bastan),
+   salvo las acciones que se buscan por nombre: Capturar, Marcar y Compartir. */
+@container (max-width: 860px) {
+  .visor-barra .visor-boton:not(.visor-boton--rotulo) .visor-boton__texto {
+    display: none;
+  }
+}
+
+/* ── Información sobre la imagen ── */
+.visor-viewport__estado {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.5rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.05rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.35rem;
+  /* Con la imagen invertida el fondo es blanco: sin esta placa el texto se pierde. */
+  background: rgba(2, 8, 22, 0.62);
+  color: #e5e7eb;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.visor-viewport__etiqueta {
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.35rem;
+  background: rgba(2, 8, 22, 0.62);
+}
+
+.visor-viewport__clave {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+/* ── Deslizador de cortes ── */
+.visor-cortes {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  background: #0b1220;
+  color: #e5e7eb;
+  font-size: 0.8rem;
+}
+
+.visor-cortes .btn {
+  color: #cbd5e1;
+}
+
+.visor-cortes__pista {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.visor-cortes__rango {
+  width: 100%;
+  accent-color: var(--cx-azul-vivo, #2f8cff);
+  cursor: pointer;
+}
+
+/* Las muescas son los cortes clave de la serie: se ve dónde estaba lo importante. */
+.visor-cortes__muesca {
+  position: absolute;
+  top: 0;
+  width: 3px;
+  height: 0.5rem;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: #fbbf24;
+  box-shadow: 0 0 4px rgba(251, 191, 36, 0.7);
+  pointer-events: none;
+}
+
+.visor-cortes__contador {
+  min-width: 7.2rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.visor-cortes__claves {
+  display: inline-flex;
+}
+
+/* ── Panel de cortes clave ── */
+.visor-claves {
+  margin-bottom: 0.6rem;
+}
+
+.visor-claves__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.visor-clave {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--cx-borde, #e3e6ea);
+  border-radius: 0.5rem;
+  padding: 0.3rem;
+}
+
+.visor-clave[data-actual='true'] {
+  border-color: var(--cx-azul-vivo, #2f8cff);
+  background: rgba(47, 140, 255, 0.08);
+}
+
+.visor-clave__ir {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.visor-clave__miniatura {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 0.35rem;
+  background: #000;
+}
+
+.visor-clave__miniatura--vacia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.visor-clave__texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.visor-clave__texto strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.visor-clave__nota {
+  font-size: 0.75rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.visor-claves__hoja {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--cx-borde, #e3e6ea);
+}
+
+.visor-medida__tipo {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cx-texto-suave, #6b7280);
+}
+
+/* ── Ventana de captura ── */
+.visor-captura {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .visor-captura {
+    grid-template-columns: 1fr;
+  }
+}
+
+.visor-captura__previa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  border-radius: 0.5rem;
+  background: #000;
+}
+
+.visor-captura__imagen {
+  max-width: 100%;
+  max-height: 55vh;
+  object-fit: contain;
+}
+
+.visor-captura__espera {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+}
+
+.visor-captura__pie {
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* ── Ventana de compartir ── */
+.visor-compartir__bloque {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--cx-borde, #e3e6ea);
+}
+
+.visor-compartir__bloque:last-of-type {
+  border-bottom: 0;
+}
+
+.visor-compartir__titulo {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.visor-enlaces {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.visor-enlace {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid var(--cx-borde, #e3e6ea);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.6rem;
+}
+
+/* ── Ayuda de atajos ── */
+.visor-atajos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .visor-atajos {
+    grid-template-columns: 1fr;
+  }
+}
+
+.visor-atajos__grupo {
+  margin: 0.5rem 0 0.3rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cx-texto-suave, #6b7280);
+}
+
+.visor-atajos__lista {
+  margin: 0;
+}
+
+.visor-atajos__fila {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.15rem 0;
+}
+
+.visor-atajos__fila dt,
+.visor-atajos__fila dd {
+  margin: 0;
+}
+
+.visor-atajos kbd,
+.visor-ayuda-gestos kbd {
+  display: inline-block;
+  min-width: 1.6rem;
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--cx-borde, #c9d1dc);
+  border-bottom-width: 2px;
+  border-radius: 0.3rem;
+  background: var(--cx-superficie, #fff);
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+/* ── Pantalla completa ── */
+.visor-escenario:fullscreen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  background: #05080f;
+}
+
+.visor-escenario:fullscreen .visor-lienzo {
+  flex: 1;
+  min-height: 0;
+}
+
+.visor-escenario:fullscreen .visor-viewport {
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.visor-escenario:fullscreen .visor-barra .btn-outline-secondary {
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.4);
+}
+
+/* ── Modo presentación: sólo la imagen, para enseñársela al paciente ── */
+.visor-presentacion__salir {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 5;
+  opacity: 0.85;
+}
+
+.visor-pagina[data-presentacion='true'] .visor-encabezado,
+.visor-pagina[data-presentacion='true'] .visor-panel,
+.visor-pagina[data-presentacion='true'] .alert,
+.visor-pagina[data-presentacion='true'] .visor-barra,
+.visor-pagina[data-presentacion='true'] .visor-ayuda-gestos,
+.visor-pagina[data-presentacion='true'] .visor-viewport__estado {
+  display: none;
+}
+
+.visor-pagina[data-presentacion='true'] .visor-cuerpo {
+  grid-template-columns: 1fr;
+}
+
+.visor-pagina[data-presentacion='true'] .visor-escenario:fullscreen .visor-cortes {
+  max-width: 40rem;
+  align-self: center;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visor-cortes__rango,
+  .visor-clave {
+    transition: none;
+  }
+}
+
+/* ── El estudio visto desde un enlace temporal (pantalla pública) ── */
+.visor-compartido {
+  min-height: 100vh;
+  padding: 1rem 1.25rem 2rem;
+  background: radial-gradient(80% 60% at 20% 0%, rgba(47, 140, 255, 0.16), transparent 60%), #040a18;
+  color: #e5ecfb;
+}
+
+.visor-compartido--centro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.visor-compartido__encabezado {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.visor-compartido__marca {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  color: #fff;
+}
+
+.visor-compartido__meta {
+  font-size: 0.82rem;
+  color: #9fb2d6;
+}
+
+.visor-compartido__aviso {
+  margin: 0 0 0.75rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(125, 211, 252, 0.25);
+  border-radius: 0.5rem;
+  background: rgba(47, 140, 255, 0.1);
+  font-size: 0.82rem;
+  color: #cfe0ff;
+}
+
+.visor-compartido__cuerpo {
+  display: grid;
+  grid-template-columns: minmax(180px, 230px) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .visor-compartido__cuerpo {
+    grid-template-columns: 1fr;
+  }
+}
+
+.visor-compartido .visor-panel {
+  border-color: rgba(125, 211, 252, 0.18);
+  background: rgba(11, 29, 69, 0.55);
+  color: #e5ecfb;
+}
+
+.visor-compartido .visor-panel__titulo,
+.visor-compartido .visor-series__detalle {
+  color: #9fb2d6;
+}
+
+.visor-compartido .visor-series__boton:hover {
+  border-color: rgba(125, 211, 252, 0.3);
+}
+
+.visor-compartido .visor-series__boton[aria-pressed='true'] {
+  border-color: #2f8cff;
+  background: rgba(47, 140, 255, 0.16);
+}
+
+.visor-compartido .visor-barra .btn-outline-secondary {
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.4);
+}

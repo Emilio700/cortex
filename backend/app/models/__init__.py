@@ -25,6 +25,13 @@ from app.models.doctor_profile import DoctorProfile
 from app.models.doctor_schedule import DoctorWorkingHours, ScheduleBlock
 from app.models.document import Document
 from app.models.espejo_legacy import VinculoLegacy
+from app.models.imaging import (
+    ImagingAnnotation,
+    ImagingKeyImage,
+    ImagingSeries,
+    ImagingShareLink,
+    ImagingStudy,
+)
 from app.models.medical_certificate import CertificateType, MedicalCertificate
 from app.models.medication_cache import MedicationCache
 from app.models.notification import Notification, NotificationPreference, NotificationType
@@ -77,6 +84,9 @@ __all__ = [
     "Document",
     "Triage",
     "SOAPNote",
+    "ImagingStudy",
+    "ImagingSeries",
+    "ImagingAnnotation",
     "Prescription",
     "MedicalCertificate",
     "CertificateType",

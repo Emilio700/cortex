@@ -218,6 +218,113 @@ Explican qué falta y qué hacer, en español y sin culpar a nadie.
 `"Todavía no hay medicamentos en esta receta."` vale;
 `"No data"` no.
 
+### 4.9 Visor de estudios
+
+La imagen va sobre **negro fijo**, no sobre el fondo del tema: así se lee una
+resonancia. El cromo alrededor sí usa los tokens.
+
+- Series a la izquierda, imagen al centro, panel con pestañas a la derecha
+  (**Mediciones · Cortes clave · Comparar · Estudio**). En pantalla angosta las tres
+  columnas se apilan. La imagen ocupa la altura que queda en pantalla.
+- El encabezado siempre dice **qué se está viendo**: descripción, modalidad,
+  fecha, institución y estado (`Estudio completo` o el motivo de que no lo esté).
+  Nunca se muestra una imagen sin fecha ni modalidad.
+- Una serie sin geometría se marca «sin posición» y el estudio avisa de que no
+  hay reconstrucción multiplanar. No se finge MPR.
+- Las mediciones nacen **sin aceptar**. Aceptarlas es lo que las vuelve dato del
+  expediente; una aceptada ya no se borra, se corrige en la nota. Misma regla que
+  el resto del sistema: el rastro de lo que se midió no se pierde.
+- La evolución contra el estudio previo se escribe en texto
+  (`+3.3 (+18.3 %) vs. estudio previo`) y con color de **aviso**, no de alarma:
+  en un tumor, crecer puede ser progresión o respuesta al tratamiento.
+- Los análisis asistidos (volumetría, segmentación) aparecen en la pestaña
+  «Estudio», con su motor y su versión, y se pueden apagar. Mientras no existan,
+  la pestaña lo dice; no se deja un hueco que prometa IA.
+
+**Controles.** La barra va en grupos, de lo que más se usa a lo que menos:
+herramientas del botón izquierdo (contraste, distancia, ángulo, elipse, mover, zoom),
+vista (acercar, ajustar, girar, voltear, invertir, restablecer), ventana, cine,
+acciones (**Capturar · Marcar · Compartir**) y pantalla (presentación, completa,
+atajos). Con poco ancho los botones pierden su rótulo y quedan con su ícono y tooltip,
+**salvo** Capturar, Marcar y Compartir, que se buscan por nombre. Cada tooltip dice su
+atajo, sacado de la misma tabla (`dominio/atajos.ts`) que alimenta la ayuda: no pueden
+contradecirse. Los atajos no actúan mientras se escribe en un campo ni con una ventana
+abierta, ni con Ctrl/Cmd/Alt (son del navegador).
+
+- **Ventana (contraste):** presets sólo en tomografía (unidades Hounsfield). En
+  resonancia hay «automática» y el ajuste a mano; ofrecer «encéfalo 40/80» sobre una
+  RM prometería una precisión que no existe.
+- **Captura:** PNG sin pérdida, con las mediciones y un sello (estudio, serie, fecha,
+  corte, ventana) y la leyenda de material de apoyo. El **nombre del paciente no va
+  por omisión**: una imagen suelta se reenvía y se queda en cualquier teléfono. Si se
+  pidieron las mediciones y no se pudieron dibujar, se dice y no se entrega la captura
+  a medias.
+- **Cortes clave:** una marca por corte, con nombre, nota y la vista con que se marcó.
+  Se ven como muescas en el deslizador y como miniaturas en su pestaña.
+- **Compartir:** la hoja en PDF (con opción sin nombre) y el **enlace temporal**.
+  El enlace exige confirmar el consentimiento, vence (máximo 7 días), se revoca, sirve
+  los cortes sin identidad y se muestra **una sola vez**. Quien lo abre no entra al
+  expediente ni puede guardar, capturar o compartir.
+- **Modo presentación (`T`):** sólo la imagen y el deslizador, para enseñársela al
+  paciente; oculta series, notas y herramientas. `Esc` sale.
+- Nada dice «guardado», «enlace creado» o «revocado» hasta que el servidor lo confirmó.
+
+Referencia: `frontend/src/modules/imagen/`.
+
+### 4.10 Cuando algo falla: nunca una pantalla en blanco
+
+Una pantalla vacía no dice nada y no se puede diagnosticar; con el médico
+enfrente es una consulta detenida. Cuatro capas, de adentro hacia afuera:
+
+1. **Por pestaña**: `BarreraDeError` en `TabsOutlet`. Falla la pantalla, siguen
+   vivas las demás pestañas y el menú.
+2. **De la aplicación**: otra `BarreraDeError` dentro de `App`, por si falla el
+   armazón o el enrutador.
+3. **Raíz**: en `index.tsx`, envolviendo todo. Sin ella, un fallo al armar la
+   sesión o el enrutador se escapaba de las dos anteriores y React desmontaba la
+   aplicación entera.
+4. **Guardia de arranque**: en `index.html`, en HTML y JavaScript puros, fuera de
+   React y de Vite. Es lo único que sobrevive si el paquete no carga, y es el caso
+   que se veía como una página en blanco sin pista alguna. Muestra el motivo, un
+   botón de recarga y se retira sola en cuanto React pinta algo.
+
+El mensaje dice qué pasó y qué hacer; el detalle técnico va plegado. Nunca datos
+del paciente: el detalle es el mensaje del error, no el expediente.
+
+Referencia: `frontend/src/shared/components/BarreraDeError.tsx` y `frontend/index.html`.
+
+---
+
+## 11. Dónde vive cada cosa (módulos)
+
+Un módulo por área clínica, y dentro de cada uno siempre las mismas capas. La
+regla es simple: **la pantalla no habla con el servidor y el cálculo no vive
+dentro de un componente.**
+
+```
+src/modules/<área>/
+  dominio/      tipos y cálculos puros, con pruebas (sin React, sin red)
+  servicios/    llamadas al API y arranque de librerías externas
+  componentes/  piezas de interfaz sin estado de negocio
+  paginas/      la pantalla que une todo
+  ui/           estilos del módulo
+  index.ts      única superficie pública
+```
+
+- El **expediente manda**: una pantalla clínica se abre desde el expediente y
+  conserva su ruta (`/pacientes/:id/...`), no desde el menú.
+- Si dos módulos necesitan lo mismo, se sube a `shared/`; no se copia.
+- Las librerías pesadas —el motor del visor DICOM es el caso— se cargan con
+  `React.lazy` y su propio paquete, para que quien no las usa no las descargue.
+  Ese paquete solo se arma al servir y compilar; dentro de vitest se desactiva
+  porque volvía la suite tres veces más lenta.
+
+**Ejemplo vivo: imagen médica.** `modules/imagen` tiene `dominio/tipos.ts`
+(series y comparabilidad), `dominio/medidas.ts` (evolución de una medición),
+`servicios/estudiosApi.ts`, `servicios/cornerstone.ts`, los paneles y
+`paginas/VisorEstudioPage.tsx`. La pestaña Imágenes del expediente solo monta
+`EstudiosDelPaciente`; el visor vive en su propia ruta.
+
 ---
 
 ## 5. El modal de cita
