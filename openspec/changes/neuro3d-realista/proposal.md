@@ -17,11 +17,14 @@ texturas y sin paquetes nuevos.
   - Se recuerda por usuario en `localStorage` (preferencia de pantalla, no dato
     clínico; si el navegador no deja guardar, sólo no se recuerda).
   - Sin preferencia guardada, arranca en Realista sólo si el equipo lo aguanta:
-    WebGL2, `MAX_TEXTURE_SIZE` ≥ 4096, sin «reducir movimiento» y no en un
-    teléfono. Sin WebGL2 la opción Realista queda deshabilitada y dice por qué.
+    WebGL2, tarjeta dedicada (por `WEBGL_debug_renderer_info`; sin nombre,
+    `MAX_TEXTURE_SIZE` ≥ 8192), sin «reducir movimiento» y no en un teléfono. Sin
+    WebGL2 o sin tarjeta dedicada la opción Realista queda deshabilitada y una
+    leyenda dice por qué. El nombre de la tarjeta sólo decide y va en un tooltip:
+    nunca se envía al servidor.
   - Si con Realista los cuadros por segundo caen de forma sostenida, la escena
-    baja sola a Estándar y lo dice. Si después el médico vuelve a elegir
-    Realista, se respeta (no se vuelve a bajar en esa sesión).
+    baja sola a Estándar y la leyenda lo dice con «Reintentar realista». Si el
+    médico reintenta, se respeta (no se vuelve a bajar en esa visita).
   - Cambiar de calidad rehace la escena (la geometría cambia) conservando la
     cámara, las capas, el corte, la selección, las marcas y la capa del paciente.
 - **Materiales por tejido** (`servicios/materiales/`): `MeshPhysicalMaterial`
@@ -32,7 +35,7 @@ texturas y sin paquetes nuevos.
   cortical y del tejido blando, proyectadas en triplanar porque las mallas del
   paciente (TC) no traen UV. Colores como tokens `--cx-anat-real-*`.
 - **Luz y posproceso, sólo en Realista:** entorno `RoomEnvironment` con PMREM más
-  presente, tone mapping AgX, luz de estudio; `EffectComposer` con GTAO a media
+  presente, tone mapping Neutral (AgX apagaba los colores), luz de estudio; `EffectComposer` con GTAO a media
   resolución (sólo con lo opaco: la piel translúcida no ensombrece), SMAA y
   `OutputPass`. Al girar o mover la cámara se apaga el GTAO; al soltar vuelve.
 - **Más detalle geométrico en Realista** (procedural): circunvoluciones más finas
