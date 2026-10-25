@@ -97,6 +97,15 @@ Todos los cambios notables de Cortex. Formato basado en
   aviso de reconstrucción automática y la marca de revisado. Tabla
   `imaging_modelos_3d` (migración 0053) y permiso `neuro3d.generar_modelo` para el
   médico. `SEGMENTADOR_FALSO=1` da una columna sintética para probar sin GPU.
+<!-- Render volumétrico (feat/render-volumetrico) -->
+- **3D del estudio**: la TC, angio-TC o RM del paciente pintada en volumen en la
+  tarjeta gráfica, sin IA (`/pacientes/:id/estudios/:studyId/3d/:serieId`).
+  «Ver en 3D» en el visor sólo se habilita en series volumétricas y, si no, dice por
+  qué; «Ver el estudio en 3D» desde Neuro 3D. Preajustes en español (hueso, angio-TC,
+  piel, tejidos blandos, RM), umbral y opacidad, iluminación cinematográfica,
+  recorte axial, sagital y coronal, captura PNG sin nombre del paciente. Barra de
+  progreso, «Reducir resolución» si falta memoria y aviso fijo de que no sirve para
+  medir. Sin cambios en el backend ni dependencias nuevas.
 <!-- base-modulos-extra (tramo A) -->
 - Base para los módulos extra: módulos opcionales que se encienden por consultorio
   en **Sistema → Módulos** (tabla `tenant_modulos`, migración 0051; apagar no borra
@@ -134,13 +143,31 @@ Todos los cambios notables de Cortex. Formato basado en
   y dice por qué. Pie «Créditos» con la atribución de cada fuente a la vista, también
   en la captura.
 
+<!-- Neuro 3D realista (feat/neuro3d-realista) -->
+- **Neuro 3D realista**: interruptor «Estándar | Realista» en la escena, recordado
+  por usuario. Realista pinta cada tejido con su material (hueso marfil con poro,
+  corteza húmeda con surcos oscuros, arterias, venas, nervios y discos), luz de
+  estudio, oclusión ambiental (GTAO) y antialias, y más detalle en encéfalo y
+  vértebras (carillas, agujeros transversos cervicales). Todo generado en código,
+  sin descargar modelos. Una leyenda dice si el equipo puede con Realista (sin
+  tarjeta dedicada queda en Estándar y lo explica); si los cuadros caen, baja solo
+  a Estándar, lo dice y deja reintentar. Las mallas del paciente (TC) toman el
+  material de su tejido. El aviso del origen no cambia con la calidad.
+- **Venas y senos** en Neuro 3D (también en Estándar): senos sagital superior e
+  inferior, recto, confluencia, transversos y sigmoides, vena cerebral magna,
+  yugulares internas y venas superficiales, con ficha y búsqueda. Trayectos
+  típicos marcados «(verificar)».
+
 ### Cambiado
+- Neuro 3D: el interruptor de flujo dice «Flujo en arterias, venas y vías» (las venas
+  también lo muestran). <!-- feat/neuro3d-realista -->
 - El visor ocupa la altura de la pantalla en vez de ser un cuadrado, y su barra se
   compacta según el ancho que de verdad tiene.
 - Voz de la interfaz en masculino genérico: «el paciente», «el médico».
 - Puertos, contenedores y nombres de producción propios para convivir con GEMS.
 
 ### Corregido
+- Cambiar de serie en el visor de estudios ya no tumba la pantalla («No se pudo mostrar esta pantalla»): Cornerstone monta en su propio lienzo y no borra la etiqueta y el estado que pinta la interfaz.
 - Al cerrar sesión y entrar con otra cuenta en la misma ventana, la cuenta nueva ya no hereda las pestañas abiertas de la anterior (con nombres de pacientes en sus títulos): se borran al salir y cada lista sólo se carga para quien la abrió.
 - La sección «Escalas neurológicas» de la consulta usa un ícono de CoreUI en lugar de un emoji, como el resto de las secciones.
 - Las mediciones trazadas **nunca llegaban al panel**: el visor escuchaba el fin del

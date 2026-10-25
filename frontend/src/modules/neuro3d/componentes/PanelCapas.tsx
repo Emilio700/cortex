@@ -121,7 +121,7 @@ export default function PanelCapas(p: Props) {
           checked={p.flujo && !p.reducirMovimiento}
           disabled={p.reducirMovimiento}
           onChange={(e) => p.alCambiarFlujo(e.target.checked)}
-          label="Flujo en el polígono de Willis y en las vías"
+          label="Flujo en arterias, venas y vías"
         />
         <CFormSwitch
           id="atlas-rotacion"

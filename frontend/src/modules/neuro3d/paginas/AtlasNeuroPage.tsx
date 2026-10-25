@@ -13,6 +13,12 @@
  * three.js se descarga sólo aquí (paquete `vendor-three`) y la escena se carga
  * aparte, después de comprobar que el equipo puede dibujar en 3D: sin WebGL,
  * un mensaje claro en vez de una pantalla en blanco.
+ *
+ * Calidad «Estándar | Realista» (feat/neuro3d-realista): se recuerda por
+ * usuario; sin preferencia, Realista sólo si el equipo lo aguanta. Cambiarla
+ * rehace la escena con la misma cámara. Si en Realista los cuadros caen, la
+ * escena avisa y se baja a Estándar diciéndolo. El aviso del origen no cambia
+ * con la calidad: un modelo más realista sigue siendo esquemático.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
@@ -39,6 +45,7 @@ import { useOrigenRadiografia } from '../servicios/origenRadiografia'
 import { EVENTO_ORIGEN_PEDIDO, origenPedidoDeLaUrl, tomarOrigenPedido, type OrigenPedido } from '../servicios/origenPedido'
 import type { CapaAnatomica } from '../servicios/anatomia/tipos'
 import { mensajeDeFallo } from '../../imagen/servicios/mensajes'
+import EnlaceEstudio3D from '../../imagen/componentes/EnlaceEstudio3D' // render volumétrico (VOL)
 import PanelCapas from '../componentes/PanelCapas'
 import PanelExplicar from '../componentes/PanelExplicar'
 import { atlasApi } from '../servicios/atlasApi'
@@ -55,7 +62,19 @@ import { consultarAtlas, descargarAtlas, type EstadoDelAtlas } from '../servicio
 import { componerCaptura, descargar, nombreDeCaptura } from '../servicios/captura'
 import { useReducirMovimiento } from '../servicios/movimiento'
 import { hayWebGL } from '../servicios/webgl'
-import type { EscenaAtlas, Resaltado } from '../servicios/escena'
+import type { EscenaAtlas, EstadoDeCamara, Resaltado } from '../servicios/escena'
+// Modo realista (feat/neuro3d-realista)
+import {
+  CALIDADES,
+  calidadInicial,
+  disponibilidadRealista,
+  guardarPreferencia,
+  leerPreferencia,
+  leyendaDeCalidad,
+  motivoParaEstandar,
+  type Calidad,
+} from '../dominio/calidad'
+import { leerCapacidad } from '../servicios/capacidad'
 import '../ui/atlas.css'
 
 export const AVISO_ESQUEMATICO = AVISO_ORIGEN.esquematico
@@ -75,7 +94,8 @@ const esCampoDeTexto = (el: EventTarget | null) =>
 export default function AtlasNeuroPage() {
   const { patientId: patientIdTexto } = useParams<{ patientId?: string }>()
   const patientId = patientIdTexto ? Number(patientIdTexto) : null
-  const { can, tieneModulo } = useAuth()
+  const { user, can, tieneModulo } = useAuth()
+  const usuarioId = user?.id ?? null
   const [parametros] = useSearchParams()
   const reducirMovimiento = useReducirMovimiento()
 
@@ -101,6 +121,19 @@ export default function AtlasNeuroPage() {
   const [capturando, setCapturando] = useState(false)
   const [guardar, setGuardar] = useState<{ imagen: Blob; descripcion: string } | null>(null)
   const animacionPelado = useRef(0)
+
+  // ── Calidad ──────────────────────────────────────────────────────────────
+  const [capacidad] = useState(leerCapacidad)
+  const [calidad, setCalidad] = useState<Calidad>(() => calidadInicial(leerPreferencia(usuarioId), capacidad))
+  // Tras una caída automática, si el médico vuelve a pedir Realista, manda él:
+  // ya no se vigila en esta visita.
+  const [cayo, setCayo] = useState(false)
+  const [vigilar, setVigilar] = useState(true)
+  const camaraRef = useRef<EstadoDeCamara | null>(null)
+  const usuarioRef = useRef(usuarioId)
+  usuarioRef.current = usuarioId
+  const realistaDisponible = disponibilidadRealista(capacidad)
+  const leyenda = leyendaDeCalidad(capacidad, cayo, calidad)
 
   // ── Origen del modelo ────────────────────────────────────────────────────
   // `origen` es lo que la escena YA muestra (o, con «radiografia», lo que se
@@ -160,7 +193,7 @@ export default function AtlasNeuroPage() {
   const origenEfectivo: OrigenModelo = origen === 'radiografia' && !radiografia.ajuste ? 'esquematico' : origen
   const ajusteVigente = origenEfectivo === 'radiografia' ? radiografia.ajuste : null
   const ajusteDeEscena = useMemo(() => (ajusteVigente ? ajusteDelEje(ajusteVigente.mediciones) : null), [ajusteVigente])
-  const claveDeEscena = ajusteDeEscena && ajusteVigente ? `rx-${ajusteVigente.id}` : 'esquematico'
+  const claveDeEscena = `${ajusteDeEscena && ajusteVigente ? `rx-${ajusteVigente.id}` : 'esquematico'}·${calidad}`
 
   const puedeGuardar = patientId !== null && can('clinical_images.upload')
 
@@ -213,6 +246,16 @@ export default function AtlasNeuroPage() {
           contenedor,
           reducirMovimiento,
           ajusteColumna: ajusteDeEscena,
+          calidad,
+          camara: camaraRef.current,
+          vigilarRendimiento: vigilar,
+          alRendimientoBajo: () => {
+            if (cancelado) return
+            // La leyenda junto al interruptor lo dice y ofrece reintentar.
+            setCayo(true)
+            setCalidad('estandar')
+            guardarPreferencia(usuarioRef.current, 'estandar')
+          },
           alSeleccionar: (id) => setSeleccion(id),
           alPasar: (id, x, y) => setHover(id ? { id, x, y } : null),
           alInteractuar: () => setRotacion(false),
@@ -228,12 +271,20 @@ export default function AtlasNeuroPage() {
       } catch (err) {
         if (cancelado) return
         if (err instanceof Error && err.name === 'SinWebGL') setEstadoEscena({ tipo: 'sin-webgl' })
-        else setEstadoEscena({ tipo: 'error', mensaje: 'No se pudo preparar el modelo 3D. Recarga la pantalla; si sigue igual, avisa a soporte.' })
+        else if (calidad === 'realista') {
+          // Realista pide más a la tarjeta: si no se pudo, se intenta en
+          // Estándar y se dice, en vez de dejar al médico sin modelo.
+          setCayo(true)
+          setCalidad('estandar')
+          setAviso({ color: 'info', texto: 'No se pudo preparar el modo Realista en este equipo; se muestra en Estándar.' })
+        } else setEstadoEscena({ tipo: 'error', mensaje: 'No se pudo preparar el modelo 3D. Recarga la pantalla; si sigue igual, avisa a soporte.' })
       }
     })()
     return () => {
       cancelado = true
       escenaRef.current = null
+      // La escena siguiente (otra calidad u otra columna) arranca con esta cámara.
+      if (creada) camaraRef.current = creada.camara?.() ?? camaraRef.current
       creada?.liberar()
     }
     // La escena se crea una vez por columna (el ajuste de la radiografía cambia
@@ -242,6 +293,15 @@ export default function AtlasNeuroPage() {
   }, [claveDeEscena])
 
   const lista = estadoEscena.tipo === 'lista'
+
+  const elegirCalidad = (c: Calidad) => {
+    if (c === calidad) return
+    if (c === 'realista' && !realistaDisponible.disponible) return
+    if (c === 'realista' && cayo) setVigilar(false)
+    guardarPreferencia(usuarioId, c)
+    setAviso(null)
+    setCalidad(c)
+  }
 
   // ── Paciente en contexto ─────────────────────────────────────────────────
   useEffect(() => {
@@ -646,6 +706,7 @@ export default function AtlasNeuroPage() {
         }
         acciones={
           <div className="atlas-acciones">
+            {patientId !== null && can('clinical_images.read') && <EnlaceEstudio3D patientId={patientId} />}
             <CButton
               color={explicar ? 'warning' : 'light'}
               aria-pressed={explicar}
@@ -790,6 +851,41 @@ export default function AtlasNeuroPage() {
                 <CButton size="sm" color="dark" className="atlas-escena__boton" onClick={alternarPelado}>
                   {pelado >= PELADO_MAXIMO - 0.01 ? 'Volver a cubrir' : 'Pelar capas'}
                 </CButton>
+                {/* Modo realista (feat/neuro3d-realista) */}
+                <div className="atlas-calidad-bloque" data-tour="atlas-calidad">
+                  <div className="atlas-calidad" role="group" aria-label="Calidad del modelo" aria-describedby="atlas-calidad-leyenda">
+                    {CALIDADES.map((c) => {
+                      const bloqueada = c.id === 'realista' && !realistaDisponible.disponible
+                      return (
+                        <button
+                          key={c.id}
+                          type="button"
+                          className={`atlas-calidad__opcion${calidad === c.id ? ' is-activa' : ''}`}
+                          aria-pressed={calidad === c.id}
+                          disabled={bloqueada}
+                          title={c.id === 'realista' && calidad === 'estandar' ? (motivoParaEstandar(capacidad) ?? undefined) : undefined}
+                          onClick={() => elegirCalidad(c.id)}
+                        >
+                          {c.nombre}
+                        </button>
+                      )
+                    })}
+                  </div>
+                  <p
+                    id="atlas-calidad-leyenda"
+                    className={`atlas-calidad__leyenda atlas-calidad__leyenda--${leyenda.tono}`}
+                    role="status"
+                    // El nombre de la tarjeta sólo vive aquí, en el tooltip: no se envía a ningún lado.
+                    title={capacidad.gpu ? `Tarjeta gráfica: ${capacidad.gpu}` : undefined}
+                  >
+                    {leyenda.texto}
+                    {leyenda.reintentar && (
+                      <button type="button" className="atlas-calidad__reintentar" onClick={() => elegirCalidad('realista')}>
+                        Reintentar realista
+                      </button>
+                    )}
+                  </p>
+                </div>
               </div>
               <p className="atlas-escena__ayuda" aria-hidden="true">
                 Arrastra para girar · rueda o pellizco para acercar · toca una estructura

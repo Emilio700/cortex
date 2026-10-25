@@ -389,7 +389,7 @@ contexto). Permiso `neuro3d.read`.
   pruebas): la escena, la ficha y la silueta dicen lo mismo.
 - **Movimiento.** Transiciones de cámara de 750 ms, latido suave de lo encendido,
   rotación automática al abrir, separación de la columna y pelado animados, flujo
-  opcional en Willis. Con «reducir movimiento» (sistema o interruptor de Cortex) todo
+  opcional en arterias, venas y vías. Con «reducir movimiento» (sistema o interruptor de Cortex) todo
   eso se apaga: la cámara salta, nada late ni gira, el flujo no se ofrece.
 - **Carga.** `three` viaja en `vendor-three` y la escena se importa después de
   comprobar WebGL (`servicios/webgl.ts`, sin three). Sin WebGL: un mensaje que dice
@@ -496,6 +496,105 @@ se llega desde Neuro 3D con el paciente en contexto («Marcar radiografías»).
 
 Referencia: `frontend/src/modules/neuro3d/paginas/MarcadoRadiografiaPage.tsx`,
 `dominio/ajusteRadiografico.ts` y `backend/app/services/columna_rx.py`.
+
+<!-- Render volumétrico (feat/render-volumetrico) -->
+### 4.16 3D del estudio (render volumétrico)
+
+El estudio mismo pintado en volumen en la tarjeta gráfica: sin IA ni
+segmentación. Ruta `/pacientes/:id/estudios/:studyId/3d/:serieId` (la serie va en
+la ruta: las pestañas recortan el `?…`), permiso `clinical_images.read`.
+
+- **Se abre desde el visor** con «Ver en 3D», en el encabezado. Sólo se habilita en
+  una serie que forma volumen: TC o RM, al menos 20 cortes, paralelos, del mismo
+  tamaño y con espaciado uniforme (`dominio/volumen3d.ts`, `elegibilidad3D`). Si no,
+  queda deshabilitado y **el motivo va escrito al lado**, no sólo en un tooltip.
+  Desde Neuro 3D, «Ver el estudio en 3D» aparece si el paciente tiene una TC o RM
+  con serie candidata; si no, no se pinta.
+- **Aviso fijo**, con borde ámbar: «Render del estudio original: lo que ves depende
+  del preajuste y del umbral; para medir y decidir, usa los cortes». Esta vista no
+  ofrece mediciones.
+- **Distribución.** Escena sobre negro a la izquierda, controles a la derecha
+  (preajuste, umbral/opacidad/iluminación, recorte, botón izquierdo, restablecer,
+  captura). Con menos de 992 px se apilan. Si la serie no sirve o el equipo no
+  pinta 3D, no hay controles: sólo el mensaje.
+- **Preajustes en español** sobre los de Cornerstone (Slicer), sólo los de la
+  modalidad: Hueso, Hueso (contorno fino), Angio-TC, Piel, Tejidos blandos; RM:
+  encéfalo, angio, general. El umbral mueve la curva de opacidad (UH en TC; en RM
+  se dice que no hay unidades fijas) y en cero es exactamente la del preajuste.
+- **Recorte** axial (desde arriba), sagital (desde la izquierda del paciente) y
+  coronal (desde delante), con «Desde el otro lado». Abre de frente, cabeza arriba.
+- **Iluminación cinematográfica** (LAO y dispersión de vtk.js, receta inspirada en
+  VolView): opcional, apagada por omisión porque pide mucho a la tarjeta; mientras
+  se gira baja la calidad y vuelve al soltar.
+- **Nunca en blanco.** Barra de progreso («Descargando cortes n / N», «Armando el
+  volumen»). No se pinta un volumen con cortes sin decodificar: parecería un hueco.
+  Memoria agotada, falla de WebGL o pérdida del contexto: mensaje con «Reducir
+  resolución» (un corte de cada dos) e «Intentar de nuevo»; tras perder el contexto,
+  también «Recargar la página». Sin texturas *float*, aviso. Sin WebGL 2, qué hacer.
+  Un volumen que pasa de ~768 MB se carga ya decimado y se dice.
+- **Al salir** se suelta el volumen de la caché, los archivos leídos, el motor y el
+  grupo de herramientas.
+- **Captura** PNG con estudio, serie, fecha, preajuste, umbral y recorte, y la
+  leyenda «Render 3D del estudio · Material de apoyo · No sirve para medir». **Sin
+  el nombre del paciente.**
+
+Referencia: `frontend/src/modules/imagen/` (`paginas/Volumen3DPage.tsx`,
+`servicios/volumen3d.ts`, `dominio/volumen3d.ts`).
+<!-- fin render-volumetrico -->
+
+<!-- Neuro 3D realista (feat/neuro3d-realista) -->
+### 4.17 Neuro 3D: calidad «Estándar | Realista»
+
+Dos maneras de pintar el mismo modelo. **Estándar** es el atlas didáctico de §4.13
+(un color por lóbulo, materiales sencillos, sin posproceso). **Realista** pinta cada
+tejido como en una pieza anatómica. Ninguna cambia el aviso del origen (§4.14): un
+modelo más realista sigue siendo esquemático o aproximado.
+
+- **Dónde.** Junto a «Separar vértebras» y «Pelar capas», abajo a la izquierda de
+  la escena: un par segmentado de vidrio oscuro (`.atlas-calidad`, `aria-pressed`) y,
+  debajo, la **leyenda del equipo** (`role="status"`):
+  - «Render realista disponible en este equipo»;
+  - «Este equipo usa calidad estándar: el render realista necesita una tarjeta
+    gráfica dedicada» (o «…el navegador no tiene WebGL2…»), con Realista
+    deshabilitado;
+  - en ámbar, «Bajamos a estándar porque el equipo no alcanzaba los cuadros por
+    segundo» con **Reintentar realista**.
+  El nombre de la tarjeta (`WEBGL_debug_renderer_info`) sólo decide y va en el
+  tooltip de la leyenda: nunca se envía al servidor. Esto es sólo cómo se ve; la
+  segmentación (TC → 3D) corre en el servidor.
+  La escena es un contenedor (`container-type: inline-size`): si mide menos de
+  820 px, la ayuda de gestos de la esquina se oculta para no tapar la leyenda.
+- **Con qué arranca** (`dominio/calidad.ts`, puro y con pruebas). La preferencia se
+  guarda por usuario en `localStorage` (`cortex.neuro3d.calidad.<id>`): es de
+  pantalla, no clínica. Sin preferencia, Realista sólo con WebGL2, tarjeta dedicada
+  (o, sin nombre, `MAX_TEXTURE_SIZE` ≥ 8192), sin «reducir movimiento» y fuera del
+  teléfono. Si Realista no se puede preparar, se muestra en Estándar y se dice.
+- **Caída automática.** La escena mide sólo rachas de cuadros seguidos (una vista
+  quieta se pinta una vez y no dice nada del equipo). Si una ventana de 4 s promedia
+  menos de 24 fps, avisa una vez; la página baja a Estándar y guarda esa preferencia.
+  Si el médico reintenta, manda él: ya no se vigila en esa visita.
+- **Cambiar de calidad rehace la escena** (la geometría es otra) con la misma
+  cámara; capas, corte, selección, marcas y capa del paciente se vuelven a aplicar.
+- **Materiales por tejido** (`servicios/materiales/`): `MeshPhysicalMaterial` para
+  hueso, corteza, sustancia blanca, médula, nervio, arteria, vena, disco, líquido,
+  piel y cráneo. Colores en tokens `--cx-anat-real-*` de `ui/atlas.css`; el relieve
+  (poro del hueso, textura fina del tejido blando) son `DataTexture` generadas en
+  código y proyectadas en triplanar, porque las mallas del paciente no traen UV. Las
+  vías y las lesiones conservan su color didáctico.
+- **Luz y posproceso.** Entorno `RoomEnvironment` con PMREM, tone mapping Neutral
+  (conserva el rojo arterial y el marfil), luz de estudio con luz de ras.
+  `EffectComposer`: GTAO a media resolución sólo sobre lo opaco (la piel translúcida
+  no ensombrece lo de adentro), SMAA y `OutputPass`. Al girar o mover la cámara se
+  apaga el GTAO; al soltar se pinta completo. La captura PNG usa el pintado completo.
+- **Para capas nuevas** (mallas detalladas, tramo ATLAS): una `CapaAnatomica`
+  entrega piezas con `acabado`, `capa` y, si hace falta, `tejido`; la escena pide el
+  material a la biblioteca. No se crean materiales sueltos.
+- **Venas y senos** son una capa más (`venas`, también en Estándar), con ficha y
+  búsqueda; el pelado las descubre con los vasos.
+
+Referencia: `frontend/src/modules/neuro3d/servicios/escena.ts`, `posproceso.ts`,
+`materiales/` y `dominio/calidad.ts`.
+<!-- fin neuro3d-realista -->
 
 <!-- Atlas detallado (feat/neuro3d-atlas) -->
 ### 4.18 Atlas detallado y créditos en Neuro 3D

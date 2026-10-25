@@ -10,8 +10,15 @@
  * cuando su TC ya se ve; si no, se saltan solos. El recorrido del visor
  * («Modelo 3D desde la tomografía») vive aquí porque termina en Neuro 3D.
  *
+ * Modo realista (feat/neuro3d-realista): paso «Calidad» (junto a los botones
+ * de la escena, sólo con el modelo cargado) y venas y senos en las capas.
+ *
  * Atlas detallado (feat/neuro3d-atlas): «Modelo» (simplificado o atlas
  * BodyParts3D) se ve siempre; el pie de créditos, también.
+ *
+ * Versión 5: une los pasos de las dos ramas (calidad, venas, atlas y créditos)
+ * y la calidad dice que en Realista el atlas también toma el material de cada
+ * tejido.
  */
 import { Role } from '../../types'
 import type { Recorrido } from '../tipos'
@@ -21,7 +28,7 @@ const CLINICO = [Role.DOCTOR, Role.ADMIN, Role.MASTER]
 export const RECORRIDOS_NEURO3D: Recorrido[] = [
   {
     id: 'neuro-3d',
-    version: 4,
+    version: 5,
     titulo: 'Neuro 3D',
     resumen:
       'Encéfalo y columna en 3D para explicarle al paciente su lesión: capas, vistas, raíces con su dermatoma y captura.',
@@ -84,7 +91,7 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         elemento: 'atlas-capas',
         titulo: 'Capas',
         texto:
-          'Enciende o apaga piel, cráneo, encéfalo, ventrículos, vasos, columna, médula y raíces, y ajusta la opacidad de cada una. Las <b>vías principales</b> son un trazo esquemático, no una tractografía.',
+          'Enciende o apaga piel, cráneo, encéfalo, ventrículos, arterias, venas y senos, columna, médula y raíces, y ajusta la opacidad de cada una. Las <b>vías principales</b> son un trazo esquemático, no una tractografía.',
         lado: 'right',
       },
       {
@@ -99,6 +106,13 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         titulo: 'Separar vértebras',
         texto:
           'Separa la columna para ver los discos y por dónde sale cada raíz. <b>Unir vértebras</b> la regresa.',
+        lado: 'top',
+      },
+      {
+        elemento: 'atlas-calidad',
+        titulo: 'Calidad: Estándar o Realista',
+        texto:
+          '<b>Estándar</b> es el modelo didáctico, con un color por lóbulo. <b>Realista</b> pinta cada tejido como en una pieza anatómica (hueso, encéfalo, arterias y venas), con más detalle y sombras suaves. Debajo dice si este equipo puede con Realista; si se pone lento, baja solo a Estándar y te deja <b>reintentar</b>. Con el atlas detallado, Realista también pinta sus mallas con el material de cada tejido. Tu elección se recuerda. Ninguna de las dos es la anatomía de tu paciente.',
         lado: 'top',
       },
       {

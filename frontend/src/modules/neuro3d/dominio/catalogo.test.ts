@@ -71,6 +71,28 @@ describe('catálogo anatómico', () => {
     expect(POLIGONO_DE_WILLIS).not.toContain('vertebral-izq')
   })
 
+  it('el sistema venoso es su propia capa, con ficha, lado y búsqueda', () => {
+    const venas = CATALOGO.filter((e) => e.capa === 'venas')
+    expect(venas.map((e) => e.id)).toEqual(
+      expect.arrayContaining([
+        'seno-sagital-superior', 'seno-sagital-inferior', 'seno-recto', 'vena-cerebral-magna', 'confluencia-de-los-senos',
+        'seno-transverso-izq', 'seno-transverso-der', 'seno-sigmoideo-izq', 'seno-sigmoideo-der',
+        'yugular-interna-izq', 'yugular-interna-der', 'venas-puenteantes-izq', 'venas-puenteantes-der',
+      ]),
+    )
+    for (const e of venas) {
+      expect(e.sistema, e.id).toBe('Venas y senos')
+      expect(e.color, e.id).toBe('--cx-anat-vena')
+      expect(IDS_DE_MALLAS, e.id).toContain(e.id)
+    }
+    expect(estructuraPorId('seno-transverso-der')!.lado).toBe('derecho')
+    expect(estructuraPorId('yugular-interna-izq')!.nombre).toBe('Vena yugular interna izquierda')
+    expect(buscarEstructuras('seno sagital')[0].id).toMatch(/^seno-sagital/)
+    expect(buscarEstructuras('torcula')[0].id).toBe('confluencia-de-los-senos')
+    expect(buscarEstructuras('hematoma subdural')[0].id).toMatch(/^venas-puenteantes/)
+    expect(buscarEstructuras('galeno')[0].id).toBe('vena-cerebral-magna')
+  })
+
   it('cada vértebra, disco, segmento y raíz de los dos lados', () => {
     for (const n of NIVELES_VERTEBRALES) expect(estructuraPorId(n.id === 'S' ? 'sacro' : `vertebra-${n.id}`), n.id).toBeDefined()
     for (const d of DISCOS) expect(estructuraPorId(`disco-${d}`), d).toBeDefined()

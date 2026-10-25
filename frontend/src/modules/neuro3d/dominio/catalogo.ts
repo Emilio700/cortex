@@ -26,6 +26,7 @@ export type Sistema =
   | 'Encéfalo'
   | 'Ventrículos'
   | 'Vasos'
+  | 'Venas y senos'
   | 'Columna'
   | 'Médula espinal'
   | 'Raíces nerviosas'
@@ -277,6 +278,82 @@ const VASOS: Estructura[] = [
 
 /** Las arterias del polígono de Willis propiamente dicho (para encenderlas juntas). */
 export const POLIGONO_DE_WILLIS: string[] = VASOS.filter((v) => !v.id.startsWith('vertebral')).map((v) => v.id)
+
+// ── Venas y senos ───────────────────────────────────────────────────────────
+// (verificar) Trayectos típicos (Rhoton, «The cerebral veins», 2002; Gray, 42.ª
+// ed.): la simetría y el tamaño de los senos varían mucho entre personas.
+
+const VENA = { sistema: 'Venas y senos' as const, capa: 'venas' as const, color: '--cx-anat-vena' }
+
+const plural = (lado: string) => (lado === 'izquierdo' ? 'izquierdas' : 'derechas')
+
+const VENAS: Estructura[] = [
+  {
+    id: 'seno-sagital-superior',
+    nombre: 'Seno sagital superior',
+    ...VENA,
+    descripcion:
+      'Canal venoso en la línea media, en el borde superior de la hoz del cerebro, que corre de adelante hacia atrás. Recoge la sangre de la superficie de los hemisferios y el líquido cefalorraquídeo que se reabsorbe.',
+    sinonimos: ['seno longitudinal superior', 'senos venosos', 'trombosis venosa'],
+  },
+  {
+    id: 'seno-sagital-inferior',
+    nombre: 'Seno sagital inferior',
+    ...VENA,
+    profunda: true,
+    descripcion: 'Seno delgado en el borde libre de la hoz del cerebro, por encima del cuerpo calloso. Desemboca en el seno recto.',
+    sinonimos: ['seno longitudinal inferior', 'senos venosos'],
+  },
+  {
+    id: 'vena-cerebral-magna',
+    nombre: 'Vena cerebral magna (de Galeno)',
+    ...VENA,
+    profunda: true,
+    descripcion: 'Vena corta y gruesa que recoge la sangre de la profundidad del cerebro. Con el seno sagital inferior forma el seno recto.',
+    sinonimos: ['galeno', 'vena de galeno', 'venas profundas'],
+  },
+  {
+    id: 'seno-recto',
+    nombre: 'Seno recto',
+    ...VENA,
+    profunda: true,
+    descripcion: 'Corre donde la hoz del cerebro se une con la tienda del cerebelo y lleva la sangre de las venas profundas a la confluencia de los senos.',
+    sinonimos: ['senos venosos'],
+  },
+  {
+    id: 'confluencia-de-los-senos',
+    nombre: 'Confluencia de los senos',
+    ...VENA,
+    descripcion:
+      'Unión, a la altura de la protuberancia occipital interna, del seno sagital superior, el recto y los transversos. Su forma varía mucho entre personas.',
+    sinonimos: ['torcula', 'torcular', 'prensa de herofilo', 'senos venosos'],
+  },
+  ...bilateral('seno-transverso', (lado) => `Seno transverso ${lado}`, {
+    ...VENA,
+    descripcion:
+      'Sale de la confluencia hacia el lado por el borde de la tienda del cerebelo y sigue como seno sigmoideo. Es común que uno sea más grande que el otro.',
+    sinonimos: ['seno lateral', 'senos venosos'],
+  }),
+  ...bilateral('seno-sigmoideo', (lado) => `Seno sigmoideo ${lado}`, {
+    ...VENA,
+    descripcion: 'Baja en forma de S por detrás del hueso temporal, junto a la mastoides, hasta el agujero yugular, donde se vuelve la vena yugular interna.',
+    sinonimos: ['senos venosos', 'mastoides'],
+  }),
+  ...bilateral('yugular-interna', (lado) => `Vena yugular interna ${femenino(lado)}`, {
+    ...VENA,
+    descripcion:
+      'Sale del cráneo por el agujero yugular y baja por el cuello, por fuera de la carótida, llevando casi toda la sangre del encéfalo de regreso al corazón.',
+    sinonimos: ['yugular', 'vyi'],
+  }),
+  // Las puenteantes (venas puente) y la anastomótica inferior (de Labbé), en una
+  // sola malla por lado. «Puente» a secas sigue llevando a la protuberancia.
+  ...bilateral('venas-puenteantes', (lado) => `Venas cerebrales superficiales ${plural(lado)}`, {
+    ...VENA,
+    descripcion:
+      'Venas de la superficie del cerebro. Las que suben al seno sagital superior cruzan bajo la duramadre («venas puente»): si se rompen por un golpe, sobre todo en el adulto mayor, causan un hematoma subdural.',
+    sinonimos: ['venas puente', 'puenteantes', 'venas cerebrales superiores', 'venas corticales', 'hematoma subdural', 'subdural', 'labbe'],
+  }),
+]
 
 // ── Columna ─────────────────────────────────────────────────────────────────
 
@@ -665,6 +742,7 @@ export const CATALOGO: Estructura[] = [
   ...ENCEFALO,
   ...VENTRICULOS,
   ...VASOS,
+  ...VENAS,
   ...COLUMNA,
   ...MEDULA,
   ...RAICES_CATALOGO,
@@ -693,6 +771,7 @@ export const SISTEMAS: Sistema[] = [
   'Encéfalo',
   'Ventrículos',
   'Vasos',
+  'Venas y senos',
   'Columna',
   'Médula espinal',
   'Raíces nerviosas',

@@ -10,6 +10,13 @@
  * Movimiento: con «reducir movimiento» no hay rotación automática, la cámara
  * salta a cada vista, la columna se separa sin animación, el brillo no late y
  * el flujo del polígono de Willis no se muestra.
+ *
+ * Calidad: «estandar» es el modelo didáctico (un color por lóbulo, materiales
+ * sencillos, sin posproceso). «realista» pide a la biblioteca un material por
+ * tejido (`materiales/`), construye la anatomía con más detalle, ilumina con
+ * entorno y AgX y pinta con posproceso (`posproceso.ts`). La calidad no cambia
+ * en caliente: la página rehace la escena (la geometría es otra) y le pasa la
+ * cámara para que nada salte.
  */
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -28,7 +35,12 @@ import { construirVasos } from './anatomia/vasos'
 import { construirVentriculos } from './anatomia/ventriculos'
 import { desplazamientoHaciaAtlas } from './anatomia/capaPaciente'
 import { construirVias } from './anatomia/vias'
+import { construirVenas } from './anatomia/venas'
 import type { AjusteDelEje } from '../dominio/ajusteRadiografico'
+import { crearMonitorDeFps, type Calidad } from '../dominio/calidad'
+import { crearBibliotecaDeTejidos } from './materiales/biblioteca'
+import { TEJIDOS, tejidoDePieza } from './materiales/tejidos'
+import { crearPosproceso, type Posproceso } from './posproceso'
 import { hayWebGL } from './webgl'
 
 export type TonoDeEtiqueta = 'seleccion' | 'conexion' | 'afectado'
@@ -67,6 +79,22 @@ export interface OpcionesDeEscena {
    * se dobla a ellas. Sin ajuste, la columna esquemática de siempre.
    */
   ajusteColumna?: AjusteDelEje | null
+  /** «estandar» por omisión. */
+  calidad?: Calidad
+  /** Dónde estaba la cámara en la escena anterior (al cambiar de calidad o de columna). */
+  camara?: EstadoDeCamara | null
+  /**
+   * En Realista, la escena mide los cuadros mientras se mueve y avisa una vez
+   * si caen de forma sostenida: la página baja a Estándar.
+   */
+  alRendimientoBajo?: () => void
+  /** Falso si el médico volvió a pedir Realista después de una caída: se respeta. */
+  vigilarRendimiento?: boolean
+}
+
+export interface EstadoDeCamara {
+  posicion: [number, number, number]
+  objetivo: [number, number, number]
 }
 
 export interface EscenaAtlas {
@@ -97,6 +125,9 @@ export interface EscenaAtlas {
   fijarCapaAtlas(capa: CapaAnatomica | null): Promise<{ piezas: number }>
   /** PNG de lo que se ve, sin rótulos (se dibujan aparte en la captura). */
   capturar(): { dataUrl: string; ancho: number; alto: number }
+  /** Dónde está la cámara, para que la escena siguiente arranque igual. */
+  camara(): EstadoDeCamara
+  readonly calidad: Calidad
   liberar(): void
 }
 
@@ -133,6 +164,9 @@ const OPACIDAD_BASE: Partial<Record<Acabado, number>> = { disco: 0.9, liquido: 0
 export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   if (!hayWebGL()) throw new SinWebGL()
   const { contenedor } = op
+  const calidad: Calidad = op.calidad ?? 'estandar'
+  const realista = calidad === 'realista'
+  const detalle = realista ? 'realista' : 'estandar'
   let reducir = op.reducirMovimiento
   const estilo = getComputedStyle(contenedor)
   const token = (nombre: string, respaldo = '#9aa7bd') => {
@@ -149,8 +183,10 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   }
   renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1))
   renderer.setClearColor(0x000000, 0)
+  // Neutral (Khronos PBR Neutral) en los dos: conserva el tono y la saturación
+  // de cada tejido (el rojo arterial, el marfil del hueso). AgX los apagaba.
   renderer.toneMapping = THREE.NeutralToneMapping
-  renderer.toneMappingExposure = 1.0
+  renderer.toneMappingExposure = realista ? 1.05 : 1.0
   renderer.localClippingEnabled = true
   const lienzo = renderer.domElement
   lienzo.className = 'atlas-escena__lienzo'
@@ -166,7 +202,9 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   const entorno = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
   pmrem.dispose()
   escena.environment = entorno
-  escena.environmentIntensity = 0.3
+  // En Realista el entorno de estudio es la luz que da forma (reflejos suaves
+  // en lo húmedo); en Estándar sólo acompaña.
+  escena.environmentIntensity = realista ? 0.75 : 0.3
 
   const camara = new THREE.PerspectiveCamera(30, 1, 0.5, 700)
   camara.position.set(30, 6, 34)
@@ -174,16 +212,30 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
 
   // Luz de estudio: principal desde arriba y adelante (viaja con la cámara),
   // contraluz frío por detrás para recortar la silueta y relleno suave.
-  escena.add(new THREE.HemisphereLight(token('--cx-cian-claro', '#7dd3fc'), token('--cx-marino-700', '#0b1d45'), 0.35))
-  const principal = new THREE.DirectionalLight(0xffffff, 2.6)
+  // En Realista la principal es blanca cálida y el contraluz, más tenue, no
+  // tiñe de cian los tejidos: el color lo pone el tejido, no la luz.
+  escena.add(
+    new THREE.HemisphereLight(
+      realista ? new THREE.Color(0xf4f1ec) : token('--cx-cian-claro', '#7dd3fc'),
+      token('--cx-marino-700', '#0b1d45'),
+      realista ? 0.22 : 0.35,
+    ),
+  )
+  const principal = new THREE.DirectionalLight(realista ? 0xfff3e6 : 0xffffff, realista ? 2.3 : 2.6)
   principal.position.set(-16, 14, 5)
   camara.add(principal)
-  const contraluz = new THREE.DirectionalLight(token('--cx-cian', '#38bdf8'), 1.4)
+  const contraluz = new THREE.DirectionalLight(token('--cx-cian', '#38bdf8'), realista ? 0.7 : 1.4)
   contraluz.position.set(6, 10, -30)
   escena.add(contraluz)
-  const relleno = new THREE.DirectionalLight(token('--cx-azul-vivo', '#2f8cff'), 0.45)
+  const relleno = new THREE.DirectionalLight(realista ? 0xdfe8ff : token('--cx-azul-vivo', '#2f8cff'), realista ? 0.5 : 0.45)
   relleno.position.set(10, -14, 18)
   camara.add(relleno)
+  if (realista) {
+    // Luz de ras desde arriba: marca circunvoluciones y apófisis.
+    const ras = new THREE.DirectionalLight(0xffffff, 0.6)
+    ras.position.set(4, 30, 8)
+    camara.add(ras)
+  }
 
   const controles = new OrbitControls(camara, lienzo)
   controles.enableDamping = true
@@ -194,13 +246,24 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   controles.autoRotateSpeed = 0.7
   controles.target.set(0, -3, -0.5)
   controles.autoRotate = !reducir
+  // Mientras la persona arrastra, el posproceso baja la calidad.
+  let interactuando = false
   controles.addEventListener('start', () => {
     tween = null
+    interactuando = true
     if (controles.autoRotate) {
       controles.autoRotate = false
       op.alInteractuar?.()
     }
   })
+  controles.addEventListener('end', () => {
+    interactuando = false
+  })
+  if (op.camara) {
+    camara.position.set(...op.camara.posicion)
+    controles.target.set(...op.camara.objetivo)
+    controles.update()
+  }
 
   // ── Corte ────────────────────────────────────────────────────────────────
   const plano = new THREE.Plane(new THREE.Vector3(1, 0, 0), 1e5)
@@ -225,6 +288,15 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
     }
     m.customProgramCacheKey = () => `fresnel-${potencia}-${minimo}`
   }
+
+  // Realista: un material por tejido; las texturas se comparten y se liberan con la biblioteca.
+  const biblioteca = realista
+    ? crearBibliotecaDeTejidos({
+        leerToken: (nombre, respaldo) => token(nombre, respaldo),
+        planos,
+        anisotropia: Math.min(8, renderer.capabilities.getMaxAnisotropy()),
+      })
+    : null
 
   const crearMaterial = (acabado: Acabado, color: THREE.Color): THREE.MeshStandardMaterial => {
     const comun = { color, clippingPlanes: planos, side: THREE.FrontSide as THREE.Side, transparent: true }
@@ -360,10 +432,11 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   const modelo = crearModeloColumna(op.ajusteColumna)
   const CAPAS_DEL_ATLAS: CapaAnatomica[] = [
     { id: 'envolturas', nombre: 'Piel y cráneo', origen: 'procedural', construir: (c) => construirEnvolturas(c.columna!) },
-    { id: 'encefalo', nombre: 'Encéfalo', origen: 'procedural', construir: () => construirEncefalo() },
+    { id: 'encefalo', nombre: 'Encéfalo', origen: 'procedural', construir: () => construirEncefalo(detalle) },
     { id: 'ventriculos', nombre: 'Ventrículos', origen: 'procedural', construir: () => construirVentriculos() },
-    { id: 'vasos', nombre: 'Vasos', origen: 'procedural', construir: () => construirVasos() },
-    { id: 'columna', nombre: 'Columna', origen: 'procedural', construir: (c) => construirColumna(c.columna!) },
+    { id: 'vasos', nombre: 'Vasos', origen: 'procedural', construir: () => construirVasos(detalle) },
+    { id: 'venas', nombre: 'Venas y senos', origen: 'procedural', construir: () => construirVenas(detalle) },
+    { id: 'columna', nombre: 'Columna', origen: 'procedural', construir: (c) => construirColumna(c.columna!, detalle) },
     { id: 'medula', nombre: 'Médula', origen: 'procedural', construir: (c) => construirMedula(c.columna!) },
     { id: 'raices', nombre: 'Raíces', origen: 'procedural', construir: (c) => construirRaices(c.columna!) },
     { id: 'vias', nombre: 'Vías', origen: 'procedural', construir: (c) => construirVias(c.columna!) },
@@ -377,8 +450,11 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   const materialesPropios = new Set<THREE.Material>()
 
   const agregarPieza = (pieza: PiezaAnatomica) => {
-    const colorBase = token(pieza.color)
-    const material = crearMaterial(pieza.acabado, colorBase.clone())
+    const colorDidactico = token(pieza.color)
+    // En Realista el material sale del tejido (también para las mallas del
+    // paciente: `vertebra-*` llega como hueso) y el color base es el del tejido.
+    const material = biblioteca ? biblioteca.materialDePieza(pieza, colorDidactico) : crearMaterial(pieza.acabado, colorDidactico.clone())
+    const colorBase = biblioteca ? material.color.clone() : colorDidactico
     // Sombra de cavidad horneada en la geometría (surcos del encéfalo, folias).
     if (pieza.geometria.getAttribute('color')) material.vertexColors = true
     const malla = new THREE.Mesh(pieza.geometria, material)
@@ -394,7 +470,7 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
       material,
       colorBase,
       emisivoBase: material.emissiveIntensity,
-      opacidadBase: OPACIDAD_BASE[pieza.acabado] ?? 1,
+      opacidadBase: biblioteca ? TEJIDOS[tejidoDePieza(pieza)].opacidad : (OPACIDAD_BASE[pieza.acabado] ?? 1),
       capaVisible: true,
       capaOpacidad: 1,
     }
@@ -671,10 +747,12 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   lienzo.addEventListener('webglcontextlost', alPerder)
 
   // ── Tamaño ───────────────────────────────────────────────────────────────
+  const posproceso: Posproceso | null = realista ? crearPosproceso(renderer, escena, camara, planos) : null
   const ajustar = () => {
     const ancho = Math.max(1, contenedor.clientWidth)
     const alto = Math.max(1, contenedor.clientHeight)
     renderer.setSize(ancho, alto, false)
+    posproceso?.ajustar(ancho, alto, renderer.getPixelRatio())
     rotulos.setSize(ancho, alto)
     camara.aspect = ancho / alto
     camara.updateProjectionMatrix()
@@ -692,6 +770,13 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   let anterior = performance.now()
   let despieceInicio = 0
   let despieceDesde = 0
+  // Sólo Realista se vigila: Estándar es el piso, no hay a dónde bajar.
+  const monitor = realista && op.vigilarRendimiento !== false && op.alRendimientoBajo ? crearMonitorDeFps() : null
+  let estabaEnMovimiento = false
+  const dibujar = (plena: boolean) => {
+    if (posproceso) posproceso.pintar(plena)
+    else renderer.render(escena, camara)
+  }
   const pintar = (ahora: number) => {
     cuadro = requestAnimationFrame(pintar)
     if (document.hidden) return
@@ -711,7 +796,13 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
       if (k >= 1) despiece = despieceDestino
       aplicarDespiece()
     }
-    if (controles.update(dt)) sucio = true
+    const giro = controles.update(dt)
+    if (giro) sucio = true
+    // En movimiento: arrastre, transición de cámara o la inercia al soltar. La
+    // rotación automática no cuenta: es lenta y se mira entera.
+    const enMovimiento = interactuando || tween !== null || (giro && !controles.autoRotate)
+    if (estabaEnMovimiento && !enMovimiento) sucio = true
+    estabaEnMovimiento = enMovimiento
 
     const hayHalo = resaltado.seleccion.length + resaltado.conexion.length + resaltado.afectados.length > 0
     if (!reducir && hayHalo) {
@@ -740,8 +831,11 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
 
     if (sucio) {
       sucio = false
-      renderer.render(escena, camara)
+      dibujar(!enMovimiento)
       rotulos.render(escena, camara)
+      if (monitor?.registrar(ahora)) op.alRendimientoBajo?.()
+    } else {
+      monitor?.interrumpir()
     }
   }
   cuadro = requestAnimationFrame(pintar)
@@ -847,7 +941,7 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
         const disco = porEstructura.get(`disco-${h.disco}`)?.[0]
         const geo = geometriaDeHernia(modelo, h.disco, h.posicion, h.lado)
         if (!disco || !geo) continue
-        const mat = crearMaterial('lesion', colorAfectado.clone())
+        const mat = biblioteca ? biblioteca.material('lesion', { colorDePieza: colorAfectado.clone() }) : crearMaterial('lesion', colorAfectado.clone())
         materialesPropios.add(mat)
         const malla = new THREE.Mesh(geo, mat)
         malla.userData.estructura = `disco-${h.disco}`
@@ -969,9 +1063,18 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
     },
 
     capturar() {
-      renderer.render(escena, camara)
+      dibujar(true)
       return { dataUrl: lienzo.toDataURL('image/png'), ancho: lienzo.width, alto: lienzo.height }
     },
+
+    camara() {
+      return {
+        posicion: camara.position.toArray() as [number, number, number],
+        objetivo: controles.target.toArray() as [number, number, number],
+      }
+    },
+
+    calidad,
 
     liberar() {
       cancelAnimationFrame(cuadro)
@@ -989,6 +1092,8 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
       for (const g of geometriasPropias) g.dispose()
       for (const m of materialesPropios) m.dispose()
       for (const m of Object.values(halos)) m.dispose()
+      posproceso?.liberar()
+      biblioteca?.liberar()
       entorno.dispose()
       renderer.dispose()
       renderer.forceContextLoss()

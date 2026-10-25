@@ -123,9 +123,14 @@ describe('ubicar una pieza', () => {
     expect(u).toEqual({ estructura: undefined, parteDe: undefined, capa: 'vasos', color: '--cx-anat-arteria' })
   })
 
-  it('una capa que aún no existe (las venas del tramo REAL) no rompe la escena', () => {
-    expect(ubicarEnCatalogo(entrada({ estructura: 'yugular-interna-izq', capa: 'venas', tejido: 'vena' }))).toBeNull()
-    expect(ubicarEnCatalogo(entrada({ estructura: 'basilar', capa: 'venas', tejido: 'vena' }))!.capa).toBe('vasos')
+  it('una vena del atlas entra en la capa «venas» (modo realista) con su id del catálogo', () => {
+    const u = ubicarEnCatalogo(entrada({ estructura: 'yugular-interna-izq', capa: 'venas', tejido: 'vena' }))
+    expect(u).toMatchObject({ estructura: 'yugular-interna-izq', capa: 'venas' })
+  })
+
+  it('una capa que aún no existe no rompe la escena', () => {
+    expect(ubicarEnCatalogo(entrada({ estructura: 'conducto-linfatico', capa: 'linfaticos', tejido: 'vena' }))).toBeNull()
+    expect(ubicarEnCatalogo(entrada({ estructura: 'basilar', capa: 'linfaticos', tejido: 'arteria' }))!.capa).toBe('vasos')
   })
 })
 
