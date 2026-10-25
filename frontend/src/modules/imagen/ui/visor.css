@@ -22,6 +22,23 @@
   justify-content: space-between;
 }
 
+/* Modelo 3D desde TC (feat/modelo-3d-desde-tc): estado y botón junto al badge. */
+.visor-encabezado__lado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.visor-modelo3d {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.visor-modelo3d__texto { font-size: 0.85rem; color: var(--cx-texto-2); }
+.visor-modelo3d__texto--error { color: var(--cui-danger); }
+
 .visor-encabezado__titulo {
   margin: 0;
   font-size: 1.05rem;

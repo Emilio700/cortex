@@ -7,6 +7,7 @@
  */
 import { apiClient } from '../../../shared/services/api'
 import type { CorteClave } from '../dominio/cortesClave'
+import type { Modelo3D } from '../../neuro3d/dominio/modeloPaciente'
 import type { EnlaceCompartido, EnlaceCreado } from '../dominio/compartir'
 import type {
   AnotacionDicom,
@@ -260,6 +261,27 @@ export const compartidoApi = {
     const { data } = await apiClient.get<ManifiestoSerie>(
       `/public/imaging/shared/${token}/series/${seriesId}/manifest`
     )
+    return data
+  },
+}
+
+// ── Modelo 3D desde TC (feat/modelo-3d-desde-tc) ──
+// El tipo vive en Neuro 3D, que es quien lo dibuja; aquí sólo se pide y se consulta.
+
+export const modelo3dApi = {
+  /** El más reciente de la serie; `null` si nunca se pidió (404). */
+  async estado(studyId: number | string, seriesId: number): Promise<Modelo3D | null> {
+    try {
+      const { data } = await apiClient.get<Modelo3D>(`/imaging/studies/${studyId}/series/${seriesId}/modelo-3d`)
+      return data
+    } catch (error) {
+      if ((error as { response?: { status?: number } })?.response?.status === 404) return null
+      throw error
+    }
+  },
+
+  async generar(studyId: number | string, seriesId: number): Promise<Modelo3D> {
+    const { data } = await apiClient.post<Modelo3D>(`/imaging/studies/${studyId}/series/${seriesId}/modelo-3d`)
     return data
   },
 }

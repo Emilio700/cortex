@@ -12,9 +12,19 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const get = vi.hoisted(() => vi.fn())
+const post = vi.hoisted(() => vi.fn())
+// Modelo 3D desde TC: el módulo y el permiso se cambian por prueba.
+const auth = vi.hoisted(() => ({ modulos: [] as string[], permisos: [] as string[] }))
+
+vi.mock('../../../shared/context/AuthContext', () => ({
+  useAuth: () => ({
+    can: (a: string) => auth.permisos.includes(a),
+    tieneModulo: (m: string) => auth.modulos.includes(m),
+  }),
+}))
 
 vi.mock('../../../shared/services/api', () => ({
-  apiClient: { get, post: vi.fn(), delete: vi.fn() },
+  apiClient: { get, post, delete: vi.fn() },
   default: { get },
 }))
 
@@ -267,3 +277,56 @@ describe('VisorEstudioPage · cortes clave y controles', () => {
     await waitFor(() => expect(screen.getByText(/Los atajos no funcionan mientras escribes/)).toBeInTheDocument())
   })
 })
+
+describe('VisorEstudioPage · modelo 3D', () => {
+  const RUTA = '/imaging/studies/3/series/11/modelo-3d'
+  const MODELO = {
+    id: 9, patient_id: 7, study_id: 3, series_id: 11, region: 'columna', estado: 'pendiente',
+    sintetico: false, solicitado_en: '2026-10-25T10:00:00',
+  }
+
+  beforeEach(() => {
+    auth.modulos = []
+    auth.permisos = []
+    post.mockReset()
+    get.mockReset()
+    get.mockImplementation((url: string) => {
+      if (url === RUTA) return Promise.reject(Object.assign(new Error('404'), { response: { status: 404, data: {} } }))
+      if (url.includes('/comparison-candidates')) return Promise.resolve({ data: [] })
+      if (url.includes('/key-images')) return Promise.resolve({ data: [] })
+      if (url.includes('/patients/')) return Promise.resolve({ data: { first_name: 'Ana', last_name: 'López' } })
+      if (url.includes('/manifest')) return Promise.resolve({ data: { ordered_by: 'posicion', instances: [] } })
+      return Promise.resolve({ data: ESTUDIO })
+    })
+  })
+
+  it('con el módulo apagado no aparece ni se consulta', async () => {
+    auth.permisos = ['neuro3d.generar_modelo']
+    montar()
+    await screen.findByText('RM encefálico con contraste')
+    expect(screen.queryByRole('button', { name: 'Generar modelo 3D' })).toBeNull()
+    expect(get.mock.calls.some(([url]) => String(url).includes('modelo-3d'))).toBe(false)
+  })
+
+  it('con el módulo y el permiso ofrece generarlo para la serie que se ve', async () => {
+    auth.modulos = ['neuro3d_paciente']
+    auth.permisos = ['neuro3d.generar_modelo']
+    post.mockResolvedValue({ data: MODELO })
+    montar()
+    const boton = await screen.findByRole('button', { name: 'Generar modelo 3D' })
+    await userEvent.click(boton)
+    expect(post).toHaveBeenCalledWith(RUTA)
+    // Mandarlo no es terminarlo: dice que está en proceso, no «listo».
+    expect(await screen.findByText(/Procesando el modelo 3D/)).toBeInTheDocument()
+    expect(screen.queryByText(/Modelo 3D listo/)).toBeNull()
+  })
+
+  it('sin el permiso de generar no ofrece el botón', async () => {
+    auth.modulos = ['neuro3d_paciente']
+    montar()
+    await screen.findByText('RM encefálico con contraste')
+    await waitFor(() => expect(get.mock.calls.some(([url]) => url === RUTA)).toBe(true))
+    expect(screen.queryByRole('button', { name: 'Generar modelo 3D' })).toBeNull()
+  })
+})
+
