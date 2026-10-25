@@ -57,6 +57,8 @@ from app.routers import (
     users,
     catalogo_estudios,
 )
+# Escalas neurológicas (Cortex, feat/escalas-neuro)
+from app.routers import escalas as escalas_router
 
 
 @asynccontextmanager
@@ -217,6 +219,8 @@ app.include_router(imagenes.router, prefix=settings.API_V1_PREFIX)
 app.include_router(imaging.router, prefix=settings.API_V1_PREFIX)
 app.include_router(imaging_compartir.router, prefix=settings.API_V1_PREFIX)
 app.include_router(imaging_compartir.router_publico, prefix=settings.API_V1_PREFIX)
+# Escalas neurológicas (Cortex, feat/escalas-neuro)
+app.include_router(escalas_router.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/health")

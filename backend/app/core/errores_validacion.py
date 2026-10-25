@@ -214,6 +214,13 @@ ETIQUETAS: Dict[str, str] = {
     "priority": "Prioridad",
     "skip": "Página",
     "limit": "Cantidad por página",
+    # Escalas neurológicas (Cortex, feat/escalas-neuro)
+    "escala": "Escala",
+    "version_escala": "Versión de la escala",
+    "respuestas": "Respuestas de la escala",
+    "aplicada_en": "Fecha en que se aplicó",
+    "notas": "Notas de la escala",
+    "incluir_anuladas": "Incluir anuladas",
 }
 
 # --- Cómo se llaman los valores que acepta cada lista -----------------------

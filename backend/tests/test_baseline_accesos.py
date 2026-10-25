@@ -177,6 +177,11 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "clinical_images.read",
         "clinical_images.update",
         "clinical_images.upload",
+        # Por decisión, no por deriva (Cortex, feat/escalas-neuro): aplicar,
+        # ver y anular escalas neurológicas de su expediente
+        # (test_escalas_aplicadas.py).
+        "clinical_scales.read",
+        "clinical_scales.write",
         "clinical_tracking.create",
         # Por decisión, no por deriva: imprimir o reimprimir la orden de estudio
         # (O-01, decisión 1.3/1.4). Es sólo el papel; no abre el seguimiento

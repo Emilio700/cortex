@@ -48,6 +48,8 @@ PESTANAS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("embarazo", ("prenatal.read",)),
     ("consentimientos", ("clinical_consents.read", "patients.read")),
     ("equipo", ("patient_care_team.read",)),
+    # Escalas neurológicas (Cortex, feat/escalas-neuro): la gráfica de evolución.
+    ("escalas", ("clinical_scales.read",)),
 )
 
 PENDIENTES = (

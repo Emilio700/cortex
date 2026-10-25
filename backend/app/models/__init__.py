@@ -25,6 +25,8 @@ from app.models.doctor_profile import DoctorProfile
 from app.models.doctor_schedule import DoctorWorkingHours, ScheduleBlock
 from app.models.document import Document
 from app.models.espejo_legacy import VinculoLegacy
+# Escalas neurológicas (Cortex, feat/escalas-neuro)
+from app.models.escala_aplicada import EscalaAplicada
 from app.models.imaging import (
     ImagingAnnotation,
     ImagingKeyImage,
@@ -133,4 +135,6 @@ __all__ = [
     "Permission",
     "AccesoClinico",
     "FolioEmitido",
+    # Escalas neurológicas (Cortex, feat/escalas-neuro)
+    "EscalaAplicada",
 ]
