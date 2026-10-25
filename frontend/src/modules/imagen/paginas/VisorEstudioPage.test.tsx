@@ -6,7 +6,8 @@
  * avisos del servidor y que no se caiga cuando algo viene vacío. Lo que dibuja
  * la imagen se valida a mano contra 3D Slicer.
  */
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -32,6 +33,7 @@ vi.mock('../servicios/cornerstone', () => ({
 
 vi.mock('@cornerstonejs/core', () => ({
   Enums: { ViewportType: { STACK: 'stack' } },
+  eventTarget: { addEventListener: () => undefined, removeEventListener: () => undefined },
   RenderingEngine: class {
     enableElement() {}
     destroy() {}
@@ -138,6 +140,8 @@ describe('VisorEstudioPage', () => {
     get.mockReset()
     get.mockImplementation((url: string) => {
       if (url.includes('/comparison-candidates')) return Promise.resolve({ data: [] })
+      if (url.includes('/key-images')) return Promise.resolve({ data: [] })
+      if (url.includes('/patients/')) return Promise.resolve({ data: { first_name: 'Ana', last_name: 'López' } })
       if (url.includes('/manifest')) {
         return Promise.resolve({ data: { ordered_by: 'posicion', instances: [] } })
       }
@@ -166,6 +170,7 @@ describe('VisorEstudioPage', () => {
   it('un estudio sin series no rompe la pantalla', async () => {
     get.mockImplementation((url: string) => {
       if (url.includes('/comparison-candidates')) return Promise.resolve({ data: [] })
+      if (url.includes('/key-images')) return Promise.resolve({ data: [] })
       return Promise.resolve({ data: { ...ESTUDIO, series: [], series_count: 0, warnings: [] } })
     })
 
@@ -173,5 +178,92 @@ describe('VisorEstudioPage', () => {
 
     expect(await screen.findByText('RM encefálico con contraste')).toBeInTheDocument()
     expect(screen.getByText('El estudio no tiene series legibles.')).toBeInTheDocument()
+  })
+})
+
+describe('VisorEstudioPage · cortes clave y controles', () => {
+  const MARCA = {
+    id: 40,
+    study_id: 3,
+    series_id: 11,
+    series_description: 't1_ax_post',
+    instance_index: 7,
+    sop_instance_uid: null,
+    label: 'Lesión frontal',
+    notes: null,
+    view_state: {},
+    has_image: false,
+    created_at: '2026-10-25T10:00:00',
+    updated_at: '2026-10-25T10:00:00',
+    created_by: 'Dr. Salazar',
+  }
+
+  const respuestas = (extra: Record<string, unknown> = {}) =>
+    get.mockImplementation((url: string) => {
+      if (url in extra) return Promise.resolve({ data: extra[url] })
+      if (url.includes('/comparison-candidates')) return Promise.resolve({ data: [] })
+      if (url.includes('/key-images')) return Promise.resolve({ data: [] })
+      if (url.includes('/patients/')) return Promise.resolve({ data: { first_name: 'Ana', last_name: 'López' } })
+      if (url.includes('/manifest')) return Promise.resolve({ data: { ordered_by: 'posicion', instances: [] } })
+      return Promise.resolve({ data: ESTUDIO })
+    })
+
+  it('muestra la barra con sus herramientas, capturar, corte clave y compartir', async () => {
+    respuestas()
+    montar()
+    await screen.findByText('RM encefálico con contraste')
+
+    for (const nombre of [/^Medir una distancia/, /^Medir un ángulo/, /^Elipse/, /^Invertir los grises/, /^Capturar la imagen/, /^Marcar este corte como clave/, /^Compartir el estudio/, /^Atajos de teclado/]) {
+      expect(screen.getByRole('button', { name: nombre })).toBeInTheDocument()
+    }
+  })
+
+  it('los cortes clave que llegan del servidor se listan en su pestaña', async () => {
+    const usuario = userEvent.setup()
+    respuestas({ '/imaging/studies/3/key-images': [MARCA] })
+    montar()
+    await screen.findByText('RM encefálico con contraste')
+
+    await usuario.click(screen.getByText(/^Cortes clave/))
+    expect(await screen.findByText('Lesión frontal')).toBeInTheDocument()
+    expect(screen.getByText(/Corte 8/)).toBeInTheDocument()
+  })
+
+  it('una respuesta que no es una lista de cortes clave no rompe la pantalla', async () => {
+    respuestas({ '/imaging/studies/3/key-images': { algo: 'raro' } })
+    montar()
+    expect(await screen.findByText('RM encefálico con contraste')).toBeInTheDocument()
+    expect(screen.getByText(/^Cortes clave/)).toBeInTheDocument()
+  })
+
+  it('si no se pueden leer los cortes clave, lo dice en vez de mostrar «ninguno»', async () => {
+    get.mockImplementation((url: string) => {
+      if (url.includes('/key-images')) return Promise.reject(Object.assign(new Error('x'), { response: { status: 500, data: {} } }))
+      if (url.includes('/comparison-candidates')) return Promise.resolve({ data: [] })
+      if (url.includes('/patients/')) return Promise.resolve({ data: {} })
+      if (url.includes('/manifest')) return Promise.resolve({ data: { instances: [] } })
+      return Promise.resolve({ data: ESTUDIO })
+    })
+    montar()
+    expect(await screen.findByText(/No se pudieron cargar los cortes clave/)).toBeInTheDocument()
+  })
+
+  it('la tecla «?» abre la lista de atajos, y no mientras se escribe en un campo', async () => {
+    const usuario = userEvent.setup()
+    respuestas()
+    montar()
+    await screen.findByText('RM encefálico con contraste')
+
+    await usuario.keyboard('?')
+    expect(await screen.findByText('Atajos de teclado', { selector: '.modal-title' })).toBeInTheDocument()
+  })
+
+  it('el botón de atajos también abre la ayuda', async () => {
+    const usuario = userEvent.setup()
+    respuestas()
+    montar()
+    await screen.findByText('RM encefálico con contraste')
+    await usuario.click(screen.getByRole('button', { name: /^Atajos de teclado/ }))
+    await waitFor(() => expect(screen.getByText(/Los atajos no funcionan mientras escribes/)).toBeInTheDocument())
   })
 })

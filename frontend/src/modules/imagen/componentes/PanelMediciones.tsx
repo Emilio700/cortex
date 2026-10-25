@@ -1,11 +1,14 @@
 import { CButton, CFormInput } from '@coreui/react-pro'
 
 import { formatearMedida, resumirEvolucion, type Evolucion } from '../dominio/medidas'
+import { nombreDeMedicion } from '../dominio/mediciones'
 import type { AnotacionDicom } from '../dominio/tipos'
 
 interface Pendiente {
   value: number
   unit: string
+  /** length, angle o roi; si falta, se dice «Medición». */
+  kind?: string
 }
 
 interface Props {
@@ -43,6 +46,7 @@ export default function PanelMediciones({
     <div data-tour="visor-mediciones">
       {pendiente && (
         <div className="visor-medida mb-2">
+          <div className="visor-medida__tipo">{nombreDeMedicion(pendiente.kind ?? '')}</div>
           <div className="visor-medida__valor">
             {formatearMedida(pendiente.value, pendiente.unit)}
           </div>
@@ -67,7 +71,7 @@ export default function PanelMediciones({
 
       {medidas.length === 0 ? (
         <p className="mb-0 visor-encabezado__meta">
-          Todavía no hay mediciones. Elige «Medir» y traza una distancia sobre la imagen.
+          Todavía no hay mediciones. Elige «Medir», «Ángulo» o «Elipse» y traza sobre la imagen.
         </p>
       ) : (
         <ul className="visor-medidas">
@@ -77,6 +81,7 @@ export default function PanelMediciones({
             const signo = delta > 0 ? 'sube' : delta < 0 ? 'baja' : 'igual'
             return (
               <li className="visor-medida" key={medicion.id}>
+                <div className="visor-medida__tipo">{nombreDeMedicion(medicion.kind)}</div>
                 <div className="visor-medida__valor">
                   {formatearMedida(medicion.value, medicion.unit)}
                 </div>

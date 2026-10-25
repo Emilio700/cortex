@@ -29,6 +29,8 @@ const Login = React.lazy(() => import('./views/pages/login/Login'))
 const ForgotPasswordPage = React.lazy(() => import('./views/pages/login/ForgotPasswordPage'))
 const ResetPasswordPage = React.lazy(() => import('./views/pages/login/ResetPasswordPage'))
 const ForceChangePasswordPage = React.lazy(() => import('./views/pages/login/ForceChangePasswordPage'))
+// El estudio visto desde un enlace temporal: pública a propósito (sin sesión).
+const VisorCompartidoPage = React.lazy(() => import('./modules/imagen/paginas/VisorCompartidoPage'))
 const Page403 = React.lazy(() => import('./views/pages/page403/Page403'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
@@ -77,6 +79,7 @@ const App = () => {
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/force-change-password" element={<ForceChangePasswordPage />} />
+            <Route path="/compartido/:token" element={<VisorCompartidoPage />} />
             <Route path="/403" element={<Page403 />} />
             <Route path="/404" element={<Page404 />} />
             <Route path="/500" element={<Page500 />} />
