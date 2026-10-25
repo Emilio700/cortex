@@ -21,7 +21,9 @@ TORACICAS = [f"T{i}" for i in range(1, 13)]
 LUMBARES = [f"L{i}" for i in range(1, 6)]
 NIVELES = CERVICALES + TORACICAS + LUMBARES
 
-MAX_TRIANGULOS = 12_000
+# Medido con una TC real: con 8000 la malla refinada pesa lo mismo que la clásica
+# con 12 000 (4.9 MB la columna completa) y conserva más forma.
+MAX_TRIANGULOS = 8_000
 
 
 @dataclass(frozen=True)
