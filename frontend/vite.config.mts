@@ -35,6 +35,9 @@ export default defineConfig(() => {
             // cuando lo abre llega entero: en su propio paquete para que no
             // arrastre al resto de la aplicación.
             if (id.includes('@cornerstonejs')) return 'vendor-cornerstone'
+            // Atlas Neuro 3D (tramo C): three.js sólo lo descarga quien abre el
+            // atlas, y llega en un solo paquete aparte.
+            if (/[\/]node_modules[\/]three[\/]/.test(id)) return 'vendor-three'
             return undefined
           },
         },

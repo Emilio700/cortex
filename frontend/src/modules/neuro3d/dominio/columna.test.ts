@@ -30,7 +30,7 @@ describe('niveles vertebrales', () => {
     expect(DISCOS[0]).toBe('C2-C3')
     expect(DISCOS).toContain('C7-T1')
     expect(DISCOS).toContain('T12-L1')
-    expect(DISCOS.at(-1)).toBe('L5-S1')
+    expect(DISCOS[DISCOS.length - 1]).toBe('L5-S1')
     expect(DISCOS).not.toContain('C1-C2')
     expect(DISCOS).toHaveLength(23)
     expect(vertebrasDelDisco('L5-S1')).toEqual(['L5', 'S'])
@@ -45,7 +45,7 @@ describe('raíces', () => {
     expect(RAICES.filter((r) => r.region === 'toracica')).toHaveLength(12)
     expect(RAICES.filter((r) => r.region === 'lumbar')).toHaveLength(5)
     expect(RAICES.filter((r) => r.region === 'sacra')).toHaveLength(5)
-    expect(RAICES.at(-1)!.id).toBe('Co')
+    expect(RAICES[RAICES.length - 1]!.id).toBe('Co')
   })
 
   it('las cervicales salen por encima de su vértebra y C8 entre C7 y T1', () => {
@@ -92,7 +92,7 @@ describe('segmentos medulares (aproximación clásica)', () => {
   })
 
   it('la médula es más corta que la columna: el cono termina hacia L1-L2', () => {
-    expect(SEGMENTOS_MEDULARES.at(-1)!.hasta).toBe(FIN_DEL_CONO)
+    expect(SEGMENTOS_MEDULARES[SEGMENTOS_MEDULARES.length - 1]!.hasta).toBe(FIN_DEL_CONO)
     expect(Math.floor(FIN_DEL_CONO)).toBe(20) // L2 empieza en 20: el cono acaba en el disco L1-L2
   })
 

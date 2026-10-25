@@ -4,6 +4,10 @@
  * Coordenadas del modelo, en centímetros: +x es el lado IZQUIERDO del paciente,
  * +y arriba y +z hacia delante. Así la vista anterior deja la izquierda del
  * paciente a la derecha de la pantalla, como al tenerlo enfrente.
+ *
+ * La cámara siempre conserva +y como «arriba» (los controles de órbita lo
+ * fijan al crearse); las vistas desde arriba y desde abajo se desplazan un poco
+ * en z para que la frente quede hacia arriba de la pantalla.
  */
 
 export type VistaId = 'anterior' | 'lateral' | 'superior' | 'sagital' | 'columna' | 'base' | 'posterior'
@@ -18,7 +22,6 @@ export interface Vista {
   descripcion: string
   posicion: Vec3
   objetivo: Vec3
-  arriba: Vec3
   /** El sagital medio abre con el corte sagital en la línea media. */
   corte?: { plano: PlanoDeCorte; posicion: number }
 }
@@ -49,7 +52,6 @@ export const VISTAS: Vista[] = [
     descripcion: 'De frente, como al tener al paciente enfrente.',
     posicion: [0, 3, 40],
     objetivo: CENTRO_ENCEFALO,
-    arriba: [0, 1, 0],
   },
   {
     id: 'lateral',
@@ -58,16 +60,15 @@ export const VISTAS: Vista[] = [
     descripcion: 'Desde el lado izquierdo: los cuatro lóbulos y la cisura de Silvio.',
     posicion: [40, 2, 1],
     objetivo: CENTRO_ENCEFALO,
-    arriba: [0, 1, 0],
   },
   {
     id: 'superior',
     nombre: 'Superior',
     tecla: '3',
     descripcion: 'Desde arriba, con la frente hacia arriba de la pantalla.',
-    posicion: [0, 42, 0.5],
+    // Un poco por detrás del objetivo: así la frente queda arriba de la pantalla.
+    posicion: [0, 42, -1.6],
     objetivo: CENTRO_ENCEFALO,
-    arriba: [0, 0, 1],
   },
   {
     id: 'sagital',
@@ -76,7 +77,6 @@ export const VISTAS: Vista[] = [
     descripcion: 'Corte por la línea media: cara interna del hemisferio, tronco y ventrículos.',
     posicion: [-38, 1, 2],
     objetivo: [0, -1, -0.8],
-    arriba: [0, 1, 0],
     corte: { plano: 'sagital', posicion: 0 },
   },
   {
@@ -84,18 +84,17 @@ export const VISTAS: Vista[] = [
     nombre: 'Columna completa',
     tecla: '5',
     descripcion: 'Del cráneo al sacro, desde atrás y de lado.',
-    posicion: [62, -36, -78],
-    objetivo: [0, -44, -2],
-    arriba: [0, 1, 0],
+    posicion: [104, -40, -150],
+    objetivo: [0, -46, -2],
   },
   {
     id: 'base',
     nombre: 'Base (polígono de Willis)',
     tecla: '6',
     descripcion: 'Desde abajo: el polígono de Willis en la base del encéfalo.',
-    posicion: [0, -34, 9],
+    // Un poco por delante del objetivo: la frente queda arriba de la pantalla.
+    posicion: [0, -34, 1.8],
     objetivo: [0, -1.2, 0.6],
-    arriba: [0, 0, 1],
   },
   {
     id: 'posterior',
@@ -104,7 +103,6 @@ export const VISTAS: Vista[] = [
     descripcion: 'Desde atrás: cerebelo, columna y raíces.',
     posicion: [0, -10, -48],
     objetivo: [0, -12, -1],
-    arriba: [0, 1, 0],
   },
 ]
 
