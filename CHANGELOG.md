@@ -108,6 +108,19 @@ Todos los cambios notables de Cortex. Formato basado en
 - Material de referencia en `docs/referencias/`: MediSuite (imagen DICOM con Orthanc
   y OHIF, anonimización con Presidio, voz a texto, receta con QR), de solo lectura y
   sin binarios de terceros. No es código de Cortex.
+<!-- Columna desde radiografías (feat/columna-desde-radiografias) -->
+- **Columna desde radiografía** (`/pacientes/:id/neuro-3d/radiografia`, desde
+  Neuro 3D con el paciente en contexto): sobre una foto de la placa o una serie
+  DICOM CR/DX, el médico marca las esquinas de cada vértebra (lupa, deshacer,
+  saltar, arrastrar; también con el dedo) y se miden lordosis L1–S1, cifosis
+  T4–T12, Cobb coronal con vértebras límite cambiables, listesis con grado de
+  Meyerding, altura discal relativa e incidencia, inclinación y pendiente pélvicas,
+  cada una con su fuente. Sin escala sólo hay ángulos y proporciones; los mm salen
+  del DICOM o de una distancia conocida, y se dice cuál. El servidor recalcula y
+  guarda (tabla `columna_ajustes_rx`, migración 0054, anulación con motivo);
+  permisos `spine_rx.read`/`write` para el médico. En Neuro 3D, el origen
+  «Radiografía» del mismo selector que la TC dobla la columna esquemática a esas
+  medidas con su aviso de aproximación. Lo marcado «(verificar)» espera revisión médica.
 
 ### Cambiado
 - El visor ocupa la altura de la pantalla en vez de ser un cuadrado, y su barra se

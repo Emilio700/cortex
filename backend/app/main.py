@@ -59,6 +59,8 @@ from app.routers import (
 )
 # Escalas neurológicas (Cortex, feat/escalas-neuro)
 from app.routers import escalas as escalas_router
+# Columna desde radiografías (Cortex, feat/columna-desde-radiografias)
+from app.routers import columna_rx as columna_rx_router
 # base-modulos-extra (tramo A): módulos opcionales y estado de servicios.
 from app.routers import modulos as modulos_router
 # Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc)
@@ -225,6 +227,8 @@ app.include_router(imaging_compartir.router, prefix=settings.API_V1_PREFIX)
 app.include_router(imaging_compartir.router_publico, prefix=settings.API_V1_PREFIX)
 # Escalas neurológicas (Cortex, feat/escalas-neuro)
 app.include_router(escalas_router.router, prefix=settings.API_V1_PREFIX)
+# Columna desde radiografías (Cortex, feat/columna-desde-radiografias)
+app.include_router(columna_rx_router.router, prefix=settings.API_V1_PREFIX)
 # base-modulos-extra (tramo A): módulos opcionales y estado de servicios.
 app.include_router(modulos_router.router, prefix=settings.API_V1_PREFIX)
 app.include_router(modulos_router.router_servicios, prefix=settings.API_V1_PREFIX)

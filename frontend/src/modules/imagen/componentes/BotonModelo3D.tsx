@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom'
 import { CBadge, CButton, CSpinner } from '@coreui/react-pro'
 
 import type { Modelo3D } from '../../neuro3d/dominio/modeloPaciente'
-import { pedirModelo } from '../../neuro3d/servicios/modeloPedido'
+import { pedirOrigen } from '../../neuro3d/servicios/origenPedido'
 import { modelo3dApi } from '../servicios/estudiosApi'
 import { mensajeDeFallo } from '../servicios/mensajes'
 
@@ -122,7 +122,7 @@ export default function BotonModelo3D({ patientId, estudioId, serieId, puedeGene
           <Link
             className="btn btn-sm btn-primary"
             to={`/pacientes/${patientId}/neuro-3d?modelo=${m.id}`}
-            onClick={() => pedirModelo(m.id)}
+            onClick={() => pedirOrigen(Number(patientId), 'tc', m.id)}
           >
             Ver en Neuro 3D
           </Link>

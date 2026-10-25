@@ -51,6 +51,8 @@ const ResultsInboxPage = React.lazy(() => import('./modules/doctor/pages/Results
 // ── Neuro 3D (tramo C) ──
 // En su propio paquete: three.js (vendor-three) sólo lo descarga quien abre el atlas.
 const AtlasNeuroPage = React.lazy(() => import('./modules/neuro3d/paginas/AtlasNeuroPage'))
+// Columna desde radiografías (feat/columna-desde-radiografias): marcar la AP y la lateral.
+const MarcadoRadiografiaPage = React.lazy(() => import('./modules/neuro3d/paginas/MarcadoRadiografiaPage'))
 
 // Admin Module
 const AdminDashboard = React.lazy(() => import('./modules/admin/pages/AdminDashboard'))
@@ -157,6 +159,14 @@ const routes: Route[] = [
     requires: ['neuro3d.read'],
     name: 'Neuro 3D',
     element: AtlasNeuroPage,
+  },
+  {
+    // Columna desde radiografías: marcar puntos es escribir en el expediente.
+    // `requires` basta con uno; aquí sólo hay uno a propósito.
+    path: '/pacientes/:patientId/neuro-3d/radiografia',
+    requires: ['spine_rx.write'],
+    name: 'Columna desde radiografía',
+    element: MarcadoRadiografiaPage,
   },
   {
     // Mostrador de órdenes: entregar la orden (O-09) y subir el resultado

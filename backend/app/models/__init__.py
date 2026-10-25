@@ -27,6 +27,8 @@ from app.models.document import Document
 from app.models.espejo_legacy import VinculoLegacy
 # Escalas neurológicas (Cortex, feat/escalas-neuro)
 from app.models.escala_aplicada import EscalaAplicada
+# Columna desde radiografías (Cortex, feat/columna-desde-radiografias)
+from app.models.columna_ajuste_rx import ColumnaAjusteRx
 # Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc)
 from app.models.imaging_modelo_3d import EstadoModelo3D, ImagingModelo3D
 from app.models.imaging import (
@@ -140,6 +142,8 @@ __all__ = [
     "FolioEmitido",
     # Escalas neurológicas (Cortex, feat/escalas-neuro)
     "EscalaAplicada",
+    # Columna desde radiografías (Cortex, feat/columna-desde-radiografias)
+    "ColumnaAjusteRx",
     "TenantModulo",
     # Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc)
     "EstadoModelo3D",

@@ -422,9 +422,9 @@ botón del visor ni la opción del selector se pintan.
   minutos» (consulta sola cada 5 s), «Modelo 3D listo» con «Ver en Neuro 3D», o
   «No se pudo: motivo» con «Intentar de nuevo». Mandar la petición **no** es
   «listo». Sin el permiso `neuro3d.generar_modelo` sólo se ve el estado.
-  «Ver en Neuro 3D» pasa el modelo con `servicios/modeloPedido.ts`, no sólo con
-  `?modelo=`: las pestañas reemplazan la URL por la ruta limpia y el parámetro se
-  perdía.
+  «Ver en Neuro 3D» pasa el origen «tc» y el modelo con `servicios/origenPedido.ts`
+  (el mismo que usa la radiografía, §4.15), no sólo con `?modelo=`: las pestañas
+  reemplazan la URL por la ruta limpia y el parámetro se perdía.
 - **Origen del modelo.** Con el paciente en contexto, debajo del encabezado va el
   selector (`componentes/SelectorOrigen.tsx`): grupo de radio con «Esquemático»,
   «Radiografía» y «Tomografía del paciente». Lo que no se puede elegir queda
@@ -450,6 +450,52 @@ botón del visor ni la opción del selector se pintan.
 
 Referencia: `frontend/src/modules/neuro3d/` y `servicios/segmentador/`.
 <!-- fin modelo-3d-desde-tc -->
+
+<!-- Columna desde radiografías (feat/columna-desde-radiografias) -->
+### 4.15 Columna desde radiografía: marcar, sugerir y aproximar
+
+Pantalla `/pacientes/:id/neuro-3d/radiografia` (permiso `spine_rx.write`), a la que
+se llega desde Neuro 3D con el paciente en contexto («Marcar radiografías»).
+
+- **Siempre se dice qué es.** Arriba, fijo, el aviso del origen «radiografía»
+  (`AVISO_ORIGEN` de `dominio/origenModelo.ts`): las medidas doblan la columna
+  esquemática, la forma de cada vértebra no es la del paciente. Y la petición de
+  fotografiar la placa de frente.
+- **La placa va sobre negro fijo**, como en el visor (§4.9). Puntos y platillos en
+  cian; lo que se está moviendo y la distancia de referencia, en ámbar.
+- **Un punto a la vez.** Una franja dice qué esquina toca y dónde está
+  («L3 · platillo superior, esquina anterior»), con el avance («12 de 60»). Al tocar
+  aparece la **lupa** (×3) del lado contrario al dedo; el punto se coloca al soltar.
+  Un punto ya puesto se corrige **arrastrándolo** (más de 6 px); un toque sin arrastrar
+  pone el que toca aunque haya otro cerca (en un disco estrecho, a 390 px, las
+  esquinas vecinas quedan a pocos píxeles). La franja del paso tiene alto fijo: la
+  placa no se mueve bajo el dedo cuando el texto cambia de largo. **Deshacer**, **Saltar punto** (lo que
+  dependía de él no se calcula y se dice por qué) y **Mover imagen** (el dedo
+  desplaza la placa sin marcar) son botones de 40 px. Funciona a 390 px.
+- **Sugerir, no decidir.** Las mediciones se calculan en vivo con la insignia
+  «Sugerencia» y su fuente; lo fuera de referencia va en ámbar como aviso. El Cobb
+  coronal elige sus vértebras límite y el médico puede cambiarlas.
+- **Escala explícita.** Sin escala sólo hay ángulos y proporciones; los milímetros
+  aparecen con el espaciado del DICOM (lo pone el servidor, leído de la serie) o con
+  una distancia conocida que el médico marca, y el panel dice cuál se usó.
+- **El servidor manda.** «Guardado» sólo aparece con su respuesta; desde ahí se ven
+  sus mediciones («Calculadas por el servidor») y, si no coinciden con la sugerencia,
+  se dice. Si falla, los puntos se quedan. Un ajuste no se edita: se anula con motivo
+  y queda tachado en «Ajustes guardados».
+- **En Neuro 3D**, la opción «Radiografía» del selector «Origen del modelo» (§4.14)
+  usa el ajuste vigente más reciente (`servicios/origenRadiografia.ts`): rehace la
+  escena con el eje ajustado y sin la capa de la TC, cambia el aviso y pone las
+  mediciones en la ficha. Sin ajuste, la opción queda deshabilitada y dice por qué;
+  junto al grupo va «Marcar radiografías» si el médico tiene `spine_rx.write`. Si el
+  ajuste se anula, la escena vuelve al esquemático.
+- **Un solo «origen pedido».** «Ver en Neuro 3D», desde la radiografía o desde el
+  visor de TC, deja el origen (y el modelo, en TC) en `servicios/origenPedido.ts`:
+  `sessionStorage` por paciente más un evento para la pestaña ya abierta, porque las
+  pestañas abren cada pantalla sin su `?…`. Neuro 3D lo toma una vez y lo aplica
+  cuando la escena y ese modelo están listos; lo que el médico elige después manda.
+
+Referencia: `frontend/src/modules/neuro3d/paginas/MarcadoRadiografiaPage.tsx`,
+`dominio/ajusteRadiografico.ts` y `backend/app/services/columna_rx.py`.
 
 ---
 

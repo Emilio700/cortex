@@ -18,7 +18,7 @@ const CLINICO = [Role.DOCTOR, Role.ADMIN, Role.MASTER]
 export const RECORRIDOS_NEURO3D: Recorrido[] = [
   {
     id: 'neuro-3d',
-    version: 2,
+    version: 3,
     titulo: 'Neuro 3D',
     resumen:
       'Encéfalo y columna en 3D para explicarle al paciente su lesión: capas, vistas, raíces con su dermatoma y captura.',
@@ -39,7 +39,7 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         elemento: 'atlas-origen',
         titulo: 'Origen del modelo',
         texto:
-          'Con un paciente en contexto eliges de dónde sale la columna: el modelo <b>esquemático</b>, el ajustado desde su <b>radiografía</b> o la <b>tomografía del paciente</b> (una reconstrucción automática de su TC). Lo que no está disponible aparece deshabilitado y dice por qué.',
+          'Con un paciente en contexto eliges de dónde sale la columna: el modelo <b>esquemático</b>, el ajustado desde su <b>radiografía</b> o la <b>tomografía del paciente</b> (una reconstrucción automática de su TC). Lo que no está disponible aparece deshabilitado y dice por qué. Si puedes marcar radiografías, <b>Marcar radiografías</b> abre la herramienta para medirlas.',
         lado: 'bottom',
       },
       {
@@ -109,7 +109,7 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         elemento: 'atlas-capturar',
         titulo: 'Captura',
         texto:
-          'Descarga un PNG con la vista, la silueta y el aviso del origen del modelo (esquemático o reconstrucción de su TC), sin el nombre del paciente. Si abriste Neuro 3D desde la pestaña <b>Imágenes</b> del expediente, también puedes <b>guardarla en el expediente</b> (con su consentimiento); solo dice «guardado» cuando el sistema lo confirmó.',
+          'Descarga un PNG con la vista, la silueta y el aviso del origen del modelo (esquemático, aproximación desde radiografía o reconstrucción de su TC), sin el nombre del paciente. Si abriste Neuro 3D desde la pestaña <b>Imágenes</b> del expediente, también puedes <b>guardarla en el expediente</b> (con su consentimiento); solo dice «guardado» cuando el sistema lo confirmó.',
         lado: 'bottom',
       },
     ],
