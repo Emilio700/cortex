@@ -7,8 +7,8 @@
  * disco. Así la raíz L5 sale exactamente por el agujero L5-S1 que dice la
  * ficha, y su segmento medular queda donde dice la tabla de segmentos.
  *
- * La columna despiezada separa cada vértebra hacia abajo (una «junta» por
- * disco). Las vértebras y los discos se mueven enteros; la médula y las raíces,
+ * El eje y su despiece viven en `ejeColumna.ts`, puros y con pruebas. La
+ * columna despiezada abre cada disco (una «junta») a lo largo de la curva. Las vértebras y los discos se mueven enteros; la médula y las raíces,
  * que cruzan varias juntas, traen su forma separada como morph target, para
  * que se estiren con la columna y se puedan seguir tocando.
  */
@@ -25,27 +25,9 @@ import {
 import { idDeRaiz } from '../../dominio/catalogo'
 import type { PiezaAnatomica } from './tipos'
 import { aMarco, campana, elipsoide, fusionar, limitar, pasoSuave, tuboVariable } from './geometria'
+import { crearDesplazamiento, crearJuntas, crearLongitud, trazarEje } from './ejeColumna'
 
 const v3 = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z)
-
-/** Eje del conducto raquídeo, del agujero magno al cóccix. */
-const EJE_DEL_CONDUCTO = [
-  v3(0, -8.2, -1.6),
-  v3(0, -10, -1.2),
-  v3(0, -16, -0.2),
-  v3(0, -22.5, -1.3),
-  v3(0, -30, -3.4),
-  v3(0, -38, -4.4),
-  v3(0, -47, -3.6),
-  v3(0, -55, -1.8),
-  v3(0, -62, -0.4),
-  v3(0, -67, -0.2),
-  v3(0, -72.5, -1.6),
-  v3(0, -76.5, -3.8),
-  v3(0, -81, -6.6),
-  v3(0, -85, -7.8),
-  v3(0, -88, -7.4),
-]
 
 interface MedidasDeNivel {
   id: string
@@ -76,7 +58,9 @@ const medidas = (): MedidasDeNivel[] =>
       const k = (i - 19) / 4
       return { id: n.id, region: n.region, cuerpo: 2.6 + 0.25 * Math.sin(k * Math.PI), disco: 0.95 + 0.12 * Math.sin(k * Math.PI), ancho: 4.2 + 0.8 * k, fondo: 3.0 + 0.4 * k, conducto: 0.82 }
     }
-    return { id: n.id, region: n.region, cuerpo: 10.5, disco: 3.0, ancho: 9, fondo: 3.6, conducto: 0.7 }
+    // El sacro: unos 11 cm del platillo de S1 al vértice, como en un adulto
+    // (cuatro cuerpos lumbares). No tiene disco abajo; el cóccix va aparte.
+    return { id: n.id, region: n.region, cuerpo: 11, disco: 0, ancho: 9, fondo: 3.6, conducto: 0.7 }
   })
 
 /** Separación de cada junta en la columna despiezada (cm). */
@@ -108,23 +92,10 @@ export interface ModeloColumna {
 }
 
 export const crearModeloColumna = (): ModeloColumna => {
-  const curva = new THREE.CatmullRomCurve3(EJE_DEL_CONDUCTO, false, 'catmullrom', 0.5)
-  const largo = curva.getLength()
   const m = medidas()
-  // Inicio (en cm de curva) de cada vértebra; C1 arranca 1.3 cm bajo el agujero magno.
-  const inicio: number[] = []
-  let s = 1.3
-  for (const n of m) {
-    inicio.push(s)
-    s += n.cuerpo + n.disco
-  }
-
-  const sDeV = (v: number): number => {
-    if (v < 0) return Math.max(0, inicio[0] + v * (m[0].cuerpo + m[0].disco))
-    const i = Math.min(Math.floor(v), m.length - 1)
-    const f = v - i
-    return Math.min(largo, inicio[i] + f * (m[i].cuerpo + m[i].disco) + (v >= m.length ? (v - m.length) * 3 : 0))
-  }
+  const curva = new THREE.CatmullRomCurve3(trazarEje(m), false, 'catmullrom', 0.5)
+  const largo = curva.getLength()
+  const { sDeV } = crearLongitud(m)
 
   const marco = (v: number): MarcoColumna => {
     const u = limitar(sDeV(v) / largo)
@@ -141,16 +112,13 @@ export const crearModeloColumna = (): ModeloColumna => {
 
   const fraccionDeCuerpo = (i: number) => m[i].cuerpo / (m[i].cuerpo + m[i].disco)
 
-  const juntas = (v: number) => {
-    if (v <= 0) return 0
-    const i = Math.min(Math.floor(v), m.length - 1)
-    if (i >= m.length - 1) return m.length - 1
-    const f = v - i
-    const fc = fraccionDeCuerpo(i)
-    return i + (f <= fc ? 0 : (f - fc) / (1 - fc))
-  }
-
-  const desplazamiento = (v: number) => v3(0, -SEPARACION_DESPIECE * juntas(v), 0)
+  // Cada junta se abre sobre la tangente de su disco (a la mitad del disco).
+  const tangentesDeJuntas = m.slice(0, -1).map((_, j) => {
+    const fc = fraccionDeCuerpo(j)
+    return marco(j + fc + (1 - fc) / 2).tangente
+  })
+  const desplazamientoEn = crearDesplazamiento(crearJuntas(m), tangentesDeJuntas, SEPARACION_DESPIECE)
+  const desplazamiento = (v: number) => desplazamientoEn(v)
 
   const radioMedular = (v: number) => {
     const base = 0.43
@@ -283,19 +251,24 @@ const axis = (n: MedidasDeNivel): THREE.BufferGeometry => {
   return fusionar([base, diente])
 }
 
-/** Sacro: cuña curva, ancha arriba (alas) y angosta abajo, con el conducto atrás. */
+/**
+ * Medidas del sacro a lo largo de su eje (t = 0 en el platillo de S1, 1 en el
+ * vértice), en cm: medio ancho (las alas, ~10 cm de lado a lado), medio grosor
+ * y cuánto queda su centro por delante del conducto. Arriba es tan grueso como
+ * el cuerpo de L5 y envuelve el conducto sacro; abajo se adelgaza.
+ */
+export const PERFIL_DEL_SACRO = {
+  ancho: (t: number) => 4.9 * (1 - 0.74 * Math.pow(t, 0.85)),
+  grueso: (t: number) => 2.2 * (1 - 0.6 * t),
+  adelante: (t: number) => 1.0 - 0.7 * t,
+}
+
+/** Sacro: cuña curva, ancha arriba (alas) y angosta abajo, con el conducto dentro. */
 const sacro = (modelo: ModeloColumna, indice: number) => {
-  const n = modelo.medidas[indice]
+  const { ancho, grueso, adelante } = PERFIL_DEL_SACRO
   const puntos: THREE.Vector3[] = []
   const pasos = 8
-  for (let k = 0; k <= pasos; k++) {
-    const v = indice + (k / pasos) * 0.98
-    puntos.push(modelo.punto(v, 0, n.conducto + 0.95 - 0.55 * (k / pasos)))
-  }
-  // Una placa: ancha arriba (las alas, ~10 cm) y angosta abajo; gruesa sólo
-  // en el cuerpo de S1.
-  const ancho = (t: number) => 4.9 * (1 - 0.74 * Math.pow(t, 0.85))
-  const grueso = (t: number) => 1.45 * (1 - 0.68 * t)
+  for (let k = 0; k <= pasos; k++) puntos.push(modelo.punto(indice + k / pasos, 0, adelante(k / pasos)))
   const cuerpoSacro = tuboVariable({
     puntos,
     radio: grueso,
@@ -304,8 +277,9 @@ const sacro = (modelo: ModeloColumna, indice: number) => {
     radiales: 36,
   })
   const coxis = tuboVariable({
-    puntos: [modelo.punto(indice + 0.98, 0, 0.6), modelo.punto(indice + 1.3, 0, 0.5), modelo.punto(indice + 1.6, 0, 0.6)],
-    radio: (t) => 0.55 * (1 - 0.7 * t),
+    // El cóccix: corto (unos 3 cm), del vértice del sacro hacia abajo y adelante.
+    puntos: [modelo.punto(indice + 0.97, 0, 0.32), modelo.punto(indice + 1.5, 0, 0.35), modelo.punto(indice + 2, 0, 0.4)],
+    radio: (t) => 0.5 * (1 - 0.6 * t),
     escalaLateral: () => 1.3,
     segmentos: 12,
     radiales: 16,
@@ -326,7 +300,10 @@ export const construirColumna = (modelo: ModeloColumna): PiezaAnatomica[] => {
     const desplazamiento = modelo.desplazamiento(i + fc * 0.5)
     if (n.id === 'S') {
       const geo = sacro(modelo, i)
-      const ancla = modelo.punto(i + 0.25, 4.6, 1.8)
+      // En el borde lateral, abajo de las alas: lejos de donde termina la raíz L5,
+      // para que los dos rótulos no se encimen en la vista lateral.
+      const { ancho, adelante } = PERFIL_DEL_SACRO
+      const ancla = modelo.punto(i + 0.78, ancho(0.78) + 0.4, adelante(0.78))
       piezas.push({
         estructura: 'sacro',
         capa: 'columna',
@@ -489,9 +466,12 @@ export const construirRaices = (modelo: ModeloColumna): PiezaAnatomica[] => {
       } else {
         const cervical = raiz.region === 'cervical'
         const lumbar = raiz.region === 'lumbar'
+        // L5 sale por el agujero L5-S1 y baja por delante del ala del sacro (el
+        // tronco lumbosacro): si siguiera como las otras lumbares, cruzaría el hueso.
+        const sobreElAla = raiz.id === 'L5'
         muestras.push({ v: vf, lateral: s * (rcF + 0.4), adelante: 0.12 })
-        muestras.push({ v: vf + (lumbar ? 0.18 : 0.08), lateral: s * (rcF + 1.6), adelante: cervical ? 0.55 : 0.3 })
-        muestras.push({ v: vf + (lumbar ? 0.45 : 0.22), lateral: s * (rcF + (lumbar ? 3.4 : 3.0)), adelante: cervical ? 1.2 : lumbar ? 1.3 : 0.6 })
+        muestras.push({ v: vf + (lumbar ? 0.18 : 0.08), lateral: s * (rcF + 1.6), adelante: cervical ? 0.55 : sobreElAla ? 1.1 : 0.3 })
+        muestras.push({ v: vf + (lumbar ? 0.45 : 0.22), lateral: s * (rcF + (lumbar ? 3.4 : 3.0)), adelante: cervical ? 1.2 : sobreElAla ? 3.2 : lumbar ? 1.3 : 0.6 })
       }
       const { g, separado, normal } = tuboConDespiece(modelo, muestras, (t) => r * (0.65 + 0.35 * pasoSuave(0, 0.25, t)) * (1 - 0.25 * pasoSuave(0.8, 1, t)), {
         segmentos: Math.max(24, muestras.length * 10),
