@@ -52,6 +52,14 @@ export interface Estructura {
   nivel?: string
   disco?: string
   esquematica?: boolean
+  /**
+   * Sólo existe en el atlas detallado (BodyParts3D): un giro, un hueso del
+   * cráneo. El modelo simplificado no la dibuja; el buscador sólo la ofrece con
+   * el atlas a la vista.
+   */
+  soloAtlas?: boolean
+  /** La estructura que la contiene: al elegir el lóbulo se encienden sus giros. */
+  parteDe?: string
 }
 
 const LADOS: [Lado, string, string][] = [
@@ -420,6 +428,238 @@ const VIAS: Estructura[] = [
   }),
 ]
 
+// ── Atlas detallado (feat/neuro3d-atlas) ────────────────────────────────────
+// Lo que BodyParts3D trae más fino que el modelo simplificado. Cada una dice de
+// qué estructura es parte, para que elegir «Lóbulo frontal» encienda sus giros
+// y «Cráneo» todos sus huesos.
+
+const HUESO_DEL_CRANEO = {
+  sistema: 'Envolturas' as const,
+  capa: 'craneo' as const,
+  color: '--cx-anat-hueso',
+  soloAtlas: true,
+  parteDe: 'craneo',
+}
+
+const HUESOS_DEL_CRANEO: Estructura[] = [
+  {
+    id: 'hueso-frontal',
+    nombre: 'Hueso frontal',
+    ...HUESO_DEL_CRANEO,
+    descripcion: 'Forma la frente y el techo de las órbitas. Protege a los lóbulos frontales.',
+    sinonimos: ['frontal', 'frente'],
+  },
+  {
+    id: 'hueso-occipital',
+    nombre: 'Hueso occipital',
+    ...HUESO_DEL_CRANEO,
+    descripcion: 'La parte de atrás y de abajo del cráneo. Por su agujero magno pasa el tronco del encéfalo hacia la médula.',
+    sinonimos: ['occipital', 'nuca', 'agujero magno'],
+  },
+  {
+    id: 'hueso-esfenoides',
+    nombre: 'Hueso esfenoides',
+    ...HUESO_DEL_CRANEO,
+    descripcion: 'Hueso en forma de mariposa en la base del cráneo. En su silla turca descansa la hipófisis.',
+    sinonimos: ['esfenoides', 'silla turca', 'base del craneo'],
+  },
+  {
+    id: 'hueso-etmoides',
+    nombre: 'Hueso etmoides',
+    ...HUESO_DEL_CRANEO,
+    descripcion: 'Hueso delgado entre las órbitas. Su lámina cribosa deja pasar los nervios del olfato.',
+    sinonimos: ['etmoides', 'lamina cribosa'],
+  },
+  ...bilateral('hueso-temporal', (lado) => `Hueso temporal ${lado}`, {
+    ...HUESO_DEL_CRANEO,
+    descripcion: 'A los lados y en la base del cráneo. Guarda el oído y deja pasar los nervios facial y auditivo.',
+    sinonimos: ['temporal', 'oido', 'mastoides'],
+  }),
+  ...bilateral('hueso-parietal', (lado) => `Hueso parietal ${lado}`, {
+    ...HUESO_DEL_CRANEO,
+    descripcion: 'Forma la parte alta y lateral de la bóveda del cráneo.',
+    sinonimos: ['parietal', 'boveda'],
+  }),
+  ...bilateral('hueso-cigomatico', (lado) => `Hueso cigomático ${lado}`, {
+    ...HUESO_DEL_CRANEO,
+    descripcion: 'El pómulo: forma el borde de afuera de la órbita.',
+    sinonimos: ['malar', 'pomulo'],
+  }),
+  ...bilateral('maxilar', (lado) => `Maxilar ${lado}`, {
+    ...HUESO_DEL_CRANEO,
+    descripcion: 'Hueso de la cara que sostiene los dientes de arriba y forma el piso de la órbita.',
+    sinonimos: ['maxilar superior'],
+  }),
+  {
+    id: 'mandibula',
+    nombre: 'Mandíbula',
+    ...HUESO_DEL_CRANEO,
+    descripcion: 'El hueso de la quijada, el único del cráneo que se mueve.',
+    sinonimos: ['quijada', 'maxilar inferior'],
+  },
+]
+
+/** Un giro de cada lado; con `lobulo`, como parte de ese lóbulo. */
+const giro = (
+  base: string,
+  nombre: string,
+  lobulo: string | null,
+  color: string,
+  descripcion: string,
+  extra: Pick<Estructura, 'profunda' | 'sinonimos'> = {},
+): Estructura[] =>
+  LADOS.map(([lado, sufijo, texto]) => ({
+    ...extra,
+    id: `${base}-${sufijo}`,
+    // «Giros orbitarios izquierdos»: el lado concuerda en plural.
+    nombre: `${nombre} ${nombre.startsWith('Giros ') ? `${texto}s` : texto}`,
+    sistema: 'Encéfalo' as const,
+    capa: 'encefalo' as const,
+    soloAtlas: true,
+    lado,
+    color,
+    descripcion,
+    parteDe: lobulo ? `${lobulo}-${sufijo}` : undefined,
+  }))
+
+const GIROS: Estructura[] = [
+  ...giro(
+    'giro-frontal-superior',
+    'Giro frontal superior',
+    'lobulo-frontal',
+    '--cx-anat-frontal',
+    'Parte alta del lóbulo frontal. Participa en planear el movimiento y en la atención.',
+  ),
+  ...giro('giro-frontal-medio', 'Giro frontal medio', 'lobulo-frontal', '--cx-anat-frontal', 'Participa en la memoria de trabajo y en dirigir la mirada.'),
+  ...giro(
+    'giro-frontal-inferior',
+    'Giro frontal inferior',
+    'lobulo-frontal',
+    '--cx-anat-frontal',
+    'En el hemisferio dominante (casi siempre el izquierdo) está el área de Broca: producir el lenguaje.',
+    { sinonimos: ['broca', 'lenguaje'] },
+  ),
+  ...giro(
+    'giro-precentral',
+    'Giro precentral',
+    'lobulo-frontal',
+    '--cx-anat-frontal',
+    'La corteza motora primaria: de aquí sale la orden de mover el lado contrario del cuerpo.',
+    { sinonimos: ['motor', 'corteza motora', 'circunvolucion precentral'] },
+  ),
+  ...giro(
+    'giros-orbitarios',
+    'Giros orbitarios',
+    'lobulo-frontal',
+    '--cx-anat-frontal',
+    'Cara de abajo del lóbulo frontal, sobre las órbitas. Participa en la conducta y las emociones.',
+  ),
+  ...giro(
+    'giro-poscentral',
+    'Giro poscentral',
+    'lobulo-parietal',
+    '--cx-anat-parietal',
+    'La corteza sensitiva primaria: recibe tacto, dolor y temperatura del lado contrario del cuerpo.',
+    { sinonimos: ['sensitivo', 'corteza sensitiva', 'circunvolucion poscentral'] },
+  ),
+  ...giro('giro-supramarginal', 'Giro supramarginal', 'lobulo-parietal', '--cx-anat-parietal', 'Participa en el lenguaje y en reconocer objetos por el tacto.'),
+  ...giro('giro-angular', 'Giro angular', 'lobulo-parietal', '--cx-anat-parietal', 'En el hemisferio dominante participa en la lectura, la escritura y el cálculo.'),
+  ...giro(
+    'lobulillo-parietal-superior',
+    'Lobulillo parietal superior',
+    'lobulo-parietal',
+    '--cx-anat-parietal',
+    'Ubica al cuerpo en el espacio y guía el movimiento de la mano hacia lo que ve.',
+  ),
+  ...giro(
+    'giro-temporal-superior',
+    'Giro temporal superior',
+    'lobulo-temporal',
+    '--cx-anat-temporal',
+    'Corteza auditiva. En su parte de atrás, en el hemisferio dominante, el área de Wernicke: entender el lenguaje.',
+    { sinonimos: ['wernicke', 'audicion'] },
+  ),
+  ...giro('giro-temporal-medio', 'Giro temporal medio', 'lobulo-temporal', '--cx-anat-temporal', 'Participa en el significado de las palabras y en reconocer el movimiento.'),
+  ...giro('giro-temporal-inferior', 'Giro temporal inferior', 'lobulo-temporal', '--cx-anat-temporal', 'Participa en reconocer formas y objetos que se ven.'),
+  ...giro('giro-fusiforme', 'Giro fusiforme', 'lobulo-temporal', '--cx-anat-temporal', 'En la cara de abajo del temporal: reconoce caras y palabras escritas.'),
+  ...giro(
+    'giro-parahipocampico',
+    'Giro parahipocampal',
+    'lobulo-temporal',
+    '--cx-anat-temporal',
+    'Rodea al hipocampo y participa en la memoria de lugares.',
+    { profunda: true },
+  ),
+  ...giro(
+    'hipocampo',
+    'Hipocampo',
+    'lobulo-temporal',
+    '--cx-anat-temporal',
+    'En la cara interna del temporal: guarda los recuerdos nuevos. Se afecta en la epilepsia del lóbulo temporal.',
+    { profunda: true, sinonimos: ['memoria', 'epilepsia'] },
+  ),
+  ...giro(
+    'giro-cingulado',
+    'Giro cingulado',
+    null,
+    '--cx-anat-insula',
+    'Rodea al cuerpo calloso por la cara interna del hemisferio. Participa en las emociones, la atención y el dolor.',
+    { profunda: true, sinonimos: ['cingulo', 'limbico'] },
+  ),
+]
+
+const PROFUNDAS_Y_NERVIOS: Estructura[] = [
+  ...bilateral('talamo', (lado) => `Tálamo ${lado}`, {
+    sistema: 'Encéfalo',
+    capa: 'encefalo',
+    color: '--cx-anat-tronco',
+    soloAtlas: true,
+    profunda: true,
+    descripcion: 'Estación de relevo en el centro del encéfalo: casi toda la sensibilidad pasa por aquí antes de llegar a la corteza.',
+    sinonimos: ['nucleos grises'],
+  }),
+  {
+    id: 'cuerpo-calloso',
+    nombre: 'Cuerpo calloso',
+    sistema: 'Encéfalo',
+    capa: 'encefalo',
+    color: '--cx-anat-medula',
+    soloAtlas: true,
+    profunda: true,
+    descripcion: 'Puente de fibras que une los dos hemisferios para que trabajen juntos.',
+    sinonimos: ['calloso', 'comisura'],
+  },
+  ...bilateral('nervio-optico', (lado) => `Nervio óptico ${lado}`, {
+    sistema: 'Encéfalo',
+    capa: 'encefalo',
+    color: '--cx-anat-raiz',
+    soloAtlas: true,
+    descripcion: 'Par craneal II: lleva la imagen del ojo al encéfalo.',
+    sinonimos: ['optico', 'par craneal', 'vision'],
+  }),
+  {
+    id: 'quiasma-optico',
+    nombre: 'Quiasma óptico',
+    sistema: 'Encéfalo',
+    capa: 'encefalo',
+    color: '--cx-anat-raiz',
+    soloAtlas: true,
+    descripcion: 'Donde se cruzan las fibras de la mitad interna de cada ojo. Un tumor de hipófisis lo aprieta y quita la visión de los lados.',
+    sinonimos: ['quiasma', 'hipofisis', 'vision'],
+  },
+  ...bilateral('nervio-troclear', (lado) => `Nervio troclear ${lado}`, {
+    sistema: 'Encéfalo',
+    capa: 'encefalo',
+    color: '--cx-anat-raiz',
+    soloAtlas: true,
+    descripcion: 'Par craneal IV: mueve el ojo hacia abajo y adentro. Si falla, se ve doble al bajar escaleras.',
+    sinonimos: ['troclear', 'patetico', 'par craneal'],
+  }),
+]
+
+const ATLAS_DETALLADO: Estructura[] = [...HUESOS_DEL_CRANEO, ...GIROS, ...PROFUNDAS_Y_NERVIOS]
+// ── fin atlas detallado ─────────────────────────────────────────────────────
+
 export const CATALOGO: Estructura[] = [
   ...ENVOLTURAS,
   ...ENCEFALO,
@@ -429,6 +669,7 @@ export const CATALOGO: Estructura[] = [
   ...MEDULA,
   ...RAICES_CATALOGO,
   ...VIAS,
+  ...ATLAS_DETALLADO,
 ]
 
 const POR_ID = new Map(CATALOGO.map((e) => [e.id, e]))
@@ -442,8 +683,11 @@ export const mallasDe = (id: string): string[] => {
   return e.componentes ?? [id]
 }
 
-/** Ids que deben existir como malla en la escena (todo lo que no es compuesto). */
-export const IDS_DE_MALLAS: string[] = CATALOGO.filter((e) => !e.componentes).map((e) => e.id)
+/**
+ * Ids que deben existir como malla en la escena del modelo simplificado (todo
+ * lo que no es compuesto ni exclusivo del atlas detallado).
+ */
+export const IDS_DE_MALLAS: string[] = CATALOGO.filter((e) => !e.componentes && !e.soloAtlas).map((e) => e.id)
 
 export const SISTEMAS: Sistema[] = [
   'Encéfalo',
@@ -469,11 +713,13 @@ export const normalizar = (texto: string): string =>
  * inicio de una palabra del nombre o de un sinónimo). Primero lo que empieza
  * igual; las compuestas, antes que sus piezas.
  */
-export const buscarEstructuras = (texto: string, limite = 8): Estructura[] => {
+export const buscarEstructuras = (texto: string, limite = 8, opciones: { incluirAtlas?: boolean } = {}): Estructura[] => {
   const palabras = normalizar(texto).split(/\s+/).filter(Boolean)
   if (palabras.length === 0) return []
   const puntuadas: { e: Estructura; puntos: number }[] = []
   for (const e of CATALOGO) {
+    // Sin el atlas a la vista, ofrecer un giro llevaría a algo que no se ve.
+    if (e.soloAtlas && !opciones.incluirAtlas) continue
     const nombre = normalizar(e.nombre)
     const extra = (e.sinonimos ?? []).map(normalizar)
     const tokens = [...nombre.split(/[\s()]+/), ...extra.flatMap((s) => s.split(/\s+/)), ...extra]
