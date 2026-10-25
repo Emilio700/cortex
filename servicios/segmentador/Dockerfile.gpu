@@ -1,0 +1,50 @@
+# Segmentador de Cortex con GPU NVIDIA (CUDA 12.6). Mismo código que la imagen
+# de CPU (Dockerfile); cambia sólo el torch que se instala y que torch va en su
+# propia capa: pesa ~2.5 GB con las bibliotecas de CUDA y no conviene volver a
+# bajarlo cada vez que cambia una dependencia ligera.
+#
+#   docker compose --profile ia-gpu up -d segmentador-gpu
+#
+# Requisitos del equipo: GPU NVIDIA con 8 GB de VRAM o más (probado en una
+# RTX 4060 Laptop de 8 GB), driver con soporte de CUDA 12.6 (>= 560) y el
+# NVIDIA Container Toolkit (en Windows lo trae Docker Desktop con WSL2).
+# La imagen no trae el toolkit de CUDA: las bibliotecas vienen en las ruedas de
+# torch y el driver lo pone el host.
+#
+# Versiones fijas (una actualización del motor se decide y se vuelve a validar):
+#   torch 2.7.1+cu126 y torchvision 0.22.1+cu126 (BSD-3) · TotalSegmentator 2.18.0 (Apache-2.0)
+#   nnU-Net v2 (Apache-2.0) · dcm2niix 1.0.20260724 (BSD-2)
+#   trimesh 5.2.0 (MIT) · fast-simplification 0.2.0 (MIT)
+# El resto de dependencias del motor queda fijo en constraints-motor.txt
+# (sacado con «pip freeze» de la imagen que se probó).
+FROM python:3.12.11-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    TOTALSEG_HOME_DIR=/pesos \
+    TOTALSEG_WEIGHTS_PATH=/pesos/nnunet/results \
+    SEGMENTADOR_DISPOSITIVO=gpu
+
+WORKDIR /servicio
+
+# torchvision va junto y del mismo índice: nnU-Net la pide (vía timm) sin versión
+# y, si llega de PyPI, arrastra un torch nuevo para CUDA 13 (otros 3 GB).
+RUN pip install --index-url https://download.pytorch.org/whl/cu126 torch==2.7.1+cu126 torchvision==0.22.1+cu126
+
+COPY requirements.txt requirements-motor.txt constraints-motor.txt ./
+RUN pip install -c constraints-motor.txt -r requirements.txt -r requirements-motor.txt
+
+# Los pesos se bajan la primera vez que se usa cada tarea y quedan en el volumen
+# /pesos. Para una imagen sin red: --build-arg DESCARGAR_PESOS=1.
+ARG DESCARGAR_PESOS=0
+RUN if [ "$DESCARGAR_PESOS" = "1" ]; then totalseg_download_weights -t total && totalseg_download_weights -t total_fast; fi
+
+COPY app ./app
+
+RUN useradd --create-home segmentador && mkdir -p /pesos && chown segmentador /pesos
+USER segmentador
+
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=5s CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)"
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

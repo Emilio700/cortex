@@ -181,6 +181,47 @@ services:
       - ia
   # ── fin modelo-3d-desde-tc ──
 
+  # ── segmentador-gpu: el mismo segmentador con GPU NVIDIA (CUDA 12.6) ──
+  # Se levanta en lugar del de CPU, no junto a él: mismo puerto en el equipo y
+  # mismo nombre en la red interna, así SEGMENTADOR_URL no cambia.
+  #   docker compose --profile ia-gpu up -d segmentador-gpu
+  # Probado con una RTX 4060 Laptop (8 GB de VRAM); ver su README.
+  # SEGMENTADOR_RESPALDO: «rapido» repite con el modelo de 3 mm si se acaba la
+  # VRAM o la RAM; agrega «cpu» para repetir en CPU si no hay GPU (lento).
+  segmentador-gpu:
+    build:
+      context: ./servicios/segmentador
+      dockerfile: Dockerfile.gpu
+    image: cortex-segmentador-gpu:0.2.0
+    container_name: cortex_segmentador_gpu
+    environment:
+      SEGMENTADOR_FALSO: ${SEGMENTADOR_FALSO:-0}
+      SEGMENTADOR_RAPIDO: ${SEGMENTADOR_RAPIDO:-0}
+      SEGMENTADOR_DISPOSITIVO: gpu
+      SEGMENTADOR_RESPALDO: ${SEGMENTADOR_RESPALDO:-rapido}
+      SEGMENTADOR_MALLA: ${SEGMENTADOR_MALLA:-refinada}
+    ports:
+      - "127.0.0.1:${SEGMENTADOR_PORT:-8030}:8000"
+    volumes:
+      - cortex_segmentador_pesos:/pesos
+    # nnU-Net pasa datos entre procesos por memoria compartida; los 64 MB que
+    # Docker da por omisión no alcanzan para una TC completa.
+    shm_size: 2gb
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      cortex_network:
+        aliases:
+          - segmentador
+    profiles:
+      - ia-gpu
+  # ── fin segmentador-gpu ──
+
 volumes:
   cortex_postgres_data:
     name: cortex_postgres_data
