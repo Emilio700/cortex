@@ -253,6 +253,11 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "soap_notes.create",
         "soap_notes.read",
         "soap_notes.update",
+        # Por decisión, no por deriva (Cortex, feat/columna-desde-radiografias):
+        # marcar radiografías de columna de su expediente y anular el ajuste
+        # (test_columna_rx.py).
+        "spine_rx.read",
+        "spine_rx.write",
         # Por decisión, no por deriva: el médico toma los signos cuando nadie
         # los tomó en la sala de espera (test_triage_desde_consulta.py).
         "triage.create",
