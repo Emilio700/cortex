@@ -3,6 +3,9 @@
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# «ninguno» no llama a nadie y Ollama corre en la red local sin llave.
+PROVEEDORES_IA_SIN_LLAVE = frozenset({"ninguno", "ollama"})
+
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables"""
@@ -91,6 +94,22 @@ class Settings(BaseSettings):
     EMAIL_FROM_ADDRESS: str = "no-reply@gems.local"
     EMAIL_FROM_NAME: str = "CORTEX"
 
+    # Servicios auxiliares de los módulos extra (base-modulos-extra). Todos son
+    # opcionales: vacío significa «no instalado» y el módulo que lo necesita no
+    # se deja encender. Así un consultorio sin Orthanc ni IA arranca igual.
+    ORTHANC_URL: str = ""
+    ORTHANC_USUARIO: str = ""
+    ORTHANC_PASSWORD: str = ""
+    WHISPER_URL: str = ""
+    PRESIDIO_URL: str = ""
+    SEGMENTADOR_URL: str = ""
+    # Proveedor de IA: «ninguno» (plantillas sin modelo), «ollama» (local, sin
+    # llave), «deepseek», «anthropic»… Cambiar de modelo es cambiar esto, no código.
+    IA_PROVEEDOR: str = "ninguno"
+    IA_MODELO: str = ""
+    IA_BASE_URL: str = ""
+    IA_API_KEY: str = ""
+
     # A deployment .env also contains Compose-only variables (POSTGRES_USER,
     # IMAGE_TAG, VITE_API_BASE_URL, etc.). They must not prevent the API from
     # starting merely because they are not Settings fields.
@@ -113,7 +132,15 @@ class Settings(BaseSettings):
             raise ValueError("Production antivirus is required but ANTIVIRUS_ENABLED is false")
         if self.STORAGE_BACKEND == "s3" and not self.S3_BUCKET:
             raise ValueError("S3_BUCKET is required when STORAGE_BACKEND=s3")
+        # Un proveedor remoto sin llave fallaría a media consulta; mejor que la
+        # API no arranque y el error se vea al desplegar.
+        if self.ia_proveedor not in PROVEEDORES_IA_SIN_LLAVE and not self.IA_API_KEY:
+            raise ValueError("IA_API_KEY is required when IA_PROVEEDOR is a remote provider")
         return self
+
+    @property
+    def ia_proveedor(self) -> str:
+        return (self.IA_PROVEEDOR or "ninguno").strip().lower()
 
     @property
     def cors_origins_list(self) -> list[str]:
