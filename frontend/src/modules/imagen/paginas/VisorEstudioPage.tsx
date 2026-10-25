@@ -37,6 +37,7 @@ import { rutaDelExpediente } from '../../expediente/rutas'
 import { useAuth } from '../../../shared/context/AuthContext'
 import AyudaDeAtajos from '../componentes/AyudaDeAtajos'
 import BotonModelo3D from '../componentes/BotonModelo3D'
+import BotonVer3D from '../componentes/BotonVer3D'
 import BarraDelVisor from '../componentes/BarraDelVisor'
 import ModalCaptura from '../componentes/ModalCaptura'
 import ModalCompartir from '../componentes/ModalCompartir'
@@ -71,6 +72,7 @@ import {
   type AnotacionDicom,
   type CandidatoComparacion,
   type EstudioDicom,
+  type ManifiestoSerie,
   type SerieDicom,
 } from '../dominio/tipos'
 import { componerCaptura, descargarBlob } from '../servicios/capturaCanvas'
@@ -112,6 +114,8 @@ export default function VisorEstudioPage() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [avisoVisor, setAvisoVisor] = useState<string | null>(null)
+  // Render volumétrico: el manifiesto de la serie activa decide si hay «Ver en 3D».
+  const [manifiestoActivo, setManifiestoActivo] = useState<ManifiestoSerie | null>(null)
 
   const [vista, setVista] = useState<EstadoDeVista | null>(null)
   const [cineActivo, setCineActivo] = useState(false)
@@ -188,6 +192,7 @@ export default function VisorEstudioPage() {
     setAvisoVisor(null)
     setVista(null)
     setCineActivo(false)
+    setManifiestoActivo(null)
 
     const montar = async () => {
       try {
@@ -197,6 +202,7 @@ export default function VisorEstudioPage() {
         pilaIzquierda.current = null
         const manifiesto = await estudiosApi.manifiesto(serieActiva.id)
         if (cancelado) return
+        setManifiestoActivo(manifiesto)
         const pila = await crearPila({
           elemento,
           manifiesto,
@@ -618,6 +624,14 @@ export default function VisorEstudioPage() {
           <div className="visor-encabezado__meta">{resumenDeEstudio(estudio)}</div>
         </div>
         <div className="visor-encabezado__lado">
+          {serieActiva && (
+            <BotonVer3D
+              patientId={patientId ?? ''}
+              estudioId={estudio.id}
+              serie={serieActiva}
+              manifiesto={manifiestoActivo}
+            />
+          )}
           {tieneModulo('neuro3d_paciente') &&
             serieActiva &&
             ['CT', 'MR'].includes((serieActiva.modality || estudio.modality || '').toUpperCase()) && (
@@ -702,7 +716,11 @@ export default function VisorEstudioPage() {
             />
 
             <div className="visor-lienzo" data-comparando={compararCon ? 'true' : 'false'}>
-              <div className="visor-viewport" ref={refIzquierda}>
+              <div className="visor-viewport">
+                {/* Cornerstone vacía su elemento al montar y al cambiar de serie:
+                    si fuera este mismo div, se llevaría la etiqueta y el estado
+                    que pinta React y la pantalla se caería (removeChild). */}
+                <div className="visor-viewport__lienzo" ref={refIzquierda} />
                 <div className="visor-viewport__etiqueta">
                   {serieActiva ? nombreDeSerie(serieActiva) : 'Sin serie'}
                   <br />
@@ -732,7 +750,8 @@ export default function VisorEstudioPage() {
                 )}
               </div>
               {compararCon && (
-                <div className="visor-viewport" ref={refDerecha}>
+                <div className="visor-viewport">
+                  <div className="visor-viewport__lienzo" ref={refDerecha} />
                   <div className="visor-viewport__etiqueta">
                     {previo ? fechaCorta(previo.study_date) : 'Estudio previo'}
                   </div>

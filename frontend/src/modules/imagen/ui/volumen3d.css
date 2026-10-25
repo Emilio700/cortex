@@ -1,0 +1,124 @@
+/**
+ * «3D del estudio» (feat/render-volumetrico).
+ *
+ * Como el visor: el volumen va sobre negro fijo y el cromo usa los tokens de la
+ * marca. Los mensajes de carga y de falla se pintan sobre la escena, en vidrio
+ * oscuro, para que el recuadro nunca quede vacío.
+ */
+.vol3d-aviso {
+  border: 1px solid var(--cui-warning, #d97706);
+  border-left-width: 4px;
+  border-radius: 0.4rem;
+  background: var(--cx-superficie, #fff);
+  color: var(--cx-texto, inherit);
+  padding: 0.45rem 0.7rem;
+  font-size: 0.88rem;
+}
+
+.vol3d-cuerpo {
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 300px);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+/* Sin volumen posible, la escena con su mensaje ocupa todo el ancho. */
+.vol3d-cuerpo--solo {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 992px) {
+  .vol3d-cuerpo {
+    grid-template-columns: 1fr;
+  }
+}
+
+.vol3d-central {
+  min-width: 0;
+}
+
+.vol3d-escena {
+  position: relative;
+  background: #000;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  height: calc(100vh - 260px);
+  min-height: 360px;
+}
+
+@media (max-width: 576px) {
+  .vol3d-escena {
+    height: 70vh;
+    min-height: 300px;
+  }
+}
+
+.vol3d-lienzo {
+  position: absolute;
+  inset: 0;
+}
+
+.vol3d-capa {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e5e7eb;
+  background: rgba(2, 8, 22, 0.55);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+.vol3d-capa--mensaje {
+  flex-direction: column;
+  background: rgba(2, 8, 22, 0.85);
+}
+
+.vol3d-capa--mensaje h3 {
+  /* Sobre la escena negra: el color de encabezado del tema no se lee. */
+  color: #f1f5f9;
+}
+
+.vol3d-capa--mensaje p {
+  max-width: 34rem;
+  color: #cbd5e1;
+}
+
+.vol3d-progreso {
+  width: min(360px, 80%);
+}
+
+.vol3d-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.vol3d-grupo + .vol3d-grupo {
+  border-top: 1px solid var(--cx-borde, #e3e6ea);
+  padding-top: 0.6rem;
+}
+
+.vol3d-nota {
+  color: var(--cx-texto-2);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.vol3d-recorte + .vol3d-recorte {
+  margin-top: 0.4rem;
+}
+
+.vol3d-recorte__nombre {
+  display: block;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vol3d-progreso .progress-bar {
+    transition: none;
+  }
+}

@@ -145,6 +145,12 @@
   cursor: crosshair;
 }
 
+/* Cornerstone monta aquí, nunca en .visor-viewport: lo vacía al cambiar de serie. */
+.visor-viewport__lienzo {
+  position: absolute;
+  inset: 0;
+}
+
 .visor-viewport__etiqueta {
   position: absolute;
   top: 0.4rem;

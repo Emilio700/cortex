@@ -177,6 +177,23 @@ describe('VisorEstudioPage', () => {
     expect(screen.queryByText('Estudio completo')).toBeNull()
   })
 
+  it('Cornerstone monta en un lienzo vacío, aparte de la etiqueta y el estado', async () => {
+    // Al cambiar de serie, la pila vacía su elemento: si React pintara ahí la
+    // etiqueta, la pantalla se caía con «removeChild».
+    const { container } = render(
+      <MemoryRouter initialEntries={['/pacientes/7/estudios/3']}>
+        <Routes>
+          <Route path="/pacientes/:patientId/estudios/:studyId" element={<VisorEstudioPage />} />
+        </Routes>
+      </MemoryRouter>
+    )
+    await screen.findByText('RM encefálico con contraste')
+    const lienzo = container.querySelector('.visor-viewport__lienzo')
+    expect(lienzo).not.toBeNull()
+    expect(lienzo!.querySelector('.visor-viewport__etiqueta')).toBeNull()
+    expect(lienzo!.parentElement!.querySelector(':scope > .visor-viewport__etiqueta')).not.toBeNull()
+  })
+
   it('un estudio sin series no rompe la pantalla', async () => {
     get.mockImplementation((url: string) => {
       if (url.includes('/comparison-candidates')) return Promise.resolve({ data: [] })

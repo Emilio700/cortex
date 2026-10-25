@@ -17,6 +17,7 @@ import {
   LengthTool,
   PanTool,
   StackScrollTool,
+  TrackballRotateTool,
   WindowLevelTool,
   ZoomTool,
   addTool,
@@ -63,6 +64,8 @@ async function iniciar(): Promise<void> {
     LengthTool,
     EllipticalROITool,
     AngleTool,
+    // Render volumétrico (feat/render-volumetrico): girar el volumen 3D.
+    TrackballRotateTool,
   ]) {
     addTool(herramienta)
   }
@@ -81,4 +84,5 @@ export const HERRAMIENTAS = {
   medir: LengthTool.toolName,
   area: EllipticalROITool.toolName,
   angulo: AngleTool.toolName,
+  rotar3d: TrackballRotateTool.toolName,
 } as const

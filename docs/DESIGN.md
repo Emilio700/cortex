@@ -497,6 +497,51 @@ se llega desde Neuro 3D con el paciente en contexto («Marcar radiografías»).
 Referencia: `frontend/src/modules/neuro3d/paginas/MarcadoRadiografiaPage.tsx`,
 `dominio/ajusteRadiografico.ts` y `backend/app/services/columna_rx.py`.
 
+<!-- Render volumétrico (feat/render-volumetrico) -->
+### 4.16 3D del estudio (render volumétrico)
+
+El estudio mismo pintado en volumen en la tarjeta gráfica: sin IA ni
+segmentación. Ruta `/pacientes/:id/estudios/:studyId/3d/:serieId` (la serie va en
+la ruta: las pestañas recortan el `?…`), permiso `clinical_images.read`.
+
+- **Se abre desde el visor** con «Ver en 3D», en el encabezado. Sólo se habilita en
+  una serie que forma volumen: TC o RM, al menos 20 cortes, paralelos, del mismo
+  tamaño y con espaciado uniforme (`dominio/volumen3d.ts`, `elegibilidad3D`). Si no,
+  queda deshabilitado y **el motivo va escrito al lado**, no sólo en un tooltip.
+  Desde Neuro 3D, «Ver el estudio en 3D» aparece si el paciente tiene una TC o RM
+  con serie candidata; si no, no se pinta.
+- **Aviso fijo**, con borde ámbar: «Render del estudio original: lo que ves depende
+  del preajuste y del umbral; para medir y decidir, usa los cortes». Esta vista no
+  ofrece mediciones.
+- **Distribución.** Escena sobre negro a la izquierda, controles a la derecha
+  (preajuste, umbral/opacidad/iluminación, recorte, botón izquierdo, restablecer,
+  captura). Con menos de 992 px se apilan. Si la serie no sirve o el equipo no
+  pinta 3D, no hay controles: sólo el mensaje.
+- **Preajustes en español** sobre los de Cornerstone (Slicer), sólo los de la
+  modalidad: Hueso, Hueso (contorno fino), Angio-TC, Piel, Tejidos blandos; RM:
+  encéfalo, angio, general. El umbral mueve la curva de opacidad (UH en TC; en RM
+  se dice que no hay unidades fijas) y en cero es exactamente la del preajuste.
+- **Recorte** axial (desde arriba), sagital (desde la izquierda del paciente) y
+  coronal (desde delante), con «Desde el otro lado». Abre de frente, cabeza arriba.
+- **Iluminación cinematográfica** (LAO y dispersión de vtk.js, receta inspirada en
+  VolView): opcional, apagada por omisión porque pide mucho a la tarjeta; mientras
+  se gira baja la calidad y vuelve al soltar.
+- **Nunca en blanco.** Barra de progreso («Descargando cortes n / N», «Armando el
+  volumen»). No se pinta un volumen con cortes sin decodificar: parecería un hueco.
+  Memoria agotada, falla de WebGL o pérdida del contexto: mensaje con «Reducir
+  resolución» (un corte de cada dos) e «Intentar de nuevo»; tras perder el contexto,
+  también «Recargar la página». Sin texturas *float*, aviso. Sin WebGL 2, qué hacer.
+  Un volumen que pasa de ~768 MB se carga ya decimado y se dice.
+- **Al salir** se suelta el volumen de la caché, los archivos leídos, el motor y el
+  grupo de herramientas.
+- **Captura** PNG con estudio, serie, fecha, preajuste, umbral y recorte, y la
+  leyenda «Render 3D del estudio · Material de apoyo · No sirve para medir». **Sin
+  el nombre del paciente.**
+
+Referencia: `frontend/src/modules/imagen/` (`paginas/Volumen3DPage.tsx`,
+`servicios/volumen3d.ts`, `dominio/volumen3d.ts`).
+<!-- fin render-volumetrico -->
+
 <!-- Neuro 3D realista (feat/neuro3d-realista) -->
 ### 4.17 Neuro 3D: calidad «Estándar | Realista»
 
