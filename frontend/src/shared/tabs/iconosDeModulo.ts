@@ -7,6 +7,7 @@
  * Hay prueba de que cada ruta con pantalla tiene el suyo.
  */
 import {
+    cil3d,
     cilBuilding,
     cilCalendar,
     cilCash,
@@ -55,6 +56,9 @@ export const ICONOS_DE_MODULO: Record<string, string[]> = {
     '/master/permisos': cilShieldAlt,
     '/master/roles': cilUserFollow,
     '/master/sucursales': cilBuilding,
+    // Atlas Neuro 3D (tramo C).
+    '/imagen/atlas-neuro': cil3d,
+    '/pacientes/:patientId/atlas-neuro': cil3d,
 }
 
 const entradas = buildRouteEntries()

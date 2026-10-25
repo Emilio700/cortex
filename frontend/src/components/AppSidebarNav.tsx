@@ -6,7 +6,7 @@ import SimpleBar from 'simplebar-react'
 import 'simplebar-react/dist/simplebar.min.css'
 import { CBadge, CNavItem, CNavLink, CSidebarNav } from '@coreui/react-pro'
 import CIcon from '@coreui/icons-react'
-import { cilBriefcase, cilCash, cilChevronBottom, cilCode, cilHospital, cilMedicalCross } from '@coreui/icons'
+import { cil3d, cilBriefcase, cilCash, cilChevronBottom, cilCode, cilHospital, cilMedicalCross } from '@coreui/icons'
 
 import type { Badge, NavItem } from '../_nav'
 import { agruparEnSecciones, seccionDeLaRuta, type SeccionDelMenu } from './menuEnSecciones'
@@ -18,6 +18,8 @@ const ICONOS_DE_SECCION: Record<string, string[]> = {
   Consultorio: cilHospital,
   Finanzas: cilCash,
   Médico: cilMedicalCross,
+  // Tramo C (Atlas Neuro 3D).
+  'Imagen y señales': cil3d,
 }
 
 const LLAVE_ABIERTAS = 'cortex.menu.secciones-abiertas'

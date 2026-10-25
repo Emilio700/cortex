@@ -42,6 +42,7 @@ const PERMISOS_POR_DEFECTO: Record<Role, string[]> = {
     'doctor.appointments.read',
     'clinical_tracking.read',
     'doctor_profile.read',
+    'neuro3d.read',
   ],
   [Role.ADMIN]: [
     'admin.dashboard.read',
@@ -59,6 +60,7 @@ const PERMISOS_POR_DEFECTO: Record<Role, string[]> = {
     'payments.cashcut',
     'clinical_tracking.read',
     'doctor_profile.read',
+    'neuro3d.read',
   ],
   [Role.SECRETARIA]: [
     'appointments.read',
@@ -81,6 +83,7 @@ const PERMISOS_POR_DEFECTO: Record<Role, string[]> = {
     'doctor.appointments.read',
     'clinical_tracking.read',
     'doctor_profile.read',
+    'neuro3d.read',
   ],
 }
 
@@ -93,6 +96,9 @@ const PERMISOS_POR_DEFECTO: Record<Role, string[]> = {
  */
 const MENU_CON_PERMISOS: Record<Role, string[]> = {
   ...MENU_VIGENTE,
+  // Tramo C: el Atlas Neuro 3D («Imagen y señales») llega por neuro3d.read.
+  [Role.MASTER]: [...MENU_VIGENTE[Role.MASTER], '/imagen/atlas-neuro'],
+  [Role.ADMIN]: [...MENU_VIGENTE[Role.ADMIN], '/imagen/atlas-neuro'],
   [Role.DOCTOR]: [
     '/',
     '/secretaria/agenda',
@@ -102,6 +108,7 @@ const MENU_CON_PERMISOS: Record<Role, string[]> = {
     '/doctor/appointments',
     '/doctor/results',
     '/doctor/profile',
+    '/imagen/atlas-neuro',
   ],
 }
 

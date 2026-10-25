@@ -18,6 +18,7 @@ import {
   cilBuilding,
   cilRoom,
   cilCloudUpload,
+  cil3d,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react-pro'
 import { Role } from './shared/types'
@@ -273,6 +274,26 @@ const _nav: NavItem[] = [
     requires: ['doctor_profile.read'],
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
     roles: orMaster(Role.DOCTOR, Role.ADMIN),
+  },
+  // ── Imagen y señales (tramo C: Atlas Neuro 3D) ──
+  // Grupo del plan maestro (§3). Otros tramos agregan aquí sus entradas
+  // («Estudios por asignar», …) debajo del encabezado. Sólo por permiso, sin
+  // respaldo por rol: es un módulo nuevo y una sesión vieja sin permisos no
+  // lo veía antes, así que no pierde nada. `roles: []` (y no ausente) para que
+  // el filtro viejo por rol tampoco lo muestre: sin `roles` lo vería cualquiera.
+  {
+    component: CNavTitle,
+    name: 'Imagen y señales',
+    requires: ['neuro3d.read'],
+    roles: [],
+  },
+  {
+    component: CNavItem,
+    name: 'Atlas Neuro 3D',
+    to: '/imagen/atlas-neuro',
+    requires: ['neuro3d.read'],
+    icon: <CIcon icon={cil3d} customClassName="nav-icon" />,
+    roles: [],
   },
 ]
 
