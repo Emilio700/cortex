@@ -421,6 +421,11 @@ export default function AtlasNeuroPage() {
           // Un giro o un hueso del atlas ya no se ve: se suelta.
           setSeleccion((s) => (s && estructuraPorId(s)?.soloAtlas ? null : s))
         }
+        // Si la escena se rehízo mientras se descargaba (p. ej. otra calidad) y
+        // la nueva ya estaba lista, el efecto de `lista` no vio esta capa: se
+        // pone (o se quita) aquí, para que lo marcado sea lo que se ve.
+        const actual = escenaRef.current
+        if (actual && actual !== escena) await actual.fijarCapaAtlas(capaAtlasRef.current)
         setDetalle(nuevo)
       } catch (err) {
         setAviso({

@@ -4,8 +4,9 @@
  *
  * Lo que no puede fallar: sin atlas instalado la opción se ve deshabilitada y
  * dice por qué (nunca una pantalla en blanco); con atlas, el aviso y los
- * créditos cambian sólo cuando la escena ya lo muestra; y no se mezcla con la
- * TC del paciente.
+ * créditos cambian sólo cuando la escena ya lo muestra; no se mezcla con la
+ * TC del paciente; y si la escena se rehace por la calidad (Estándar |
+ * Realista), el atlas vuelve solo.
  */
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -38,11 +39,23 @@ const escena = vi.hoisted(() => ({
   liberar: vi.fn(),
 }))
 const crearEscena = vi.hoisted(() => vi.fn())
+// Un equipo con tarjeta dedicada: el interruptor de calidad deja elegir las dos.
+const capacidad = vi.hoisted(() => ({
+  actual: { webgl2: true, maxTextura: 16384, reducirMovimiento: false, movil: false, gpu: 'ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Direct3D11)' },
+}))
+/** Otra escena (la que se crea al cambiar de calidad), con sus propias funciones. */
+const otraEscena = () => ({
+  ...escena,
+  fijarCapaAtlas: vi.fn(() => Promise.resolve({ piezas: 130 })),
+  fijarCapaPaciente: vi.fn(() => Promise.resolve({ piezas: 0 })),
+  liberar: vi.fn(),
+})
 
 vi.mock('three', () => {
   throw new Error('three no debe cargarse en las pruebas de la pantalla')
 })
 vi.mock('../servicios/webgl', () => ({ hayWebGL: () => true }))
+vi.mock('../servicios/capacidad', () => ({ leerCapacidad: () => capacidad.actual }))
 vi.mock('../servicios/escena', () => ({ crearEscena }))
 vi.mock('../servicios/anatomia/capaPaciente', () => ({ crearCapaPaciente: () => capaPacienteFalsa }))
 vi.mock('../servicios/anatomia/capaAtlas', () => ({ crearCapaAtlas }))
@@ -87,8 +100,10 @@ const abrir = (ruta = '/imagen/neuro-3d') =>
   )
 
 const atlas = () => screen.getByRole('radio', { name: 'Atlas detallado' })
+const calidad = (nombre: 'Estándar' | 'Realista') => screen.getByRole('button', { name: new RegExp(`^${nombre}$`) })
 
 beforeEach(() => {
+  localStorage.clear()
   permisos.actual = ['neuro3d.read']
   modulos.actual = []
   get.mockReset()
@@ -202,5 +217,53 @@ describe('Neuro 3D · atlas detallado', () => {
     expect(screen.queryByText(AVISO_ATLAS)).toBeNull()
     expect(atlas()).toBeDisabled()
     expect(screen.getByText(MOTIVO_SOLO_ESQUEMATICO)).toBeInTheDocument()
+  })
+
+  it('al cambiar de calidad la escena se rehace y el atlas vuelve solo, con su aviso y su crédito', async () => {
+    consultarAtlas.mockResolvedValue(INSTALADO)
+    descargarAtlas.mockResolvedValue(DATOS)
+    abrir()
+    await screen.findByRole('group', { name: 'Calidad del modelo' })
+    expect(crearEscena.mock.calls[0][0].calidad).toBe('realista')
+    await waitFor(() => expect(atlas()).toBeEnabled())
+    await userEvent.click(atlas())
+    await waitFor(() => expect(atlas()).toHaveAttribute('aria-checked', 'true'))
+    expect(escena.fijarCapaAtlas).toHaveBeenCalledWith(capaAtlasFalsa)
+
+    const segunda = otraEscena()
+    crearEscena.mockImplementationOnce(() => Promise.resolve(segunda))
+    await userEvent.click(calidad('Estándar'))
+    await waitFor(() => expect(crearEscena).toHaveBeenCalledTimes(2))
+    expect(crearEscena.mock.calls[1][0].calidad).toBe('estandar')
+    expect(escena.liberar).toHaveBeenCalledTimes(1)
+    // La escena nueva recibe la misma capa, sin volver a descargar el atlas.
+    await waitFor(() => expect(segunda.fijarCapaAtlas).toHaveBeenCalledWith(capaAtlasFalsa))
+    expect(descargarAtlas).toHaveBeenCalledTimes(1)
+    expect(atlas()).toHaveAttribute('aria-checked', 'true')
+    expect(screen.getByText(AVISO_ATLAS)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Créditos/ })).toHaveTextContent('BodyParts3D (CC BY 4.0)')
+  })
+
+  it('si la calidad cambia mientras se descarga, el atlas llega a la escena nueva', async () => {
+    consultarAtlas.mockResolvedValue(INSTALADO)
+    let terminar: (d: ArrayBuffer[]) => void = () => undefined
+    descargarAtlas.mockImplementation(() => new Promise((r) => (terminar = r)))
+    abrir()
+    await screen.findByRole('group', { name: 'Calidad del modelo' })
+    await waitFor(() => expect(atlas()).toBeEnabled())
+    await userEvent.click(atlas())
+    await waitFor(() => expect(descargarAtlas).toHaveBeenCalled())
+
+    const segunda = otraEscena()
+    crearEscena.mockImplementationOnce(() => Promise.resolve(segunda))
+    await userEvent.click(calidad('Estándar'))
+    await waitFor(() => expect(crearEscena).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(calidad('Estándar')).toHaveAttribute('aria-pressed', 'true'))
+    expect(segunda.fijarCapaAtlas).not.toHaveBeenCalled()
+
+    await act(async () => terminar(DATOS))
+    await waitFor(() => expect(atlas()).toHaveAttribute('aria-checked', 'true'))
+    expect(segunda.fijarCapaAtlas).toHaveBeenCalledWith(capaAtlasFalsa)
+    expect(screen.getByText(AVISO_ATLAS)).toBeInTheDocument()
   })
 })
