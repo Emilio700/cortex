@@ -239,7 +239,9 @@ resonancia. El cromo alrededor sí usa los tokens.
   en un tumor, crecer puede ser progresión o respuesta al tratamiento.
 - Los análisis asistidos (volumetría, segmentación) aparecen en la pestaña
   «Estudio», con su motor y su versión, y se pueden apagar. Mientras no existan,
-  la pestaña lo dice; no se deja un hueco que prometa IA.
+  la pestaña lo dice; no se deja un hueco que prometa IA. Excepción: «Generar
+  modelo 3D» va en el encabezado, junto al estado del estudio, porque actúa sobre
+  la serie que se está viendo y su resultado se mira en Neuro 3D (ver §4.14).
 
 **Controles.** La barra va en grupos, de lo que más se usa a lo que menos:
 herramientas del botón izquierdo (contraste, distancia, ángulo, elipse, mover, zoom),
@@ -400,12 +402,54 @@ contexto). Permiso `neuro3d.read`.
   `clinical_images.upload`; pide confirmar el consentimiento, usa
   `POST /clinical-images/upload` como «Imagen de referencia» y sólo dice «Guardado»
   cuando el servidor respondió. Las marcas no se guardan solas.
-- **Modelo del paciente (fase futura).** La escena recibe capas (`CapaAnatomica` en
+- **Modelo del paciente.** La escena recibe capas (`CapaAnatomica` en
   `servicios/anatomia/tipos.ts`) que entregan piezas con estructura, capa, color y
-  acabado; una capa que lea las mallas glTF del segmentador entrará igual que las
-  del atlas.
+  acabado; la del paciente (las mallas glTF del segmentador) entra igual que las
+  del atlas. Ver §4.14.
 
 Referencia: `frontend/src/modules/neuro3d/`.
+
+<!-- Modelo 3D desde TC (feat/modelo-3d-desde-tc) -->
+### 4.14 Modelo 3D del paciente y origen del modelo
+
+La columna del paciente reconstruida desde su TC, dentro de Neuro 3D. Módulo
+opcional `neuro3d_paciente` (necesita el servicio segmentador); apagado, ni el
+botón del visor ni la opción del selector se pintan.
+
+- **Se pide desde el visor.** «Generar modelo 3D» en el encabezado de una TC o RM
+  (`componentes/BotonModelo3D.tsx`), para la serie que se está viendo. Estados,
+  todos dichos por el servidor: «Procesando el modelo 3D… puede tardar varios
+  minutos» (consulta sola cada 5 s), «Modelo 3D listo» con «Ver en Neuro 3D», o
+  «No se pudo: motivo» con «Intentar de nuevo». Mandar la petición **no** es
+  «listo». Sin el permiso `neuro3d.generar_modelo` sólo se ve el estado.
+  «Ver en Neuro 3D» pasa el origen «tc» y el modelo con `servicios/origenPedido.ts`
+  (el mismo que usa la radiografía, §4.15), no sólo con `?modelo=`: las pestañas
+  reemplazan la URL por la ruta limpia y el parámetro se perdía.
+- **Origen del modelo.** Con el paciente en contexto, debajo del encabezado va el
+  selector (`componentes/SelectorOrigen.tsx`): grupo de radio con «Esquemático»,
+  «Radiografía» y «Tomografía del paciente». Lo que no se puede elegir queda
+  deshabilitado y dice por qué debajo; lo que el consultorio no usa no se pinta.
+  Contrato común en `dominio/origenModelo.ts` (`AVISO_ORIGEN`).
+- **El aviso es del origen que se ve, no del elegido.** Al elegir la TC se descarga
+  el GLB, la escena lo pone y **sólo entonces** cambian el aviso y el radio
+  marcado; mientras, «Cargando el modelo…». Si falla, se dice y se sigue viendo el
+  anterior. El aviso de la TC lleva borde ámbar (`--cui-warning`): aviso, no
+  alarma.
+- **Lo que acompaña al modelo del paciente:** de qué estudio salió y con qué motor
+  y versión; que raíces, discos y encéfalo siguen siendo esquemáticos; «Sin revisar»
+  en negritas con «Marcar como revisada», o quién la revisó y cuándo. Un modelo del
+  segmentador en modo falso dice en negritas que es **sintético**, también en la
+  captura.
+- **Escena.** Las mallas llegan en mm y LPS y se pasan a cm de la escena sin
+  espejo; se alinean al atlas sólo por traslación (centros de las vértebras en
+  común). Las piezas del atlas de las mismas capas se ocultan, no se borran. Cada
+  malla lleva su id del catálogo: tocar una raíz enciende la vértebra **del
+  paciente**. El conducto (aproximado) se ve pero no se elige.
+- **Captura.** La leyenda es el aviso del origen; la descripción al guardarla dice
+  «reconstrucción automática desde TC; revisar contra el estudio».
+
+Referencia: `frontend/src/modules/neuro3d/` y `servicios/segmentador/`.
+<!-- fin modelo-3d-desde-tc -->
 
 <!-- Columna desde radiografías (feat/columna-desde-radiografias) -->
 ### 4.15 Columna desde radiografía: marcar, sugerir y aproximar
@@ -438,11 +482,17 @@ se llega desde Neuro 3D con el paciente en contexto («Marcar radiografías»).
   sus mediciones («Calculadas por el servidor») y, si no coinciden con la sugerencia,
   se dice. Si falla, los puntos se quedan. Un ajuste no se edita: se anula con motivo
   y queda tachado en «Ajustes guardados».
-- **En Neuro 3D** («Ver en Neuro 3D» deja el origen pedido en `sessionStorage`: las
-  pestañas abren cada pantalla sin su `?…`) el origen «Desde radiografía» usa el ajuste vigente más reciente,
-  cambia el aviso y pone las mediciones en la ficha. Sin ajuste, la opción queda
-  deshabilitada y dice por qué. (El selector definitivo, con TC, es
-  `SelectorOrigen`; hasta integrarlo hay una entrada temporal.)
+- **En Neuro 3D**, la opción «Radiografía» del selector «Origen del modelo» (§4.14)
+  usa el ajuste vigente más reciente (`servicios/origenRadiografia.ts`): rehace la
+  escena con el eje ajustado y sin la capa de la TC, cambia el aviso y pone las
+  mediciones en la ficha. Sin ajuste, la opción queda deshabilitada y dice por qué;
+  junto al grupo va «Marcar radiografías» si el médico tiene `spine_rx.write`. Si el
+  ajuste se anula, la escena vuelve al esquemático.
+- **Un solo «origen pedido».** «Ver en Neuro 3D», desde la radiografía o desde el
+  visor de TC, deja el origen (y el modelo, en TC) en `servicios/origenPedido.ts`:
+  `sessionStorage` por paciente más un evento para la pestaña ya abierta, porque las
+  pestañas abren cada pantalla sin su `?…`. Neuro 3D lo toma una vez y lo aplica
+  cuando la escena y ese modelo están listos; lo que el médico elige después manda.
 
 Referencia: `frontend/src/modules/neuro3d/paginas/MarcadoRadiografiaPage.tsx`,
 `dominio/ajusteRadiografico.ts` y `backend/app/services/columna_rx.py`.

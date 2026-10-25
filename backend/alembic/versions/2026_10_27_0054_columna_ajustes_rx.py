@@ -10,18 +10,19 @@ como en la 0052, se sube ``users.permissions_version`` para que una sesión
 abierta recargue sus permisos sin cerrar sesión.
 
 Encadenamiento: se escribió en paralelo con la 0053 del modelo 3D desde TC
-(``feat/modelo-3d-desde-tc``); las dos salen de la 0052. Se integra TC
-primero y, al integrar esta rama, ``down_revision`` pasa a la 0053.
+(``feat/modelo-3d-desde-tc``) y al principio también salía de la 0052. TC se
+integró primero; al integrar esta rama se reencadenó detrás de la 0053 para
+que haya una sola cabeza. Las dos son independientes (tablas distintas).
 
 Revision ID: 2026_10_27_0054
-Revises: 2026_10_26_0052
+Revises: 2026_10_27_0053
 """
 import sqlalchemy as sa
 
 from alembic import op
 
 revision = "2026_10_27_0054"
-down_revision = "2026_10_26_0052"
+down_revision = "2026_10_27_0053"
 branch_labels = None
 depends_on = None
 

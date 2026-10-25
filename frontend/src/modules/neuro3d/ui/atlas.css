@@ -57,6 +57,66 @@
   font-size: 0.85rem;
 }
 
+/* ── Modelo 3D desde TC (feat/modelo-3d-desde-tc) ── */
+/* La reconstrucción del paciente se distingue del atlas: borde de aviso (ámbar),
+   no de alarma. Lo sintético y lo no revisado se dicen en el mismo bloque. */
+.atlas-aviso--paciente { border-left-color: var(--cui-warning); }
+.atlas-aviso__detalle { color: var(--cx-texto-2); }
+.atlas-aviso__pendiente { font-weight: 600; color: var(--cx-texto); }
+.atlas-aviso__sintetico {
+  font-weight: 700;
+  color: var(--cx-texto);
+}
+
+.atlas-origen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: -6px 0 12px;
+}
+.atlas-origen__titulo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cx-texto-2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.atlas-origen__opciones {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--cx-borde);
+  border-radius: var(--cx-radio);
+  background: var(--cx-superficie);
+}
+.atlas-origen__opcion {
+  border: 0;
+  border-radius: calc(var(--cx-radio) - 2px);
+  padding: 4px 12px;
+  background: transparent;
+  color: var(--cx-texto);
+  font-size: 0.85rem;
+}
+.atlas-origen__opcion:hover:not(:disabled) { background: var(--cx-superficie-2); }
+.atlas-origen__opcion:focus-visible { outline: 2px solid var(--cx-azul-vivo); outline-offset: 1px; }
+.atlas-origen__opcion--elegida,
+.atlas-origen__opcion--elegida:hover:not(:disabled) {
+  background: var(--cx-azul);
+  color: var(--cx-anat-sobre-azul);
+}
+.atlas-origen__opcion:disabled { color: var(--cx-texto-3); cursor: not-allowed; }
+.atlas-origen__motivos {
+  flex-basis: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.78rem;
+  color: var(--cx-texto-3);
+}
+/* ── fin modelo-3d-desde-tc ── */
+
 .atlas-rejilla {
   display: grid;
   grid-template-columns: 272px minmax(0, 1fr) 340px;

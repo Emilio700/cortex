@@ -2,10 +2,11 @@
  * Neuro 3D con el origen «radiografía», sin GPU (la escena se sustituye).
  *
  * Lo que no puede fallar: el aviso dice siempre de dónde sale el modelo, la
- * columna sólo se dobla con un ajuste vigente del servidor, y sin él la opción
- * queda deshabilitada diciendo por qué.
+ * columna sólo se dobla con un ajuste vigente del servidor, sin él la opción
+ * queda deshabilitada diciendo por qué, y al pasar entre los tres orígenes
+ * la escena lleva sólo lo de ese origen (el eje ajustado o la capa de la TC).
  */
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -14,6 +15,9 @@ import { calcularRx } from '../dominio/ajusteRadiografico'
 import { lateralSintetica } from '../dominio/radiografiaSintetica'
 
 const permisos = vi.hoisted(() => ({ actual: [] as string[] }))
+const modulos = vi.hoisted(() => ({ actual: [] as string[] }))
+const capaFalsa = vi.hoisted(() => ({ id: 'paciente-tc', nombre: 'Columna del paciente (TC)', origen: 'paciente', construir: () => [] }))
+const crearCapaPaciente = vi.hoisted(() => vi.fn(() => capaFalsa))
 const get = vi.hoisted(() => vi.fn())
 const post = vi.hoisted(() => vi.fn())
 const crearEscena = vi.hoisted(() => vi.fn())
@@ -29,6 +33,7 @@ const escena = vi.hoisted(() => ({
   fijarRotacion: vi.fn(),
   fijarReducirMovimiento: vi.fn(),
   capturar: vi.fn(),
+  fijarCapaPaciente: vi.fn(() => Promise.resolve({ piezas: 3 })),
   liberar: vi.fn(),
 }))
 
@@ -37,12 +42,18 @@ vi.mock('three', () => {
 })
 vi.mock('../servicios/webgl', () => ({ hayWebGL: () => true }))
 vi.mock('../servicios/escena', () => ({ crearEscena }))
+vi.mock('../servicios/anatomia/capaPaciente', () => ({ crearCapaPaciente }))
 vi.mock('../../../shared/services/api', () => ({ apiClient: { get, post }, default: { get, post } }))
 vi.mock('../../../shared/context/AuthContext', () => ({
-  useAuth: () => ({ user: { role: 'doctor' }, can: (a: string) => permisos.actual.includes(a) }),
+  useAuth: () => ({
+    user: { role: 'doctor' },
+    can: (a: string) => permisos.actual.includes(a),
+    tieneModulo: (m: string) => modulos.actual.includes(m),
+  }),
 }))
 
 import AtlasNeuroPage from './AtlasNeuroPage'
+import { pedirOrigen } from '../servicios/origenPedido'
 
 const SIN_ESCALA = { lateral: { tipo: 'ninguna' as const }, ap: { tipo: 'ninguna' as const } }
 const MEDICIONES = calcularRx(lateralSintetica({ platillos: { 'L1.superior': 4, 'S1.superior': -30 }, listesis: { 'L4-L5': 0.2 } }), SIN_ESCALA)
@@ -65,9 +76,17 @@ const AJUSTE = {
   anulado_motivo: null,
 }
 
-const responder = (ajustes: unknown[]) =>
+const MODELO_TC = {
+  id: 9, patient_id: 5, study_id: 3, series_id: 11, region: 'columna', estado: 'listo', sintetico: false,
+  solicitado_en: '2026-10-25T10:00:00', estudio_fecha: '2026-09-12T00:00:00', serie_descripcion: 'columna axial',
+  motor: 'TotalSegmentator', motor_version: '2.18.0', modalidad: 'CT', confirmado_en: null,
+}
+
+const responder = (ajustes: unknown[], modelos: unknown[] = []) =>
   get.mockImplementation((url: string) => {
     if (url.endsWith('/columna-rx')) return Promise.resolve({ data: ajustes })
+    if (url.endsWith('/modelos-3d')) return Promise.resolve({ data: modelos })
+    if (url.endsWith('/mallas')) return Promise.resolve({ data: new ArrayBuffer(8) })
     return Promise.resolve({ data: { first_name: 'Juan', last_name: 'Pérez' } })
   })
 
@@ -81,8 +100,14 @@ const abrir = (ruta: string) =>
     </MemoryRouter>,
   )
 
+const ultimaEscena = () => crearEscena.mock.calls[crearEscena.mock.calls.length - 1][0]
+
 beforeEach(() => {
+  sessionStorage.clear()
   permisos.actual = ['neuro3d.read', 'spine_rx.read', 'spine_rx.write']
+  modulos.actual = []
+  crearCapaPaciente.mockClear()
+  Object.values(escena).forEach((f) => f.mockClear())
   get.mockReset()
   post.mockReset()
   crearEscena.mockReset()
@@ -109,7 +134,7 @@ describe('Neuro 3D desde radiografía', () => {
     responder([AJUSTE])
     abrir('/pacientes/5/neuro-3d?origen=radiografia')
     await waitFor(() => expect(screen.getByText(AVISO_ORIGEN.radiografia)).toBeInTheDocument())
-    await userEvent.click(screen.getByRole('button', { name: 'Esquemático' }))
+    await userEvent.click(screen.getByRole('radio', { name: 'Esquemático' }))
     expect(screen.getByText(AVISO_ORIGEN.esquematico)).toBeInTheDocument()
     await waitFor(() => expect(crearEscena).toHaveBeenLastCalledWith(expect.objectContaining({ ajusteColumna: null })))
     expect(escena.liberar).toHaveBeenCalled()
@@ -119,7 +144,7 @@ describe('Neuro 3D desde radiografía', () => {
     responder([])
     abrir('/pacientes/5/neuro-3d?origen=radiografia')
     expect(await screen.findByText('Este paciente no tiene radiografías marcadas.')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Desde radiografía' })).toBeDisabled()
+    expect(screen.getByRole('radio', { name: 'Radiografía' })).toBeDisabled()
     expect(screen.getByText(AVISO_ORIGEN.esquematico)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Marcar radiografías' })).toHaveAttribute('href', '/pacientes/5/neuro-3d/radiografia')
   })
@@ -135,10 +160,77 @@ describe('Neuro 3D desde radiografía', () => {
 
   it('el pedido de la herramienta de marcado llega aunque la pestaña quite el ?origen', async () => {
     responder([AJUSTE])
-    sessionStorage.setItem('cortex.neuro3d.origen.5', 'radiografia')
+    pedirOrigen(5, 'radiografia')
     abrir('/pacientes/5/neuro-3d')
     await waitFor(() => expect(screen.getByText(AVISO_ORIGEN.radiografia)).toBeInTheDocument())
     // Se toma una sola vez.
+    expect(sessionStorage.getItem('cortex.neuro3d.origen.5')).toBeNull()
+  })
+
+  it('un pedido para otro paciente no se toma', async () => {
+    responder([AJUSTE])
+    pedirOrigen(6, 'radiografia')
+    abrir('/pacientes/5/neuro-3d')
+    await waitFor(() => expect(screen.getByRole('radio', { name: 'Radiografía' })).toBeEnabled())
+    expect(screen.getByText(AVISO_ORIGEN.esquematico)).toBeInTheDocument()
+    expect(sessionStorage.getItem('cortex.neuro3d.origen.6')).not.toBeNull()
+  })
+
+  it('entre los tres orígenes, la escena lleva sólo lo de cada uno y el aviso lo sigue', async () => {
+    modulos.actual = ['neuro3d_paciente']
+    permisos.actual = ['neuro3d.read', 'spine_rx.read', 'clinical_images.read']
+    responder([AJUSTE], [MODELO_TC])
+    abrir('/pacientes/5/neuro-3d')
+    const radio = (name: string) => screen.getByRole('radio', { name })
+    await waitFor(() => expect(radio('Tomografía del paciente')).toBeEnabled())
+    await waitFor(() => expect(radio('Radiografía')).toBeEnabled())
+    expect(ultimaEscena().ajusteColumna).toBeNull()
+
+    // Esquemático → TC: la capa del paciente sobre la columna sin ajustar.
+    await userEvent.click(radio('Tomografía del paciente'))
+    expect(await screen.findByText(AVISO_ORIGEN.tc)).toBeInTheDocument()
+    expect(escena.fijarCapaPaciente).toHaveBeenLastCalledWith(capaFalsa)
+    expect(ultimaEscena().ajusteColumna).toBeNull()
+    expect(screen.queryByText('Calculadas por el servidor')).toBeNull()
+
+    // TC → radiografía: se quita la capa y la escena se rehace con el eje ajustado.
+    const creadasAntes = crearEscena.mock.calls.length
+    await userEvent.click(radio('Radiografía'))
+    expect(await screen.findByText(AVISO_ORIGEN.radiografia)).toBeInTheDocument()
+    expect(escena.fijarCapaPaciente).toHaveBeenLastCalledWith(null)
+    await waitFor(() => expect(crearEscena.mock.calls.length).toBe(creadasAntes + 1))
+    expect(ultimaEscena().ajusteColumna).toEqual(expect.objectContaining({ sagital: expect.any(Array) }))
+    expect(screen.getByText('Calculadas por el servidor')).toBeInTheDocument()
+    await waitFor(() => expect(radio('Radiografía')).toHaveAttribute('aria-checked', 'true'))
+    // La escena nueva no recibe la capa de la TC.
+    await act(() => new Promise((r) => setTimeout(r, 0)))
+    expect(escena.fijarCapaPaciente).toHaveBeenLastCalledWith(null)
+
+    // Radiografía → TC: la escena vuelve sin ajuste y la capa se pone de nuevo sola.
+    await waitFor(() => expect(radio('Tomografía del paciente')).toBeEnabled())
+    await userEvent.click(radio('Tomografía del paciente'))
+    expect(await screen.findByText(AVISO_ORIGEN.tc)).toBeInTheDocument()
+    await waitFor(() => expect(ultimaEscena().ajusteColumna).toBeNull())
+    await waitFor(() => expect(escena.fijarCapaPaciente).toHaveBeenLastCalledWith(capaFalsa))
+    expect(screen.queryByText(AVISO_ORIGEN.radiografia)).toBeNull()
+
+    // TC → esquemático: ni capa ni ajuste.
+    await waitFor(() => expect(radio('Esquemático')).toBeEnabled())
+    await userEvent.click(radio('Esquemático'))
+    expect(await screen.findByText(AVISO_ORIGEN.esquematico)).toBeInTheDocument()
+    expect(escena.fijarCapaPaciente).toHaveBeenLastCalledWith(null)
+    expect(ultimaEscena().ajusteColumna).toBeNull()
+  })
+
+  it('«Ver en Neuro 3D» desde el visor de TC abre en «tc», aunque antes se pidiera radiografía', async () => {
+    modulos.actual = ['neuro3d_paciente']
+    permisos.actual = ['neuro3d.read', 'spine_rx.read', 'clinical_images.read']
+    responder([AJUSTE], [MODELO_TC])
+    pedirOrigen(5, 'radiografia')
+    pedirOrigen(5, 'tc', 9)
+    abrir('/pacientes/5/neuro-3d')
+    expect(await screen.findByText(AVISO_ORIGEN.tc)).toBeInTheDocument()
+    expect(ultimaEscena().ajusteColumna).toBeNull()
     expect(sessionStorage.getItem('cortex.neuro3d.origen.5')).toBeNull()
   })
 

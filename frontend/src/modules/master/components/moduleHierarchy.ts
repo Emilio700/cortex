@@ -84,6 +84,8 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
       { label: 'Neuro 3D', actions: ['neuro3d.read'] },
       // Columna desde radiografías (Cortex, feat/columna-desde-radiografias)
       { label: 'Columna desde radiografía', actions: ['spine_rx.read', 'spine_rx.write'] },
+      // Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc)
+      { label: 'Modelo 3D del paciente', actions: ['neuro3d.generar_modelo'] },
     ],
   },
   {

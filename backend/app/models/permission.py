@@ -116,6 +116,12 @@ ALL_PERMISSIONS: dict[str, str] = {
     # lee ni escribe datos clínicos: guardar una captura en el expediente sigue
     # pidiendo clinical_images.upload, y su consentimiento, aparte.
     "neuro3d.read":           "Ver Neuro 3D",
+    # ── Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc) ──
+    # Mandar una serie del paciente al segmentador y marcar la reconstrucción
+    # como revisada. Aparte de neuro3d.read (que es el atlas educativo) y de
+    # clinical_images.read (que basta para ver un modelo ya hecho): generar
+    # gasta minutos de CPU del servidor y deja un derivado en el expediente.
+    "neuro3d.generar_modelo": "Generar y revisar el modelo 3D del paciente desde su estudio",
     # Digital informed consents
     "clinical_consents.read":   "Ver consentimientos informados",
     "clinical_consents.create": "Crear borradores de consentimiento",
@@ -294,6 +300,9 @@ ROLE_DEFAULT_PERMISSIONS: dict[str, list[str]] = {
         "clinical_consents.read", "clinical_consents.create", "clinical_consents.sign", "clinical_consents.revoke",
         # Neuro 3D (tramo C): para explicarle al paciente su lesión.
         "neuro3d.read",
+        # Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc): el médico pide
+        # la reconstrucción de su paciente y la revisa.
+        "neuro3d.generar_modelo",
         # Sube documentos (decisión de Emilio, plan 32 punto 6): antes veía el
         # botón y al guardar recibía un 403 (C7).
         "documents.read", "documents.upload",

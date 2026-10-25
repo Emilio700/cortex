@@ -156,6 +156,31 @@ services:
       - ia
   # ── fin base-modulos-extra ──
 
+  # ── modelo-3d-desde-tc: segmentador de TC para Neuro 3D del paciente ──
+  # Servicio aparte: torch y los pesos no viven en el proceso de la consulta.
+  # Imagen con versión fija (cortex-segmentador:0.1.0, ver su Dockerfile). Solo
+  # escucha en el equipo local: recibe estudios del paciente y no lleva
+  # autenticación propia; el backend lo alcanza por la red interna.
+  # SEGMENTADOR_FALSO=1 devuelve una columna sintética (sin GPU ni pesos).
+  segmentador:
+    build:
+      context: ./servicios/segmentador
+    image: cortex-segmentador:0.1.0
+    container_name: cortex_segmentador
+    environment:
+      SEGMENTADOR_FALSO: ${SEGMENTADOR_FALSO:-0}
+      SEGMENTADOR_RAPIDO: ${SEGMENTADOR_RAPIDO:-1}
+      SEGMENTADOR_DISPOSITIVO: ${SEGMENTADOR_DISPOSITIVO:-cpu}
+    ports:
+      - "127.0.0.1:${SEGMENTADOR_PORT:-8030}:8000"
+    volumes:
+      - cortex_segmentador_pesos:/pesos
+    networks:
+      - cortex_network
+    profiles:
+      - ia
+  # ── fin modelo-3d-desde-tc ──
+
 volumes:
   cortex_postgres_data:
     name: cortex_postgres_data
@@ -166,6 +191,9 @@ volumes:
     name: cortex_orthanc_data
   cortex_whisper_models:
     name: cortex_whisper_models
+  # modelo-3d-desde-tc
+  cortex_segmentador_pesos:
+    name: cortex_segmentador_pesos
 
 networks:
   cortex_network:

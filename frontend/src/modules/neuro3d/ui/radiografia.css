@@ -277,19 +277,6 @@
   color: var(--cx-texto-3);
 }
 
-/* ── Neuro 3D: el origen del modelo y las mediciones junto a él ───────── */
-.rx-origen {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.rx-origen__razon {
-  font-size: 0.8rem;
-  color: var(--cx-texto-2);
-}
-
 @media (max-width: 1279.98px) {
   .rx-rejilla {
     grid-template-columns: minmax(0, 1fr) 320px;

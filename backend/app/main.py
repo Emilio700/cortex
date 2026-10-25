@@ -63,6 +63,8 @@ from app.routers import escalas as escalas_router
 from app.routers import columna_rx as columna_rx_router
 # base-modulos-extra (tramo A): módulos opcionales y estado de servicios.
 from app.routers import modulos as modulos_router
+# Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc)
+from app.routers import modelo_3d as modelo_3d_router
 
 
 @asynccontextmanager
@@ -230,6 +232,8 @@ app.include_router(columna_rx_router.router, prefix=settings.API_V1_PREFIX)
 # base-modulos-extra (tramo A): módulos opcionales y estado de servicios.
 app.include_router(modulos_router.router, prefix=settings.API_V1_PREFIX)
 app.include_router(modulos_router.router_servicios, prefix=settings.API_V1_PREFIX)
+# Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc)
+app.include_router(modelo_3d_router.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/health")
