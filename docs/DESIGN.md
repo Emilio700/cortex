@@ -357,6 +357,56 @@ compartida (`paridad.json`) vigila que digan lo mismo.
 
 Referencia: `frontend/src/modules/escalas/` y `backend/app/services/escalas.py`.
 
+### 4.13 Neuro 3D
+
+<!-- Tramo C · Neuro 3D -->
+Modelo anatómico 3D para **explicarle al paciente** su lesión y su cirugía. Ruta
+`/imagen/neuro-3d` (menú «Imagen y señales») y `/pacientes/:id/neuro-3d`
+(botón «Neuro 3D» en la pestaña Imágenes del expediente, con el paciente en
+contexto). Permiso `neuro3d.read`.
+
+- **Siempre se dice qué es.** Debajo del encabezado, fijo: «Modelo esquemático con
+  fines educativos; no representa la anatomía de este paciente ni sustituye su
+  estudio de imagen». La captura lo lleva al pie. Las vías se nombran
+  «esquemáticas» y lo aproximado del dominio va marcado `(verificar)` con su fuente.
+- **Distribución.** Navegación a la izquierda (buscar, capas con opacidad, pelado,
+  corte, movimiento), escena al centro y ficha / «Explicar al paciente» a la
+  derecha. Con menos de 1280 px la escena va arriba a todo lo ancho; en el teléfono
+  se apila escena → ficha → navegación y la barra de vistas se desliza de lado.
+- **Fondo.** La escena va sobre el marino de la marca (`--cx-anat-fondo`), como el
+  visor va sobre negro; el cromo usa las superficies del tema. Botones y rótulos
+  sobre la escena son de «vidrio oscuro».
+- **Paleta anatómica.** Tokens `--cx-anat-*` en `modules/neuro3d/ui/atlas.css`. La
+  escena los lee del DOM: un color se cambia en un solo lugar y cambia en el modelo,
+  la ficha, el buscador y la silueta. Lo afectado (marcas, dermatomas) va en ámbar
+  (`--cx-anat-afectado`): aviso, no alarma. Hay prueba de que cada color del
+  catálogo es un token definido.
+- **El camino de una raíz.** Tocar una raíz enciende, juntos, su segmento medular, el
+  disco que cruza, las vértebras de su agujero y su dermatoma en la silueta; el resto
+  de la columna se atenúa. La regla vive en `dominio/conexiones.ts` (pura y con
+  pruebas): la escena, la ficha y la silueta dicen lo mismo.
+- **Movimiento.** Transiciones de cámara de 750 ms, latido suave de lo encendido,
+  rotación automática al abrir, separación de la columna y pelado animados, flujo
+  opcional en Willis. Con «reducir movimiento» (sistema o interruptor de Cortex) todo
+  eso se apaga: la cámara salta, nada late ni gira, el flujo no se ofrece.
+- **Carga.** `three` viaja en `vendor-three` y la escena se importa después de
+  comprobar WebGL (`servicios/webgl.ts`, sin three). Sin WebGL: un mensaje que dice
+  qué pasa y qué hacer, nunca un recuadro vacío. Al salir, `liberar()` suelta
+  geometrías, materiales, texturas y el contexto.
+- **Materiales.** Todos nacen transparentes y lo opaco sólo escribe profundidad:
+  cambiar `transparent` recompila el sombreador y el pelado lo haría en cada cuadro.
+- **Captura y expediente.** PNG con la vista, la silueta y el aviso, **sin el nombre
+  del paciente**. «Guardar en el expediente» sólo con paciente en contexto y permiso
+  `clinical_images.upload`; pide confirmar el consentimiento, usa
+  `POST /clinical-images/upload` como «Imagen de referencia» y sólo dice «Guardado»
+  cuando el servidor respondió. Las marcas no se guardan solas.
+- **Modelo del paciente (fase futura).** La escena recibe capas (`CapaAnatomica` en
+  `servicios/anatomia/tipos.ts`) que entregan piezas con estructura, capa, color y
+  acabado; una capa que lea las mallas glTF del segmentador entrará igual que las
+  del atlas.
+
+Referencia: `frontend/src/modules/neuro3d/`.
+
 ---
 
 ## 11. Dónde vive cada cosa (módulos)

@@ -48,6 +48,9 @@ const ExpedientePage = React.lazy(() => import('./modules/expediente/ExpedienteP
 // imagen (Cornerstone y sus decodificadores pesan más que el resto de la app).
 const VisorEstudioPage = React.lazy(() => import('./modules/imagen/paginas/VisorEstudioPage'))
 const ResultsInboxPage = React.lazy(() => import('./modules/doctor/pages/ResultsInboxPage'))
+// ── Neuro 3D (tramo C) ──
+// En su propio paquete: three.js (vendor-three) sólo lo descarga quien abre el atlas.
+const AtlasNeuroPage = React.lazy(() => import('./modules/neuro3d/paginas/AtlasNeuroPage'))
 
 // Admin Module
 const AdminDashboard = React.lazy(() => import('./modules/admin/pages/AdminDashboard'))
@@ -137,6 +140,23 @@ const routes: Route[] = [
     name: 'Visor de estudios',
     element: VisorEstudioPage,
     roles: orMaster(Role.DOCTOR, Role.ADMIN),
+  },
+  // ── Neuro 3D (tramo C) ──
+  // Dos puertas a la misma pantalla: desde el menú (sin paciente) y desde la
+  // pestaña Imágenes del expediente, con el paciente en contexto para guardar
+  // la captura. El atlas no lee datos clínicos: basta neuro3d.read. Sólo por
+  // permiso, igual que su ítem del menú.
+  {
+    path: '/imagen/neuro-3d',
+    requires: ['neuro3d.read'],
+    name: 'Neuro 3D',
+    element: AtlasNeuroPage,
+  },
+  {
+    path: '/pacientes/:patientId/neuro-3d',
+    requires: ['neuro3d.read'],
+    name: 'Neuro 3D',
+    element: AtlasNeuroPage,
   },
   {
     // Mostrador de órdenes: entregar la orden (O-09) y subir el resultado

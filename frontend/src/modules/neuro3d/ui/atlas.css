@@ -1,0 +1,497 @@
+/*
+ * Neuro 3D.
+ *
+ * La escena va sobre el marino profundo de la marca (como el visor va sobre
+ * negro): ahí el modelo brilla y se lee. El cromo alrededor usa las
+ * superficies del tema.
+ *
+ * Paleta anatómica: tokens `--cx-anat-*`, propios del atlas. La escena 3D los
+ * lee del DOM (getComputedStyle), así que cambiar un color aquí lo cambia en
+ * el modelo, en la ficha y en la silueta a la vez. Tonos apagados a propósito:
+ * sobre marino, los colores saturados cansan y parecen de juguete.
+ */
+.atlas-neuro {
+  --cx-anat-fondo: var(--cx-marino-900);
+  --cx-anat-fondo-2: var(--cx-marino-800);
+  --cx-anat-piel: #9cc4ff;
+  --cx-anat-hueso: #d8cdb4;
+  --cx-anat-frontal: #8fb4ff;
+  --cx-anat-parietal: #b3a6f5;
+  --cx-anat-temporal: #7fd3c4;
+  --cx-anat-occipital: #f0c591;
+  --cx-anat-insula: #f2a3c0;
+  --cx-anat-cerebelo: #d4bff0;
+  --cx-anat-tronco: #c9d4e6;
+  --cx-anat-lcr: #38bdf8;
+  --cx-anat-arteria: #e5575c;
+  --cx-anat-disco: #9fd2ec;
+  --cx-anat-medula: #f1dcae;
+  --cx-anat-raiz: #f3c75f;
+  --cx-anat-via-motora: #ff8a5c;
+  --cx-anat-via-sensitiva: #5fd4ff;
+  --cx-anat-resalte: var(--cx-cian-claro);
+  --cx-anat-seleccion: var(--cx-azul-vivo);
+  /* Lo afectado (marca, dermatoma) va en ámbar: aviso, no alarma. */
+  --cx-anat-afectado: #ffb020;
+  --cx-anat-texto: #e4ecfb;
+  --cx-anat-texto-2: #9fb2d6;
+  /* Texto sobre el azul de acción. */
+  --cx-anat-sobre-azul: #ffffff;
+}
+
+/* ── Página ─────────────────────────────────────────────────────────────── */
+.atlas-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* El aviso de modelo esquemático: siempre a la vista, sin gritar. */
+.atlas-aviso {
+  margin: -8px 0 14px;
+  padding: 8px 14px;
+  border-left: 3px solid var(--cx-cian);
+  border-radius: 0 var(--cx-radio) var(--cx-radio) 0;
+  background: var(--cx-superficie-2);
+  color: var(--cx-texto-2);
+  font-size: 0.85rem;
+}
+
+.atlas-rejilla {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr) 340px;
+  grid-template-areas: 'nav escena ficha';
+  gap: 16px;
+  height: max(600px, calc(100vh - 290px));
+}
+.atlas-panel--navegacion { grid-area: nav; }
+.atlas-escena { grid-area: escena; }
+.atlas-panel--ficha { grid-area: ficha; }
+
+.atlas-panel {
+  min-height: 0;
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid var(--cx-borde);
+  border-radius: var(--cx-radio-lg);
+  background: var(--cx-superficie);
+  box-shadow: var(--cx-sombra);
+}
+
+/* ── Escena ─────────────────────────────────────────────────────────────── */
+.atlas-escena {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--cx-radio-lg);
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--cx-cian-claro) 9%, transparent) 1px, transparent 0) 0 0 / 26px 26px,
+    radial-gradient(70% 60% at 50% 38%, color-mix(in srgb, var(--cx-azul-vivo) 20%, transparent) 0%, transparent 70%),
+    radial-gradient(120% 100% at 50% 30%, var(--cx-marino-700) 0%, var(--cx-anat-fondo-2) 48%, var(--cx-anat-fondo) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cx-cian-claro) 14%, transparent), var(--cx-sombra-alta);
+  color: var(--cx-anat-texto);
+}
+.atlas-escena__lienzo-contenedor {
+  position: absolute;
+  inset: 0;
+}
+.atlas-escena__lienzo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+.atlas-escena__lienzo:active { cursor: grabbing; }
+.atlas-escena__rotulos {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.atlas-escena__estado {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--cx-anat-texto);
+  text-align: center;
+}
+.atlas-escena__estado--aviso { flex-direction: column; }
+.atlas-escena__estado--aviso > * { max-width: 440px; }
+
+/* Vidrio oscuro: botones y rótulos sobre la escena. */
+.atlas-vistas__boton,
+.atlas-escena__boton,
+.atlas-escena__tooltip,
+.atlas-rotulo {
+  border: 1px solid color-mix(in srgb, var(--cx-cian-claro) 24%, transparent);
+  background: color-mix(in srgb, var(--cx-anat-fondo) 72%, transparent);
+  color: var(--cx-anat-texto);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.atlas-vistas {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.atlas-vistas__boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 6px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.atlas-vistas__boton kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--cx-cian-claro) 16%, transparent);
+  color: var(--cx-cian-claro);
+  font: 600 0.7rem var(--cx-fuente);
+  box-shadow: none;
+}
+.atlas-vistas__boton:hover { border-color: color-mix(in srgb, var(--cx-cian-claro) 55%, transparent); }
+.atlas-vistas__boton.is-activa {
+  border-color: var(--cx-azul-vivo);
+  background: var(--cx-azul);
+  color: var(--cx-anat-sobre-azul);
+}
+.atlas-vistas__boton.is-activa kbd {
+  background: color-mix(in srgb, var(--cx-anat-sobre-azul) 22%, transparent);
+  color: var(--cx-anat-sobre-azul);
+}
+.atlas-vistas__boton:focus-visible,
+.atlas-escena__boton:focus-visible {
+  outline: 2px solid var(--cx-cian);
+  outline-offset: 2px;
+}
+
+.atlas-escena__acciones {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.atlas-escena__boton.btn {
+  --cui-btn-color: var(--cx-anat-texto);
+  --cui-btn-hover-color: var(--cx-anat-sobre-azul);
+  --cui-btn-hover-bg: color-mix(in srgb, var(--cx-azul) 60%, transparent);
+  --cui-btn-hover-border-color: var(--cx-azul-vivo);
+  --cui-btn-active-bg: var(--cx-azul);
+  border-radius: 10px;
+}
+.atlas-escena__boton.btn-primary {
+  border-color: var(--cx-azul-vivo);
+  background: var(--cx-azul);
+  color: var(--cx-anat-sobre-azul);
+}
+.atlas-escena__ayuda {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  margin: 0;
+  color: var(--cx-anat-texto-2);
+  font-size: 0.75rem;
+  pointer-events: none;
+}
+.atlas-escena__tooltip {
+  position: absolute;
+  z-index: 3;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Rótulos de la escena: una pastilla con un punto que señala la pieza.
+   Sin `position`: CSS2DRenderer los pone en absoluto y los mueve con transform. */
+.atlas-rotulo {
+  margin-left: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font: 500 0.74rem/1.3 var(--cx-fuente);
+  white-space: nowrap;
+  animation: atlas-aparece 0.2s var(--cx-curva) both;
+}
+.atlas-rotulo::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: var(--cx-anat-resalte);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cx-anat-resalte) 25%, transparent);
+}
+.atlas-rotulo--seleccion {
+  border-color: var(--cx-anat-seleccion);
+  font-weight: 600;
+}
+.atlas-rotulo--seleccion::before {
+  background: var(--cx-anat-seleccion);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cx-anat-seleccion) 30%, transparent);
+}
+.atlas-rotulo--afectado {
+  border-color: var(--cx-anat-afectado);
+  color: var(--cx-anat-afectado);
+}
+.atlas-rotulo--afectado::before {
+  background: var(--cx-anat-afectado);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cx-anat-afectado) 30%, transparent);
+}
+/* Sólo opacidad: el transform es de CSS2DRenderer, que lo usa para ubicarlo. */
+@keyframes atlas-aparece {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Paneles ────────────────────────────────────────────────────────────── */
+.atlas-panel__bloques {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+.atlas-bloque + .atlas-bloque {
+  padding-top: 14px;
+  border-top: 1px solid var(--cx-borde);
+}
+.atlas-bloque__titulo {
+  display: block;
+  margin: 0 0 8px;
+  color: var(--cx-texto-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.atlas-bloque__ayuda {
+  color: var(--cx-texto-2);
+  font-size: 0.82rem;
+}
+
+.atlas-capas {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.atlas-capa__fila .form-check { margin-bottom: 0; }
+.atlas-capa__opacidad {
+  width: calc(100% - 2.5em);
+  height: 1rem;
+  margin: 0 0 4px 2.5em;
+}
+.atlas-capa__esquema {
+  color: var(--cx-texto-3);
+  font-size: 0.75rem;
+}
+.atlas-pelado__marcas {
+  display: flex;
+  justify-content: space-between;
+  color: var(--cx-texto-3);
+  font-size: 0.66rem;
+}
+
+/* Botones segmentados: lo elegido va en sólido (regla del consultorio). */
+.atlas-segmentado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.atlas-segmentado__opcion {
+  flex: 1 1 auto;
+  padding: 5px 8px;
+  border: 1px solid var(--cx-borde-fuerte);
+  border-radius: 8px;
+  background: var(--cx-superficie-2);
+  color: var(--cx-texto);
+  font-size: 0.8rem;
+}
+.atlas-segmentado__opcion.is-activo {
+  border-color: var(--cx-azul);
+  background: var(--cx-azul);
+  color: var(--cx-anat-sobre-azul);
+}
+.atlas-segmentado__opcion:focus-visible {
+  outline: 2px solid var(--cx-cian);
+  outline-offset: 1px;
+}
+
+/* Buscador */
+.atlas-buscador { position: relative; }
+.atlas-buscador__lista {
+  position: absolute;
+  z-index: 5;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  margin: 4px 0 0;
+  padding: 4px;
+  overflow: auto;
+  list-style: none;
+  border: 1px solid var(--cx-borde-fuerte);
+  border-radius: var(--cx-radio);
+  background: var(--cx-superficie);
+  box-shadow: var(--cx-sombra-alta);
+}
+.atlas-buscador__opcion {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  align-items: center;
+  column-gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.atlas-buscador__opcion.is-activa { background: var(--cx-superficie-2); box-shadow: inset 3px 0 0 var(--cx-azul); }
+.atlas-buscador__punto { grid-row: span 2; width: 10px; height: 10px; border-radius: 50%; }
+.atlas-buscador__nombre { color: var(--cx-texto); font-size: 0.86rem; }
+.atlas-buscador__sistema { color: var(--cx-texto-3); font-size: 0.72rem; }
+.atlas-buscador__vacio { padding: 8px; color: var(--cx-texto-2); font-size: 0.82rem; }
+
+/* Ficha */
+.atlas-ficha__cabecera {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.atlas-ficha__muestra {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--cx-superficie-2);
+}
+.atlas-ficha__titulos { flex: 1; min-width: 0; }
+.atlas-ficha__sistema { color: var(--cx-texto-3); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.atlas-ficha__nombre { margin: 0; color: var(--cx-texto); font-size: 1.1rem; font-weight: 700; }
+.atlas-ficha__descripcion { margin: 10px 0; color: var(--cx-texto); font-size: 0.9rem; }
+.atlas-ficha__nota { color: var(--cx-texto-2); font-size: 0.8rem; font-style: italic; }
+.atlas-ficha__subtitulo { margin: 12px 0 6px; color: var(--cx-texto-2); font-size: 0.78rem; font-weight: 700; }
+.atlas-ficha__piezas { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 8px; padding: 0; list-style: none; }
+.atlas-pieza {
+  padding: 2px 8px;
+  border: 1px solid color-mix(in srgb, var(--cx-cian) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cx-cian) 10%, transparent);
+  color: var(--cx-texto);
+  font-size: 0.75rem;
+}
+.atlas-pieza--raiz,
+.atlas-pieza--disco-que-cruza {
+  border-color: var(--cx-azul);
+  background: color-mix(in srgb, var(--cx-azul) 14%, transparent);
+  font-weight: 600;
+}
+.atlas-ficha__pasos { margin: 0; padding-left: 1.2em; color: var(--cx-texto); font-size: 0.84rem; }
+.atlas-ficha__pasos li + li { margin-top: 3px; }
+.atlas-ficha__clave { margin: 6px 0 0; color: var(--cx-texto); font-size: 0.82rem; }
+
+/* Explicar */
+.atlas-explicar { margin-top: 14px; }
+.atlas-panel--ficha > .atlas-explicar:first-child { margin-top: 0; }
+.atlas-explicar__formulario { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.atlas-explicar__formulario .form-label { margin: 4px 0 0; color: var(--cx-texto-2); font-size: 0.8rem; font-weight: 600; }
+.atlas-marcas { display: flex; flex-direction: column; gap: 6px; margin: 0 0 12px; padding: 0; list-style: none; }
+.atlas-marca {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--cx-anat-afectado) 55%, transparent);
+  border-left-width: 4px;
+  border-radius: var(--cx-radio);
+  background: color-mix(in srgb, var(--cx-anat-afectado) 8%, var(--cx-superficie));
+}
+.atlas-marca__titulo { color: var(--cx-texto); font-size: 0.86rem; font-weight: 600; }
+.atlas-marca__detalle { color: var(--cx-texto-2); font-size: 0.78rem; }
+
+/* Silueta de dermatomas */
+.atlas-silueta { margin: 0; }
+.atlas-silueta__svg { display: block; width: 100%; height: auto; border-radius: var(--cx-radio); }
+.atlas-silueta--compacta .atlas-silueta__svg { max-height: 300px; }
+.atlas-silueta__region {
+  fill-opacity: 0.82;
+  filter: drop-shadow(0 0 4px var(--cx-anat-afectado));
+  animation: atlas-late 2.6s ease-in-out infinite;
+}
+.atlas-silueta__pie { margin-top: 6px; color: var(--cx-texto-3); font-size: 0.72rem; }
+@keyframes atlas-late {
+  0%, 100% { fill-opacity: 0.68; }
+  50% { fill-opacity: 0.92; }
+}
+
+.atlas-guardar__vista {
+  display: block;
+  max-width: 100%;
+  max-height: 46vh;
+  margin: 0 auto;
+  border-radius: var(--cx-radio);
+}
+
+/* Reducir movimiento: nada late ni aparece deslizándose. */
+@media (prefers-reduced-motion: reduce) {
+  .atlas-silueta__region,
+  .atlas-rotulo { animation: none; }
+}
+.reduce-motion .atlas-silueta__region,
+.reduce-motion .atlas-rotulo { animation: none; }
+
+/* ── Anchos ─────────────────────────────────────────────────────────────── */
+@media (max-width: 1280px) {
+  .atlas-rejilla {
+    grid-template-columns: 260px minmax(0, 1fr);
+    grid-template-areas:
+      'escena escena'
+      'nav ficha';
+    grid-template-rows: max(520px, calc(100vh - 300px)) auto;
+    height: auto;
+  }
+  .atlas-panel { overflow: visible; }
+}
+
+@media (max-width: 767.98px) {
+  .atlas-rejilla {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'escena' 'ficha' 'nav';
+    grid-template-rows: min(64vh, 560px) auto auto;
+    gap: 12px;
+  }
+  .atlas-vistas {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .atlas-vistas__boton { flex: none; }
+  .atlas-escena__ayuda { display: none; }
+  .atlas-acciones .btn { flex: 1 1 auto; }
+}

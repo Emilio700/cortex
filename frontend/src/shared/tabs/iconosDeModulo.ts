@@ -7,6 +7,7 @@
  * Hay prueba de que cada ruta con pantalla tiene el suyo.
  */
 import {
+    cil3d,
     cilBuilding,
     cilCalendar,
     cilCash,
@@ -58,6 +59,9 @@ export const ICONOS_DE_MODULO: Record<string, string[]> = {
     '/master/permisos': cilShieldAlt,
     '/master/roles': cilUserFollow,
     '/master/sucursales': cilBuilding,
+    // Neuro 3D (tramo C).
+    '/imagen/neuro-3d': cil3d,
+    '/pacientes/:patientId/neuro-3d': cil3d,
     // base-modulos-extra (tramo A): los mismos íconos que el menú.
     '/sistema/servicios': cilApplications,
     '/sistema/modulos': cilSettings,

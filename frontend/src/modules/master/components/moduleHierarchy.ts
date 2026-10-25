@@ -77,6 +77,13 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
       { label: 'Escalas neurológicas', actions: ['clinical_scales.read', 'clinical_scales.write'] },
     ],
   },
+  // ── Imagen y señales (tramo C: Neuro 3D) ──
+  {
+    label: 'Imagen y señales',
+    submodules: [
+      { label: 'Neuro 3D', actions: ['neuro3d.read'] },
+    ],
+  },
   {
     label: 'Horarios',
     submodules: [
