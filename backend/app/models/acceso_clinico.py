@@ -27,10 +27,13 @@ class SeccionClinica:
     EPISODIOS = "episodios"
     CONSENTIMIENTOS = "consentimientos"
     RESUMEN_CLINICO = "resumen_clinico"
+    # Escalas neurológicas (Cortex, feat/escalas-neuro)
+    ESCALAS = "escalas"
 
     TODAS = (
         CONSULTAS, RECETAS, CERTIFICADOS, ESTUDIOS, IMAGENES, DOCUMENTOS,
         EMBARAZO, EPISODIOS, CONSENTIMIENTOS, RESUMEN_CLINICO,
+        ESCALAS,
     )
 
 

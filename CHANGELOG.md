@@ -65,6 +65,14 @@ Todos los cambios notables de Cortex. Formato basado en
   carga o algo truena antes de que exista la primera barrera de React, la pantalla
   dice qué pasó y ofrece recargar. Antes ese caso se veía como una página en blanco,
   sin mensaje y sin forma de saber por qué.
+- **Escalas neurológicas** en la consulta (sección junto a «Plan clínico») y su
+  evolución en la pestaña «Escalas» del expediente: Glasgow (con «no valorable»),
+  NIHSS, Hunt y Hess, WFNS, Fisher modificada, Spetzler-Martin, Rankin modificada,
+  ASIA (grado AIS), Karnofsky, mJOA, Oswestry, NDI, ENA de dolor y Barthel, cada una
+  con su fuente. El puntaje se sugiere mientras se llena y lo calcula el servidor al
+  guardar; una escala mal capturada se anula con motivo, no se borra. Permisos
+  `clinical_scales.read`/`write` para el médico. Migración 0052. Lo marcado
+  «(verificar)» espera revisión médica.
 <!-- base-modulos-extra (tramo A) -->
 - Base para los módulos extra: módulos opcionales que se encienden por consultorio
   en **Sistema → Módulos** (tabla `tenant_modulos`, migración 0051; apagar no borra

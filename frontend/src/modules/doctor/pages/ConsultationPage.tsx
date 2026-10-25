@@ -47,6 +47,8 @@ import ExpedienteDePaciente, { pedirPestanaDelExpediente } from '../../expedient
 import ClinicalConsentCard from '../components/ClinicalConsentCard'
 import ClinicalPlanPanel from '../components/ClinicalPlanPanel'
 import ConsultationSection from '../components/ConsultationSection'
+// Escalas neurológicas (Cortex, feat/escalas-neuro)
+import { EscalasEnConsulta, type ResumenEscalas } from '../../escalas'
 import './consultaPestanas.css'
 import DatosPacienteEditables from '../components/DatosPacienteEditables'
 import { AvisoCompletarFicha } from '../../../shared/components/AvisoCompletarFicha'
@@ -117,7 +119,7 @@ const PESTANAS: { id: PestanaConsulta; nombre: string; descripcion: string; icon
   {
     id: 'expediente',
     nombre: 'Expediente',
-    descripcion: 'Todo lo del paciente: resumen, consultas, estudios, documentos, imágenes, embarazo y consentimientos',
+    descripcion: 'Todo lo del paciente: resumen, consultas, estudios, documentos, imágenes, escalas, embarazo y consentimientos',
     icono: cilNotes,
   },
 ]
@@ -188,6 +190,7 @@ const ConsultationPage = () => {
   const [discountNote, setDiscountNote] = useState('')
   const [planSummary, setPlanSummary] = useState<ClinicalPlanSummary | null>(null)
   const [consentSummary, setConsentSummary] = useState<ClinicalConsentSummary | null>(null)
+  const [escalasSummary, setEscalasSummary] = useState<ResumenEscalas | null>(null)
 
   // El borrador de cobro sobrevive a cerrar el modal: si el cierre falló, el
   // reintento no obliga al médico a capturar otra vez monto y referencia.
@@ -293,6 +296,19 @@ const ConsultationPage = () => {
     ) : consentSummary && consentSummary.total > 0 ? (
       <CBadge color="warning" textColor="dark" shape="rounded-pill">
         {consentSummary.total} pendiente(s) de firma
+      </CBadge>
+    ) : null
+
+  // Escalas neurológicas (Cortex, feat/escalas-neuro): con la sección cerrada,
+  // la insignia avisa que ya hay escalas (regla 6 de DESIGN.md).
+  const escalasSummaryBadge =
+    escalasSummary && escalasSummary.enConsulta > 0 ? (
+      <CBadge color="info" shape="rounded-pill">
+        {escalasSummary.enConsulta} en esta consulta
+      </CBadge>
+    ) : escalasSummary && escalasSummary.total > 0 ? (
+      <CBadge color="light" textColor="dark" shape="rounded-pill">
+        {escalasSummary.total} en el expediente
       </CBadge>
     ) : null
 
@@ -698,8 +714,27 @@ const ConsultationPage = () => {
               />
             </ConsultationSection>
 
+            {/* Escalas neurológicas (Cortex, feat/escalas-neuro) */}
+            {can('clinical_scales.read') && (
+              <ConsultationSection
+                step={4}
+                stepColor="info"
+                icon={<span className="fs-5" aria-hidden="true">🧠</span>}
+                title="Escalas neurológicas"
+                subtitle="Glasgow, NIHSS, ASIA, Rankin, ODI y más; el puntaje se calcula mientras respondes."
+                summary={escalasSummaryBadge}
+              >
+                <EscalasEnConsulta
+                  patientId={appointment.patient_id}
+                  appointmentId={appointment.id}
+                  readOnly={isReadOnly}
+                  onSummaryChange={setEscalasSummary}
+                />
+              </ConsultationSection>
+            )}
+
             <ConsultationSection
-              step={4}
+              step={can('clinical_scales.read') ? 5 : 4}
               stepColor="primary"
               icon={<CIcon icon={cilDescriptionIcon} className="text-primary" width={20} />}
               title="Consentimiento informado"
@@ -717,7 +752,7 @@ const ConsultationPage = () => {
             </ConsultationSection>
 
             <ConsultationSection
-              step={5}
+              step={can('clinical_scales.read') ? 6 : 5}
               stepColor="secondary"
               icon={<span className="fs-5">📋</span>}
               title="Certificado médico"

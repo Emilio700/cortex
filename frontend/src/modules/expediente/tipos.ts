@@ -9,6 +9,8 @@ export type PestanaExpediente =
   | 'embarazo'
   | 'consentimientos'
   | 'equipo'
+  // Escalas neurológicas (Cortex, feat/escalas-neuro)
+  | 'escalas'
 
 export interface CitaBreve {
   id: number
