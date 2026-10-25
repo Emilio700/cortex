@@ -1,0 +1,5772 @@
+{
+  "_nota": "Generado por generarParidadRx.ts. Lo leen paridadRx.test.ts (vitest) y backend/tests/test_columna_rx_paridad.py (pytest). No lo edites a mano.",
+  "version": "1",
+  "casos": [
+    {
+      "nota": "sin marcas",
+      "marcas": {
+        "lateral": {
+          "vertebras": {},
+          "caderas": []
+        },
+        "ap": {
+          "vertebras": {}
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "ninguna"
+        },
+        "ap": {
+          "tipo": "ninguna"
+        }
+      },
+      "opciones": null,
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": null,
+        "cifosisToracica": null,
+        "cobbCoronal": null,
+        "listesis": [],
+        "discos": [],
+        "pelvis": null,
+        "inclinacionesSagitales": [],
+        "inclinacionesCoronales": [],
+        "escala": {
+          "lateral": "ninguna",
+          "ap": "ninguna"
+        },
+        "faltan": [
+          "Lordosis lumbar: marca el platillo superior de L1 y el de S1 en la lateral.",
+          "Cifosis torácica: marca el platillo superior de T4 y el inferior de T12 en la lateral.",
+          "Parámetros pélvicos: marca el platillo de S1 y al menos una cabeza femoral en la lateral.",
+          "Cobb coronal: marca los platillos de al menos dos vértebras en la AP."
+        ]
+      }
+    },
+    {
+      "nota": "lateral completa con lordosis 50 y pelvis",
+      "marcas": {
+        "lateral": {
+          "vertebras": {
+            "T1": {
+              "sa": {
+                "x": 680,
+                "y": 80
+              },
+              "sp": {
+                "x": 520,
+                "y": 80
+              },
+              "ia": {
+                "x": 680,
+                "y": 180
+              },
+              "ip": {
+                "x": 520,
+                "y": 180
+              }
+            },
+            "T2": {
+              "sa": {
+                "x": 680,
+                "y": 220
+              },
+              "sp": {
+                "x": 520,
+                "y": 220
+              },
+              "ia": {
+                "x": 680,
+                "y": 320
+              },
+              "ip": {
+                "x": 520,
+                "y": 320
+              }
+            },
+            "T3": {
+              "sa": {
+                "x": 680,
+                "y": 360
+              },
+              "sp": {
+                "x": 520,
+                "y": 360
+              },
+              "ia": {
+                "x": 680,
+                "y": 460
+              },
+              "ip": {
+                "x": 520,
+                "y": 460
+              }
+            },
+            "T4": {
+              "sa": {
+                "x": 675.1754096628727,
+                "y": 527.3616114660535
+              },
+              "sp": {
+                "x": 524.8245903371273,
+                "y": 472.6383885339465
+              },
+              "ia": {
+                "x": 680,
+                "y": 600
+              },
+              "ip": {
+                "x": 520,
+                "y": 600
+              }
+            },
+            "T5": {
+              "sa": {
+                "x": 680,
+                "y": 640
+              },
+              "sp": {
+                "x": 520,
+                "y": 640
+              },
+              "ia": {
+                "x": 680,
+                "y": 740
+              },
+              "ip": {
+                "x": 520,
+                "y": 740
+              }
+            },
+            "T6": {
+              "sa": {
+                "x": 680,
+                "y": 780
+              },
+              "sp": {
+                "x": 520,
+                "y": 780
+              },
+              "ia": {
+                "x": 680,
+                "y": 880
+              },
+              "ip": {
+                "x": 520,
+                "y": 880
+              }
+            },
+            "T7": {
+              "sa": {
+                "x": 680,
+                "y": 920
+              },
+              "sp": {
+                "x": 520,
+                "y": 920
+              },
+              "ia": {
+                "x": 680,
+                "y": 1020
+              },
+              "ip": {
+                "x": 520,
+                "y": 1020
+              }
+            },
+            "T8": {
+              "sa": {
+                "x": 680,
+                "y": 1060
+              },
+              "sp": {
+                "x": 520,
+                "y": 1060
+              },
+              "ia": {
+                "x": 680,
+                "y": 1160
+              },
+              "ip": {
+                "x": 520,
+                "y": 1160
+              }
+            },
+            "T9": {
+              "sa": {
+                "x": 680,
+                "y": 1200
+              },
+              "sp": {
+                "x": 520,
+                "y": 1200
+              },
+              "ia": {
+                "x": 680,
+                "y": 1300
+              },
+              "ip": {
+                "x": 520,
+                "y": 1300
+              }
+            },
+            "T10": {
+              "sa": {
+                "x": 680,
+                "y": 1340
+              },
+              "sp": {
+                "x": 520,
+                "y": 1340
+              },
+              "ia": {
+                "x": 680,
+                "y": 1440
+              },
+              "ip": {
+                "x": 520,
+                "y": 1440
+              }
+            },
+            "T11": {
+              "sa": {
+                "x": 680,
+                "y": 1480
+              },
+              "sp": {
+                "x": 520,
+                "y": 1480
+              },
+              "ia": {
+                "x": 680,
+                "y": 1580
+              },
+              "ip": {
+                "x": 520,
+                "y": 1580
+              }
+            },
+            "T12": {
+              "sa": {
+                "x": 680,
+                "y": 1620
+              },
+              "sp": {
+                "x": 520,
+                "y": 1620
+              },
+              "ia": {
+                "x": 675.1754096628727,
+                "y": 1692.6383885339465
+              },
+              "ip": {
+                "x": 524.8245903371273,
+                "y": 1747.3616114660535
+              }
+            },
+            "L1": {
+              "sa": {
+                "x": 678.7846202409767,
+                "y": 1746.1081457866455
+              },
+              "sp": {
+                "x": 521.2153797590233,
+                "y": 1773.8918542133545
+              },
+              "ia": {
+                "x": 680,
+                "y": 1860
+              },
+              "ip": {
+                "x": 520,
+                "y": 1860
+              }
+            },
+            "L2": {
+              "sa": {
+                "x": 680,
+                "y": 1900
+              },
+              "sp": {
+                "x": 520,
+                "y": 1900
+              },
+              "ia": {
+                "x": 680,
+                "y": 2000
+              },
+              "ip": {
+                "x": 520,
+                "y": 2000
+              }
+            },
+            "L3": {
+              "sa": {
+                "x": 680,
+                "y": 2040
+              },
+              "sp": {
+                "x": 520,
+                "y": 2040
+              },
+              "ia": {
+                "x": 680,
+                "y": 2140
+              },
+              "ip": {
+                "x": 520,
+                "y": 2140
+              }
+            },
+            "L4": {
+              "sa": {
+                "x": 680,
+                "y": 2180
+              },
+              "sp": {
+                "x": 520,
+                "y": 2180
+              },
+              "ia": {
+                "x": 680,
+                "y": 2280
+              },
+              "ip": {
+                "x": 520,
+                "y": 2280
+              }
+            },
+            "L5": {
+              "sa": {
+                "x": 680,
+                "y": 2320
+              },
+              "sp": {
+                "x": 520,
+                "y": 2320
+              },
+              "ia": {
+                "x": 680,
+                "y": 2420
+              },
+              "ip": {
+                "x": 520,
+                "y": 2420
+              }
+            },
+            "S1": {
+              "sa": {
+                "x": 661.2835554495182,
+                "y": 2511.4230087749233
+              },
+              "sp": {
+                "x": 538.7164445504818,
+                "y": 2408.5769912250767
+              }
+            }
+          },
+          "caderas": [
+            {
+              "x": 683.1646763271037,
+              "y": 2851.259040293522
+            }
+          ]
+        },
+        "ap": {
+          "vertebras": {}
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "ninguna"
+        },
+        "ap": {
+          "tipo": "ninguna"
+        }
+      },
+      "opciones": null,
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": {
+          "grados": 50,
+          "superior": "L1",
+          "inferior": "S1"
+        },
+        "cifosisToracica": {
+          "grados": 40,
+          "superior": "T4",
+          "inferior": "T12"
+        },
+        "cobbCoronal": null,
+        "listesis": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "porcentaje": -5.5,
+            "grado": null,
+            "apreciable": true,
+            "mm": null
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "porcentaje": 5.1,
+            "grado": 1,
+            "apreciable": true,
+            "mm": null
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "porcentaje": -4.4,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          }
+        ],
+        "discos": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "indice": 0.41,
+            "mm": null
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "indice": 0.58,
+            "mm": null
+          }
+        ],
+        "pelvis": {
+          "incidencia": 52,
+          "inclinacion": 12,
+          "pendienteSacra": 40
+        },
+        "inclinacionesSagitales": [
+          {
+            "vertebra": "T1",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T1",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "superior",
+            "grados": -20
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "inferior",
+            "grados": 20
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "superior",
+            "grados": 10
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "S1",
+            "platillo": "superior",
+            "grados": -40
+          }
+        ],
+        "inclinacionesCoronales": [],
+        "escala": {
+          "lateral": "ninguna",
+          "ap": "ninguna"
+        },
+        "faltan": [
+          "Cobb coronal: marca los platillos de al menos dos vértebras en la AP."
+        ]
+      }
+    },
+    {
+      "nota": "paciente mirando a la izquierda, dos caderas",
+      "marcas": {
+        "lateral": {
+          "vertebras": {
+            "T1": {
+              "sa": {
+                "x": 520,
+                "y": 80
+              },
+              "sp": {
+                "x": 680,
+                "y": 80
+              },
+              "ia": {
+                "x": 520,
+                "y": 180
+              },
+              "ip": {
+                "x": 680,
+                "y": 180
+              }
+            },
+            "T2": {
+              "sa": {
+                "x": 520,
+                "y": 220
+              },
+              "sp": {
+                "x": 680,
+                "y": 220
+              },
+              "ia": {
+                "x": 520,
+                "y": 320
+              },
+              "ip": {
+                "x": 680,
+                "y": 320
+              }
+            },
+            "T3": {
+              "sa": {
+                "x": 520,
+                "y": 360
+              },
+              "sp": {
+                "x": 680,
+                "y": 360
+              },
+              "ia": {
+                "x": 520,
+                "y": 460
+              },
+              "ip": {
+                "x": 680,
+                "y": 460
+              }
+            },
+            "T4": {
+              "sa": {
+                "x": 520,
+                "y": 500
+              },
+              "sp": {
+                "x": 680,
+                "y": 500
+              },
+              "ia": {
+                "x": 520,
+                "y": 600
+              },
+              "ip": {
+                "x": 680,
+                "y": 600
+              }
+            },
+            "T5": {
+              "sa": {
+                "x": 520,
+                "y": 640
+              },
+              "sp": {
+                "x": 680,
+                "y": 640
+              },
+              "ia": {
+                "x": 520,
+                "y": 740
+              },
+              "ip": {
+                "x": 680,
+                "y": 740
+              }
+            },
+            "T6": {
+              "sa": {
+                "x": 520,
+                "y": 780
+              },
+              "sp": {
+                "x": 680,
+                "y": 780
+              },
+              "ia": {
+                "x": 520,
+                "y": 880
+              },
+              "ip": {
+                "x": 680,
+                "y": 880
+              }
+            },
+            "T7": {
+              "sa": {
+                "x": 520,
+                "y": 920
+              },
+              "sp": {
+                "x": 680,
+                "y": 920
+              },
+              "ia": {
+                "x": 520,
+                "y": 1020
+              },
+              "ip": {
+                "x": 680,
+                "y": 1020
+              }
+            },
+            "T8": {
+              "sa": {
+                "x": 520,
+                "y": 1060
+              },
+              "sp": {
+                "x": 680,
+                "y": 1060
+              },
+              "ia": {
+                "x": 520,
+                "y": 1160
+              },
+              "ip": {
+                "x": 680,
+                "y": 1160
+              }
+            },
+            "T9": {
+              "sa": {
+                "x": 520,
+                "y": 1200
+              },
+              "sp": {
+                "x": 680,
+                "y": 1200
+              },
+              "ia": {
+                "x": 520,
+                "y": 1300
+              },
+              "ip": {
+                "x": 680,
+                "y": 1300
+              }
+            },
+            "T10": {
+              "sa": {
+                "x": 520,
+                "y": 1340
+              },
+              "sp": {
+                "x": 680,
+                "y": 1340
+              },
+              "ia": {
+                "x": 520,
+                "y": 1440
+              },
+              "ip": {
+                "x": 680,
+                "y": 1440
+              }
+            },
+            "T11": {
+              "sa": {
+                "x": 520,
+                "y": 1480
+              },
+              "sp": {
+                "x": 680,
+                "y": 1480
+              },
+              "ia": {
+                "x": 520,
+                "y": 1580
+              },
+              "ip": {
+                "x": 680,
+                "y": 1580
+              }
+            },
+            "T12": {
+              "sa": {
+                "x": 520,
+                "y": 1620
+              },
+              "sp": {
+                "x": 680,
+                "y": 1620
+              },
+              "ia": {
+                "x": 520,
+                "y": 1720
+              },
+              "ip": {
+                "x": 680,
+                "y": 1720
+              }
+            },
+            "L1": {
+              "sa": {
+                "x": 520.1948759792141,
+                "y": 1754.41948210047
+              },
+              "sp": {
+                "x": 679.8051240207859,
+                "y": 1765.58051789953
+              },
+              "ia": {
+                "x": 520,
+                "y": 1860
+              },
+              "ip": {
+                "x": 680,
+                "y": 1860
+              }
+            },
+            "L2": {
+              "sa": {
+                "x": 520,
+                "y": 1900
+              },
+              "sp": {
+                "x": 680,
+                "y": 1900
+              },
+              "ia": {
+                "x": 520,
+                "y": 2000
+              },
+              "ip": {
+                "x": 680,
+                "y": 2000
+              }
+            },
+            "L3": {
+              "sa": {
+                "x": 520,
+                "y": 2040
+              },
+              "sp": {
+                "x": 680,
+                "y": 2040
+              },
+              "ia": {
+                "x": 520,
+                "y": 2140
+              },
+              "ip": {
+                "x": 680,
+                "y": 2140
+              }
+            },
+            "L4": {
+              "sa": {
+                "x": 520,
+                "y": 2180
+              },
+              "sp": {
+                "x": 680,
+                "y": 2180
+              },
+              "ia": {
+                "x": 520,
+                "y": 2280
+              },
+              "ip": {
+                "x": 680,
+                "y": 2280
+              }
+            },
+            "L5": {
+              "sa": {
+                "x": 520,
+                "y": 2320
+              },
+              "sp": {
+                "x": 680,
+                "y": 2320
+              },
+              "ia": {
+                "x": 520,
+                "y": 2420
+              },
+              "ip": {
+                "x": 680,
+                "y": 2420
+              }
+            },
+            "S1": {
+              "sa": {
+                "x": 532.9063545643661,
+                "y": 2503.5711228012024
+              },
+              "sp": {
+                "x": 667.0936454356339,
+                "y": 2416.4288771987976
+              }
+            }
+          },
+          "caderas": [
+            {
+              "x": 487.1919426697325,
+              "y": 2819.8770483143635
+            },
+            {
+              "x": 439.1919426697325,
+              "y": 2851.8770483143635
+            }
+          ]
+        },
+        "ap": {
+          "vertebras": {}
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "ninguna"
+        },
+        "ap": {
+          "tipo": "ninguna"
+        }
+      },
+      "opciones": null,
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": {
+          "grados": 37,
+          "superior": "L1",
+          "inferior": "S1"
+        },
+        "cifosisToracica": {
+          "grados": 0,
+          "superior": "T4",
+          "inferior": "T12"
+        },
+        "cobbCoronal": null,
+        "listesis": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "porcentaje": 1.9,
+            "grado": 1,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "porcentaje": -5.5,
+            "grado": null,
+            "apreciable": true,
+            "mm": null
+          }
+        ],
+        "discos": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "indice": 0.49,
+            "mm": null
+          }
+        ],
+        "pelvis": {
+          "incidencia": 53,
+          "inclinacion": 20,
+          "pendienteSacra": 33
+        },
+        "inclinacionesSagitales": [
+          {
+            "vertebra": "T1",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T1",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "superior",
+            "grados": 4
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "S1",
+            "platillo": "superior",
+            "grados": -33
+          }
+        ],
+        "inclinacionesCoronales": [],
+        "escala": {
+          "lateral": "ninguna",
+          "ap": "ninguna"
+        },
+        "faltan": [
+          "Cobb coronal: marca los platillos de al menos dos vértebras en la AP."
+        ]
+      }
+    },
+    {
+      "nota": "listesis L5-S1 30 % con referencia de 100 mm",
+      "marcas": {
+        "lateral": {
+          "vertebras": {
+            "T1": {
+              "sa": {
+                "x": 680,
+                "y": 80
+              },
+              "sp": {
+                "x": 520,
+                "y": 80
+              },
+              "ia": {
+                "x": 680,
+                "y": 180
+              },
+              "ip": {
+                "x": 520,
+                "y": 180
+              }
+            },
+            "T2": {
+              "sa": {
+                "x": 680,
+                "y": 220
+              },
+              "sp": {
+                "x": 520,
+                "y": 220
+              },
+              "ia": {
+                "x": 680,
+                "y": 320
+              },
+              "ip": {
+                "x": 520,
+                "y": 320
+              }
+            },
+            "T3": {
+              "sa": {
+                "x": 680,
+                "y": 360
+              },
+              "sp": {
+                "x": 520,
+                "y": 360
+              },
+              "ia": {
+                "x": 680,
+                "y": 460
+              },
+              "ip": {
+                "x": 520,
+                "y": 460
+              }
+            },
+            "T4": {
+              "sa": {
+                "x": 680,
+                "y": 500
+              },
+              "sp": {
+                "x": 520,
+                "y": 500
+              },
+              "ia": {
+                "x": 680,
+                "y": 600
+              },
+              "ip": {
+                "x": 520,
+                "y": 600
+              }
+            },
+            "T5": {
+              "sa": {
+                "x": 680,
+                "y": 640
+              },
+              "sp": {
+                "x": 520,
+                "y": 640
+              },
+              "ia": {
+                "x": 680,
+                "y": 740
+              },
+              "ip": {
+                "x": 520,
+                "y": 740
+              }
+            },
+            "T6": {
+              "sa": {
+                "x": 680,
+                "y": 780
+              },
+              "sp": {
+                "x": 520,
+                "y": 780
+              },
+              "ia": {
+                "x": 680,
+                "y": 880
+              },
+              "ip": {
+                "x": 520,
+                "y": 880
+              }
+            },
+            "T7": {
+              "sa": {
+                "x": 680,
+                "y": 920
+              },
+              "sp": {
+                "x": 520,
+                "y": 920
+              },
+              "ia": {
+                "x": 680,
+                "y": 1020
+              },
+              "ip": {
+                "x": 520,
+                "y": 1020
+              }
+            },
+            "T8": {
+              "sa": {
+                "x": 680,
+                "y": 1060
+              },
+              "sp": {
+                "x": 520,
+                "y": 1060
+              },
+              "ia": {
+                "x": 680,
+                "y": 1160
+              },
+              "ip": {
+                "x": 520,
+                "y": 1160
+              }
+            },
+            "T9": {
+              "sa": {
+                "x": 680,
+                "y": 1200
+              },
+              "sp": {
+                "x": 520,
+                "y": 1200
+              },
+              "ia": {
+                "x": 680,
+                "y": 1300
+              },
+              "ip": {
+                "x": 520,
+                "y": 1300
+              }
+            },
+            "T10": {
+              "sa": {
+                "x": 680,
+                "y": 1340
+              },
+              "sp": {
+                "x": 520,
+                "y": 1340
+              },
+              "ia": {
+                "x": 680,
+                "y": 1440
+              },
+              "ip": {
+                "x": 520,
+                "y": 1440
+              }
+            },
+            "T11": {
+              "sa": {
+                "x": 680,
+                "y": 1480
+              },
+              "sp": {
+                "x": 520,
+                "y": 1480
+              },
+              "ia": {
+                "x": 680,
+                "y": 1580
+              },
+              "ip": {
+                "x": 520,
+                "y": 1580
+              }
+            },
+            "T12": {
+              "sa": {
+                "x": 680,
+                "y": 1620
+              },
+              "sp": {
+                "x": 520,
+                "y": 1620
+              },
+              "ia": {
+                "x": 680,
+                "y": 1720
+              },
+              "ip": {
+                "x": 520,
+                "y": 1720
+              }
+            },
+            "L1": {
+              "sa": {
+                "x": 680,
+                "y": 1760
+              },
+              "sp": {
+                "x": 520,
+                "y": 1760
+              },
+              "ia": {
+                "x": 680,
+                "y": 1860
+              },
+              "ip": {
+                "x": 520,
+                "y": 1860
+              }
+            },
+            "L2": {
+              "sa": {
+                "x": 680,
+                "y": 1900
+              },
+              "sp": {
+                "x": 520,
+                "y": 1900
+              },
+              "ia": {
+                "x": 680,
+                "y": 2000
+              },
+              "ip": {
+                "x": 520,
+                "y": 2000
+              }
+            },
+            "L3": {
+              "sa": {
+                "x": 680,
+                "y": 2040
+              },
+              "sp": {
+                "x": 520,
+                "y": 2040
+              },
+              "ia": {
+                "x": 680,
+                "y": 2140
+              },
+              "ip": {
+                "x": 520,
+                "y": 2140
+              }
+            },
+            "L4": {
+              "sa": {
+                "x": 680,
+                "y": 2180
+              },
+              "sp": {
+                "x": 520,
+                "y": 2180
+              },
+              "ia": {
+                "x": 680,
+                "y": 2280
+              },
+              "ip": {
+                "x": 520,
+                "y": 2280
+              }
+            },
+            "L5": {
+              "sa": {
+                "x": 696,
+                "y": 2320
+              },
+              "sp": {
+                "x": 536,
+                "y": 2320
+              },
+              "ia": {
+                "x": 696,
+                "y": 2420
+              },
+              "ip": {
+                "x": 536,
+                "y": 2420
+              }
+            },
+            "S1": {
+              "sa": {
+                "x": 648,
+                "y": 2460
+              },
+              "sp": {
+                "x": 488,
+                "y": 2460
+              }
+            }
+          },
+          "caderas": []
+        },
+        "ap": {
+          "vertebras": {}
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "referencia",
+          "a": {
+            "x": 0,
+            "y": 0
+          },
+          "b": {
+            "x": 400,
+            "y": 0
+          },
+          "mm": 100
+        },
+        "ap": {
+          "tipo": "ninguna"
+        }
+      },
+      "opciones": null,
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": {
+          "grados": 0,
+          "superior": "L1",
+          "inferior": "S1"
+        },
+        "cifosisToracica": {
+          "grados": 0,
+          "superior": "T4",
+          "inferior": "T12"
+        },
+        "cobbCoronal": null,
+        "listesis": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "porcentaje": -10,
+            "grado": null,
+            "apreciable": true,
+            "mm": -4
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "porcentaje": 30,
+            "grado": 2,
+            "apreciable": true,
+            "mm": 12
+          }
+        ],
+        "discos": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "indice": 0.43,
+            "mm": 10.8
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "indice": 0.62,
+            "mm": 15.6
+          }
+        ],
+        "pelvis": null,
+        "inclinacionesSagitales": [
+          {
+            "vertebra": "T1",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T1",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "S1",
+            "platillo": "superior",
+            "grados": 0
+          }
+        ],
+        "inclinacionesCoronales": [],
+        "escala": {
+          "lateral": "referencia",
+          "ap": "ninguna"
+        },
+        "faltan": [
+          "Parámetros pélvicos: marca el platillo de S1 y al menos una cabeza femoral en la lateral.",
+          "Cobb coronal: marca los platillos de al menos dos vértebras en la AP."
+        ]
+      }
+    },
+    {
+      "nota": "DICOM con píxel no cuadrado y disco colapsado",
+      "marcas": {
+        "lateral": {
+          "vertebras": {
+            "T1": {
+              "sa": {
+                "x": 800,
+                "y": 80
+              },
+              "sp": {
+                "x": 400,
+                "y": 80
+              },
+              "ia": {
+                "x": 800,
+                "y": 205
+              },
+              "ip": {
+                "x": 400,
+                "y": 205
+              }
+            },
+            "T2": {
+              "sa": {
+                "x": 800,
+                "y": 255
+              },
+              "sp": {
+                "x": 400,
+                "y": 255
+              },
+              "ia": {
+                "x": 800,
+                "y": 380
+              },
+              "ip": {
+                "x": 400,
+                "y": 380
+              }
+            },
+            "T3": {
+              "sa": {
+                "x": 800,
+                "y": 430
+              },
+              "sp": {
+                "x": 400,
+                "y": 430
+              },
+              "ia": {
+                "x": 800,
+                "y": 555
+              },
+              "ip": {
+                "x": 400,
+                "y": 555
+              }
+            },
+            "T4": {
+              "sa": {
+                "x": 800,
+                "y": 605
+              },
+              "sp": {
+                "x": 400,
+                "y": 605
+              },
+              "ia": {
+                "x": 800,
+                "y": 730
+              },
+              "ip": {
+                "x": 400,
+                "y": 730
+              }
+            },
+            "T5": {
+              "sa": {
+                "x": 800,
+                "y": 780
+              },
+              "sp": {
+                "x": 400,
+                "y": 780
+              },
+              "ia": {
+                "x": 800,
+                "y": 905
+              },
+              "ip": {
+                "x": 400,
+                "y": 905
+              }
+            },
+            "T6": {
+              "sa": {
+                "x": 800,
+                "y": 955
+              },
+              "sp": {
+                "x": 400,
+                "y": 955
+              },
+              "ia": {
+                "x": 800,
+                "y": 1080
+              },
+              "ip": {
+                "x": 400,
+                "y": 1080
+              }
+            },
+            "T7": {
+              "sa": {
+                "x": 800,
+                "y": 1130
+              },
+              "sp": {
+                "x": 400,
+                "y": 1130
+              },
+              "ia": {
+                "x": 800,
+                "y": 1255
+              },
+              "ip": {
+                "x": 400,
+                "y": 1255
+              }
+            },
+            "T8": {
+              "sa": {
+                "x": 800,
+                "y": 1305
+              },
+              "sp": {
+                "x": 400,
+                "y": 1305
+              },
+              "ia": {
+                "x": 800,
+                "y": 1430
+              },
+              "ip": {
+                "x": 400,
+                "y": 1430
+              }
+            },
+            "T9": {
+              "sa": {
+                "x": 800,
+                "y": 1480
+              },
+              "sp": {
+                "x": 400,
+                "y": 1480
+              },
+              "ia": {
+                "x": 800,
+                "y": 1605
+              },
+              "ip": {
+                "x": 400,
+                "y": 1605
+              }
+            },
+            "T10": {
+              "sa": {
+                "x": 800,
+                "y": 1655
+              },
+              "sp": {
+                "x": 400,
+                "y": 1655
+              },
+              "ia": {
+                "x": 800,
+                "y": 1780
+              },
+              "ip": {
+                "x": 400,
+                "y": 1780
+              }
+            },
+            "T11": {
+              "sa": {
+                "x": 800,
+                "y": 1830
+              },
+              "sp": {
+                "x": 400,
+                "y": 1830
+              },
+              "ia": {
+                "x": 800,
+                "y": 1955
+              },
+              "ip": {
+                "x": 400,
+                "y": 1955
+              }
+            },
+            "T12": {
+              "sa": {
+                "x": 800,
+                "y": 2005
+              },
+              "sp": {
+                "x": 400,
+                "y": 2005
+              },
+              "ia": {
+                "x": 800,
+                "y": 2130
+              },
+              "ip": {
+                "x": 400,
+                "y": 2130
+              }
+            },
+            "L1": {
+              "sa": {
+                "x": 796.9615506024415,
+                "y": 2162.6351822333068
+              },
+              "sp": {
+                "x": 403.03844939755845,
+                "y": 2197.364817766693
+              },
+              "ia": {
+                "x": 800,
+                "y": 2305
+              },
+              "ip": {
+                "x": 400,
+                "y": 2305
+              }
+            },
+            "L2": {
+              "sa": {
+                "x": 800,
+                "y": 2355
+              },
+              "sp": {
+                "x": 400,
+                "y": 2355
+              },
+              "ia": {
+                "x": 800,
+                "y": 2480
+              },
+              "ip": {
+                "x": 400,
+                "y": 2480
+              }
+            },
+            "L3": {
+              "sa": {
+                "x": 800,
+                "y": 2530
+              },
+              "sp": {
+                "x": 400,
+                "y": 2530
+              },
+              "ia": {
+                "x": 800,
+                "y": 2655
+              },
+              "ip": {
+                "x": 400,
+                "y": 2655
+              }
+            },
+            "L4": {
+              "sa": {
+                "x": 800,
+                "y": 2705
+              },
+              "sp": {
+                "x": 400,
+                "y": 2705
+              },
+              "ia": {
+                "x": 800,
+                "y": 2830
+              },
+              "ip": {
+                "x": 400,
+                "y": 2830
+              }
+            },
+            "L5": {
+              "sa": {
+                "x": 800,
+                "y": 2845
+              },
+              "sp": {
+                "x": 400,
+                "y": 2845
+              },
+              "ia": {
+                "x": 800,
+                "y": 2970
+              },
+              "ip": {
+                "x": 400,
+                "y": 2970
+              }
+            },
+            "S1": {
+              "sa": {
+                "x": 753.2088886237956,
+                "y": 3084.278760968654
+              },
+              "sp": {
+                "x": 446.7911113762044,
+                "y": 2955.7212390313457
+              }
+            }
+          },
+          "caderas": []
+        },
+        "ap": {
+          "vertebras": {}
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "dicom",
+          "mmPorPxX": 0.1,
+          "mmPorPxY": 0.2
+        },
+        "ap": {
+          "tipo": "dicom",
+          "mmPorPxX": 0.1,
+          "mmPorPxY": 0.1
+        }
+      },
+      "opciones": null,
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": {
+          "grados": 50,
+          "superior": "L1",
+          "inferior": "S1"
+        },
+        "cifosisToracica": {
+          "grados": 0,
+          "superior": "T4",
+          "inferior": "T12"
+        },
+        "cobbCoronal": null,
+        "listesis": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "porcentaje": 5.1,
+            "grado": 1,
+            "apreciable": true,
+            "mm": 2
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "porcentaje": -4.4,
+            "grado": null,
+            "apreciable": false,
+            "mm": -1.7
+          }
+        ],
+        "discos": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "indice": 0.4,
+            "mm": 10
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "indice": 0.12,
+            "mm": 3
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "indice": 0.58,
+            "mm": 14.4
+          }
+        ],
+        "pelvis": null,
+        "inclinacionesSagitales": [
+          {
+            "vertebra": "T1",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T1",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "superior",
+            "grados": 10
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "S1",
+            "platillo": "superior",
+            "grados": -40
+          }
+        ],
+        "inclinacionesCoronales": [],
+        "escala": {
+          "lateral": "dicom",
+          "ap": "dicom"
+        },
+        "faltan": [
+          "Parámetros pélvicos: marca el platillo de S1 y al menos una cabeza femoral en la lateral.",
+          "Cobb coronal: marca los platillos de al menos dos vértebras en la AP."
+        ]
+      }
+    },
+    {
+      "nota": "escoliosis automática",
+      "marcas": {
+        "lateral": {
+          "vertebras": {},
+          "caderas": []
+        },
+        "ap": {
+          "vertebras": {
+            "T5": {
+              "si": {
+                "x": 420,
+                "y": 80
+              },
+              "sd": {
+                "x": 580,
+                "y": 80
+              },
+              "ii": {
+                "x": 420,
+                "y": 180
+              },
+              "id": {
+                "x": 580,
+                "y": 180
+              }
+            },
+            "T6": {
+              "si": {
+                "x": 421.74819194129554,
+                "y": 236.63293526542074
+              },
+              "sd": {
+                "x": 578.2518080587045,
+                "y": 203.36706473457926
+              },
+              "ii": {
+                "x": 421.21537975902334,
+                "y": 333.8918542133544
+              },
+              "id": {
+                "x": 578.7846202409767,
+                "y": 306.1081457866456
+              }
+            },
+            "T8": {
+              "si": {
+                "x": 420.3044241526604,
+                "y": 366.97245941981265
+              },
+              "sd": {
+                "x": 579.6955758473397,
+                "y": 353.02754058018735
+              },
+              "ii": {
+                "x": 420.1096372196341,
+                "y": 464.1868764994355
+              },
+              "id": {
+                "x": 579.8903627803659,
+                "y": 455.8131235005645
+              }
+            },
+            "T10": {
+              "si": {
+                "x": 420.3044241526604,
+                "y": 493.02754058018735
+              },
+              "sd": {
+                "x": 579.6955758473397,
+                "y": 506.97245941981265
+              },
+              "ii": {
+                "x": 420.7785545006744,
+                "y": 588.8661519231948
+              },
+              "id": {
+                "x": 579.2214454993257,
+                "y": 611.1338480768052
+              }
+            },
+            "L1": {
+              "si": {
+                "x": 422.72593389687455,
+                "y": 619.2944763917983
+              },
+              "sd": {
+                "x": 577.2740661031255,
+                "y": 660.7055236082017
+              },
+              "ii": {
+                "x": 424.82459033712735,
+                "y": 712.6383885339465
+              },
+              "id": {
+                "x": 575.1754096628727,
+                "y": 767.3616114660535
+              }
+            },
+            "L2": {
+              "si": {
+                "x": 420.7785545006744,
+                "y": 768.8661519231948
+              },
+              "sd": {
+                "x": 579.2214454993257,
+                "y": 791.1338480768052
+              },
+              "ii": {
+                "x": 420.3044241526604,
+                "y": 873.0275405801873
+              },
+              "id": {
+                "x": 579.6955758473397,
+                "y": 886.9724594198127
+              }
+            }
+          }
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "ninguna"
+        },
+        "ap": {
+          "tipo": "ninguna"
+        }
+      },
+      "opciones": null,
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": null,
+        "cifosisToracica": null,
+        "cobbCoronal": {
+          "grados": 32,
+          "superior": "T6",
+          "inferior": "L1",
+          "convexidad": "izquierda",
+          "automatico": true,
+          "escoliosis": true
+        },
+        "listesis": [],
+        "discos": [],
+        "pelvis": null,
+        "inclinacionesSagitales": [],
+        "inclinacionesCoronales": [
+          {
+            "vertebra": "T5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "superior",
+            "grados": 12
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "inferior",
+            "grados": 10
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "superior",
+            "grados": 5
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "inferior",
+            "grados": 3
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "superior",
+            "grados": -5
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "inferior",
+            "grados": -8
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "superior",
+            "grados": -15
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "inferior",
+            "grados": -20
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "superior",
+            "grados": -8
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "inferior",
+            "grados": -5
+          }
+        ],
+        "escala": {
+          "lateral": "ninguna",
+          "ap": "ninguna"
+        },
+        "faltan": [
+          "Lordosis lumbar: marca el platillo superior de L1 y el de S1 en la lateral.",
+          "Cifosis torácica: marca el platillo superior de T4 y el inferior de T12 en la lateral.",
+          "Parámetros pélvicos: marca el platillo de S1 y al menos una cabeza femoral en la lateral."
+        ]
+      }
+    },
+    {
+      "nota": "escoliosis con vértebras elegidas y derecha del paciente a la derecha",
+      "marcas": {
+        "lateral": {
+          "vertebras": {},
+          "caderas": []
+        },
+        "ap": {
+          "vertebras": {
+            "T5": {
+              "si": {
+                "x": 420,
+                "y": 80
+              },
+              "sd": {
+                "x": 580,
+                "y": 80
+              },
+              "ii": {
+                "x": 420,
+                "y": 180
+              },
+              "id": {
+                "x": 580,
+                "y": 180
+              }
+            },
+            "T6": {
+              "si": {
+                "x": 421.74819194129554,
+                "y": 236.63293526542074
+              },
+              "sd": {
+                "x": 578.2518080587045,
+                "y": 203.36706473457926
+              },
+              "ii": {
+                "x": 421.21537975902334,
+                "y": 333.8918542133544
+              },
+              "id": {
+                "x": 578.7846202409767,
+                "y": 306.1081457866456
+              }
+            },
+            "T8": {
+              "si": {
+                "x": 420.3044241526604,
+                "y": 366.97245941981265
+              },
+              "sd": {
+                "x": 579.6955758473397,
+                "y": 353.02754058018735
+              },
+              "ii": {
+                "x": 420.1096372196341,
+                "y": 464.1868764994355
+              },
+              "id": {
+                "x": 579.8903627803659,
+                "y": 455.8131235005645
+              }
+            },
+            "T10": {
+              "si": {
+                "x": 420.3044241526604,
+                "y": 493.02754058018735
+              },
+              "sd": {
+                "x": 579.6955758473397,
+                "y": 506.97245941981265
+              },
+              "ii": {
+                "x": 420.7785545006744,
+                "y": 588.8661519231948
+              },
+              "id": {
+                "x": 579.2214454993257,
+                "y": 611.1338480768052
+              }
+            },
+            "L1": {
+              "si": {
+                "x": 422.72593389687455,
+                "y": 619.2944763917983
+              },
+              "sd": {
+                "x": 577.2740661031255,
+                "y": 660.7055236082017
+              },
+              "ii": {
+                "x": 424.82459033712735,
+                "y": 712.6383885339465
+              },
+              "id": {
+                "x": 575.1754096628727,
+                "y": 767.3616114660535
+              }
+            },
+            "L2": {
+              "si": {
+                "x": 420.7785545006744,
+                "y": 768.8661519231948
+              },
+              "sd": {
+                "x": 579.2214454993257,
+                "y": 791.1338480768052
+              },
+              "ii": {
+                "x": 420.3044241526604,
+                "y": 873.0275405801873
+              },
+              "id": {
+                "x": 579.6955758473397,
+                "y": 886.9724594198127
+              }
+            }
+          }
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "ninguna"
+        },
+        "ap": {
+          "tipo": "ninguna"
+        }
+      },
+      "opciones": {
+        "derechaDelPaciente": "derecha",
+        "cobbCoronal": {
+          "superior": "T8",
+          "inferior": "T10"
+        }
+      },
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": null,
+        "cifosisToracica": null,
+        "cobbCoronal": {
+          "grados": 13,
+          "superior": "T8",
+          "inferior": "T10",
+          "convexidad": "derecha",
+          "automatico": false,
+          "escoliosis": true
+        },
+        "listesis": [],
+        "discos": [],
+        "pelvis": null,
+        "inclinacionesSagitales": [],
+        "inclinacionesCoronales": [
+          {
+            "vertebra": "T5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "superior",
+            "grados": -12
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "inferior",
+            "grados": -10
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "superior",
+            "grados": -5
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "inferior",
+            "grados": -3
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "superior",
+            "grados": 5
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "inferior",
+            "grados": 8
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "superior",
+            "grados": 15
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "inferior",
+            "grados": 20
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "superior",
+            "grados": 8
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "inferior",
+            "grados": 5
+          }
+        ],
+        "escala": {
+          "lateral": "ninguna",
+          "ap": "ninguna"
+        },
+        "faltan": [
+          "Lordosis lumbar: marca el platillo superior de L1 y el de S1 en la lateral.",
+          "Cifosis torácica: marca el platillo superior de T4 y el inferior de T12 en la lateral.",
+          "Parámetros pélvicos: marca el platillo de S1 y al menos una cabeza femoral en la lateral."
+        ]
+      }
+    },
+    {
+      "nota": "elección imposible",
+      "marcas": {
+        "lateral": {
+          "vertebras": {},
+          "caderas": []
+        },
+        "ap": {
+          "vertebras": {
+            "T5": {
+              "si": {
+                "x": 420,
+                "y": 80
+              },
+              "sd": {
+                "x": 580,
+                "y": 80
+              },
+              "ii": {
+                "x": 420,
+                "y": 180
+              },
+              "id": {
+                "x": 580,
+                "y": 180
+              }
+            },
+            "T6": {
+              "si": {
+                "x": 421.74819194129554,
+                "y": 236.63293526542074
+              },
+              "sd": {
+                "x": 578.2518080587045,
+                "y": 203.36706473457926
+              },
+              "ii": {
+                "x": 421.21537975902334,
+                "y": 333.8918542133544
+              },
+              "id": {
+                "x": 578.7846202409767,
+                "y": 306.1081457866456
+              }
+            },
+            "T8": {
+              "si": {
+                "x": 420.3044241526604,
+                "y": 366.97245941981265
+              },
+              "sd": {
+                "x": 579.6955758473397,
+                "y": 353.02754058018735
+              },
+              "ii": {
+                "x": 420.1096372196341,
+                "y": 464.1868764994355
+              },
+              "id": {
+                "x": 579.8903627803659,
+                "y": 455.8131235005645
+              }
+            },
+            "T10": {
+              "si": {
+                "x": 420.3044241526604,
+                "y": 493.02754058018735
+              },
+              "sd": {
+                "x": 579.6955758473397,
+                "y": 506.97245941981265
+              },
+              "ii": {
+                "x": 420.7785545006744,
+                "y": 588.8661519231948
+              },
+              "id": {
+                "x": 579.2214454993257,
+                "y": 611.1338480768052
+              }
+            },
+            "L1": {
+              "si": {
+                "x": 422.72593389687455,
+                "y": 619.2944763917983
+              },
+              "sd": {
+                "x": 577.2740661031255,
+                "y": 660.7055236082017
+              },
+              "ii": {
+                "x": 424.82459033712735,
+                "y": 712.6383885339465
+              },
+              "id": {
+                "x": 575.1754096628727,
+                "y": 767.3616114660535
+              }
+            },
+            "L2": {
+              "si": {
+                "x": 420.7785545006744,
+                "y": 768.8661519231948
+              },
+              "sd": {
+                "x": 579.2214454993257,
+                "y": 791.1338480768052
+              },
+              "ii": {
+                "x": 420.3044241526604,
+                "y": 873.0275405801873
+              },
+              "id": {
+                "x": 579.6955758473397,
+                "y": 886.9724594198127
+              }
+            }
+          }
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "ninguna"
+        },
+        "ap": {
+          "tipo": "ninguna"
+        }
+      },
+      "opciones": {
+        "derechaDelPaciente": "izquierda",
+        "cobbCoronal": {
+          "superior": "L1",
+          "inferior": "T6"
+        }
+      },
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": null,
+        "cifosisToracica": null,
+        "cobbCoronal": null,
+        "listesis": [],
+        "discos": [],
+        "pelvis": null,
+        "inclinacionesSagitales": [],
+        "inclinacionesCoronales": [
+          {
+            "vertebra": "T5",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "inferior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "superior",
+            "grados": 12
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "inferior",
+            "grados": 10
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "superior",
+            "grados": 5
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "inferior",
+            "grados": 3
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "superior",
+            "grados": -5
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "inferior",
+            "grados": -8
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "superior",
+            "grados": -15
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "inferior",
+            "grados": -20
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "superior",
+            "grados": -8
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "inferior",
+            "grados": -5
+          }
+        ],
+        "escala": {
+          "lateral": "ninguna",
+          "ap": "ninguna"
+        },
+        "faltan": [
+          "Lordosis lumbar: marca el platillo superior de L1 y el de S1 en la lateral.",
+          "Cifosis torácica: marca el platillo superior de T4 y el inferior de T12 en la lateral.",
+          "Parámetros pélvicos: marca el platillo de S1 y al menos una cabeza femoral en la lateral.",
+          "Cobb coronal: faltan los platillos de L1 (superior) o de T6 (inferior) en la AP."
+        ]
+      }
+    },
+    {
+      "nota": "AP y lateral con ruido de mano",
+      "marcas": {
+        "lateral": {
+          "vertebras": {
+            "T1": {
+              "sa": {
+                "x": 680.6,
+                "y": 78.8
+              },
+              "sp": {
+                "x": 520.3,
+                "y": 82.9
+              },
+              "ia": {
+                "x": 681,
+                "y": 180.2
+              },
+              "ip": {
+                "x": 522.2,
+                "y": 182.5
+              }
+            },
+            "T2": {
+              "sa": {
+                "x": 677.4,
+                "y": 223
+              },
+              "sp": {
+                "x": 518.3,
+                "y": 218.2
+              },
+              "ia": {
+                "x": 683,
+                "y": 317.4
+              },
+              "ip": {
+                "x": 519.3,
+                "y": 317.2
+              }
+            },
+            "T3": {
+              "sa": {
+                "x": 677.4,
+                "y": 361
+              },
+              "sp": {
+                "x": 522.5,
+                "y": 361.9
+              },
+              "ia": {
+                "x": 681.4,
+                "y": 457.4
+              },
+              "ip": {
+                "x": 520.7,
+                "y": 460
+              }
+            },
+            "T4": {
+              "sa": {
+                "x": 675.5,
+                "y": 523.1
+              },
+              "sp": {
+                "x": 520.1,
+                "y": 481.1
+              },
+              "ia": {
+                "x": 677.9,
+                "y": 597.2
+              },
+              "ip": {
+                "x": 521.3,
+                "y": 601.4
+              }
+            },
+            "T5": {
+              "sa": {
+                "x": 682.2,
+                "y": 641.9
+              },
+              "sp": {
+                "x": 522,
+                "y": 641.5
+              },
+              "ia": {
+                "x": 677.2,
+                "y": 739
+              },
+              "ip": {
+                "x": 517.9,
+                "y": 741
+              }
+            },
+            "T6": {
+              "sa": {
+                "x": 679.3,
+                "y": 778.8
+              },
+              "sp": {
+                "x": 521.7,
+                "y": 778.9
+              },
+              "ia": {
+                "x": 682.2,
+                "y": 880.3
+              },
+              "ip": {
+                "x": 518.2,
+                "y": 879.8
+              }
+            },
+            "T7": {
+              "sa": {
+                "x": 680.4,
+                "y": 919.5
+              },
+              "sp": {
+                "x": 518.8,
+                "y": 922
+              },
+              "ia": {
+                "x": 680.6,
+                "y": 1019.1
+              },
+              "ip": {
+                "x": 521.3,
+                "y": 1020.5
+              }
+            },
+            "T8": {
+              "sa": {
+                "x": 679.4,
+                "y": 1060.4
+              },
+              "sp": {
+                "x": 518.4,
+                "y": 1057.5
+              },
+              "ia": {
+                "x": 680.5,
+                "y": 1160.2
+              },
+              "ip": {
+                "x": 519.7,
+                "y": 1158.8
+              }
+            },
+            "T9": {
+              "sa": {
+                "x": 679.7,
+                "y": 1197.5
+              },
+              "sp": {
+                "x": 521.6,
+                "y": 1198.2
+              },
+              "ia": {
+                "x": 677.7,
+                "y": 1302.1
+              },
+              "ip": {
+                "x": 520.6,
+                "y": 1300.7
+              }
+            },
+            "T10": {
+              "sa": {
+                "x": 682.6,
+                "y": 1338.5
+              },
+              "sp": {
+                "x": 519.9,
+                "y": 1339.4
+              },
+              "ia": {
+                "x": 680.8,
+                "y": 1441.1
+              },
+              "ip": {
+                "x": 518.4,
+                "y": 1438.2
+              }
+            },
+            "T11": {
+              "sa": {
+                "x": 680.7,
+                "y": 1477
+              },
+              "sp": {
+                "x": 518.7,
+                "y": 1481.7
+              },
+              "ia": {
+                "x": 681.6,
+                "y": 1579.6
+              },
+              "ip": {
+                "x": 519.2,
+                "y": 1580.1
+              }
+            },
+            "T12": {
+              "sa": {
+                "x": 678.5,
+                "y": 1618.8
+              },
+              "sp": {
+                "x": 522.1,
+                "y": 1618.7
+              },
+              "ia": {
+                "x": 676.7,
+                "y": 1692.6
+              },
+              "ip": {
+                "x": 526.2,
+                "y": 1745.8
+              }
+            },
+            "L1": {
+              "sa": {
+                "x": 679.3,
+                "y": 1749.7
+              },
+              "sp": {
+                "x": 522.4,
+                "y": 1767.1
+              },
+              "ia": {
+                "x": 678.3,
+                "y": 1859.7
+              },
+              "ip": {
+                "x": 521.6,
+                "y": 1859.2
+              }
+            },
+            "L2": {
+              "sa": {
+                "x": 677,
+                "y": 1899.5
+              },
+              "sp": {
+                "x": 517.7,
+                "y": 1902.9
+              },
+              "ia": {
+                "x": 678.7,
+                "y": 2000.5
+              },
+              "ip": {
+                "x": 520.6,
+                "y": 2002.4
+              }
+            },
+            "L3": {
+              "sa": {
+                "x": 681.3,
+                "y": 2042.8
+              },
+              "sp": {
+                "x": 518.5,
+                "y": 2038.4
+              },
+              "ia": {
+                "x": 680,
+                "y": 2139.4
+              },
+              "ip": {
+                "x": 521.7,
+                "y": 2140
+              }
+            },
+            "L4": {
+              "sa": {
+                "x": 682.7,
+                "y": 2181.7
+              },
+              "sp": {
+                "x": 520,
+                "y": 2182.5
+              },
+              "ia": {
+                "x": 679.3,
+                "y": 2280.5
+              },
+              "ip": {
+                "x": 522.3,
+                "y": 2279.8
+              }
+            },
+            "L5": {
+              "sa": {
+                "x": 650.2,
+                "y": 2321.5
+              },
+              "sp": {
+                "x": 493.6,
+                "y": 2322.2
+              },
+              "ia": {
+                "x": 649.3,
+                "y": 2418.5
+              },
+              "ip": {
+                "x": 490.2,
+                "y": 2417.3
+              }
+            },
+            "S1": {
+              "sa": {
+                "x": 628.5,
+                "y": 2514.5
+              },
+              "sp": {
+                "x": 513.6,
+                "y": 2404.9
+              }
+            }
+          },
+          "caderas": [
+            {
+              "x": 657.8,
+              "y": 2827.2
+            },
+            {
+              "x": 703.6,
+              "y": 2861.1
+            }
+          ]
+        },
+        "ap": {
+          "vertebras": {
+            "T4": {
+              "si": {
+                "x": 420.9,
+                "y": 85.3
+              },
+              "sd": {
+                "x": 582.4,
+                "y": 75.7
+              },
+              "ii": {
+                "x": 421.1,
+                "y": 179.1
+              },
+              "id": {
+                "x": 581.9,
+                "y": 177.6
+              }
+            },
+            "T7": {
+              "si": {
+                "x": 419.9,
+                "y": 233.7
+              },
+              "sd": {
+                "x": 576.7,
+                "y": 209.6
+              },
+              "ii": {
+                "x": 419.7,
+                "y": 328.4
+              },
+              "id": {
+                "x": 580.1,
+                "y": 310.1
+              }
+            },
+            "T11": {
+              "si": {
+                "x": 420.8,
+                "y": 354.2
+              },
+              "sd": {
+                "x": 579.3,
+                "y": 371.3
+              },
+              "ii": {
+                "x": 418.9,
+                "y": 445.2
+              },
+              "id": {
+                "x": 579.4,
+                "y": 473.2
+              }
+            },
+            "L3": {
+              "si": {
+                "x": 420.8,
+                "y": 497.4
+              },
+              "sd": {
+                "x": 580.4,
+                "y": 501.5
+              },
+              "ii": {
+                "x": 422.4,
+                "y": 597.1
+              },
+              "id": {
+                "x": 579.6,
+                "y": 604.7
+              }
+            }
+          }
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "ninguna"
+        },
+        "ap": {
+          "tipo": "ninguna"
+        }
+      },
+      "opciones": null,
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": {
+          "grados": 50,
+          "superior": "L1",
+          "inferior": "S1"
+        },
+        "cifosisToracica": {
+          "grados": 34.6,
+          "superior": "T4",
+          "inferior": "T12"
+        },
+        "cobbCoronal": {
+          "grados": 18.6,
+          "superior": "T7",
+          "inferior": "T11",
+          "convexidad": "izquierda",
+          "automatico": true,
+          "escoliosis": true
+        },
+        "listesis": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "porcentaje": 1.8,
+            "grado": 1,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "porcentaje": -1.9,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "porcentaje": -3.1,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "porcentaje": -0.5,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "porcentaje": -2.4,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "porcentaje": 0,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "porcentaje": 1.4,
+            "grado": 1,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "porcentaje": -1.1,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "porcentaje": 0.6,
+            "grado": 1,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "porcentaje": 0.6,
+            "grado": 1,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "porcentaje": -1.9,
+            "grado": null,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "porcentaje": 3.9,
+            "grado": 1,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "porcentaje": 3,
+            "grado": 1,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "porcentaje": 0.7,
+            "grado": 1,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "porcentaje": 1.2,
+            "grado": 1,
+            "apreciable": false,
+            "mm": null
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "porcentaje": 18.4,
+            "grado": 1,
+            "apreciable": true,
+            "mm": null
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "porcentaje": -5.3,
+            "grado": null,
+            "apreciable": true,
+            "mm": null
+          }
+        ],
+        "discos": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "indice": 0.39,
+            "mm": null
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "indice": 0.46,
+            "mm": null
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "indice": 0.45,
+            "mm": null
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "indice": 0.44,
+            "mm": null
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "indice": 0.4,
+            "mm": null
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "indice": 0.38,
+            "mm": null
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "indice": 0.36,
+            "mm": null
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "indice": 0.39,
+            "mm": null
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "indice": 0.39,
+            "mm": null
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "indice": 0.39,
+            "mm": null
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "indice": 0.41,
+            "mm": null
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "indice": 0.39,
+            "mm": null
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "indice": 0.43,
+            "mm": null
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "indice": 0.52,
+            "mm": null
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "indice": 0.65,
+            "mm": null
+          }
+        ],
+        "pelvis": {
+          "incidencia": 59.6,
+          "inclinacion": 15.9,
+          "pendienteSacra": 43.6
+        },
+        "inclinacionesSagitales": [
+          {
+            "vertebra": "T1",
+            "platillo": "superior",
+            "grados": 1.5
+          },
+          {
+            "vertebra": "T1",
+            "platillo": "inferior",
+            "grados": 0.8
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "superior",
+            "grados": -1.7
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "inferior",
+            "grados": -0.1
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "superior",
+            "grados": 0.3
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "inferior",
+            "grados": 0.9
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "superior",
+            "grados": -15.1
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "inferior",
+            "grados": 1.5
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "superior",
+            "grados": -0.1
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "inferior",
+            "grados": 0.7
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "inferior",
+            "grados": -0.2
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "superior",
+            "grados": 0.9
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "inferior",
+            "grados": 0.5
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "superior",
+            "grados": -1
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "inferior",
+            "grados": -0.5
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "superior",
+            "grados": 0.3
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "inferior",
+            "grados": -0.5
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "superior",
+            "grados": 0.3
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "inferior",
+            "grados": -1
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "superior",
+            "grados": 1.7
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "inferior",
+            "grados": 0.2
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "superior",
+            "grados": 0
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "inferior",
+            "grados": 19.5
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "superior",
+            "grados": 6.3
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "inferior",
+            "grados": -0.2
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "superior",
+            "grados": 1.2
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "inferior",
+            "grados": 0.7
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "superior",
+            "grados": -1.5
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "inferior",
+            "grados": 0.2
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "superior",
+            "grados": 0.3
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "inferior",
+            "grados": -0.3
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "superior",
+            "grados": 0.3
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "inferior",
+            "grados": -0.4
+          },
+          {
+            "vertebra": "S1",
+            "platillo": "superior",
+            "grados": -43.6
+          }
+        ],
+        "inclinacionesCoronales": [
+          {
+            "vertebra": "T4",
+            "platillo": "superior",
+            "grados": 3.4
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "inferior",
+            "grados": 0.5
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "superior",
+            "grados": 8.7
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "inferior",
+            "grados": 6.5
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "superior",
+            "grados": -6.2
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "inferior",
+            "grados": -9.9
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "superior",
+            "grados": -1.5
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "inferior",
+            "grados": -2.8
+          }
+        ],
+        "escala": {
+          "lateral": "ninguna",
+          "ap": "ninguna"
+        },
+        "faltan": []
+      }
+    },
+    {
+      "nota": "ruido fuerte con DICOM",
+      "marcas": {
+        "lateral": {
+          "vertebras": {
+            "T1": {
+              "sa": {
+                "x": 681.3,
+                "y": 80.3
+              },
+              "sp": {
+                "x": 526.6,
+                "y": 83.2
+              },
+              "ia": {
+                "x": 684,
+                "y": 183
+              },
+              "ip": {
+                "x": 520.3,
+                "y": 174.4
+              }
+            },
+            "T2": {
+              "sa": {
+                "x": 672.8,
+                "y": 215.6
+              },
+              "sp": {
+                "x": 516.6,
+                "y": 228
+              },
+              "ia": {
+                "x": 683.4,
+                "y": 322.7
+              },
+              "ip": {
+                "x": 517.8,
+                "y": 316.1
+              }
+            },
+            "T3": {
+              "sa": {
+                "x": 673.7,
+                "y": 366.4
+              },
+              "sp": {
+                "x": 525.6,
+                "y": 365.4
+              },
+              "ia": {
+                "x": 679.2,
+                "y": 456.5
+              },
+              "ip": {
+                "x": 525.5,
+                "y": 452.7
+              }
+            },
+            "T4": {
+              "sa": {
+                "x": 684.3,
+                "y": 507.4
+              },
+              "sp": {
+                "x": 524.9,
+                "y": 493.8
+              },
+              "ia": {
+                "x": 677.4,
+                "y": 602.4
+              },
+              "ip": {
+                "x": 512.9,
+                "y": 596.3
+              }
+            },
+            "T5": {
+              "sa": {
+                "x": 680.1,
+                "y": 644.3
+              },
+              "sp": {
+                "x": 516.3,
+                "y": 640.3
+              },
+              "ia": {
+                "x": 672,
+                "y": 741.2
+              },
+              "ip": {
+                "x": 520.9,
+                "y": 742.4
+              }
+            },
+            "T6": {
+              "sa": {
+                "x": 683.2,
+                "y": 785.7
+              },
+              "sp": {
+                "x": 525,
+                "y": 775.7
+              },
+              "ia": {
+                "x": 685.4,
+                "y": 878.8
+              },
+              "ip": {
+                "x": 526.7,
+                "y": 874.2
+              }
+            },
+            "T7": {
+              "sa": {
+                "x": 685.5,
+                "y": 916.6
+              },
+              "sp": {
+                "x": 512.3,
+                "y": 919.8
+              },
+              "ia": {
+                "x": 672.4,
+                "y": 1014.5
+              },
+              "ip": {
+                "x": 527,
+                "y": 1015.9
+              }
+            },
+            "T8": {
+              "sa": {
+                "x": 677.2,
+                "y": 1061.8
+              },
+              "sp": {
+                "x": 523.7,
+                "y": 1061.4
+              },
+              "ia": {
+                "x": 684.9,
+                "y": 1161.7
+              },
+              "ip": {
+                "x": 521.9,
+                "y": 1153.4
+              }
+            },
+            "T9": {
+              "sa": {
+                "x": 676.3,
+                "y": 1193.3
+              },
+              "sp": {
+                "x": 526.4,
+                "y": 1207.6
+              },
+              "ia": {
+                "x": 675.8,
+                "y": 1305
+              },
+              "ip": {
+                "x": 515.5,
+                "y": 1298.8
+              }
+            },
+            "T10": {
+              "sa": {
+                "x": 673.1,
+                "y": 1332.4
+              },
+              "sp": {
+                "x": 514.4,
+                "y": 1337.7
+              },
+              "ia": {
+                "x": 680.7,
+                "y": 1447.9
+              },
+              "ip": {
+                "x": 518.8,
+                "y": 1438.1
+              }
+            },
+            "T11": {
+              "sa": {
+                "x": 677.7,
+                "y": 1482.1
+              },
+              "sp": {
+                "x": 518.7,
+                "y": 1472.4
+              },
+              "ia": {
+                "x": 684.1,
+                "y": 1578.9
+              },
+              "ip": {
+                "x": 525.3,
+                "y": 1574.7
+              }
+            },
+            "T12": {
+              "sa": {
+                "x": 682.9,
+                "y": 1620.5
+              },
+              "sp": {
+                "x": 524.2,
+                "y": 1622.1
+              },
+              "ia": {
+                "x": 679.8,
+                "y": 1718.7
+              },
+              "ip": {
+                "x": 515.8,
+                "y": 1712.2
+              }
+            },
+            "L1": {
+              "sa": {
+                "x": 677.3,
+                "y": 1760.6
+              },
+              "sp": {
+                "x": 516.6,
+                "y": 1767.8
+              },
+              "ia": {
+                "x": 685.2,
+                "y": 1861.5
+              },
+              "ip": {
+                "x": 513.6,
+                "y": 1867.3
+              }
+            },
+            "L2": {
+              "sa": {
+                "x": 681.4,
+                "y": 1901.5
+              },
+              "sp": {
+                "x": 514,
+                "y": 1893.5
+              },
+              "ia": {
+                "x": 685.3,
+                "y": 2002.7
+              },
+              "ip": {
+                "x": 519.4,
+                "y": 2004.5
+              }
+            },
+            "L3": {
+              "sa": {
+                "x": 682.3,
+                "y": 2045.9
+              },
+              "sp": {
+                "x": 517.4,
+                "y": 2034
+              },
+              "ia": {
+                "x": 679.3,
+                "y": 2133.1
+              },
+              "ip": {
+                "x": 526.5,
+                "y": 2137.5
+              }
+            },
+            "L4": {
+              "sa": {
+                "x": 683.3,
+                "y": 2180.1
+              },
+              "sp": {
+                "x": 513.1,
+                "y": 2173.5
+              },
+              "ia": {
+                "x": 680.6,
+                "y": 2279.2
+              },
+              "ip": {
+                "x": 527.2,
+                "y": 2272.5
+              }
+            },
+            "L5": {
+              "sa": {
+                "x": 687.2,
+                "y": 2327
+              },
+              "sp": {
+                "x": 521.8,
+                "y": 2321.9
+              },
+              "ia": {
+                "x": 680.4,
+                "y": 2419.4
+              },
+              "ip": {
+                "x": 520.3,
+                "y": 2415.7
+              }
+            },
+            "S1": {
+              "sa": {
+                "x": 664.8,
+                "y": 2493.5
+              },
+              "sp": {
+                "x": 528,
+                "y": 2427.9
+              }
+            }
+          },
+          "caderas": [
+            {
+              "x": 574.2,
+              "y": 2854.7
+            }
+          ]
+        },
+        "ap": {
+          "vertebras": {}
+        }
+      },
+      "calibraciones": {
+        "lateral": {
+          "tipo": "dicom",
+          "mmPorPxX": 0.143,
+          "mmPorPxY": 0.143
+        },
+        "ap": {
+          "tipo": "ninguna"
+        }
+      },
+      "opciones": null,
+      "esperado": {
+        "version": "1",
+        "lordosisLumbar": {
+          "grados": 28.2,
+          "superior": "L1",
+          "inferior": "S1"
+        },
+        "cifosisToracica": {
+          "grados": 2.6,
+          "superior": "T4",
+          "inferior": "T12"
+        },
+        "cobbCoronal": null,
+        "listesis": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "porcentaje": 5.1,
+            "grado": 1,
+            "apreciable": true,
+            "mm": 1.1
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "porcentaje": -5.5,
+            "grado": null,
+            "apreciable": true,
+            "mm": -1.2
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "porcentaje": -1.8,
+            "grado": null,
+            "apreciable": false,
+            "mm": -0.4
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "porcentaje": -2.7,
+            "grado": null,
+            "apreciable": false,
+            "mm": -0.6
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "porcentaje": -3.9,
+            "grado": null,
+            "apreciable": false,
+            "mm": -0.9
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "porcentaje": 8.8,
+            "grado": 1,
+            "apreciable": true,
+            "mm": 2.2
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "porcentaje": 2.1,
+            "grado": 1,
+            "apreciable": false,
+            "mm": 0.5
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "porcentaje": 0.4,
+            "grado": 1,
+            "apreciable": false,
+            "mm": 0.1
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "porcentaje": 1.5,
+            "grado": 1,
+            "apreciable": false,
+            "mm": 0.3
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "porcentaje": -1.2,
+            "grado": null,
+            "apreciable": false,
+            "mm": -0.3
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "porcentaje": 1,
+            "grado": 1,
+            "apreciable": false,
+            "mm": 0.2
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "porcentaje": 1.1,
+            "grado": 1,
+            "apreciable": false,
+            "mm": 0.2
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "porcentaje": -1,
+            "grado": null,
+            "apreciable": false,
+            "mm": -0.2
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "porcentaje": -0.1,
+            "grado": null,
+            "apreciable": false,
+            "mm": 0
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "porcentaje": 7,
+            "grado": 1,
+            "apreciable": true,
+            "mm": 1.7
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "porcentaje": 2.3,
+            "grado": 1,
+            "apreciable": false,
+            "mm": 0.6
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "porcentaje": -8.1,
+            "grado": null,
+            "apreciable": true,
+            "mm": -1.7
+          }
+        ],
+        "discos": [
+          {
+            "nivel": "T1-T2",
+            "superior": "T1",
+            "inferior": "T2",
+            "indice": 0.45,
+            "mm": 6.3
+          },
+          {
+            "nivel": "T2-T3",
+            "superior": "T2",
+            "inferior": "T3",
+            "indice": 0.48,
+            "mm": 6.8
+          },
+          {
+            "nivel": "T3-T4",
+            "superior": "T3",
+            "inferior": "T4",
+            "indice": 0.52,
+            "mm": 6.6
+          },
+          {
+            "nivel": "T4-T5",
+            "superior": "T4",
+            "inferior": "T5",
+            "indice": 0.43,
+            "mm": 6.2
+          },
+          {
+            "nivel": "T5-T6",
+            "superior": "T5",
+            "inferior": "T6",
+            "indice": 0.4,
+            "mm": 5.7
+          },
+          {
+            "nivel": "T6-T7",
+            "superior": "T6",
+            "inferior": "T7",
+            "indice": 0.45,
+            "mm": 6.1
+          },
+          {
+            "nivel": "T7-T8",
+            "superior": "T7",
+            "inferior": "T8",
+            "indice": 0.48,
+            "mm": 6.7
+          },
+          {
+            "nivel": "T8-T9",
+            "superior": "T8",
+            "inferior": "T9",
+            "indice": 0.45,
+            "mm": 6.2
+          },
+          {
+            "nivel": "T9-T10",
+            "superior": "T9",
+            "inferior": "T10",
+            "indice": 0.33,
+            "mm": 4.8
+          },
+          {
+            "nivel": "T10-T11",
+            "superior": "T10",
+            "inferior": "T11",
+            "indice": 0.32,
+            "mm": 4.9
+          },
+          {
+            "nivel": "T11-T12",
+            "superior": "T11",
+            "inferior": "T12",
+            "indice": 0.45,
+            "mm": 6.4
+          },
+          {
+            "nivel": "T12-L1",
+            "superior": "T12",
+            "inferior": "L1",
+            "indice": 0.52,
+            "mm": 7
+          },
+          {
+            "nivel": "L1-L2",
+            "superior": "L1",
+            "inferior": "L2",
+            "indice": 0.33,
+            "mm": 4.7
+          },
+          {
+            "nivel": "L2-L3",
+            "superior": "L2",
+            "inferior": "L3",
+            "indice": 0.34,
+            "mm": 5.2
+          },
+          {
+            "nivel": "L3-L4",
+            "superior": "L3",
+            "inferior": "L4",
+            "indice": 0.45,
+            "mm": 6.1
+          },
+          {
+            "nivel": "L4-L5",
+            "superior": "L4",
+            "inferior": "L5",
+            "indice": 0.49,
+            "mm": 7
+          },
+          {
+            "nivel": "L5-S1",
+            "superior": "L5",
+            "inferior": "S1",
+            "indice": 0.48,
+            "mm": 6.4
+          }
+        ],
+        "pelvis": {
+          "incidencia": 22.4,
+          "inclinacion": -3.2,
+          "pendienteSacra": 25.6
+        },
+        "inclinacionesSagitales": [
+          {
+            "vertebra": "T1",
+            "platillo": "superior",
+            "grados": 1.1
+          },
+          {
+            "vertebra": "T1",
+            "platillo": "inferior",
+            "grados": -3
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "superior",
+            "grados": 4.5
+          },
+          {
+            "vertebra": "T2",
+            "platillo": "inferior",
+            "grados": -2.3
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "superior",
+            "grados": -0.4
+          },
+          {
+            "vertebra": "T3",
+            "platillo": "inferior",
+            "grados": -1.4
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "superior",
+            "grados": -4.9
+          },
+          {
+            "vertebra": "T4",
+            "platillo": "inferior",
+            "grados": -2.1
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "superior",
+            "grados": -1.4
+          },
+          {
+            "vertebra": "T5",
+            "platillo": "inferior",
+            "grados": 0.5
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "superior",
+            "grados": -3.6
+          },
+          {
+            "vertebra": "T6",
+            "platillo": "inferior",
+            "grados": -1.7
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "superior",
+            "grados": 1.1
+          },
+          {
+            "vertebra": "T7",
+            "platillo": "inferior",
+            "grados": 0.6
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "superior",
+            "grados": -0.1
+          },
+          {
+            "vertebra": "T8",
+            "platillo": "inferior",
+            "grados": -2.9
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "superior",
+            "grados": 5.4
+          },
+          {
+            "vertebra": "T9",
+            "platillo": "inferior",
+            "grados": -2.2
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "superior",
+            "grados": 1.9
+          },
+          {
+            "vertebra": "T10",
+            "platillo": "inferior",
+            "grados": -3.5
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "superior",
+            "grados": -3.5
+          },
+          {
+            "vertebra": "T11",
+            "platillo": "inferior",
+            "grados": -1.5
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "superior",
+            "grados": 0.6
+          },
+          {
+            "vertebra": "T12",
+            "platillo": "inferior",
+            "grados": -2.3
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "superior",
+            "grados": 2.6
+          },
+          {
+            "vertebra": "L1",
+            "platillo": "inferior",
+            "grados": 1.9
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "superior",
+            "grados": -2.7
+          },
+          {
+            "vertebra": "L2",
+            "platillo": "inferior",
+            "grados": 0.6
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "superior",
+            "grados": -4.1
+          },
+          {
+            "vertebra": "L3",
+            "platillo": "inferior",
+            "grados": 1.6
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "superior",
+            "grados": -2.2
+          },
+          {
+            "vertebra": "L4",
+            "platillo": "inferior",
+            "grados": -2.5
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "superior",
+            "grados": -1.8
+          },
+          {
+            "vertebra": "L5",
+            "platillo": "inferior",
+            "grados": -1.3
+          },
+          {
+            "vertebra": "S1",
+            "platillo": "superior",
+            "grados": -25.6
+          }
+        ],
+        "inclinacionesCoronales": [],
+        "escala": {
+          "lateral": "dicom",
+          "ap": "ninguna"
+        },
+        "faltan": [
+          "Cobb coronal: marca los platillos de al menos dos vértebras en la AP."
+        ]
+      }
+    }
+  ]
+}
