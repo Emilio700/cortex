@@ -1,0 +1,39 @@
+/*
+ * Atlas Neuro 3D.
+ *
+ * La escena va sobre el marino profundo de la marca (como el visor va sobre
+ * negro): ahí el modelo brilla y se lee. El cromo alrededor usa las
+ * superficies del tema.
+ *
+ * Paleta anatómica: tokens `--cx-anat-*`, propios del atlas. La escena 3D los
+ * lee del DOM (getComputedStyle), así que cambiar un color aquí lo cambia en
+ * el modelo, en la ficha y en la silueta a la vez. Tonos apagados a propósito:
+ * sobre marino, los colores saturados cansan y parecen de juguete.
+ */
+.atlas-neuro {
+  --cx-anat-fondo: var(--cx-marino-900);
+  --cx-anat-fondo-2: var(--cx-marino-800);
+  --cx-anat-piel: #9cc4ff;
+  --cx-anat-hueso: #e6dfcf;
+  --cx-anat-frontal: #8fb4ff;
+  --cx-anat-parietal: #b3a6f5;
+  --cx-anat-temporal: #7fd3c4;
+  --cx-anat-occipital: #f0c591;
+  --cx-anat-insula: #f2a3c0;
+  --cx-anat-cerebelo: #d4bff0;
+  --cx-anat-tronco: #c9d4e6;
+  --cx-anat-encefalo-neutro: #dfe4ef;
+  --cx-anat-lcr: #38bdf8;
+  --cx-anat-arteria: #e5575c;
+  --cx-anat-disco: #9fd2ec;
+  --cx-anat-medula: #f1dcae;
+  --cx-anat-raiz: #f3c75f;
+  --cx-anat-via-motora: #ff8a5c;
+  --cx-anat-via-sensitiva: #5fd4ff;
+  --cx-anat-resalte: var(--cx-cian-claro);
+  --cx-anat-seleccion: var(--cx-azul-vivo);
+  /* Lo afectado (marca, dermatoma) va en ámbar: aviso, no alarma. */
+  --cx-anat-afectado: #ffb020;
+  --cx-anat-texto: #e4ecfb;
+  --cx-anat-texto-2: #9fb2d6;
+}
