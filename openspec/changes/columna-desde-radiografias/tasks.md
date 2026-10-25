@@ -43,4 +43,4 @@
 - [x] 7.1 Recorrido guiado y `anclas.test.ts`
 - [x] 7.2 DESIGN §4.15 y CHANGELOG
 - [x] 7.3 tsc, vitest, build y pytest
-- [ ] 7.4 Revisión visual con Playwright (390 px y escritorio)
+- [x] 7.4 Revisión visual con Playwright (390 px y escritorio)

@@ -422,7 +422,10 @@ se llega desde Neuro 3D con el paciente en contexto («Marcar radiografías»).
 - **Un punto a la vez.** Una franja dice qué esquina toca y dónde está
   («L3 · platillo superior, esquina anterior»), con el avance («12 de 60»). Al tocar
   aparece la **lupa** (×3) del lado contrario al dedo; el punto se coloca al soltar.
-  Tocar cerca de uno ya puesto lo arrastra. **Deshacer**, **Saltar punto** (lo que
+  Un punto ya puesto se corrige **arrastrándolo** (más de 6 px); un toque sin arrastrar
+  pone el que toca aunque haya otro cerca (en un disco estrecho, a 390 px, las
+  esquinas vecinas quedan a pocos píxeles). La franja del paso tiene alto fijo: la
+  placa no se mueve bajo el dedo cuando el texto cambia de largo. **Deshacer**, **Saltar punto** (lo que
   dependía de él no se calcula y se dice por qué) y **Mover imagen** (el dedo
   desplaza la placa sin marcar) son botones de 40 px. Funciona a 390 px.
 - **Sugerir, no decidir.** Las mediciones se calculan en vivo con la insignia
@@ -435,7 +438,8 @@ se llega desde Neuro 3D con el paciente en contexto («Marcar radiografías»).
   sus mediciones («Calculadas por el servidor») y, si no coinciden con la sugerencia,
   se dice. Si falla, los puntos se quedan. Un ajuste no se edita: se anula con motivo
   y queda tachado en «Ajustes guardados».
-- **En Neuro 3D** el origen «Desde radiografía» usa el ajuste vigente más reciente,
+- **En Neuro 3D** («Ver en Neuro 3D» deja el origen pedido en `sessionStorage`: las
+  pestañas abren cada pantalla sin su `?…`) el origen «Desde radiografía» usa el ajuste vigente más reciente,
   cambia el aviso y pone las mediciones en la ficha. Sin ajuste, la opción queda
   deshabilitada y dice por qué. (El selector definitivo, con TC, es
   `SelectorOrigen`; hasta integrarlo hay una entrada temporal.)
