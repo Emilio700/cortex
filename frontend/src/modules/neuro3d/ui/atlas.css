@@ -163,6 +163,9 @@
   position: relative;
   min-height: 0;
   overflow: hidden;
+  /* Para acomodar lo de encima según el ancho de la escena, no de la ventana. */
+  container-type: inline-size;
+  container-name: atlas-escena;
   border-radius: var(--cx-radio-lg);
   background:
     radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--cx-cian-claro) 9%, transparent) 1px, transparent 0) 0 0 / 26px 26px,
@@ -363,7 +366,6 @@
   position: absolute;
   right: 14px;
   bottom: 14px;
-  /* Junto a la leyenda de calidad: que se acomode en renglones y no la tape. */
   max-width: 36%;
   text-align: right;
   margin: 0;
@@ -613,6 +615,14 @@
   max-height: 46vh;
   margin: 0 auto;
   border-radius: var(--cx-radio);
+}
+
+/*
+ * Escena angosta: la leyenda de calidad ocupa la esquina inferior; la ayuda de
+ * gestos (que se aprende una vez) cede su lugar para no taparla.
+ */
+@container atlas-escena (max-width: 820px) {
+  .atlas-escena__ayuda { display: none; }
 }
 
 /* Reducir movimiento: nada late ni aparece deslizándose. */
