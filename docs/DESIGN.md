@@ -224,8 +224,8 @@ La imagen va sobre **negro fijo**, no sobre el fondo del tema: así se lee una
 resonancia. El cromo alrededor sí usa los tokens.
 
 - Series a la izquierda, imagen al centro, panel con pestañas a la derecha
-  (**Mediciones · Comparar · Estudio**). En pantalla angosta las tres columnas se
-  apilan.
+  (**Mediciones · Cortes clave · Comparar · Estudio**). En pantalla angosta las tres
+  columnas se apilan. La imagen ocupa la altura que queda en pantalla.
 - El encabezado siempre dice **qué se está viendo**: descripción, modalidad,
   fecha, institución y estado (`Estudio completo` o el motivo de que no lo esté).
   Nunca se muestra una imagen sin fecha ni modalidad.
@@ -240,6 +240,34 @@ resonancia. El cromo alrededor sí usa los tokens.
 - Los análisis asistidos (volumetría, segmentación) aparecen en la pestaña
   «Estudio», con su motor y su versión, y se pueden apagar. Mientras no existan,
   la pestaña lo dice; no se deja un hueco que prometa IA.
+
+**Controles.** La barra va en grupos, de lo que más se usa a lo que menos:
+herramientas del botón izquierdo (contraste, distancia, ángulo, elipse, mover, zoom),
+vista (acercar, ajustar, girar, voltear, invertir, restablecer), ventana, cine,
+acciones (**Capturar · Marcar · Compartir**) y pantalla (presentación, completa,
+atajos). Con poco ancho los botones pierden su rótulo y quedan con su ícono y tooltip,
+**salvo** Capturar, Marcar y Compartir, que se buscan por nombre. Cada tooltip dice su
+atajo, sacado de la misma tabla (`dominio/atajos.ts`) que alimenta la ayuda: no pueden
+contradecirse. Los atajos no actúan mientras se escribe en un campo ni con una ventana
+abierta, ni con Ctrl/Cmd/Alt (son del navegador).
+
+- **Ventana (contraste):** presets sólo en tomografía (unidades Hounsfield). En
+  resonancia hay «automática» y el ajuste a mano; ofrecer «encéfalo 40/80» sobre una
+  RM prometería una precisión que no existe.
+- **Captura:** PNG sin pérdida, con las mediciones y un sello (estudio, serie, fecha,
+  corte, ventana) y la leyenda de material de apoyo. El **nombre del paciente no va
+  por omisión**: una imagen suelta se reenvía y se queda en cualquier teléfono. Si se
+  pidieron las mediciones y no se pudieron dibujar, se dice y no se entrega la captura
+  a medias.
+- **Cortes clave:** una marca por corte, con nombre, nota y la vista con que se marcó.
+  Se ven como muescas en el deslizador y como miniaturas en su pestaña.
+- **Compartir:** la hoja en PDF (con opción sin nombre) y el **enlace temporal**.
+  El enlace exige confirmar el consentimiento, vence (máximo 7 días), se revoca, sirve
+  los cortes sin identidad y se muestra **una sola vez**. Quien lo abre no entra al
+  expediente ni puede guardar, capturar o compartir.
+- **Modo presentación (`T`):** sólo la imagen y el deslizador, para enseñársela al
+  paciente; oculta series, notas y herramientas. `Esc` sale.
+- Nada dice «guardado», «enlace creado» o «revocado» hasta que el servidor lo confirmó.
 
 Referencia: `frontend/src/modules/imagen/`.
 

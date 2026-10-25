@@ -38,6 +38,27 @@ Todos los cambios notables de Cortex. Formato basado en
 - Generador de un estudio DICOM sintético (`python -m scripts.generar_estudio_demo`)
   para probar la carga y el visor sin usar imágenes de pacientes: cuatro series
   (T1, T1+C, T2, FLAIR) con paciente ficticio `DEMO^SINTETICO`.
+- Controles del visor de estudios: herramientas de distancia, **ángulo** y **área
+  (elipse)**, mover y zoom; acercar, ajustar, girar 90°, voltear, **invertir** y
+  restablecer; ventana (presets de TC; en resonancia sólo «automática», porque no hay
+  unidades absolutas); **cine** de cortes; deslizador de cortes; pantalla completa y
+  **modo presentación** para enseñárselo al paciente; atajos de teclado documentados
+  (`?`) que no roban teclas mientras se escribe.
+- **Captura de la imagen**: PNG sin pérdida con las mediciones dibujadas y un sello
+  (estudio, serie, fecha, corte, ventana) y la leyenda «Material de apoyo · No es un
+  informe radiológico». Se descarga, se copia o se guarda en el expediente. El nombre
+  del paciente sólo va en la imagen si se pide.
+- **Cortes clave**: marcar un corte con nombre, nota y la vista exacta (ventana, zoom,
+  giro) con la que se marcó; muescas en el deslizador, salto entre ellos y panel con
+  miniaturas. Una marca por corte (marcar otra vez actualiza). Migración 0050.
+- **Hoja de cortes clave en PDF** con membrete y leyenda; con opción sin nombre ni
+  fecha de nacimiento.
+- **Enlace temporal** para interconsulta: exige confirmar el consentimiento del
+  paciente (queda registrado), dura de 1 hora a 7 días, se revoca cuando se quiera y
+  sirve los cortes **sin identidad** (nombre, ID, nacimiento, médicos, institución y
+  etiquetas privadas vaciados al vuelo; el original no se toca). Se abre sin sesión en
+  `/#/compartido/<token>`, sólo para mirar y medir. Del token sólo se guarda su hash;
+  se muestra una sola vez. Crear, abrir y revocar quedan en la bitácora.
 - Barrera de error por pestaña y de último recurso: una pantalla que falla ya no
   deja el sitio en blanco; muestra el motivo y ofrece recargar o volver al inicio.
 - Guardia de arranque en `index.html`, en HTML y JavaScript puros: si el paquete no
@@ -46,10 +67,19 @@ Todos los cambios notables de Cortex. Formato basado en
   sin mensaje y sin forma de saber por qué.
 
 ### Cambiado
+- El visor ocupa la altura de la pantalla en vez de ser un cuadrado, y su barra se
+  compacta según el ancho que de verdad tiene.
 - Voz de la interfaz en masculino genérico: «el paciente», «el médico».
 - Puertos, contenedores y nombres de producción propios para convivir con GEMS.
 
 ### Corregido
+- Las mediciones trazadas **nunca llegaban al panel**: el visor escuchaba el fin del
+  trazo en el elemento de la imagen, pero Cornerstone lo avisa en su `eventTarget`
+  global. Se vio al probar de verdad con una resonancia: se dibujaba «69.1 mm» y el
+  panel seguía diciendo «Todavía no hay mediciones». Ahora se escucha donde corresponde
+  y sólo cuenta el trazo de la pila abierta.
+- Los mensajes propios del módulo de imagen ya no se reemplazan por «Ocurrió un error
+  inesperado»: el helper compartido sólo entendía errores del servidor.
 - Un CD de estudios ya no deja el estudio en «llegó incompleto» por traer su índice.
   Los discos reales incluyen `DICOMDIR` y a veces `AUTORUN.INF` o un lector; se contaban
   como archivos ilegibles y bastaba uno para marcar `partial` un estudio completo. Se
