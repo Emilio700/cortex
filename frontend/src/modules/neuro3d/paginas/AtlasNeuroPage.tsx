@@ -39,6 +39,7 @@ import { useOrigenRadiografia } from '../servicios/origenRadiografia'
 import { EVENTO_ORIGEN_PEDIDO, origenPedidoDeLaUrl, tomarOrigenPedido, type OrigenPedido } from '../servicios/origenPedido'
 import type { CapaAnatomica } from '../servicios/anatomia/tipos'
 import { mensajeDeFallo } from '../../imagen/servicios/mensajes'
+import EnlaceEstudio3D from '../../imagen/componentes/EnlaceEstudio3D' // render volumétrico (VOL)
 import PanelCapas from '../componentes/PanelCapas'
 import PanelExplicar from '../componentes/PanelExplicar'
 import { atlasApi } from '../servicios/atlasApi'
@@ -553,6 +554,7 @@ export default function AtlasNeuroPage() {
         }
         acciones={
           <div className="atlas-acciones">
+            {patientId !== null && can('clinical_images.read') && <EnlaceEstudio3D patientId={patientId} />}
             <CButton
               color={explicar ? 'warning' : 'light'}
               aria-pressed={explicar}

@@ -97,6 +97,15 @@ Todos los cambios notables de Cortex. Formato basado en
   aviso de reconstrucción automática y la marca de revisado. Tabla
   `imaging_modelos_3d` (migración 0053) y permiso `neuro3d.generar_modelo` para el
   médico. `SEGMENTADOR_FALSO=1` da una columna sintética para probar sin GPU.
+<!-- Render volumétrico (feat/render-volumetrico) -->
+- **3D del estudio**: la TC, angio-TC o RM del paciente pintada en volumen en la
+  tarjeta gráfica, sin IA (`/pacientes/:id/estudios/:studyId/3d/:serieId`).
+  «Ver en 3D» en el visor sólo se habilita en series volumétricas y, si no, dice por
+  qué; «Ver el estudio en 3D» desde Neuro 3D. Preajustes en español (hueso, angio-TC,
+  piel, tejidos blandos, RM), umbral y opacidad, iluminación cinematográfica,
+  recorte axial, sagital y coronal, captura PNG sin nombre del paciente. Barra de
+  progreso, «Reducir resolución» si falta memoria y aviso fijo de que no sirve para
+  medir. Sin cambios en el backend ni dependencias nuevas.
 <!-- base-modulos-extra (tramo A) -->
 - Base para los módulos extra: módulos opcionales que se encienden por consultorio
   en **Sistema → Módulos** (tabla `tenant_modulos`, migración 0051; apagar no borra
