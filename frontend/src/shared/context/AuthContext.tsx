@@ -9,6 +9,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react'
 import { setPermissionsVersionListener } from '../services/api'
 import * as authService from '../services/auth'
+import { obtenerModulos } from '../services/modulos'
 import type { AuthResponse, LoginCredentials, MFASetupResponse, User } from '../types'
 
 type CompletedLogin = { user: User; must_change_password: boolean; recovery_codes?: string[] }
@@ -21,6 +22,15 @@ interface AuthContextValue {
   permissions: string[]
   /** ¿La sesión puede ejecutar esta acción? Es el criterio que sustituye al rol. */
   can: (action: string) => boolean
+  // ── base-modulos-extra: módulos opcionales del consultorio ──
+  /** Ids de los módulos opcionales encendidos en el consultorio de la sesión. */
+  modulosActivos: string[]
+  /** Falso mientras no ha llegado la respuesta: un guard no debe decidir antes. */
+  modulosCargados: boolean
+  tieneModulo: (id: string) => boolean
+  /** Vuelve a pedirlos, p. ej. después de encender uno en Configuración → Módulos. */
+  recargarModulos: () => Promise<void>
+  // ── fin base-modulos-extra ──
   login: (credentials: LoginCredentials) => Promise<CompletedLogin | AuthResponse>
   setupMfa: (ticket: string) => Promise<MFASetupResponse>
   completeMfa: (mode: 'confirm' | 'verify', ticket: string, code: string) => Promise<CompletedLogin>
@@ -37,6 +47,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // cada respuesta y no debe provocar re-render por si sola.
   const knownPermissionsVersion = useRef<number | null>(null)
   const refreshingPermissions = useRef(false)
+  // base-modulos-extra: módulos opcionales encendidos en el consultorio.
+  const [modulosActivos, setModulosActivos] = useState<string[]>([])
+  const [modulosCargados, setModulosCargados] = useState(false)
 
   // Hydrate from localStorage on mount
   useEffect(() => {
@@ -78,6 +91,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => setPermissionsVersionListener(null)
   }, [])
 
+  // base-modulos-extra. Si la consulta falla, los módulos opcionales quedan
+  // ocultos: es preferible no pintar una entrada a pintar una que responderá
+  // 404. El núcleo del sistema no depende de esto y sigue funcionando.
+  const recargarModulos = useCallback(async () => {
+    try {
+      const { activos } = await obtenerModulos()
+      setModulosActivos(activos)
+    } catch {
+      setModulosActivos([])
+    } finally {
+      setModulosCargados(true)
+    }
+  }, [])
+
+  const userId = user?.id
+  useEffect(() => {
+    if (userId === undefined) {
+      setModulosActivos([])
+      setModulosCargados(false)
+      return
+    }
+    void recargarModulos()
+  }, [userId, recargarModulos])
+
   const login = useCallback(async (credentials: LoginCredentials) => {
     const authResponse = await authService.login(credentials)
     if (authResponse.mfa_required) return authResponse
@@ -115,12 +152,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     [permissions],
   )
 
+  const tieneModulo = useCallback(
+    (id: string) => modulosActivos.includes(id),
+    [modulosActivos],
+  )
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       loading,
       permissions,
       can,
+      modulosActivos,
+      modulosCargados,
+      tieneModulo,
+      recargarModulos,
       // Token-based so a hard reload doesn't flash a redirect before the
       // profile finishes hydrating from localStorage.
       isAuthenticated: authService.isAuthenticated(),
@@ -129,7 +175,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       completeMfa,
       logout,
     }),
-    [user, loading, permissions, can, login, setupMfa, completeMfa, logout],
+    [
+      user, loading, permissions, can, login, setupMfa, completeMfa, logout,
+      modulosActivos, modulosCargados, tieneModulo, recargarModulos,
+    ],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

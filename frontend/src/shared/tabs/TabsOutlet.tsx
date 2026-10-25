@@ -59,6 +59,7 @@ const TabsOutlet: React.FC = () => {
                 const Element = route.element
                 const roles = route.roles
                 const requires = route.requires
+                const modulo = route.modulo
 
                 // Synthetic location for THIS tab's concrete URL. The nested
                 // <Routes> matches it against the route *pattern* (with
@@ -97,8 +98,8 @@ const TabsOutlet: React.FC = () => {
                                                 // ofrece la pantalla por permiso, y si aquí
                                                 // sólo se mirara el rol, conceder un permiso
                                                 // mostraría la opción pero la abriría en /403.
-                                                requires?.length || roles?.length ? (
-                                                    <AccessGuard requires={requires} allowedRoles={roles} alNegar="pestana">
+                                                requires?.length || roles?.length || modulo ? (
+                                                    <AccessGuard requires={requires} allowedRoles={roles} modulo={modulo} alNegar="pestana">
                                                         <Element />
                                                     </AccessGuard>
                                                 ) : (
