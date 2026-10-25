@@ -88,6 +88,13 @@ export interface EscenaAtlas {
    * rechaza y la escena queda como estaba.
    */
   fijarCapaPaciente(capa: CapaAnatomica | null): Promise<{ piezas: number }>
+  /**
+   * Pone (o quita, con `null`) el atlas detallado (BodyParts3D, persona de
+   * referencia). Las piezas del modelo simplificado que reemplaza (las de su
+   * mismo id o las de la estructura que contiene a una pieza: el lóbulo de un
+   * giro) se ocultan sin borrarse. Si falla, la escena queda como estaba.
+   */
+  fijarCapaAtlas(capa: CapaAnatomica | null): Promise<{ piezas: number }>
   /** PNG de lo que se ve, sin rótulos (se dibujan aparte en la captura). */
   capturar(): { dataUrl: string; ancho: number; alto: number }
   liberar(): void
@@ -115,6 +122,10 @@ interface Registro {
   paciente?: boolean
   /** Pieza del atlas tapada por la del paciente: no se ve ni se elige. */
   oculta?: boolean
+  /** Pieza del atlas detallado (se quita al volver al modelo simplificado). */
+  atlas?: boolean
+  /** Pieza del modelo simplificado reemplazada por el atlas detallado. */
+  tapadaPorAtlas?: boolean
 }
 
 const OPACIDAD_BASE: Partial<Record<Acabado, number>> = { disco: 0.9, liquido: 0.88, envoltura: 0.5 }
@@ -422,9 +433,29 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
     porEstructura.clear()
     const orden = [...registros.filter((r) => r.paciente), ...registros.filter((r) => !r.paciente)]
     for (const r of orden) {
-      if (!r.pieza.estructura || r.oculta) continue
-      if (!porEstructura.has(r.pieza.estructura)) porEstructura.set(r.pieza.estructura, [])
-      porEstructura.get(r.pieza.estructura)!.push(r)
+      if (r.oculta || r.tapadaPorAtlas) continue
+      // Una pieza del atlas detallado también responde por lo que la contiene:
+      // enfocar o rotular «Lóbulo frontal» usa sus giros.
+      for (const id of [r.pieza.estructura, r.pieza.parteDe]) {
+        if (!id) continue
+        if (!porEstructura.has(id)) porEstructura.set(id, [])
+        porEstructura.get(id)!.push(r)
+      }
+    }
+  }
+
+  const quitarAtlas = () => {
+    for (let i = registros.length - 1; i >= 0; i--) {
+      const r = registros[i]
+      r.tapadaPorAtlas = false
+      if (!r.atlas) continue
+      r.malla.removeFromParent()
+      r.pieza.geometria.dispose()
+      r.material.dispose()
+      if (r.flujo) (r.flujo.material as THREE.Material).dispose()
+      geometriasPropias.delete(r.pieza.geometria)
+      materialesPropios.delete(r.material)
+      registros.splice(i, 1)
     }
   }
 
@@ -448,6 +479,7 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
   }
   let ultimasCapas: Record<CapaId, CapaEfectiva> | null = null
   let turnoPaciente = 0
+  let turnoAtlas = 0
 
   // ── Estado visual ────────────────────────────────────────────────────────
   let resaltado: Resaltado = { seleccion: [], conexion: [], afectados: [], etiquetas: [], atenuarColumna: false, rayosX: false }
@@ -474,7 +506,9 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
     const con = new Map(resaltado.conexion.map((c) => [c.id, c.papel]))
     const afe = new Set(resaltado.afectados)
     for (const r of registros) {
-      const id = r.pieza.estructura
+      // Un giro del atlas se enciende cuando se elige (o se marca) su lóbulo.
+      const padre = r.pieza.parteDe
+      const id = padre && (sel.has(padre) || con.has(padre) || afe.has(padre)) ? padre : r.pieza.estructura
       const capa = r.pieza.capa
       let opacidad = r.opacidadBase * r.capaOpacidad
       const involucrada = id !== undefined && (sel.has(id) || con.has(id) || afe.has(id))
@@ -482,7 +516,7 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
         opacidad *= capa === 'columna' ? 0.2 : 0.3
       }
       if (resaltado.rayosX && !involucrada && capa === 'encefalo') opacidad *= 0.18
-      const visible = r.capaVisible && !r.oculta && opacidad > 0.01
+      const visible = r.capaVisible && !r.oculta && !r.tapadaPorAtlas && opacidad > 0.01
       r.malla.visible = visible
       if (r.pieza.acabado === 'envoltura' || r.pieza.acabado === 'via') {
         fijarTransparencia(r.material, opacidad, true)
@@ -887,6 +921,48 @@ export async function crearEscena(op: OpcionesDeEscena): Promise<EscenaAtlas> {
         }
       }
       reindexar()
+      rehacerEtiquetas()
+      refrescar()
+      return { piezas: piezas.length }
+    },
+
+    async fijarCapaAtlas(capa) {
+      const turno = ++turnoAtlas
+      // El atlas se alinea con las piezas del modelo simplificado (también con
+      // las que ya tapaba, si se vuelve a poner).
+      const procedurales = new Map<string, PiezaAnatomica[]>()
+      for (const r of registros) {
+        if (r.paciente || r.atlas || !r.pieza.estructura) continue
+        if (!procedurales.has(r.pieza.estructura)) procedurales.set(r.pieza.estructura, [])
+        procedurales.get(r.pieza.estructura)!.push(r.pieza)
+      }
+      // Se construye antes de tocar la escena: si el archivo falla, lo que se ve no cambia.
+      const piezas = capa ? await capa.construir({ columna: modelo, procedurales }) : []
+      if (turno !== turnoAtlas) {
+        for (const p of piezas) p.geometria.dispose()
+        return { piezas: 0 }
+      }
+      quitarAtlas()
+      if (piezas.length > 0) {
+        const reemplaza = new Set<string>()
+        for (const p of piezas) {
+          if (p.estructura) reemplaza.add(p.estructura)
+          if (p.parteDe) reemplaza.add(p.parteDe)
+        }
+        for (const r of registros) if (!r.paciente && r.pieza.estructura && reemplaza.has(r.pieza.estructura)) r.tapadaPorAtlas = true
+        const desde = registros.length
+        piezas.forEach(agregarPieza)
+        for (const r of registros.slice(desde)) {
+          r.atlas = true
+          if (ultimasCapas) {
+            r.capaVisible = ultimasCapas[r.pieza.capa].visible
+            r.capaOpacidad = ultimasCapas[r.pieza.capa].opacidad
+          }
+        }
+      }
+      reindexar()
+      // Las hernias cuelgan del disco que se ve (el del atlas o el simplificado).
+      for (const h of herniasMallas) porEstructura.get(h.userData.estructura as string)?.[0]?.malla.add(h)
       rehacerEtiquetas()
       refrescar()
       return { piezas: piezas.length }
