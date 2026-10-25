@@ -97,7 +97,8 @@ _CATALOGO = (
         "laboratorios_ocr", "Laboratorios con OCR",
         "Lee la foto de los laboratorios y propone los valores para que el médico "
         "los confirme.",
-        servicio_requerido="ia",
+        # Tesseract corre en el navegador: no depende de ningún servicio.
+        servicio_requerido=None,
     ),
     ModuloOpcional(
         "neuro3d_paciente", "Neuro 3D del paciente",

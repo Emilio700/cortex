@@ -47,7 +47,7 @@ servicio auxiliar responde.
 | Recepción desde equipos (Orthanc) | Estudios que llegan solos del gabinete | Requiere servicio: `pacs_orthanc` |
 | Dictado (Whisper) | Nota SOAP y operatoria sin teclear | Requiere servicio: `dictado` |
 | Asistente IA | Resumen preconsulta, borradores sin firmar | Requiere servicio: `asistente_ia` |
-| Laboratorios OCR | Na, coagulación, antiepilépticos, LCR | Requiere servicio: `laboratorios_ocr` |
+| Laboratorios OCR | Na, coagulación, antiepilépticos, LCR | Sin servicio (Tesseract en el navegador): `laboratorios_ocr` |
 | Neuro 3D del paciente | Modelo desde sus estudios | Requiere servicio: `neuro3d_paciente` |
 | Inventario de implantes | Lote y serie por procedimiento | Opcional: `inventario` |
 | Tareas | Seguimiento posoperatorio y resultados | Opcional: `tareas` |
@@ -59,7 +59,7 @@ servicio auxiliar responde.
 | Prenatal, vacunación, odontograma, visión… | Ajenos a la especialidad | No se portan |
 
 **Prioridad de construcción:** primero `tareas`; luego los que requieren servicio
-(`pacs_orthanc`, `dictado`, `asistente_ia`, `laboratorios_ocr`); el resto después.
+(`pacs_orthanc`, `dictado`, `asistente_ia`) y `laboratorios_ocr`; el resto después.
 Un módulo pasa a `disponible=True` en la misma rama que lo construye.
 
 ## Impacto

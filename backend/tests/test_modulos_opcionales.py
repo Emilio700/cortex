@@ -83,8 +83,9 @@ def test_el_catalogo_trae_los_modulos_acordados_y_ninguno_esta_construido():
     }
     assert all(not m.disponible for m in reales.values())
     assert all(not m.activo_por_defecto for m in reales.values())
-    for requiere in ("pacs_orthanc", "dictado", "asistente_ia", "laboratorios_ocr", "neuro3d_paciente"):
+    for requiere in ("pacs_orthanc", "dictado", "asistente_ia", "neuro3d_paciente"):
         assert reales[requiere].servicio_requerido
+    assert reales["laboratorios_ocr"].servicio_requerido is None
 
 
 def test_la_lista_solo_ofrece_modulos_construidos(client, db_session, escenario):
