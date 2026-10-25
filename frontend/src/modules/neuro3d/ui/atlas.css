@@ -664,3 +664,57 @@
   .atlas-escena__ayuda { display: none; }
   .atlas-acciones .btn { flex: 1 1 auto; }
 }
+
+/* ── Atlas detallado y créditos (feat/neuro3d-atlas) ─────────────────────── */
+/* «Modelo: Simplificado | Atlas detallado» usa el mismo grupo que el origen. */
+.atlas-detalle__progreso {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: min(260px, 100%);
+  font-size: 0.8rem;
+  color: var(--cx-texto-2);
+}
+.atlas-detalle__barra { width: 100%; }
+.atlas-detalle__instalar { display: block; margin-top: 2px; }
+
+/* Pie de créditos: un renglón discreto que se despliega; nunca tapa la escena. */
+.atlas-creditos {
+  margin-top: 12px;
+  border-top: 1px solid var(--cx-borde);
+  padding-top: 6px;
+  font-size: 0.78rem;
+  color: var(--cx-texto-3);
+}
+.atlas-creditos__boton {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  min-height: 32px;
+  border: 0;
+  padding: 4px 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+.atlas-creditos__boton:focus-visible { outline: 2px solid var(--cx-azul-vivo); outline-offset: 2px; }
+.atlas-creditos__titulo { font-weight: 600; color: var(--cx-texto-2); }
+.atlas-creditos__resumen {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas-creditos__lista {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+.atlas-creditos__fuente { color: var(--cx-texto-2); }
+.atlas-creditos__texto { color: var(--cx-texto); overflow-wrap: anywhere; }
+.atlas-creditos__nota { color: var(--cx-texto-3); }
+/* ── fin atlas detallado ── */

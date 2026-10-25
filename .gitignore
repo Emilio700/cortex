@@ -22,3 +22,7 @@ backups/
 # Propuesta MediSuite de Agustín: trae su propio .git y un zip. Es material de
 # referencia; lo que se adopte se copia, se adapta y conserva su nota de origen.
 Agustin-Propuesta/
+
+# Atlas detallado de Neuro 3D (BodyParts3D): lo genera cada servidor con
+# scripts/atlas/preparar_atlas.py; los modelos no se guardan en git.
+/frontend/public/atlas/

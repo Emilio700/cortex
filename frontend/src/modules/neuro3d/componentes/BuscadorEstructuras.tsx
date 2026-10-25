@@ -8,13 +8,15 @@ import { buscarEstructuras } from '../dominio/catalogo'
 
 interface Props {
   alElegir: (id: string) => void
+  /** Con el atlas detallado a la vista también se ofrecen sus giros y huesos. */
+  incluirAtlas?: boolean
 }
 
-export default function BuscadorEstructuras({ alElegir }: Props) {
+export default function BuscadorEstructuras({ alElegir, incluirAtlas = false }: Props) {
   const [texto, setTexto] = useState('')
   const [activo, setActivo] = useState(0)
   const lista = useId()
-  const resultados = useMemo(() => buscarEstructuras(texto), [texto])
+  const resultados = useMemo(() => buscarEstructuras(texto, 8, { incluirAtlas }), [texto, incluirAtlas])
   const abierto = texto.trim().length > 0
 
   const elegir = (id: string) => {

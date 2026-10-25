@@ -53,6 +53,12 @@ import { atlasApi } from '../servicios/atlasApi'
 import { ajusteDelEje } from '../dominio/ajusteRadiografico'
 import PanelMedicionesRx from '../componentes/PanelMedicionesRx'
 import '../ui/radiografia.css'
+// Atlas detallado (feat/neuro3d-atlas)
+import SelectorDetalle, { type OpcionDeDetalle } from '../componentes/SelectorDetalle'
+import PieCreditos from '../componentes/PieCreditos'
+import { AVISO_ATLAS, MOTIVO_SIN_ATLAS, MOTIVO_SOLO_ESQUEMATICO, type DetalleDelModelo } from '../dominio/atlasDetallado'
+import { CREDITOS_BASE, combinarCreditos, lineaDeCredito } from '../dominio/creditos'
+import { consultarAtlas, descargarAtlas, type EstadoDelAtlas } from '../servicios/atlasDetallado'
 import { componerCaptura, descargar, nombreDeCaptura } from '../servicios/captura'
 import { useReducirMovimiento } from '../servicios/movimiento'
 import { hayWebGL } from '../servicios/webgl'
@@ -191,6 +197,37 @@ export default function AtlasNeuroPage() {
 
   const puedeGuardar = patientId !== null && can('clinical_images.upload')
 
+  // ── Atlas detallado (feat/neuro3d-atlas) ─────────────────────────────────
+  // «Modelo: Simplificado | Atlas detallado». `detalle` es lo que la escena YA
+  // muestra; el atlas (BodyParts3D, persona de referencia) sólo con el origen
+  // esquemático y sólo si el servidor lo tiene instalado.
+  const [detalle, setDetalle] = useState<DetalleDelModelo>('simplificado')
+  const [estadoAtlas, setEstadoAtlas] = useState<EstadoDelAtlas | null>(null)
+  const [progresoAtlas, setProgresoAtlas] = useState<number | null>(null)
+  const capaAtlasRef = useRef<CapaAnatomica | null>(null)
+  useEffect(() => {
+    let vigente = true
+    void consultarAtlas().then((e) => vigente && setEstadoAtlas(e))
+    return () => {
+      vigente = false
+    }
+  }, [])
+  const opcionesDeDetalle = useMemo<Record<DetalleDelModelo, OpcionDeDetalle>>(
+    () => ({
+      simplificado: { disponible: true },
+      atlas: !estadoAtlas
+        ? { disponible: false, motivo: 'Consultando si el atlas detallado está instalado…' }
+        : !estadoAtlas.instalado
+          ? { disponible: false, motivo: estadoAtlas.motivo }
+          : origenEfectivo !== 'esquematico'
+            ? { disponible: false, motivo: MOTIVO_SOLO_ESQUEMATICO }
+            : { disponible: true },
+    }),
+    [estadoAtlas, origenEfectivo],
+  )
+  const creditosAtlas = detalle === 'atlas' && estadoAtlas?.instalado ? estadoAtlas.creditos : null
+  const creditosActivos = useMemo(() => combinarCreditos(CREDITOS_BASE, creditosAtlas ? [creditosAtlas] : []), [creditosAtlas])
+
   // ── Escena: se carga aparte y se libera al salir ─────────────────────────
   useEffect(() => {
     if (!hayWebGL()) {
@@ -328,6 +365,13 @@ export default function AtlasNeuroPage() {
           capaPacienteRef.current = null
           setModeloMostrado(null)
         }
+        // El atlas detallado es otra persona: no se mezcla con la TC ni con la
+        // radiografía del paciente. Se quita sólo cuando el nuevo origen ya cargó.
+        if (nuevo !== 'esquematico' && capaAtlasRef.current) {
+          await escena.fijarCapaAtlas(null)
+          capaAtlasRef.current = null
+          setDetalle('simplificado')
+        }
         // Sólo ahora, con la escena ya cambiada, cambia lo que dice el aviso.
         // Con «radiografia» la escena se rehace al cambiar `claveDeEscena` y,
         // mientras, dice «Preparando el modelo…».
@@ -350,6 +394,54 @@ export default function AtlasNeuroPage() {
   // capa del paciente se vuelve a poner sola.
   useEffect(() => {
     if (lista && capaPacienteRef.current) void escenaRef.current?.fijarCapaPaciente(capaPacienteRef.current)
+  }, [lista])
+
+  // Atlas detallado: se descarga al elegirlo (con avance) y la escena lo pone;
+  // sólo entonces cambian la opción marcada, el aviso y los créditos.
+  const cambiarDetalle = useCallback(
+    async (nuevo: DetalleDelModelo) => {
+      const escena = escenaRef.current
+      if (!escena) return
+      setAviso(null)
+      try {
+        if (nuevo === 'atlas') {
+          if (!estadoAtlas?.instalado) throw new Error(MOTIVO_SIN_ATLAS)
+          setProgresoAtlas(0)
+          const [datos, { crearCapaAtlas }] = await Promise.all([
+            descargarAtlas(estadoAtlas.manifiesto, setProgresoAtlas),
+            import('../servicios/anatomia/capaAtlas'),
+          ])
+          const capa = crearCapaAtlas(estadoAtlas.manifiesto, datos)
+          await escena.fijarCapaAtlas(capa)
+          capaAtlasRef.current = capa
+          setRotacion(false)
+        } else {
+          await escena.fijarCapaAtlas(null)
+          capaAtlasRef.current = null
+          // Un giro o un hueso del atlas ya no se ve: se suelta.
+          setSeleccion((s) => (s && estructuraPorId(s)?.soloAtlas ? null : s))
+        }
+        // Si la escena se rehízo mientras se descargaba (p. ej. otra calidad) y
+        // la nueva ya estaba lista, el efecto de `lista` no vio esta capa: se
+        // pone (o se quita) aquí, para que lo marcado sea lo que se ve.
+        const actual = escenaRef.current
+        if (actual && actual !== escena) await actual.fijarCapaAtlas(capaAtlasRef.current)
+        setDetalle(nuevo)
+      } catch (err) {
+        setAviso({
+          color: 'danger',
+          texto: `No se pudo mostrar el atlas detallado: ${mensajeDeFallo(err)} Se sigue viendo el modelo simplificado.`,
+        })
+      } finally {
+        setProgresoAtlas(null)
+      }
+    },
+    [estadoAtlas],
+  )
+
+  // Si la escena se vuelve a crear (otra columna, otra calidad), el atlas vuelve solo.
+  useEffect(() => {
+    if (lista && capaAtlasRef.current) void escenaRef.current?.fijarCapaAtlas(capaAtlasRef.current)
   }, [lista])
 
   // El origen pedido se aplica cuando hay con qué: la escena lista y, según el
@@ -553,7 +645,13 @@ export default function AtlasNeuroPage() {
       silueta: explicar ? siluetaMarcasRef.current : siluetaFichaRef.current,
       titulo: 'Neuro 3D · Cortex',
       lineas,
-      leyenda: modeloMostrado?.sintetico ? `${AVISO_ORIGEN[origenEfectivo]} ${AVISO_SINTETICO}` : AVISO_ORIGEN[origenEfectivo],
+      leyenda: [
+        modeloMostrado?.sintetico ? `${AVISO_ORIGEN[origenEfectivo]} ${AVISO_SINTETICO}` : AVISO_ORIGEN[origenEfectivo],
+        // La imagen exportada lleva su atribución: CC BY lo pide al compartirla.
+        creditosAtlas ? `${AVISO_ATLAS} ${lineaDeCredito(creditosAtlas)}` : '',
+      ]
+        .filter(Boolean)
+        .join(' '),
       fondo: estilo.getPropertyValue('--cx-anat-fondo').trim() || '#040a18',
       texto: estilo.getPropertyValue('--cx-anat-texto').trim() || '#e4ecfb',
       textoSecundario: estilo.getPropertyValue('--cx-anat-texto-2').trim() || '#9fb2d6',
@@ -582,7 +680,7 @@ export default function AtlasNeuroPage() {
       const blob = await capturar()
       if (!blob) throw new Error('sin escena')
       const lineas = textoDeMarcasParaCaptura(marcas)
-      const descripcion = [TITULO_DE_CAPTURA[origenEfectivo], ...lineas.map((l) => l.toUpperCase()), estructura ? estructura.nombre.toUpperCase() : '']
+      const descripcion = [TITULO_DE_CAPTURA[origenEfectivo], creditosAtlas ? 'ATLAS DETALLADO BODYPARTS3D (PERSONA DE REFERENCIA)' : '', ...lineas.map((l) => l.toUpperCase()), estructura ? estructura.nombre.toUpperCase() : '']
         .filter(Boolean)
         .join('. ')
       setGuardar({ imagen: blob, descripcion })
@@ -651,8 +749,18 @@ export default function AtlasNeuroPage() {
         </SelectorOrigen>
       )}
 
+      {/* Atlas detallado (feat/neuro3d-atlas) */}
+      <SelectorDetalle
+        valor={detalle}
+        opciones={opcionesDeDetalle}
+        alCambiar={(d) => void cambiarDetalle(d)}
+        progreso={progresoAtlas}
+        ocupado={cambiandoOrigen || !lista}
+      />
+
       <div className={`atlas-aviso${origenEfectivo === 'tc' ? ' atlas-aviso--paciente' : ''}`} role="note" data-tour="atlas-aviso">
         <p className="mb-0">{AVISO_ORIGEN[origenEfectivo]}</p>
+        {detalle === 'atlas' && <p className="atlas-aviso__detalle mb-0 mt-1">{AVISO_ATLAS}</p>}
         {cambiandoOrigen && (
           <div className="mt-1" role="status">
             <CSpinner size="sm" className="me-2" />
@@ -690,7 +798,7 @@ export default function AtlasNeuroPage() {
 
       <div className={`atlas-rejilla${explicar ? ' atlas-rejilla--explicar' : ''}`}>
         <aside className="atlas-panel atlas-panel--navegacion" aria-label="Navegación del modelo">
-          <BuscadorEstructuras alElegir={elegirDesdeBusqueda} />
+          <BuscadorEstructuras alElegir={elegirDesdeBusqueda} incluirAtlas={detalle === 'atlas'} />
           <PanelCapas
             capas={capas}
             alCambiarCapa={cambiarCapa}
@@ -846,6 +954,8 @@ export default function AtlasNeuroPage() {
           )}
         </aside>
       </div>
+
+      <PieCreditos creditos={creditosActivos} />
 
       {guardar && patientId !== null && (
         <ModalGuardarExpediente

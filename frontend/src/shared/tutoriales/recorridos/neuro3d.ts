@@ -10,8 +10,15 @@
  * cuando su TC ya se ve; si no, se saltan solos. El recorrido del visor
  * («Modelo 3D desde la tomografía») vive aquí porque termina en Neuro 3D.
  *
- * Modo realista (feat/neuro3d-realista), versión 4: paso «Calidad» (junto a los
- * botones de la escena, sólo con el modelo cargado) y venas y senos en las capas.
+ * Modo realista (feat/neuro3d-realista): paso «Calidad» (junto a los botones
+ * de la escena, sólo con el modelo cargado) y venas y senos en las capas.
+ *
+ * Atlas detallado (feat/neuro3d-atlas): «Modelo» (simplificado o atlas
+ * BodyParts3D) se ve siempre; el pie de créditos, también.
+ *
+ * Versión 5: une los pasos de las dos ramas (calidad, venas, atlas y créditos)
+ * y la calidad dice que en Realista el atlas también toma el material de cada
+ * tejido.
  */
 import { Role } from '../../types'
 import type { Recorrido } from '../tipos'
@@ -21,7 +28,7 @@ const CLINICO = [Role.DOCTOR, Role.ADMIN, Role.MASTER]
 export const RECORRIDOS_NEURO3D: Recorrido[] = [
   {
     id: 'neuro-3d',
-    version: 4,
+    version: 5,
     titulo: 'Neuro 3D',
     resumen:
       'Encéfalo y columna en 3D para explicarle al paciente su lesión: capas, vistas, raíces con su dermatoma y captura.',
@@ -43,6 +50,13 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         titulo: 'Origen del modelo',
         texto:
           'Con un paciente en contexto eliges de dónde sale la columna: el modelo <b>esquemático</b>, el ajustado desde su <b>radiografía</b> o la <b>tomografía del paciente</b> (una reconstrucción automática de su TC). Lo que no está disponible aparece deshabilitado y dice por qué. Si puedes marcar radiografías, <b>Marcar radiografías</b> abre la herramienta para medirlas.',
+        lado: 'bottom',
+      },
+      {
+        elemento: 'atlas-detalle',
+        titulo: 'Modelo simplificado o atlas detallado',
+        texto:
+          'El <b>simplificado</b> lo dibuja Cortex y carga al instante. El <b>atlas detallado</b> usa mallas reales (BodyParts3D) de una <b>persona de referencia</b>, no de tu paciente: giros, huesos del cráneo y vértebras con su forma real. Se descarga al elegirlo y sólo se usa con el origen esquemático. Si el servidor no lo tiene instalado, la opción aparece deshabilitada y dice por qué.',
         lado: 'bottom',
       },
       {
@@ -98,7 +112,7 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         elemento: 'atlas-calidad',
         titulo: 'Calidad: Estándar o Realista',
         texto:
-          '<b>Estándar</b> es el modelo didáctico, con un color por lóbulo. <b>Realista</b> pinta cada tejido como en una pieza anatómica (hueso, encéfalo, arterias y venas), con más detalle y sombras suaves. Debajo dice si este equipo puede con Realista; si se pone lento, baja solo a Estándar y te deja <b>reintentar</b>. Tu elección se recuerda. Ninguna de las dos es la anatomía de tu paciente.',
+          '<b>Estándar</b> es el modelo didáctico, con un color por lóbulo. <b>Realista</b> pinta cada tejido como en una pieza anatómica (hueso, encéfalo, arterias y venas), con más detalle y sombras suaves. Debajo dice si este equipo puede con Realista; si se pone lento, baja solo a Estándar y te deja <b>reintentar</b>. Con el atlas detallado, Realista también pinta sus mallas con el material de cada tejido. Tu elección se recuerda. Ninguna de las dos es la anatomía de tu paciente.',
         lado: 'top',
       },
       {
@@ -119,8 +133,15 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         elemento: 'atlas-capturar',
         titulo: 'Captura',
         texto:
-          'Descarga un PNG con la vista, la silueta y el aviso del origen del modelo (esquemático, aproximación desde radiografía o reconstrucción de su TC), sin el nombre del paciente. Si abriste Neuro 3D desde la pestaña <b>Imágenes</b> del expediente, también puedes <b>guardarla en el expediente</b> (con su consentimiento); solo dice «guardado» cuando el sistema lo confirmó.',
+          'Descarga un PNG con la vista, la silueta y el aviso del origen del modelo (esquemático, aproximación desde radiografía o reconstrucción de su TC), sin el nombre del paciente. Con el atlas detallado, la imagen lleva también su crédito. Si abriste Neuro 3D desde la pestaña <b>Imágenes</b> del expediente, también puedes <b>guardarla en el expediente</b> (con su consentimiento); solo dice «guardado» cuando el sistema lo confirmó.',
         lado: 'bottom',
+      },
+      {
+        elemento: 'atlas-creditos',
+        titulo: 'Créditos',
+        texto:
+          'Al pie, <b>Créditos</b> se despliega con la atribución de lo que se está viendo: el motor 3D y, con el atlas detallado, BodyParts3D con el texto que pide su licencia.',
+        lado: 'top',
       },
     ],
   },

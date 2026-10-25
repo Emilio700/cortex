@@ -586,7 +586,7 @@ modelo más realista sigue siendo esquemático o aproximado.
   `EffectComposer`: GTAO a media resolución sólo sobre lo opaco (la piel translúcida
   no ensombrece lo de adentro), SMAA y `OutputPass`. Al girar o mover la cámara se
   apaga el GTAO; al soltar se pinta completo. La captura PNG usa el pintado completo.
-- **Para capas nuevas** (mallas detalladas, tramo ATLAS): una `CapaAnatomica`
+- **Para capas nuevas** (como el atlas detallado, §4.18): una `CapaAnatomica`
   entrega piezas con `acabado`, `capa` y, si hace falta, `tejido`; la escena pide el
   material a la biblioteca. No se crean materiales sueltos.
 - **Venas y senos** son una capa más (`venas`, también en Estándar), con ficha y
@@ -595,6 +595,60 @@ modelo más realista sigue siendo esquemático o aproximado.
 Referencia: `frontend/src/modules/neuro3d/servicios/escena.ts`, `posproceso.ts`,
 `materiales/` y `dominio/calidad.ts`.
 <!-- fin neuro3d-realista -->
+
+<!-- Atlas detallado (feat/neuro3d-atlas) -->
+### 4.18 Atlas detallado y créditos en Neuro 3D
+
+Mallas reales de **BodyParts3D 4.0** (DBCLS, CC BY 4.0) en lugar del modelo que
+Cortex dibuja en código. Es una **persona de referencia**, no el paciente.
+
+- **Selector aparte.** Debajo del «Origen del modelo» (o solo, sin paciente) va
+  «Modelo: Simplificado | Atlas detallado» (`componentes/SelectorDetalle.tsx`),
+  con el mismo grupo de radio que el origen (§4.14). No es un cuarto origen: el
+  contrato `AVISO_ORIGEN` no cambia. El atlas sólo se elige con «Esquemático»;
+  con la TC o la radiografía queda deshabilitado y dice por qué, y elegir la TC lo
+  quita (cuando la TC ya cargó).
+- **Sin atlas instalado, nunca en blanco.** La opción sale deshabilitada con «El
+  atlas detallado no está instalado en este servidor» y, debajo, cómo lo instala
+  el administrador. La página sigue con el simplificado.
+- **Carga diferida con avance.** Los GLB (≈10 MB) se piden al elegirlo; mientras,
+  «Descargando el atlas detallado… 42 %» con barra, y el grupo no acepta otro
+  cambio. La opción marcada, el aviso y los créditos cambian **sólo cuando la
+  escena ya lo muestra**; si falla, se dice y se sigue viendo el simplificado.
+- **Aviso propio**, debajo del del origen: «anatomía real de una persona de
+  referencia (BodyParts3D), no la de este paciente; raíces, médula y vías siguen
+  siendo esquemáticas».
+- **Mismos ids.** Cada pieza usa el id del catálogo (`vertebra-L5`, `basilar`);
+  lo que sólo existe en el atlas (giros, huesos del cráneo, tálamo, nervios II y
+  IV) lleva `soloAtlas` y `parteDe`: elegir un lóbulo enciende sus giros, y el
+  buscador sólo ofrece giros con el atlas a la vista. El cráneo es translúcido
+  (acabado `envoltura`), como la bóveda simplificada. Colores: los tokens
+  `--cx-anat-*` de su estructura.
+- **Con la calidad (§4.17).** Cada pieza lleva el `tejido` del manifiesto (los
+  mismos nombres que `Tejido`): en Realista toma el material físico de su tejido
+  (hueso, cráneo, corteza, sustancia blanca, arteria, nervio, disco, líquido), así
+  que la vértebra real se ve igual que la simplificada a su lado. Cambiar de
+  calidad rehace la escena y el atlas vuelve solo, sin descargarse otra vez; si
+  cambia a media descarga, llega a la escena nueva.
+- **Orden en la pantalla.** En el encabezado, «Ver el estudio en 3D» (§4.16),
+  «Explicar al paciente» y la captura; debajo, «Origen del modelo» (con paciente,
+  §4.14), luego «Modelo» y el aviso (el del origen y, abajo, el del atlas); el
+  interruptor de calidad con su leyenda, abajo a la izquierda de la escena (§4.17);
+  y el pie de créditos al final de la página.
+- **Escena.** Entra como `CapaAnatomica` (`servicios/anatomia/capaAtlas.ts`) con
+  `escena.fijarCapaAtlas`; lo simplificado que reemplaza se oculta sin borrarse.
+  Alineación: la cabeza, con escala uniforme limitada (0.8–1.25) a la caja de los
+  lóbulos simplificados; cada vértebra, rígida y con su tamaño real, al lugar de la
+  simplificada, y cada disco entre sus dos vértebras.
+- **Créditos.** Al pie de Neuro 3D, siempre, un renglón discreto «Créditos ·
+  three.js (MIT) · BodyParts3D (CC BY 4.0)» que se despliega con el texto de
+  atribución exacto de cada fuente **activa**, su licencia enlazada y los cambios
+  hechos (`componentes/PieCreditos.tsx`, armado desde los `CREDITOS.json`). Una
+  fuente sin crédito válido no se ofrece. La captura PNG con el atlas lleva el
+  aviso y el crédito en la leyenda.
+
+Referencia: `frontend/src/modules/neuro3d/` y `scripts/atlas/` (cómo se prepara).
+<!-- fin atlas detallado -->
 
 ---
 

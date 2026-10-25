@@ -17,6 +17,8 @@ export type Acabado = 'organo' | 'hueso' | 'disco' | 'nervio' | 'vaso' | 'liquid
 export interface PiezaAnatomica {
   /** Id del catálogo; sin él la pieza es decorativa y no se puede tocar. */
   estructura?: string
+  /** Atlas detallado: la estructura que la contiene (giro → lóbulo, hueso → cráneo). */
+  parteDe?: string
   capa: CapaId
   geometria: THREE.BufferGeometry
   /** Token de color (`--cx-anat-*`). */
@@ -41,12 +43,20 @@ export interface PiezaAnatomica {
 export interface ContextoDeCapa {
   /** Para capas que necesitan la columna (médula, raíces, vías). */
   columna?: import('./columna3d').ModeloColumna
+  /**
+   * Las piezas del modelo simplificado, por estructura: el atlas detallado se
+   * alinea con ellas (centros, rótulos y despiece de cada vértebra).
+   */
+  procedurales?: ReadonlyMap<string, readonly PiezaAnatomica[]>
 }
 
 export interface CapaAnatomica {
   id: string
   nombre: string
-  /** «procedural» es el atlas; «paciente», las mallas de sus estudios (fase futura). */
-  origen: 'procedural' | 'paciente'
+  /**
+   * «procedural» es el modelo simplificado; «paciente», las mallas de sus
+   * estudios; «referencia», el atlas detallado (una persona de referencia).
+   */
+  origen: 'procedural' | 'paciente' | 'referencia'
   construir(contexto: ContextoDeCapa): PiezaAnatomica[] | Promise<PiezaAnatomica[]>
 }
