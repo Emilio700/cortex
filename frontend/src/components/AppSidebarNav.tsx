@@ -18,7 +18,7 @@ const ICONOS_DE_SECCION: Record<string, string[]> = {
   Consultorio: cilHospital,
   Finanzas: cilCash,
   Médico: cilMedicalCross,
-  // Tramo C (Atlas Neuro 3D).
+  // Tramo C (Neuro 3D).
   'Imagen y señales': cil3d,
 }
 

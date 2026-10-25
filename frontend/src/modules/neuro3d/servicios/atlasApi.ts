@@ -34,7 +34,7 @@ export const atlasApi = {
     // «Imagen de referencia»: material de apoyo, no una foto de la consulta.
     form.append('category', 'reference')
     form.append('consent_obtained', datos.consentimiento ? 'true' : 'false')
-    form.append('body_region', 'Atlas Neuro 3D')
+    form.append('body_region', 'Neuro 3D')
     if (datos.descripcion) form.append('caption', datos.descripcion)
     form.append('file', new File([datos.imagen], datos.nombreArchivo, { type: 'image/png' }))
     const { data } = await apiClient.post<ImagenGuardada>('/clinical-images/upload', form, {

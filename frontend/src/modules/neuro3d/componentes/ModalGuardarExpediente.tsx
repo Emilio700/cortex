@@ -78,7 +78,7 @@ export default function ModalGuardarExpediente(p: Props) {
             Paciente: <b>{p.nombrePaciente}</b>
           </p>
         )}
-        {vista && <img src={vista} alt="Vista previa de la captura del atlas" className="atlas-guardar__vista" />}
+        {vista && <img src={vista} alt="Vista previa de la captura de Neuro 3D" className="atlas-guardar__vista" />}
         <p className="small text-body-secondary mt-2">
           Se guarda como «Imagen de referencia» en la pestaña Imágenes. La imagen no lleva el nombre del paciente.
         </p>

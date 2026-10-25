@@ -293,12 +293,12 @@ del paciente: el detalle es el mensaje del error, no el expediente.
 
 Referencia: `frontend/src/shared/components/BarreraDeError.tsx` y `frontend/index.html`.
 
-### 4.11 Atlas Neuro 3D
+### 4.11 Neuro 3D
 
-<!-- Tramo C · Atlas Neuro 3D -->
+<!-- Tramo C · Neuro 3D -->
 Modelo anatómico 3D para **explicarle al paciente** su lesión y su cirugía. Ruta
-`/imagen/atlas-neuro` (menú «Imagen y señales») y `/pacientes/:id/atlas-neuro`
-(botón «Atlas Neuro 3D» en la pestaña Imágenes del expediente, con el paciente en
+`/imagen/neuro-3d` (menú «Imagen y señales») y `/pacientes/:id/neuro-3d`
+(botón «Neuro 3D» en la pestaña Imágenes del expediente, con el paciente en
 contexto). Permiso `neuro3d.read`.
 
 - **Siempre se dice qué es.** Debajo del encabezado, fijo: «Modelo esquemático con

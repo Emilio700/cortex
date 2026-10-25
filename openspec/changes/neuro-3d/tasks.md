@@ -8,7 +8,7 @@
 ## 2. Permiso
 - [x] 2.1 `neuro3d.read` en `ALL_PERMISSIONS` y por omisión en médico y administración
 - [x] 2.2 Línea base de permisos actualizada (delta deliberado) y prueba propia
-- [x] 2.3 `MODULE_HIERARCHY`: «Imagen y señales» → «Atlas Neuro 3D»
+- [x] 2.3 `MODULE_HIERARCHY`: «Imagen y señales» → «Neuro 3D»
 
 ## 3. Dominio (puro, con pruebas)
 - [x] 3.1 Catálogo anatómico con color por token `--cx-anat-*`

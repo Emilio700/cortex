@@ -1,5 +1,5 @@
 /**
- * Atlas Neuro 3D: encéfalo y columna en 3D para explicarle al paciente su
+ * Neuro 3D: encéfalo y columna en 3D para explicarle al paciente su
  * lesión y su cirugía.
  *
  * Se abre desde el menú («Imagen y señales») o desde la pestaña Imágenes del
@@ -289,7 +289,7 @@ export default function AtlasNeuroPage() {
       ancho: foto.ancho,
       alto: foto.alto,
       silueta: explicar ? siluetaMarcasRef.current : siluetaFichaRef.current,
-      titulo: 'Atlas Neuro 3D · Cortex',
+      titulo: 'Neuro 3D · Cortex',
       lineas,
       leyenda: AVISO_ESQUEMATICO,
       fondo: estilo.getPropertyValue('--cx-anat-fondo').trim() || '#040a18',
@@ -338,7 +338,7 @@ export default function AtlasNeuroPage() {
   return (
     <div className="atlas-neuro">
       <EncabezadoPantalla
-        titulo="Atlas Neuro 3D"
+        titulo="Neuro 3D"
         descripcion="Encéfalo y columna en 3D para explicarle al paciente su lesión y su cirugía."
         icono={cil3d}
         padre={patientId !== null ? { nombre: 'Expediente', ruta: rutaDelExpediente(patientId) } : undefined}

@@ -59,7 +59,7 @@ const PanelExplicar = forwardRef<SVGSVGElement, Props>(function PanelExplicar({ 
     <section className="atlas-explicar" aria-labelledby="atlas-explicar-titulo" data-tour="atlas-marcas">
       <h2 id="atlas-explicar-titulo" className="atlas-bloque__titulo">Explicar al paciente</h2>
       <p className="atlas-bloque__ayuda">
-        Marca el nivel y el atlas enciende la raíz comprimida y la piel que siente. Las marcas no se guardan: para conservarlas, guarda la captura.
+        Marca el nivel y Neuro 3D enciende la raíz comprimida y la piel que siente. Las marcas no se guardan: para conservarlas, guarda la captura.
       </p>
       <div className="atlas-explicar__formulario">
         <label className="form-label" htmlFor="atlas-marca-disco">Nivel</label>

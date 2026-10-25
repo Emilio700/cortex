@@ -10,7 +10,7 @@ import { RECORRIDOS_DOCTORA } from './doctora'
 import { RECORRIDOS_RECEPCION } from './recepcion'
 import { RECORRIDOS_COBROS } from './cobros'
 import { RECORRIDOS_ADMINISTRACION } from './administracion'
-// Tramo C: Atlas Neuro 3D.
+// Tramo C: Neuro 3D.
 import { RECORRIDOS_NEURO3D } from './neuro3d'
 
 export const CATALOGO: Recorrido[] = [
@@ -20,6 +20,6 @@ export const CATALOGO: Recorrido[] = [
   ...RECORRIDOS_RECEPCION,
   ...RECORRIDOS_COBROS,
   ...RECORRIDOS_ADMINISTRACION,
-  // Tramo C: Atlas Neuro 3D.
+  // Tramo C: Neuro 3D.
   ...RECORRIDOS_NEURO3D,
 ]

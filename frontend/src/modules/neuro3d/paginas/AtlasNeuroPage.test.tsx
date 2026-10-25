@@ -40,7 +40,7 @@ vi.mock('../servicios/escena', () => ({ crearEscena }))
 vi.mock('../servicios/captura', () => ({
   componerCaptura: vi.fn(() => Promise.resolve(new Blob(['png'], { type: 'image/png' }))),
   descargar: vi.fn(),
-  nombreDeCaptura: () => 'atlas-neuro-3d-prueba.png',
+  nombreDeCaptura: () => 'neuro-3d-prueba.png',
 }))
 vi.mock('../../../shared/services/api', () => ({ apiClient: { get, post }, default: { get, post } }))
 vi.mock('../../../shared/context/AuthContext', () => ({
@@ -49,12 +49,12 @@ vi.mock('../../../shared/context/AuthContext', () => ({
 
 import AtlasNeuroPage, { AVISO_ESQUEMATICO } from './AtlasNeuroPage'
 
-const abrir = (ruta = '/imagen/atlas-neuro') =>
+const abrir = (ruta = '/imagen/neuro-3d') =>
   render(
     <MemoryRouter initialEntries={[ruta]}>
       <Routes>
-        <Route path="/imagen/atlas-neuro" element={<AtlasNeuroPage />} />
-        <Route path="/pacientes/:patientId/atlas-neuro" element={<AtlasNeuroPage />} />
+        <Route path="/imagen/neuro-3d" element={<AtlasNeuroPage />} />
+        <Route path="/pacientes/:patientId/neuro-3d" element={<AtlasNeuroPage />} />
       </Routes>
     </MemoryRouter>,
   )
@@ -86,7 +86,7 @@ beforeEach(() => {
   Object.values(escena).forEach((f) => (f as ReturnType<typeof vi.fn>).mockClear?.())
 })
 
-describe('Atlas Neuro 3D', () => {
+describe('Neuro 3D', () => {
   it('siempre dice que es un modelo esquemático', async () => {
     abrir()
     expect(screen.getByText(AVISO_ESQUEMATICO)).toBeInTheDocument()
@@ -165,7 +165,7 @@ describe('Atlas Neuro 3D', () => {
     get.mockResolvedValue({ data: { first_name: 'JUAN', last_name: 'PÉREZ' } })
     let responder: (v: unknown) => void = () => undefined
     post.mockImplementation(() => new Promise((r) => (responder = r)))
-    abrir('/pacientes/7/atlas-neuro')
+    abrir('/pacientes/7/neuro-3d')
     expect(await screen.findByText('Paciente: JUAN PÉREZ')).toBeInTheDocument()
     await screen.findByRole('toolbar', { name: /Vistas predefinidas/ })
     await abrirGuardar()
@@ -186,7 +186,7 @@ describe('Atlas Neuro 3D', () => {
     permisos.actual = ['neuro3d.read', 'clinical_images.upload']
     get.mockResolvedValue({ data: {} })
     post.mockRejectedValue({ response: { status: 500, data: { detail: 'No fue posible guardar la imagen clínica' } } })
-    abrir('/pacientes/7/atlas-neuro')
+    abrir('/pacientes/7/neuro-3d')
     await screen.findByRole('toolbar', { name: /Vistas predefinidas/ })
     await abrirGuardar()
     fireEvent.click(ventana().getByLabelText(/Confirmo que existe consentimiento/))

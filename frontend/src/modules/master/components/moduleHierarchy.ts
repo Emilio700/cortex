@@ -75,11 +75,11 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
       { label: 'Perfil Médico', actions: ['doctor_profile.read', 'doctor_profile.update'] },
     ],
   },
-  // ── Imagen y señales (tramo C: Atlas Neuro 3D) ──
+  // ── Imagen y señales (tramo C: Neuro 3D) ──
   {
     label: 'Imagen y señales',
     submodules: [
-      { label: 'Atlas Neuro 3D', actions: ['neuro3d.read'] },
+      { label: 'Neuro 3D', actions: ['neuro3d.read'] },
     ],
   },
   {

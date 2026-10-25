@@ -56,9 +56,9 @@ export const ICONOS_DE_MODULO: Record<string, string[]> = {
     '/master/permisos': cilShieldAlt,
     '/master/roles': cilUserFollow,
     '/master/sucursales': cilBuilding,
-    // Atlas Neuro 3D (tramo C).
-    '/imagen/atlas-neuro': cil3d,
-    '/pacientes/:patientId/atlas-neuro': cil3d,
+    // Neuro 3D (tramo C).
+    '/imagen/neuro-3d': cil3d,
+    '/pacientes/:patientId/neuro-3d': cil3d,
 }
 
 const entradas = buildRouteEntries()

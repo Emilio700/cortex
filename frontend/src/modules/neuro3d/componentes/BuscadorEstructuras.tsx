@@ -62,7 +62,7 @@ export default function BuscadorEstructuras({ alElegir }: Props) {
         <ul id={lista} role="listbox" className="atlas-buscador__lista" aria-label="Estructuras encontradas">
           {resultados.length === 0 ? (
             <li className="atlas-buscador__vacio" role="option" aria-selected={false} aria-disabled="true">
-              No hay ninguna estructura con ese nombre en el atlas.
+              No hay ninguna estructura con ese nombre en Neuro 3D.
             </li>
           ) : (
             resultados.map((r, i) => (

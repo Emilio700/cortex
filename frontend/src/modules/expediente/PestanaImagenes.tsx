@@ -59,7 +59,7 @@ export default function PestanaImagenes({ patientId, appointmentId }: { patientI
   // los documentos del paciente, pero no los estudios: si se pintara el panel,
   // lo único que vería es un error de permiso en medio del expediente.
   const veEstudios = can('clinical_images.read')
-  // Atlas Neuro 3D (tramo C): se abre con el paciente en contexto, para marcar
+  // Neuro 3D (tramo C): se abre con el paciente en contexto, para marcar
   // su lesión y guardar la captura aquí mismo.
   const veAtlas = can('neuro3d.read')
   const [items, setItems] = useState<ImagenDePaciente[] | null>(null)
@@ -106,17 +106,17 @@ export default function PestanaImagenes({ patientId, appointmentId }: { patientI
       {veAtlas && (
         <div className="expediente-atlas d-flex flex-wrap align-items-center justify-content-between gap-2">
           <div>
-            <div className="fw-semibold">Atlas Neuro 3D</div>
+            <div className="fw-semibold">Neuro 3D</div>
             <div className="small text-body-secondary">
               Explícale al paciente su lesión sobre un modelo 3D del encéfalo y la columna.
             </div>
           </div>
           <Link
-            to={`/pacientes/${patientId}/atlas-neuro`}
+            to={`/pacientes/${patientId}/neuro-3d`}
             className="btn btn-primary btn-sm"
-            data-tour="expediente-atlas-neuro"
+            data-tour="expediente-neuro-3d"
           >
-            Atlas Neuro 3D
+            Neuro 3D
           </Link>
         </div>
       )}

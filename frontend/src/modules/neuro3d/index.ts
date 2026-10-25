@@ -1,5 +1,5 @@
 /**
- * Atlas Neuro 3D: superficie pública del módulo.
+ * Neuro 3D: superficie pública del módulo.
  *
  * - `dominio/`     catálogo anatómico, niveles, raíces, dermatomas, vistas,
  *                  capas y marcas. Puro y con pruebas.

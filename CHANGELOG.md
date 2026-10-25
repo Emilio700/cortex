@@ -65,8 +65,8 @@ Todos los cambios notables de Cortex. Formato basado en
   carga o algo truena antes de que exista la primera barrera de React, la pantalla
   dice qué pasó y ofrece recargar. Antes ese caso se veía como una página en blanco,
   sin mensaje y sin forma de saber por qué.
-<!-- Tramo C · Atlas Neuro 3D -->
-- **Atlas Neuro 3D** (`/imagen/atlas-neuro`, grupo «Imagen y señales» del menú, y
+<!-- Tramo C · Neuro 3D -->
+- **Neuro 3D** (`/imagen/neuro-3d`, grupo «Imagen y señales» del menú, y
   botón en la pestaña Imágenes del expediente): encéfalo con lóbulos, ínsula,
   cerebelo y tronco; ventrículos; polígono de Willis; vértebras C1 a sacro con
   discos, médula por segmentos y raíces, generados en código. Capas con opacidad,

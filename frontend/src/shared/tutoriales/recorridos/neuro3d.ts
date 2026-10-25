@@ -1,5 +1,5 @@
 /**
- * Recorrido del Atlas Neuro 3D (tramo C).
+ * Recorrido del Neuro 3D (tramo C).
  *
  * Como todos, no arranca solo: se pide desde el centro de ayuda. Los pasos de
  * la escena (vistas, separar vértebras) sólo aparecen cuando el modelo terminó
@@ -12,22 +12,22 @@ const CLINICO = [Role.DOCTOR, Role.ADMIN, Role.MASTER]
 
 export const RECORRIDOS_NEURO3D: Recorrido[] = [
   {
-    id: 'atlas-neuro-3d',
+    id: 'neuro-3d',
     version: 1,
-    titulo: 'Atlas Neuro 3D',
+    titulo: 'Neuro 3D',
     resumen:
       'Encéfalo y columna en 3D para explicarle al paciente su lesión: capas, vistas, raíces con su dermatoma y captura.',
     grupo: 'Consulta médica',
-    ruta: '/imagen/atlas-neuro',
+    ruta: '/imagen/neuro-3d',
     requiere: ['neuro3d.read'],
     roles: CLINICO,
-    irA: { ruta: '/imagen/atlas-neuro', nombre: 'Atlas Neuro 3D' },
+    irA: { ruta: '/imagen/neuro-3d', nombre: 'Neuro 3D' },
     pasos: [
       {
         elemento: 'atlas-aviso',
         titulo: 'Un modelo para explicar',
         texto:
-          'El atlas es un modelo <b>esquemático</b>: no es la anatomía de tu paciente ni sustituye su estudio de imagen. Sirve para enseñarle dónde está su lesión y qué hace la cirugía.',
+          'Neuro 3D es un modelo <b>esquemático</b>: no es la anatomía de tu paciente ni sustituye su estudio de imagen. Sirve para enseñarle dónde está su lesión y qué hace la cirugía.',
         lado: 'bottom',
       },
       {
@@ -83,14 +83,14 @@ export const RECORRIDOS_NEURO3D: Recorrido[] = [
         elemento: 'atlas-explicar',
         titulo: 'Explicar al paciente',
         texto:
-          'Marca un nivel (p. ej. «hernia L4-L5 paracentral derecha») y el atlas muestra la hernia, la raíz comprimida y su dermatoma. Las marcas no se guardan solas.',
+          'Marca un nivel (p. ej. «hernia L4-L5 paracentral derecha») y Neuro 3D muestra la hernia, la raíz comprimida y su dermatoma. Las marcas no se guardan solas.',
         lado: 'bottom',
       },
       {
         elemento: 'atlas-capturar',
         titulo: 'Captura',
         texto:
-          'Descarga un PNG con la vista, la silueta y el aviso de modelo esquemático, sin el nombre del paciente. Si abriste el atlas desde la pestaña <b>Imágenes</b> del expediente, también puedes <b>guardarla en el expediente</b> (con su consentimiento); solo dice «guardado» cuando el sistema lo confirmó.',
+          'Descarga un PNG con la vista, la silueta y el aviso de modelo esquemático, sin el nombre del paciente. Si abriste Neuro 3D desde la pestaña <b>Imágenes</b> del expediente, también puedes <b>guardarla en el expediente</b> (con su consentimiento); solo dice «guardado» cuando el sistema lo confirmó.',
         lado: 'bottom',
       },
     ],

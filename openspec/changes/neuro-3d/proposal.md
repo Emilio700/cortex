@@ -1,4 +1,4 @@
-# Atlas Neuro 3D
+# Neuro 3D
 
 ## Por qué
 
@@ -23,13 +23,13 @@ médicos (plan maestro, fila «Neuro 3D»).
     expediente con el endpoint de imágenes clínicas que ya existe.
   - Interfaz `CapaAnatomica` para cargar en la misma escena, más adelante, las
     mallas del paciente.
-- **Pantalla** `AtlasNeuroPage` en `/imagen/atlas-neuro` y
-  `/pacientes/:patientId/atlas-neuro`: capas con opacidad, búsqueda, siete vistas
+- **Pantalla** `AtlasNeuroPage` en `/imagen/neuro-3d` y
+  `/pacientes/:patientId/neuro-3d`: capas con opacidad, búsqueda, siete vistas
   (teclas 1–7), cortes, columna despiezada, pelado por capas, flujo opcional en
   Willis, modo «Explicar al paciente» con silueta de dermatomas, captura y aviso
   fijo de modelo esquemático. Sin WebGL, un mensaje claro.
-- **Menú**: grupo nuevo «Imagen y señales» con «Atlas Neuro 3D». **Expediente**:
-  botón «Atlas Neuro 3D» en la pestaña Imágenes.
+- **Menú**: grupo nuevo «Imagen y señales» con «Neuro 3D». **Expediente**:
+  botón «Neuro 3D» en la pestaña Imágenes.
 - **Permiso** `neuro3d.read` (médico, administración y master por omisión), en
   `MODULE_HIERARCHY` bajo «Imagen y señales». Sólo por permiso, sin respaldo por
   rol.

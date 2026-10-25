@@ -70,7 +70,7 @@ export const crearMarcaDeNivel = (datos: Omit<MarcaDeNivel, 'id' | 'tipo'>): Res
 }
 
 export const crearMarcaDeRegion = (datos: Omit<MarcaDeRegion, 'id' | 'tipo'>): ResultadoDeMarca<MarcaDeRegion> => {
-  if (!estructuraPorId(datos.estructura)) return { ok: false, error: 'Elige una estructura del atlas.' }
+  if (!estructuraPorId(datos.estructura)) return { ok: false, error: 'Elige una estructura del modelo.' }
   return { ok: true, marca: { ...datos, id: nuevoId(), tipo: 'region', nota: limpiarNota(datos.nota) } }
 }
 

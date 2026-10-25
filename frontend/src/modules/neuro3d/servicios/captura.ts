@@ -127,7 +127,7 @@ export async function componerCaptura(d: DatosDeCaptura): Promise<Blob> {
 /** Nombre del archivo: lleva la fecha, nunca el nombre del paciente. */
 export const nombreDeCaptura = (fecha = new Date()) => {
   const dos = (n: number) => String(n).padStart(2, '0')
-  return `atlas-neuro-3d-${fecha.getFullYear()}-${dos(fecha.getMonth() + 1)}-${dos(fecha.getDate())}-${dos(fecha.getHours())}${dos(fecha.getMinutes())}.png`
+  return `neuro-3d-${fecha.getFullYear()}-${dos(fecha.getMonth() + 1)}-${dos(fecha.getDate())}-${dos(fecha.getHours())}${dos(fecha.getMinutes())}.png`
 }
 
 export const descargar = (blob: Blob, nombre: string) => {

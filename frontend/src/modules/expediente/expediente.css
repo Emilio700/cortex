@@ -179,7 +179,7 @@ button.expediente-senal:focus-visible { outline: 3px solid var(--cui-primary, #2
 }
 
 /* Galería combinada de imágenes (plan 32, punto 6). */
-/* Atlas Neuro 3D (tramo C): la entrada desde la pestaña Imágenes, con un filo
+/* Neuro 3D (tramo C): la entrada desde la pestaña Imágenes, con un filo
    del azul de la marca para que se encuentre sin buscarla. */
 .expediente-atlas {
   padding: 0.75rem 1rem;

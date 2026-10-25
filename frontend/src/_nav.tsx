@@ -275,7 +275,7 @@ const _nav: NavItem[] = [
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
     roles: orMaster(Role.DOCTOR, Role.ADMIN),
   },
-  // ── Imagen y señales (tramo C: Atlas Neuro 3D) ──
+  // ── Imagen y señales (tramo C: Neuro 3D) ──
   // Grupo del plan maestro (§3). Otros tramos agregan aquí sus entradas
   // («Estudios por asignar», …) debajo del encabezado. Sólo por permiso, sin
   // respaldo por rol: es un módulo nuevo y una sesión vieja sin permisos no
@@ -289,8 +289,8 @@ const _nav: NavItem[] = [
   },
   {
     component: CNavItem,
-    name: 'Atlas Neuro 3D',
-    to: '/imagen/atlas-neuro',
+    name: 'Neuro 3D',
+    to: '/imagen/neuro-3d',
     requires: ['neuro3d.read'],
     icon: <CIcon icon={cil3d} customClassName="nav-icon" />,
     roles: [],

@@ -96,9 +96,9 @@ const PERMISOS_POR_DEFECTO: Record<Role, string[]> = {
  */
 const MENU_CON_PERMISOS: Record<Role, string[]> = {
   ...MENU_VIGENTE,
-  // Tramo C: el Atlas Neuro 3D («Imagen y señales») llega por neuro3d.read.
-  [Role.MASTER]: [...MENU_VIGENTE[Role.MASTER], '/imagen/atlas-neuro'],
-  [Role.ADMIN]: [...MENU_VIGENTE[Role.ADMIN], '/imagen/atlas-neuro'],
+  // Tramo C: el Neuro 3D («Imagen y señales») llega por neuro3d.read.
+  [Role.MASTER]: [...MENU_VIGENTE[Role.MASTER], '/imagen/neuro-3d'],
+  [Role.ADMIN]: [...MENU_VIGENTE[Role.ADMIN], '/imagen/neuro-3d'],
   [Role.DOCTOR]: [
     '/',
     '/secretaria/agenda',
@@ -108,7 +108,7 @@ const MENU_CON_PERMISOS: Record<Role, string[]> = {
     '/doctor/appointments',
     '/doctor/results',
     '/doctor/profile',
-    '/imagen/atlas-neuro',
+    '/imagen/neuro-3d',
   ],
 }
 

@@ -1,4 +1,4 @@
-"""Permiso del Atlas Neuro 3D (tramo C).
+"""Permiso del Neuro 3D (tramo C).
 
 El atlas es un modelo anatómico esquemático: no lee ni escribe nada del
 expediente. Por eso es un permiso aparte y no viene con ``clinical_images.read``:
@@ -14,7 +14,7 @@ from app.models.permission import (
 
 
 def test_el_permiso_existe_en_el_catalogo_con_descripcion_en_espanol():
-    assert ALL_PERMISSIONS["neuro3d.read"] == "Ver el atlas Neuro 3D"
+    assert ALL_PERMISSIONS["neuro3d.read"] == "Ver Neuro 3D"
 
 
 def test_lo_tienen_por_omision_el_medico_la_administracion_y_master():
