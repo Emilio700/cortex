@@ -293,7 +293,41 @@ del paciente: el detalle es el mensaje del error, no el expediente.
 
 Referencia: `frontend/src/shared/components/BarreraDeError.tsx` y `frontend/index.html`.
 
-### 4.11 Escalas clínicas: sugerir en pantalla, calcular en el servidor
+<!-- base-modulos-extra (tramo A) -->
+### 4.11 Módulos opcionales
+
+Los permisos dicen **quién** usa algo; los módulos dicen **si el consultorio lo
+usa**. Un módulo opcional (inventario, tareas, recepción desde equipos, dictado,
+IA…) se instala para todos y se enciende por consultorio en **Sistema → Módulos**.
+
+- **Backend:** el catálogo vive en `app/core/modulos.py` (`MODULOS_OPCIONALES`).
+  Los routers del módulo llevan `Depends(require_modulo("<id>"))`: apagado,
+  responde **404**, no 403, para que su información no se asome por otro camino.
+- **Frontend:** el ítem del menú y su ruta llevan el mismo `modulo: '<id>'`
+  (`_nav.tsx`, `routes.tsx`). El criterio es uno solo, `moduloPermitido`
+  (`shared/utils/modulos.ts`), y se suma al permiso: ningún permiso ni rol abre
+  un módulo apagado. Lo del núcleo no lleva `modulo`.
+- Si un módulo aparece dentro de otra pantalla (expediente, consulta), se
+  pregunta con `useAuth().tieneModulo('<id>')` y, apagado, **no se pinta**: no
+  quedan huecos ni botones que lleven a «no está activo».
+- **No se ofrece lo que no existe.** Un módulo entra a la pantalla de Módulos
+  solo con `disponible=True`, en la misma rama que lo construye. Sin ninguno, la
+  pantalla dice «Aún no hay módulos opcionales instalados».
+- **Apagar no borra.** Solo oculta; al volver a encenderlo, todo sigue ahí. Cada
+  cambio queda en la bitácora (`modulo.activado` / `modulo.desactivado`).
+- Un módulo que necesita un servicio (Orthanc, Whisper, IA, segmentador) no se
+  deja encender hasta que esté configurado; el interruptor queda deshabilitado
+  y dice cuál falta. Apagarlo siempre se puede.
+- El interruptor muestra lo que **confirmó el servidor**; «Guardado» aparece
+  solo después de su respuesta. Si falla, se queda como estaba y dice por qué.
+- **Estado de servicios** solo muestra lo que averigua el backend. La IA sale
+  «Configurado, sin probar» (ámbar): no se le hace una consulta de prueba porque
+  cuesta, y no se pinta en verde lo que nadie comprobó.
+
+Referencia: `frontend/src/modules/sistema/`.
+<!-- fin base-modulos-extra -->
+
+### 4.12 Escalas clínicas: sugerir en pantalla, calcular en el servidor
 
 <!-- Escalas neurológicas (Cortex, feat/escalas-neuro) -->
 

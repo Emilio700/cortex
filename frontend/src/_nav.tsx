@@ -18,9 +18,13 @@ import {
   cilBuilding,
   cilRoom,
   cilCloudUpload,
+  // base-modulos-extra
+  cilSettings,
+  cilApplications,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react-pro'
 import { Role } from './shared/types'
+import { moduloPermitido } from './shared/utils/modulos'
 
 // Helper: returns the given roles plus MASTER (who can see everything)
 const orMaster = (...roles: Role[]): Role[] => [...roles, Role.MASTER]
@@ -56,6 +60,12 @@ export type NavItem = {
    * queda sin poder trabajar. Se retira en la Fase 6 del plan 20.
    */
   roles?: Role[]
+  /**
+   * base-modulos-extra: id de un módulo opcional (`app/core/modulos.py`). Con
+   * él, el ítem solo aparece si el módulo está encendido en el consultorio,
+   * además del permiso. Lo del núcleo no lo lleva.
+   */
+  modulo?: string
 }
 
 /**
@@ -274,15 +284,48 @@ const _nav: NavItem[] = [
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
     roles: orMaster(Role.DOCTOR, Role.ADMIN),
   },
+  // ── base-modulos-extra (tramo A): grupo «Sistema» ──
+  // Respaldo por rol como el resto de Administración: admin y master.
+  {
+    component: CNavTitle,
+    name: 'Sistema',
+    requires: ['servicios.read', 'modulos.manage'],
+    roles: orMaster(Role.ADMIN),
+  },
+  {
+    component: CNavItem,
+    // «Estado de servicios» y no «Servicios»: ese nombre ya es el catálogo de
+    // servicios médicos de Administración.
+    name: 'Estado de servicios',
+    to: '/sistema/servicios',
+    requires: ['servicios.read'],
+    icon: <CIcon icon={cilApplications} customClassName="nav-icon" />,
+    roles: orMaster(Role.ADMIN),
+  },
+  {
+    component: CNavItem,
+    name: 'Módulos',
+    to: '/sistema/modulos',
+    requires: ['modulos.manage'],
+    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+    roles: orMaster(Role.ADMIN),
+  },
+  // ── fin base-modulos-extra ──
 ]
 
 /** Identidad de la sesión con la que se decide qué ítems se muestran. */
 export type NavAccess = {
   role?: Role
   permissions?: string[]
+  /** base-modulos-extra: módulos opcionales encendidos en el consultorio. */
+  modulos?: string[]
 }
 
-const itemPermitido = (item: NavItem, { role, permissions }: NavAccess): boolean => {
+const itemPermitido = (item: NavItem, { role, permissions, modulos }: NavAccess): boolean => {
+  // base-modulos-extra: el módulo apagado se oculta antes de mirar permisos. Es
+  // un Y, no un O: ningún permiso ni rol abre un módulo que el consultorio no usa.
+  if (!moduloPermitido(item.modulo, modulos)) return false
+
   // Sin restricción declarada, se muestra a cualquier sesión (p. ej. Inicio).
   if (!item.requires && !item.roles) return true
 

@@ -27,6 +27,8 @@ export interface RouteEntry {
     name?: ReactNode
     /** Ruta retirada que lleva a otra pantalla (ver `Route.redirigeA`). */
     redirigeA?: string
+    /** base-modulos-extra: módulo opcional que debe estar encendido. */
+    modulo?: string
     /** Path split into segments, e.g. ['secretaria','pacientes',':patientId','historial'] */
     segments: string[]
     /** True when the pattern has at least one `:param` segment */
@@ -49,6 +51,7 @@ export function buildRouteEntries(): RouteEntry[] {
                     roles: (r.roles as Role[] | undefined),
                     name: r.name,
                     redirigeA: r.redirigeA,
+                    modulo: r.modulo,
                     segments,
                     hasParams: segments.some((s) => s.startsWith(':')),
                 })

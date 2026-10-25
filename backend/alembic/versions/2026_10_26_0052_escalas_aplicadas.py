@@ -8,20 +8,18 @@ Los permisos nuevos (``clinical_scales.read`` y ``clinical_scales.write``) viven
 en código; como en la 0047, se sube ``users.permissions_version`` para que una
 sesión abierta recargue sus permisos y vea la sección sin cerrar sesión.
 
-Encadenamiento: nace de la 0050 en paralelo con la 0051 de módulos opcionales
-(``chore/base-modulos-extra``). Si se integra después de ella, su
-``down_revision`` pasa a la 0051 (acordado en COORDINACION.md); la prueba
-``test_alembic_una_cabeza.py`` lo exige.
+Encadenamiento: va después de la 0051 de módulos opcionales
+(``chore/base-modulos-extra``), que se integró primero.
 
 Revision ID: 2026_10_26_0052
-Revises: 2026_10_25_0050
+Revises: 2026_10_26_0051
 """
 import sqlalchemy as sa
 
 from alembic import op
 
 revision = "2026_10_26_0052"
-down_revision = "2026_10_25_0050"
+down_revision = "2026_10_26_0051"
 branch_labels = None
 depends_on = None
 

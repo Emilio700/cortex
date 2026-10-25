@@ -91,6 +91,9 @@ export const MODULE_HIERARCHY: ModuleDef[] = [
       { label: 'Notificaciones', actions: ['notifications.read'] },
       { label: 'Configuración Global', actions: ['settings.global'] },
       { label: 'Gestión de Permisos', actions: ['permissions.manage'] },
+      // base-modulos-extra (tramo A)
+      { label: 'Módulos opcionales', actions: ['modulos.manage'] },
+      { label: 'Estado de servicios', actions: ['servicios.read'] },
     ],
   },
 ]

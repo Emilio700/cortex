@@ -94,6 +94,9 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "documents.upload",
         "medical_certificates.read",
         "medical_history.read",
+        # Por decisión (base-modulos-extra): administración enciende y apaga los
+        # módulos opcionales del consultorio y ve el estado de los servicios.
+        "modulos.manage",
         "notifications.read",
         "patients.create",
         "patients.read",
@@ -117,6 +120,7 @@ PERMISOS_POR_ROL: dict[str, set[str]] = {
         "services.delete",
         "services.read",
         "services.update",
+        "servicios.read",
         "soap_notes.read",
         "triage.create",
         "triage.read",

@@ -73,6 +73,14 @@ Todos los cambios notables de Cortex. Formato basado en
   guardar; una escala mal capturada se anula con motivo, no se borra. Permisos
   `clinical_scales.read`/`write` para el médico. Migración 0052. Lo marcado
   «(verificar)» espera revisión médica.
+<!-- base-modulos-extra (tramo A) -->
+- Base para los módulos extra: módulos opcionales que se encienden por consultorio
+  en **Sistema → Módulos** (tabla `tenant_modulos`, migración 0051; apagar no borra
+  datos y cada cambio queda en la bitácora), pantalla **Estado de servicios**
+  (Orthanc, Whisper, Presidio, segmentador e IA), permisos `modulos.manage` y
+  `servicios.read`, variables opcionales de esos servicios, perfiles de Docker
+  `imagen` e `ia`, y la carpeta `openspec/` con su primer cambio. Todavía no hay
+  ningún módulo opcional instalado.
 
 ### Cambiado
 - El visor ocupa la altura de la pantalla en vez de ser un cuadrado, y su barra se

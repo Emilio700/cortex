@@ -42,6 +42,9 @@ export const MENU_VIGENTE: Record<Role, string[]> = {
     '/doctor/appointments',
     '/doctor/results',
     '/doctor/profile',
+    // base-modulos-extra: grupo «Sistema».
+    '/sistema/servicios',
+    '/sistema/modulos',
   ],
   [Role.ADMIN]: [
     '/',
@@ -59,6 +62,9 @@ export const MENU_VIGENTE: Record<Role, string[]> = {
     // —una agenda «mía» de administración no existe— y la puerta abría en error.
     '/doctor/results',
     '/doctor/profile',
+    // base-modulos-extra: grupo «Sistema».
+    '/sistema/servicios',
+    '/sistema/modulos',
   ],
   [Role.SECRETARIA]: [
     '/',
