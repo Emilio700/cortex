@@ -32,6 +32,15 @@ describe('capas', () => {
     expect(capasEfectivas(estado, 3).ventriculos).toEqual({ visible: true, opacidad: 1 })
   })
 
+  it('las venas y senos son una capa propia que el pelado también descubre', () => {
+    expect(CAPAS.find((c) => c.id === 'venas')!.nombre).toBe('Venas y senos')
+    const estado = estadoInicialDeCapas()
+    expect(estado.venas.visible).toBe(true)
+    estado.venas.visible = false
+    expect(capasEfectivas(estado, 0).venas.visible).toBe(false)
+    expect(capasEfectivas(estado, 3).venas).toEqual({ visible: true, opacidad: 1 })
+  })
+
   it('una capa apagada sigue apagada aunque se pele', () => {
     const estado = estadoInicialDeCapas()
     estado.columna.visible = false

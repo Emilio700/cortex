@@ -9,6 +9,7 @@
  */
 import type * as THREE from 'three'
 import type { CapaId } from '../../dominio/capas'
+import type { Tejido } from '../materiales/tejidos'
 
 /** Cómo se ve una pieza: decide el material (brillo, translucidez, emisión). */
 export type Acabado = 'organo' | 'hueso' | 'disco' | 'nervio' | 'vaso' | 'liquido' | 'envoltura' | 'via' | 'lesion'
@@ -21,6 +22,12 @@ export interface PiezaAnatomica {
   /** Token de color (`--cx-anat-*`). */
   color: string
   acabado: Acabado
+  /**
+   * Tejido del modo Realista. Opcional: si falta, la escena lo deduce del
+   * acabado y la capa (`tejidoDePieza`). Una capa con mallas detalladas puede
+   * precisarlo (p. ej. «sustancia-blanca» en un corte del encéfalo).
+   */
+  tejido?: Tejido
   /** Dónde se cuelga su rótulo. */
   ancla?: THREE.Vector3
   /** Columna despiezada: cuánto se desplaza la pieza entera (rígida). */

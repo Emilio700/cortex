@@ -24,6 +24,7 @@ import {
 } from '../../dominio/columna'
 import { idDeRaiz } from '../../dominio/catalogo'
 import type { PiezaAnatomica } from './tipos'
+import type { Detalle } from './encefalo'
 import { aMarco, campana, elipsoide, fusionar, limitar, pasoSuave, tuboVariable } from './geometria'
 import { ajustarAlturas, crearDesplazamiento, crearJuntas, crearLongitud, resolverAjuste, trazarEje } from './ejeColumna'
 import { ajusteVacio, type AjusteDelEje } from '../../dominio/ajusteRadiografico'
@@ -153,12 +154,18 @@ export const crearModeloColumna = (ajuste?: AjusteDelEje | null): ModeloColumna 
 
 // ── Piezas de una vértebra (en su marco local: y arriba, z adelante) ───────
 
+/**
+ * Resolución de las cápsulas: en Realista son más redondas. Se fija al empezar
+ * a construir la columna (las piezas se generan de una en una, sin hilos).
+ */
+let capsulaFina = false
+
 /** Cápsula de `a` a `b`, aplanada: `grosor` a lo largo de `eje` y `alto` en la tercera dirección. */
 const capsula = (a: THREE.Vector3, b: THREE.Vector3, r: number, eje: THREE.Vector3, grosor = 1, alto = 1) => {
   const dir = new THREE.Vector3().subVectors(b, a)
   const l = Math.max(0.01, dir.length())
   dir.normalize()
-  const g = new THREE.CapsuleGeometry(r, l, 4, 10)
+  const g = capsulaFina ? new THREE.CapsuleGeometry(r, l, 6, 18) : new THREE.CapsuleGeometry(r, l, 4, 10)
   g.scale(grosor, 1, alto)
   const ex = eje.clone().sub(dir.clone().multiplyScalar(eje.dot(dir)))
   if (ex.lengthSq() < 1e-6) ex.set(dir.y, -dir.x, 0)
@@ -170,8 +177,12 @@ const capsula = (a: THREE.Vector3, b: THREE.Vector3, r: number, eje: THREE.Vecto
   return g
 }
 
-/** Cuerpo vertebral (o disco): cilindro de cintura estrecha, aplanado por detrás. */
-const cuerpo = (ancho: number, fondo: number, alto: number, cintura = 0.9, borde = 0.12) => {
+/**
+ * Cuerpo vertebral (o disco): cilindro de cintura estrecha, aplanado por detrás.
+ * Con `concavo`, la pared posterior se hunde en la línea media (la cara del
+ * conducto), como en la vértebra real.
+ */
+const cuerpo = (ancho: number, fondo: number, alto: number, cintura = 0.9, borde = 0.12, concavo = false) => {
   const h = alto / 2
   const perfil = [
     new THREE.Vector2(0, -h),
@@ -182,12 +193,12 @@ const cuerpo = (ancho: number, fondo: number, alto: number, cintura = 0.9, borde
     new THREE.Vector2(0.86, h),
     new THREE.Vector2(0, h),
   ]
-  const g = new THREE.LatheGeometry(perfil, 36)
+  const g = new THREE.LatheGeometry(perfil, capsulaFina ? 64 : 36)
   const pos = g.getAttribute('position') as THREE.BufferAttribute
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i) * (ancho / 2)
     let z = pos.getZ(i) * (fondo / 2)
-    if (z < 0) z *= 0.72
+    if (z < 0) z *= 0.72 * (concavo ? 1 - 0.28 * campana(pos.getX(i), 0.38) : 1)
     pos.setX(i, x)
     pos.setZ(i, z)
   }
@@ -198,50 +209,113 @@ const cuerpo = (ancho: number, fondo: number, alto: number, cintura = 0.9, borde
 const X = v3(1, 0, 0)
 const Y = v3(0, 1, 0)
 
+/**
+ * Carilla articular: un disco aplanado en `centro`, con su cara mirando hacia
+ * `normal`. Es lo que se ve de la articulación interapofisaria.
+ */
+const carilla = (centro: THREE.Vector3, normal: THREE.Vector3, ancho: number, alto: number) => {
+  const g = new THREE.SphereGeometry(1, capsulaFina ? 20 : 12, capsulaFina ? 12 : 8)
+  g.scale(ancho, alto, 0.09)
+  g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal.clone().normalize()))
+  g.translate(centro.x, centro.y, centro.z)
+  return g
+}
+
+/**
+ * Apófisis transversa de una cervical con su agujero transverso (por donde
+ * sube la arteria vertebral): un anillo entre el cuerpo y el pedículo, que
+ * termina en el tubérculo. (verificar) Medidas aproximadas, sin la anatomía
+ * fina de los tubérculos anterior y posterior.
+ */
+const transversaCervical = (s: number, rc: number) => {
+  const anillo = new THREE.TorusGeometry(0.3, 0.12, 10, 22)
+  anillo.rotateX(Math.PI / 2)
+  anillo.scale(1.2, 1, 1)
+  anillo.translate(s * (rc + 0.82), -0.02, 0.48)
+  const tuberculo = capsula(v3(s * (rc + 1.12), -0.04, 0.5), v3(s * (rc + 1.5), -0.1, 0.55), 0.15, Y, 1, 0.75)
+  return [anillo, tuberculo]
+}
+
 /** Una vértebra típica (C3–L5) en su marco local, con el conducto en el origen. */
-const vertebraTipica = (n: MedidasDeNivel, indice: number): THREE.BufferGeometry => {
+const vertebraTipica = (n: MedidasDeNivel, indice: number, detalle: Detalle = 'estandar'): THREE.BufferGeometry => {
   const rc = n.conducto
   const h = n.cuerpo
   const zc = rc + 0.12 + (n.fondo / 2) * 0.72
+  const fino = detalle === 'realista'
   const piezas: THREE.BufferGeometry[] = []
-  const c = cuerpo(n.ancho, n.fondo, h)
+  const c = cuerpo(n.ancho, n.fondo, h, 0.9, 0.12, fino)
   c.translate(0, 0, zc)
   piezas.push(c)
 
   const lumbar = n.region === 'lumbar'
   const toracica = n.region === 'toracica'
+  const cervical = n.region === 'cervical'
   const escala = lumbar ? 1.25 : toracica ? 1 : 0.8
   const rPed = 0.26 * escala
   for (const s of [-1, 1]) {
     // Pedículo: del cuerpo hacia atrás.
     piezas.push(capsula(v3(s * rc * 0.78, 0.05, rc + 0.3), v3(s * (rc + 0.18), 0.05, -rc * 0.25), rPed, Y, 1, 1.25))
-    // Macizo articular: carillas de arriba y de abajo.
-    piezas.push(capsula(v3(s * (rc + 0.3), h * 0.5 + 0.3, -rc * 0.25), v3(s * (rc + 0.3), -h * 0.5 - 0.25, -rc * 0.5), 0.3 * escala, X, 1, 1))
-    // Lámina: cierra el arco por detrás.
-    piezas.push(capsula(v3(s * (rc + 0.22), 0, -rc * 0.35), v3(0, -0.1 * escala, -(rc + 0.35)), 0.24 * escala, new THREE.Vector3(s * 0.4, 0, 1), 0.65, 1.9))
+    if (!fino) {
+      // Macizo articular: carillas de arriba y de abajo.
+      piezas.push(capsula(v3(s * (rc + 0.3), h * 0.5 + 0.3, -rc * 0.25), v3(s * (rc + 0.3), -h * 0.5 - 0.25, -rc * 0.5), 0.3 * escala, X, 1, 1))
+      // Lámina: cierra el arco por detrás.
+      piezas.push(capsula(v3(s * (rc + 0.22), 0, -rc * 0.35), v3(0, -0.1 * escala, -(rc + 0.35)), 0.24 * escala, new THREE.Vector3(s * 0.4, 0, 1), 0.65, 1.9))
+    } else {
+      // Istmo (pars) entre las dos apófisis articulares.
+      piezas.push(capsula(v3(s * (rc + 0.28), h * 0.12, -rc * 0.3), v3(s * (rc + 0.22), -h * 0.22, -rc * 0.5), 0.22 * escala, X, 0.9, 1))
+      // Apófisis articular superior y su carilla. La carilla mira hacia atrás y
+      // adentro en la lumbar, hacia atrás en la torácica y hacia arriba y atrás
+      // en la cervical (verificar: orientación típica, varía por nivel).
+      const sup = v3(s * (rc + (lumbar ? 0.42 : 0.32)), h * 0.5 + 0.32 * escala, -rc * (lumbar ? 0.2 : 0.3))
+      piezas.push(capsula(v3(s * (rc + 0.3), h * 0.1, -rc * 0.28), sup, 0.2 * escala, X, 1, 1))
+      const normalSup = (lumbar ? v3(-s * 0.75, 0.1, -0.65) : toracica ? v3(0, 0.35, -1) : v3(0, 0.75, -0.65)).normalize()
+      piezas.push(carilla(sup.clone().addScaledVector(normalSup, 0.12 * escala), normalSup, 0.3 * escala, 0.36 * escala))
+      // Apófisis articular inferior y su carilla: mira al revés, hacia la superior de abajo.
+      const inf = v3(s * (rc + (lumbar ? 0.18 : 0.3)), -h * 0.5 - 0.3 * escala, -rc * (lumbar ? 0.72 : 0.55))
+      piezas.push(capsula(v3(s * (rc + 0.22), -h * 0.15, -rc * 0.5), inf, 0.19 * escala, X, 1, 1))
+      piezas.push(carilla(inf.clone().addScaledVector(normalSup, -0.12 * escala), normalSup.clone().negate(), 0.28 * escala, 0.34 * escala))
+      // Lámina: una placa más delgada y alta que cierra el arco por detrás.
+      piezas.push(capsula(v3(s * (rc + 0.2), 0.05, -rc * 0.4), v3(0, -0.12 * escala, -(rc + 0.32)), 0.2 * escala, new THREE.Vector3(s * 0.4, 0, 1), 0.5, 2.4))
+    }
     // Apófisis transversa.
+    if (fino && cervical) {
+      piezas.push(...transversaCervical(s, rc))
+      continue
+    }
     const transversa = lumbar
       ? [v3(s * (rc + 0.3), 0, -0.1), v3(s * (rc + 2.5), 0.05, 0.15), 0.2]
       : toracica
         ? [v3(s * (rc + 0.3), 0.15, -0.35), v3(s * (rc + 1.8), 0.4, -1.05), 0.27]
         : [v3(s * (rc + 0.3), 0, 0.15), v3(s * (rc + 1.2), -0.05, 0.35), 0.2]
     piezas.push(capsula(transversa[0] as THREE.Vector3, transversa[1] as THREE.Vector3, transversa[2] as number, Y, 0.75, 1))
+    if (fino && toracica && indice < 17) {
+      // Carilla costal de la transversa, en su punta (T11 y T12 no la tienen).
+      const punta = transversa[1] as THREE.Vector3
+      piezas.push(carilla(punta.clone().add(v3(0, 0, 0.22)), v3(s * 0.3, 0, 1), 0.2, 0.2))
+    }
   }
   // Apófisis espinosa: corta y bífida en el cuello (C7 larga), larga e inclinada
   // en el tórax, horizontal y en hacha en la columna lumbar.
   const raiz = v3(0, -0.1 * escala, -(rc + 0.35))
-  if (n.region === 'cervical') {
+  if (cervical) {
     const prominente = n.id === 'C7'
     const largo = prominente ? 1.9 : 1.05
     const punta = raiz.clone().add(v3(0, -largo * 0.42, -largo))
-    if (prominente) piezas.push(capsula(raiz, punta, 0.24, X, 0.75, 1.2))
-    else for (const s of [-1, 1]) piezas.push(capsula(raiz, punta.clone().add(v3(s * 0.28, 0, 0)), 0.17, X, 1, 1))
+    if (prominente) {
+      piezas.push(capsula(raiz, punta, 0.24, X, 0.75, 1.2))
+      if (fino) piezas.push(elipsoide(punta, 0.28, 0.24, 0.22, 16, 12))
+    } else for (const s of [-1, 1]) piezas.push(capsula(raiz, punta.clone().add(v3(s * 0.28, 0, 0)), 0.17, X, 1, 1))
   } else if (toracica) {
     const angulo = THREE.MathUtils.degToRad(indice < 10 ? 42 : indice < 16 ? 58 : 35)
     const largo = 2.5
-    piezas.push(capsula(raiz, raiz.clone().add(v3(0, -Math.sin(angulo) * largo, -Math.cos(angulo) * largo)), 0.22, X, 0.8, 1.3))
+    const punta = raiz.clone().add(v3(0, -Math.sin(angulo) * largo, -Math.cos(angulo) * largo))
+    piezas.push(capsula(raiz, punta, 0.22, X, 0.8, 1.3))
+    // El tubérculo de la punta, el que se palpa bajo la piel.
+    if (fino) piezas.push(elipsoide(punta, 0.24, 0.3, 0.22, 16, 12))
   } else {
     piezas.push(capsula(raiz, raiz.clone().add(v3(0, -0.25, -2.3)), 0.32, X, 0.55, 2.3))
+    // En hacha: la punta se ensancha hacia arriba y hacia abajo.
+    if (fino) piezas.push(capsula(raiz.clone().add(v3(0, 0.35, -2.15)), raiz.clone().add(v3(0, -0.85, -2.3)), 0.24, X, 0.6, 1))
   }
   return fusionar(piezas)
 }
@@ -249,7 +323,7 @@ const vertebraTipica = (n: MedidasDeNivel, indice: number): THREE.BufferGeometry
 /** Atlas (C1): un anillo con masas laterales, sin cuerpo. */
 const atlas = (): THREE.BufferGeometry => {
   const piezas: THREE.BufferGeometry[] = []
-  const anillo = new THREE.TorusGeometry(1.85, 0.27, 12, 48)
+  const anillo = capsulaFina ? new THREE.TorusGeometry(1.85, 0.27, 18, 96) : new THREE.TorusGeometry(1.85, 0.27, 12, 48)
   anillo.rotateX(Math.PI / 2)
   anillo.scale(1, 1, 0.88)
   anillo.translate(0, 0, 0.6)
@@ -264,8 +338,8 @@ const atlas = (): THREE.BufferGeometry => {
 }
 
 /** Axis (C2): vértebra típica con el diente (odontoides) hacia arriba. */
-const axis = (n: MedidasDeNivel): THREE.BufferGeometry => {
-  const base = vertebraTipica(n, 1)
+const axis = (n: MedidasDeNivel, detalle: Detalle): THREE.BufferGeometry => {
+  const base = vertebraTipica(n, 1, detalle)
   const zc = n.conducto + 0.12 + (n.fondo / 2) * 0.72
   const diente = capsula(v3(0, n.cuerpo * 0.4, zc), v3(0, n.cuerpo * 0.5 + 1.25, zc - 0.05), 0.42, X, 1, 1)
   return fusionar([base, diente])
@@ -293,8 +367,8 @@ const sacro = (modelo: ModeloColumna, indice: number) => {
     puntos,
     radio: grueso,
     escalaLateral: (t) => ancho(t) / grueso(t),
-    segmentos: 40,
-    radiales: 36,
+    segmentos: capsulaFina ? 64 : 40,
+    radiales: capsulaFina ? 64 : 36,
   })
   const coxis = tuboVariable({
     // El cóccix: corto (unos 3 cm), del vértice del sacro hacia abajo y adelante.
@@ -311,9 +385,10 @@ const colocar = (g: THREE.BufferGeometry, k: MarcoColumna) => aMarco(g, k.centro
 
 // ── Construcción ───────────────────────────────────────────────────────────
 
-export const construirColumna = (modelo: ModeloColumna): PiezaAnatomica[] => {
+export const construirColumna = (modelo: ModeloColumna, detalle: Detalle = 'estandar'): PiezaAnatomica[] => {
   const piezas: PiezaAnatomica[] = []
   const m = modelo.medidas
+  capsulaFina = detalle === 'realista'
 
   m.forEach((n, i) => {
     const fc = modelo.fraccionDeCuerpo(i)
@@ -337,7 +412,7 @@ export const construirColumna = (modelo: ModeloColumna): PiezaAnatomica[] => {
       return
     }
     const k = modelo.marco(i + fc * 0.5)
-    const geo = colocar(n.id === 'C1' ? atlas() : n.id === 'C2' ? axis(n) : vertebraTipica(n, i), k)
+    const geo = colocar(n.id === 'C1' ? atlas() : n.id === 'C2' ? axis(n, detalle) : vertebraTipica(n, i, detalle), k)
     const ancla = modelo.punto(i + fc * 0.5, (n.ancho || 3.4) / 2 + 0.9, n.conducto + 0.6)
     piezas.push({
       estructura: `vertebra-${n.id}`,
@@ -373,6 +448,7 @@ export const construirColumna = (modelo: ModeloColumna): PiezaAnatomica[] => {
       anclaDespiece: anclaDisco.clone().add(dd),
     })
   })
+  capsulaFina = false
   return piezas
 }
 

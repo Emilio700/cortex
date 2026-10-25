@@ -12,6 +12,7 @@ export type CapaId =
   | 'encefalo'
   | 'ventriculos'
   | 'vasos'
+  | 'venas'
   | 'columna'
   | 'medula'
   | 'raices'
@@ -35,6 +36,13 @@ export const CAPAS: DefinicionDeCapa[] = [
   { id: 'encefalo', nombre: 'Encéfalo', ayuda: 'Lóbulos, ínsula, cerebelo y tronco.', visible: true, opacidad: 1 },
   { id: 'ventriculos', nombre: 'Ventrículos', ayuda: 'Cavidades con líquido cefalorraquídeo.', visible: true, opacidad: 1 },
   { id: 'vasos', nombre: 'Vasos', ayuda: 'Polígono de Willis y sus arterias.', visible: true, opacidad: 1 },
+  {
+    id: 'venas',
+    nombre: 'Venas y senos',
+    ayuda: 'Senos venosos de la duramadre, yugulares internas y venas puenteantes.',
+    visible: true,
+    opacidad: 1,
+  },
   { id: 'columna', nombre: 'Columna', ayuda: 'Vértebras C1 a sacro y discos.', visible: true, opacidad: 1 },
   { id: 'medula', nombre: 'Médula', ayuda: 'Médula espinal por segmentos y cono medular.', visible: true, opacidad: 1 },
   { id: 'raices', nombre: 'Raíces', ayuda: 'Raíces nerviosas por nivel y cola de caballo.', visible: true, opacidad: 1 },
@@ -66,9 +74,9 @@ export const etapaDelPelado = (v: number): string =>
 
 /**
  * Multiplicadores del pelado: la piel se va de 0 a 1, el cráneo de 1 a 2 y el
- * encéfalo se vuelve translúcido de 2 a 3. Ventrículos y vasos se descubren en
- * el último tramo aunque su capa estuviera apagada: es lo que el pelado promete
- * enseñar.
+ * encéfalo se vuelve translúcido de 2 a 3. Ventrículos y vasos (arterias y
+ * venas) se descubren en el último tramo aunque su capa estuviera apagada: es lo
+ * que el pelado promete enseñar.
  */
 export const multiplicadoresDelPelado = (v: number) => ({
   piel: recortar(1 - v),
@@ -92,7 +100,7 @@ export const capasEfectivas = (estado: EstadoDeCapas, pelado: number): Record<Ca
     if (id === 'piel') o *= m.piel
     if (id === 'craneo') o *= m.craneo
     if (id === 'encefalo') o *= m.encefalo
-    if ((id === 'ventriculos' || id === 'vasos') && m.revelar > 0) o = Math.max(o, m.revelar)
+    if ((id === 'ventriculos' || id === 'vasos' || id === 'venas') && m.revelar > 0) o = Math.max(o, m.revelar)
     salida[id] = { visible: o > 0.01, opacidad: recortar(o) }
   }
   return salida
