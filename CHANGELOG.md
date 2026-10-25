@@ -86,6 +86,17 @@ Todos los cambios notables de Cortex. Formato basado en
   guardar; una escala mal capturada se anula con motivo, no se borra. Permisos
   `clinical_scales.read`/`write` para el médico. Migración 0052. Lo marcado
   «(verificar)» espera revisión médica.
+<!-- Modelo 3D desde TC (feat/modelo-3d-desde-tc) -->
+- **Modelo 3D del paciente desde su TC** (módulo opcional «Neuro 3D del paciente»):
+  en el visor de una TC o RM, «Generar modelo 3D» manda la serie a un servicio
+  segmentador aparte (`servicios/segmentador/`, perfil `ia`: dcm2niix,
+  TotalSegmentator con la tarea abierta `total` y mallas en GLB, mm y LPS) y dice
+  sólo lo que confirma el servidor: procesando, listo o no se pudo, con motivo. En
+  Neuro 3D con el paciente en contexto, el selector «Origen del modelo» muestra sus
+  vértebras C1–S1, médula y conducto aproximado en lugar de los esquemáticos, con el
+  aviso de reconstrucción automática y la marca de revisado. Tabla
+  `imaging_modelos_3d` (migración 0053) y permiso `neuro3d.generar_modelo` para el
+  médico. `SEGMENTADOR_FALSO=1` da una columna sintética para probar sin GPU.
 <!-- base-modulos-extra (tramo A) -->
 - Base para los módulos extra: módulos opcionales que se encienden por consultorio
   en **Sistema → Módulos** (tabla `tenant_modulos`, migración 0051; apagar no borra
