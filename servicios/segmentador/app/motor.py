@@ -63,6 +63,16 @@ MENSAJES = {
     ),
     "tiempo": "La segmentación tardó más de lo permitido y se detuvo.",
 }
+MENSAJES_YA_RAPIDO = {
+    "sin_vram": (
+        "La tarjeta de video se quedó sin memoria con este estudio, aun con el modelo rápido (3 mm). "
+        "Prueba con una serie de menos cortes o pide que se configure el respaldo en CPU."
+    ),
+    "sin_ram": (
+        "El servidor del segmentador se quedó sin memoria RAM con este estudio, aun con el modelo "
+        "rápido (3 mm). Hace falta darle más memoria (Docker) o usar una serie de menos cortes."
+    ),
+}
 
 TIEMPO_DCM2NIIX = 300
 
@@ -277,7 +287,10 @@ def segmentar(nifti: Path, trabajo: Path, tarea: Tarea, *, ejecutar=correr_paso)
             continue
         intentos.append(f"{etiqueta}:ok")
         return Corrida(salida, es_rapido, "cuda" if en == "gpu" else "cpu", intentos, vram)
-    assert ultimo is not None
+    assert ultimo is not None and actual is not None
+    if actual[0] and ultimo.clave in MENSAJES_YA_RAPIDO:
+        # No se le sugiere al médico «prueba el modelo rápido» si ya se probó.
+        raise FaltaRecurso(ultimo.clave, MENSAJES_YA_RAPIDO[ultimo.clave])
     raise FaltaRecurso(ultimo.clave, str(ultimo))
 
 

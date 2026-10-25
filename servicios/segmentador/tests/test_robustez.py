@@ -183,6 +183,8 @@ def test_sin_ram_no_se_reintenta_en_cpu(real, monkeypatch):
     r = _segmentar(real)
     assert r.status_code == 503
     assert "RAM" in r.json()["detail"]
+    # Ya era el modelo rápido: no se le sugiere probarlo.
+    assert "aun con el modelo rápido" in r.json()["detail"]
     assert llamadas == [("total", True, "gpu")]
 
 
