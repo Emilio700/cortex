@@ -22,6 +22,11 @@
   align-items: start;
 }
 
+/* Sin volumen posible, la escena con su mensaje ocupa todo el ancho. */
+.vol3d-cuerpo--solo {
+  grid-template-columns: 1fr;
+}
+
 @media (max-width: 992px) {
   .vol3d-cuerpo {
     grid-template-columns: 1fr;
@@ -69,6 +74,11 @@
 .vol3d-capa--mensaje {
   flex-direction: column;
   background: rgba(2, 8, 22, 0.85);
+}
+
+.vol3d-capa--mensaje h3 {
+  /* Sobre la escena negra: el color de encabezado del tema no se lee. */
+  color: #f1f5f9;
 }
 
 .vol3d-capa--mensaje p {

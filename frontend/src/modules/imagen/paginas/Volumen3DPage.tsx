@@ -324,6 +324,8 @@ export default function Volumen3DPage() {
   const rutaVisor = `/pacientes/${patientId}/estudios/${studyId}`
   const listo = estado.tipo === 'listo'
   const conEscena = estado.tipo === 'cargando' || estado.tipo === 'listo'
+  // Si la serie no forma volumen o el equipo no pinta 3D, los controles sólo estorbarían.
+  const sinControles = estado.tipo === 'no-apta' || estado.tipo === 'sin-webgl'
 
   return (
     <div className="visor-pagina vol3d">
@@ -359,7 +361,7 @@ export default function Volumen3DPage() {
         </CAlert>
       )}
 
-      <div className="vol3d-cuerpo">
+      <div className={`vol3d-cuerpo${sinControles ? ' vol3d-cuerpo--solo' : ''}`}>
         <section className="vol3d-central">
           <div className="vol3d-escena" data-tour="vol3d-escena">
             <div className="vol3d-lienzo" ref={refEscena} />
@@ -429,7 +431,8 @@ export default function Volumen3DPage() {
           </div>
         </section>
 
-        <aside className="visor-panel vol3d-panel" aria-label="Controles del render 3D">
+        {!sinControles && (
+          <aside className="visor-panel vol3d-panel" aria-label="Controles del render 3D">
           <div className="vol3d-grupo" data-tour="vol3d-preajuste">
             <label className="visor-panel__titulo" htmlFor="vol3d-preajuste">
               Preajuste
@@ -581,7 +584,8 @@ export default function Volumen3DPage() {
                 }`
               : null}
           </div>
-        </aside>
+          </aside>
+        )}
       </div>
     </div>
   )
