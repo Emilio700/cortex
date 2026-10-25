@@ -27,6 +27,8 @@ from app.models.document import Document
 from app.models.espejo_legacy import VinculoLegacy
 # Escalas neurológicas (Cortex, feat/escalas-neuro)
 from app.models.escala_aplicada import EscalaAplicada
+# Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc)
+from app.models.imaging_modelo_3d import EstadoModelo3D, ImagingModelo3D
 from app.models.imaging import (
     ImagingAnnotation,
     ImagingKeyImage,
@@ -139,4 +141,7 @@ __all__ = [
     # Escalas neurológicas (Cortex, feat/escalas-neuro)
     "EscalaAplicada",
     "TenantModulo",
+    # Modelo 3D desde TC (Cortex, feat/modelo-3d-desde-tc)
+    "EstadoModelo3D",
+    "ImagingModelo3D",
 ]

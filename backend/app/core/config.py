@@ -103,6 +103,10 @@ class Settings(BaseSettings):
     WHISPER_URL: str = ""
     PRESIDIO_URL: str = ""
     SEGMENTADOR_URL: str = ""
+    # Modelo 3D desde TC (feat/modelo-3d-desde-tc): cuánto se espera al
+    # segmentador. En CPU una TC de columna tarda minutos; pasado esto, el
+    # trabajo se da por fallido con su motivo en vez de quedarse «procesando».
+    SEGMENTADOR_TIEMPO_LIMITE_SEGUNDOS: int = 1800
     # Proveedor de IA: «ninguno» (plantillas sin modelo), «ollama» (local, sin
     # llave), «deepseek», «anthropic»… Cambiar de modelo es cambiar esto, no código.
     IA_PROVEEDOR: str = "ninguno"
