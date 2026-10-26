@@ -188,6 +188,7 @@ Todos los cambios notables de Cortex. Formato basado en
 - Puertos, contenedores y nombres de producción propios para convivir con GEMS.
 
 ### Corregido
+- El triage ya no sale «encimado» sobre «Editar cita»: la ventana de abajo se atenúa como corresponde. El encabezado tiene más espacio y el buscador ya no corta su texto.
 - Subir un estudio DICOM de más de 16 MB desde el navegador ya no falla con «demasiado grande»: las rutas de carga de estudios aceptan hasta 400 MB, como el backend; el resto sigue con 16 MB.
 - Segmentador: nnU-Net y TotalSegmentator abrían procesos auxiliares que el servicio
   creía apagados (un `Pool` de 12 sólo para listar archivos y el `predict_from_files`
