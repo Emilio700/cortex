@@ -128,11 +128,9 @@ de prueba, 281 × 281 × 500 vóxeles de 1.5 mm, convertido a 500 cortes DICOM,
 | `dcm2niix` del ZIP (500 cortes), en CPU | 15.0–15.6 s |
 | Lectura de 27 máscaras + mallas refinadas + GLB | 2.2 s + 9.5 s + 0.02 s; GLB de 4.9 MB, 27 mallas |
 
-**No se midió** el tiempo de la segmentación completa en GPU ni en CPU, ni el
-modelo de 1.5 mm, ni las tareas extra: con la RAM que quedaba libre en el equipo
-(2–3 GB fuera de Docker) el motor no cabe. Para medirlo hace falta cerrar otras
-cargas o subir la memoria de Docker (`.wslconfig`, `memory=10GB`) en un equipo
-con 16 GB libres para eso, y repetir con `scripts` de la sección siguiente.
+Dentro de Docker la segmentación completa **no cupo** en esta laptop (ni
+reconstruir la imagen: el paso de torch deja la VM de WSL con ~5 GB y Windows bajó
+a 167 MB disponibles). Se midió **nativo en Windows**: ver la sección siguiente.
 
 ### Cómo medir
 
@@ -149,6 +147,97 @@ docker stats cortex_segmentador_gpu                        # RAM
 
 Para comparar con CPU o con el modelo rápido, recrea el contenedor con
 `SEGMENTADOR_DISPOSITIVO=cpu` o `SEGMENTADOR_RAPIDO=1`.
+
+## Nativo en Windows (laptops con poca RAM)
+
+Mismo código, sin Docker: en una laptop de 16 GB, Docker Desktop paga dos veces
+(la VM de WSL más torch y CUDA dentro de ella). Nativo sólo se paga el proceso.
+
+```
+.\correr_windows.ps1 -Instalar             # la primera vez (~6 GB en %LOCALAPPDATA%\cortex-segmentador)
+.\correr_windows.ps1 -Puerto 8031          # resolución normal (1.5 mm)
+.\correr_windows.ps1 -Puerto 8031 -Rapido  # sólo el modelo de 3 mm
+```
+
+- Python 3.12 (`py -3.12`) y el driver NVIDIA. torch 2.7.1+cu126 trae CUDA en su
+  rueda; `dcm2niix` viene del paquete de PyPI con su binario de Windows.
+- El venv y los pesos (`TOTALSEG_HOME_DIR`) van **fuera del repo**, que vive en
+  OneDrive. venv: 6.1 GB. Pesos: `total` rápido 316 MB; `total` normal baja sus 5
+  modelos (~105 s) la primera vez que se pide; con `vertebrae_body` y `vertebrae_mr`,
+  2.0 GB en total.
+- En la laptop de prueba el **8030 lo reserva Windows** (`http.sys`, «System»): el
+  script lo detecta y pide otro puerto. Con 8031, en `backend/.env`:
+  `SEGMENTADOR_URL=http://127.0.0.1:8031`.
+- Escucha sólo en `127.0.0.1`: recibe estudios de pacientes sin autenticación propia.
+- `OPENBLAS_NUM_THREADS=4`: con los 20 hilos de la laptop, el solo arranque del
+  servicio comprometía 1.3 GB (búfer por hilo); con 4, 250 MB.
+
+### Memoria en Windows: el límite es el compromiso, no la RAM libre
+
+- torch + CUDA + TotalSegmentator comprometen ~1.5 GB antes de tocar el estudio.
+- **La VRAM cuenta como memoria comprometida del proceso** (WDDM): 2 GB pedidos a
+  la GPU suben 2 GB la memoria privada sin tocar la RAM física. El pico de VRAM de
+  la corrida (2.7–3.9 GB) se suma al compromiso un instante.
+- En las corridas, la RAM física del motor llegó a ~3.9 GB y el compromiso a ~6.7 GB;
+  el margen de compromiso de Windows bajó hasta 282 MB con un archivo de paginación
+  **fijo** (aquí, ~8 GB). Con el compromiso agotado Windows deja de dar memoria a
+  cualquier programa. Conviene el archivo de paginación administrado por el sistema.
+
+### Lo que hubo que corregir para que cupiera
+
+- nnU-Net 2.8 abre un `Pool` de 12 procesos sólo para emparejar nombres de archivo;
+  en Windows (spawn) cada uno vuelve a cargar torch: 14 procesos y 10.5 GB
+  comprometidos antes de predecir. Ahora es una lista en el mismo proceso.
+- TotalSegmentator 2.18 instala su `predict_from_files` (con procesos) al importar
+  `totalsegmentator.nnunet` dentro de `totalsegmentator()`, y pisaba el secuencial
+  del ejecutor. Ahora se importa antes de reemplazarlo.
+- La salida del motor se lee en UTF-8: con cp1252, un carácter de `vertebrae_body`
+  tumbaba la lectura y el servicio respondía 500 sin motivo.
+- En Windows no hay grupo de sesión: al vencer el tiempo se mata el árbol del motor
+  (`taskkill /T`); el `python.exe` del venv es un lanzador con el intérprete como hijo.
+- Para instalar: `pip --no-cache-dir`. Con la caché HTTP, pip retuvo la rueda de
+  torch (2.7 GB) en memoria al terminar de bajarla.
+
+No hizo falta recortar el volumen: `roi_subset` de columna ya recorta con el modelo
+de 6 mm (de 281 × 281 × 500 a 107 × 132 × 450 en `s0923`).
+
+### Medido nativo (RTX 4060 Laptop 8 GB, 15.7 GB de RAM, Windows 11)
+
+Estudio `s0923` en ZIP de 500 cortes DICOM, `POST /segmentar?region=…&modalidad=CT`,
+GLB de mallas refinadas. RAM: procesos del segmentador muestreados cada 2 s.
+
+| | Columna rápida (3 mm) | Columna normal (1.5 mm) | Discos (normal) |
+|---|---|---|---|
+| Total | **51.8 s** | **54.1 s** | 82.3 s |
+| dcm2niix | 15.6 s | 14.3 s | 13.6 s |
+| Segmentación (GPU) | 22.9 s | 27.5 s | 47.5 s (`total` 24.3 + `vertebrae_body` 23.2) |
+| Lectura + mallas + GLB | 2.3 + 10.2 + 0.02 s | 2.3 + 9.4 + 0.02 s | 2.3 + 18.2 + 0.02 s |
+| VRAM pico (torch) | 3878 MB | 2686 MB | 2948 MB |
+| RAM física pico | 3.7 GB | 3.9 GB | 3.9 GB |
+| Comprometida pico | 5.7 GB | 6.7 GB | 5.6 GB |
+| Windows: disponible mínimo | 598 MB | 890 MB | 875 MB |
+| Mallas / GLB | 27 / 4.8 MB | 27 / 4.9 MB | 47 (22 discos) / 5.4 MB |
+
+- **Dice por estructura** contra las máscaras de referencia de `s0923` (la malla se
+  voxeliza en la rejilla de la TC; 26 estructuras, el conducto no tiene referencia):
+  - normal: mediana **0.985**; peores C4 0.949, médula 0.953, C1 0.962, C5 0.969;
+  - rápida: mediana **0.863**; peores C1 0.777, C6 0.787, C4 0.797, C5 0.807;
+  - piso del método (GLB hecho con las propias máscaras): mediana 0.998, mínimo 0.993.
+- Discos: 22 de 23 niveles nombrados (C2-C3…L5-S1; faltó C3-C4), ninguno sin nivel.
+- Punta a punta con el backend local (`SEGMENTADOR_URL` al 8031): «Sistema →
+  Servicios» lo ve en línea, se activó `neuro3d_paciente` y el médico pidió el modelo
+  de la única serie de la base local (resonancia de cráneo T1, 90 cortes; no había
+  TC): `vertebrae_mr` 44.4 s, 48.2 s en total, estado «listo» con C1 y C2 (lo que
+  alcanza el estudio), GLB servido por `/imaging/modelos-3d/{id}/mallas`.
+
+### Cuánta memoria hace falta
+
+- **Nativo, cómodo:** antes de empezar, ≥ 4.5 GB de RAM disponible y ≥ 7.5 GB de
+  compromiso libre. En una laptop de 16 GB eso pide cerrar Docker Desktop, SQL Server
+  y MySQL o tener el archivo de paginación administrado por el sistema; con 32 GB
+  cabe con todo abierto.
+- **En Docker:** súmale la VM de WSL (~2 GB) y torch dentro de ella: ≥ 12 GB para
+  Docker en un equipo de 24–32 GB.
 
 ## Calidad de malla
 

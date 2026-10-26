@@ -169,6 +169,10 @@ Todos los cambios notables de Cortex. Formato basado en
   un error claro y, si se configura, repite con el modelo rápido o en CPU; el modelo
   dice con qué resolución salió. Mallas sin escalones (Taubin y decimación) que
   conservan el volumen: la médula ya no adelgaza a la mitad.
+- **Segmentador nativo en Windows** (`servicios/segmentador/correr_windows.ps1`), sin
+  Docker, para laptops con poca RAM. Medido en una RTX 4060 Laptop con una TC de
+  columna completa: 54 s en resolución normal (Dice mediana 0.985 contra la
+  referencia) y 52 s con el modelo rápido. <!-- fix/segmentador-prueba -->
 
 ### Cambiado
 - Neuro 3D: el interruptor de flujo dice «Flujo en arterias, venas y vías» (las venas
@@ -179,6 +183,13 @@ Todos los cambios notables de Cortex. Formato basado en
 - Puertos, contenedores y nombres de producción propios para convivir con GEMS.
 
 ### Corregido
+- Segmentador: nnU-Net y TotalSegmentator abrían procesos auxiliares que el servicio
+  creía apagados (un `Pool` de 12 sólo para listar archivos y el `predict_from_files`
+  de TotalSegmentator, que pisaba el secuencial); en Windows cada uno cargaba torch y
+  una columna llegó a comprometer 10.5 GB. Además, la salida del motor se lee en
+  UTF-8 (un carácter fuera de cp1252 hacía responder 500 sin motivo) y, al vencer
+  el tiempo, se mata el árbol completo del motor también en Windows.
+  <!-- fix/segmentador-prueba -->
 - Cambiar de serie en el visor de estudios ya no tumba la pantalla («No se pudo mostrar esta pantalla»): Cornerstone monta en su propio lienzo y no borra la etiqueta y el estado que pinta la interfaz.
 - Al cerrar sesión y entrar con otra cuenta en la misma ventana, la cuenta nueva ya no hereda las pestañas abiertas de la anterior (con nombres de pacientes en sus títulos): se borran al salir y cada lista sólo se carga para quien la abrió.
 - La sección «Escalas neurológicas» de la consulta usa un ícono de CoreUI en lugar de un emoji, como el resto de las secciones.
