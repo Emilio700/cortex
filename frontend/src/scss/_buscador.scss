@@ -10,7 +10,8 @@
   align-items: center;
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 440px;
+  // 560 y no 440: con 440 el texto «…teléfono o expediente» se cortaba con puntos.
+  max-width: 560px;
 }
 
 .buscador-lupa {

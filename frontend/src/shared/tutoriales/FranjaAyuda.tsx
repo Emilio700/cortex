@@ -40,7 +40,7 @@ const Franja = () => {
     <div className="gems-franja-ayuda border-top" role="status" aria-live="polite">
       <CContainer
         fluid
-        className="px-4 py-1 d-flex align-items-center justify-content-end flex-wrap gap-2"
+        className="px-4 px-xl-5 py-1 d-flex align-items-center justify-content-end flex-wrap gap-2"
       >
         <span className="small">
           {texto}

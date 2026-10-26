@@ -57,7 +57,7 @@ const AppHeader = () => {
   // que su contenedor sea el alto completo de la página.
   return (
     <CHeader position="sticky" className="mb-4 p-0" ref={headerRef} role="banner">
-      <CContainer className="px-4" fluid>
+      <CContainer className="px-4 px-xl-5" fluid>
         {/* Sólo lleva el icono: sin nombre, el lector anunciaba un «botón» a
             secas (paso axe). */}
         <CHeaderToggler
