@@ -529,6 +529,37 @@ body.hf-theme {
   backdrop-filter: blur(4px);
 }
 
+// ── Encabezado: más aire en pantalla de escritorio ───────────────────
+// Buscador, ayuda, campana, perfil y sucursal iban casi pegados entre sí y
+// al borde derecho. En el celular manda _movil.scss (todo compacto a propósito).
+@media (min-width: 992px) {
+  .header > .container-fluid {
+    column-gap: 0.75rem;
+  }
+}
+
+// Ventanas apiladas (el triage o el alta de paciente sobre la cita).
+// Bootstrap pone todos los fondos en 1050 y todas las ventanas en 1055: el
+// fondo de la segunda ventana quedaba DEBAJO de la primera, que seguía clara y
+// se veía «encimada». Cada nivel sube su fondo y su ventana, en ese orden.
+// CoreUI monta cada ventana y su fondo como hijos directos de <body>, en el
+// orden en que se abren, así que el hermano posterior (~) es el nivel siguiente.
+.modal ~ .modal {
+  z-index: 1065;
+}
+
+.modal-backdrop ~ .modal-backdrop {
+  z-index: 1060;
+}
+
+.modal ~ .modal ~ .modal {
+  z-index: 1075;
+}
+
+.modal-backdrop ~ .modal-backdrop ~ .modal-backdrop {
+  z-index: 1070;
+}
+
 .dropdown-menu {
   border-radius: 12px;
   padding: 0.4rem;
