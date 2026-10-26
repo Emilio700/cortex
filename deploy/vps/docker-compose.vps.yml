@@ -1,0 +1,107 @@
+# =============================================================================
+# Cortex en el VPS de pruebas (Hostinger, 2 vCPU, 8 GB, sin GPU).
+#
+# Se aplica ENCIMA de docker-compose.prod.yml:
+#   docker compose -p cortex -f docker-compose.prod.yml -f deploy/vps/docker-compose.vps.yml up -d --build
+#
+# Ambiente de pruebas con datos ficticios. En el mismo VPS corre otra app (el
+# congreso) cuyo Caddy ocupa 80/443 y termina el HTTPS: por eso Cortex no
+# publica ningún puerto en el host y el Caddy lo alcanza por la red externa
+# «edge» con el nombre «cortex-web». Detalle y razones en deploy/vps/README.md.
+# =============================================================================
+
+networks:
+  # La crea desplegar.sh (docker network create edge). Es la única red que
+  # comparten las dos apps: sólo el frontend de Cortex y el Caddy del congreso
+  # se unen a ella; backend, base y segmentador quedan en cortex_network.
+  edge:
+    external: true
+
+volumes:
+  cortex_segmentador_pesos_prod:
+    name: cortex_segmentador_pesos_prod
+
+services:
+  # ClamAV carga sus firmas en memoria (~1.2–1.5 GB fijos). Junto con el
+  # segmentador, que en CPU pide varios GB durante una segmentación, el VPS se
+  # queda sin margen y el kernel podría matar procesos del congreso. En pruebas
+  # se apaga (ANTIVIRUS_ENABLED=false y ANTIVIRUS_REQUIRED=false en .env); el
+  # perfil evita que arranque. Pendiente para producción: antivirus encendido.
+  clamav:
+    profiles: ["antivirus"]
+
+  backend:
+    # Sin ClamAV no puede depender de él.
+    depends_on: !override
+      init-uploads:
+        condition: service_completed_successfully
+      migrate:
+        condition: service_completed_successfully
+    # Dos workers en lugar de cuatro: con 2 vCPU no ganan nada más y cada uno
+    # carga la app completa (~150–250 MB). WEB_CONCURRENCY debe coincidir: lo
+    # usa el freno de login para reportar su límite efectivo.
+    command: ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-w", "2", "--bind", "0.0.0.0:8000", "app.main:app"]
+    environment:
+      WEB_CONCURRENCY: "2"
+      APP_NAME: Cortex
+      MFA_ISSUER: ${MFA_ISSUER:-Cortex}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Cortex}
+      # El compose de producción no pasa estas variables al backend; sin ellas
+      # el módulo Neuro 3D del paciente dice «segmentador no instalado».
+      SEGMENTADOR_URL: ${SEGMENTADOR_URL:-http://segmentador:8000}
+      SEGMENTADOR_TIEMPO_LIMITE_SEGUNDOS: ${SEGMENTADOR_TIEMPO_LIMITE_SEGUNDOS:-1800}
+      IA_PROVEEDOR: ${IA_PROVEEDOR:-ninguno}
+      IA_MODELO: ${IA_MODELO:-}
+      IA_BASE_URL: ${IA_BASE_URL:-}
+      IA_API_KEY: ${IA_API_KEY:-}
+
+  scheduler:
+    depends_on: !override
+      init-uploads:
+        condition: service_completed_successfully
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      APP_NAME: Cortex
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Cortex}
+
+  frontend:
+    # Sin puertos en el host: 80/443 son del Caddy del congreso.
+    ports: !reset []
+    networks:
+      cortex_network: {}
+      edge:
+        aliases:
+          - cortex-web
+
+  # Segmentador de TC (CPU). Sólo en la red interna: recibe estudios del
+  # paciente y no lleva autenticación propia, así que nunca se publica.
+  segmentador:
+    build:
+      context: ./servicios/segmentador
+    image: cortex-segmentador:0.1.0
+    container_name: cortex_segmentador_prod
+    restart: unless-stopped
+    environment:
+      SEGMENTADOR_FALSO: "0"
+      SEGMENTADOR_DISPOSITIVO: cpu
+      # 0 = resolución normal (1.5 mm). Medido en este VPS con una TC de 500
+      # cortes: 4.5 min, 5.0 GB y Dice mediano 0.985; el rápido (3 mm) tarda
+      # 1.5 min pero pide MÁS RAM (5.6 GB, corre las 117 clases sobre todo el
+      # volumen) y su Dice baja a 0.864. Ver README.
+      SEGMENTADOR_RAPIDO: ${SEGMENTADOR_RAPIDO:-0}
+      SEGMENTADOR_RESPALDO: ${SEGMENTADOR_RESPALDO:-rapido}
+      SEGMENTADOR_TIEMPO_LIMITE: ${SEGMENTADOR_TIEMPO_LIMITE:-1700}
+    volumes:
+      - cortex_segmentador_pesos_prod:/pesos
+    # nnU-Net pasa datos por memoria compartida; 64 MB no alcanzan.
+    shm_size: 1gb
+    # Tope duro: si una segmentación pide más, el kernel mata al motor dentro de
+    # este contenedor (el servicio responde 503 «sin RAM») y no a otro proceso
+    # del VPS, que podría ser del congreso. En CPU los logits de las 118 clases
+    # viven en RAM (en GPU van en VRAM): con 5 GB no cupo el modo rápido de una
+    # TC de 500 cortes. Con 6 GB el VPS no bajó de 1.2 GB disponibles.
+    mem_limit: ${SEGMENTADOR_MEMORIA:-6g}
+    memswap_limit: ${SEGMENTADOR_MEMORIA:-6g}
+    networks:
+      - cortex_network

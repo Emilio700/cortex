@@ -173,6 +173,11 @@ Todos los cambios notables de Cortex. Formato basado en
   Docker, para laptops con poca RAM. Medido en una RTX 4060 Laptop con una TC de
   columna completa: 54 s en resolución normal (Dice mediana 0.985 contra la
   referencia) y 52 s con el modelo rápido. <!-- fix/segmentador-prueba -->
+- **Ambiente de pruebas en un VPS** (`deploy/vps/`): override de Compose sin puertos
+  en el host, detrás del Caddy de otra app por la red `edge`, con segmentador en
+  CPU, atlas BodyParts3D instalado en la imagen y un script `desplegar.sh` que sube
+  el código sin GitHub y genera los secretos en el servidor. Sin ClamAV por RAM y
+  sin MFA obligatorio: sólo para datos ficticios. <!-- chore/despliegue-vps -->
 
 ### Cambiado
 - Neuro 3D: el interruptor de flujo dice «Flujo en arterias, venas y vías» (las venas
