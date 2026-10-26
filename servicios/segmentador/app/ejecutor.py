@@ -34,18 +34,51 @@ def _sin_procesos_extra() -> None:
     procesos no aceleran nada y, con la memoria de una laptop (Docker con ~7.6 GB),
     son la diferencia entre terminar y que el kernel mate la segmentación: medido
     con una TC de columna completa, el modelo rápido no cabía en 3 GB con ellos.
+
+    TotalSegmentator 2.18 pone su propio ``predict_from_files`` (con procesos
+    *spawn*) al importar ``totalsegmentator.nnunet``, y ``python_api`` lo importa
+    dentro de ``totalsegmentator()``, no antes: si este reemplazo se hiciera sólo
+    después de importar ``python_api``, el suyo lo pisaría al correr. Visto en
+    Windows: tres procesos *spawn* con torch cargado y ~4.8 GB comprometidos en
+    la columna rápida. Por eso se importa su módulo aquí, primero.
     """
+    import inspect
+
+    import totalsegmentator.nnunet  # noqa: F401  (aplica su parche al importarse)
     from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
+
+    # Su versión secuencial acepta el recorte de logits al remuestrear (menos RAM);
+    # TotalSegmentator lo pide sólo si predict_from_files lo acepta.
+    acepta_recorte = "use_cropped_logits_resampling" in inspect.signature(
+        nnUNetPredictor.predict_from_files_sequential).parameters
 
     def secuencial(self, entrada, salida, save_probabilities=False, overwrite=True,
                    num_processes_preprocessing=None, num_processes_segmentation_export=None,
-                   folder_with_segs_from_prev_stage=None, num_parts=1, part_id=0, **_):
+                   folder_with_segs_from_prev_stage=None, num_parts=1, part_id=0,
+                   use_cropped_logits_resampling=False, **_):
+        extra = {"use_cropped_logits_resampling": use_cropped_logits_resampling} if acepta_recorte else {}
         return self.predict_from_files_sequential(
             entrada, salida, save_probabilities=save_probabilities, overwrite=overwrite,
-            folder_with_segs_from_prev_stage=folder_with_segs_from_prev_stage,
+            folder_with_segs_from_prev_stage=folder_with_segs_from_prev_stage, **extra,
         )
 
     nnUNetPredictor.predict_from_files = secuencial
+
+    # nnU-Net 2.8 abre un Pool de 12 procesos sólo para emparejar los nombres de
+    # archivo de la carpeta de entrada. En Linux (fork) cuesta poco; en Windows
+    # (spawn) cada uno vuelve a importar torch: visto, 14 procesos y 10.5 GB
+    # comprometidos antes de predecir nada. Aquí es una lista de un archivo.
+    import nnunetv2.inference.predict_from_raw_data as prd
+    from nnunetv2.utilities import utils as nnu
+
+    def listas_sin_procesos(folder, file_ending, identifiers=None, num_processes=None):
+        if identifiers is None:
+            identifiers = nnu.get_identifiers_from_splitted_dataset_folder(folder, file_ending)
+        archivos = nnu.subfiles(folder, suffix=file_ending, join=False, sort=True)
+        return [nnu.create_paths_fn(folder, archivos, file_ending, f) for f in identifiers]
+
+    if hasattr(prd, "create_lists_from_splitted_dataset_folder"):
+        prd.create_lists_from_splitted_dataset_folder = listas_sin_procesos
 
 
 def main(argumentos: dict) -> int:

@@ -204,6 +204,7 @@ def test_el_motor_sin_estructuras_no_es_un_exito(real, monkeypatch):
         (3, 'CORTEX_RESULTADO {"error": "sin_vram"}', "sin_vram"),
         (5, 'CORTEX_RESULTADO {"error": "sin_gpu"}', "sin_gpu"),
         (1, "numpy.core._exceptions._ArrayMemoryError: MemoryError", "sin_ram"),
+        (1, "OSError: [WinError 1455] The paging file is too small for this operation to complete", "sin_ram"),
         (1, "ValueError: algo raro", "fallo"),
     ],
 )

@@ -130,14 +130,16 @@ def info_dispositivo() -> dict:
 
 
 def convertir_dicom(carpeta: Path, salida: Path) -> Path:
-    binario = shutil.which("dcm2niix")
+    # En Windows, sin activar el venv, su carpeta Scripts no está en el PATH; el
+    # dcm2niix del paquete de PyPI vive junto al python del venv.
+    binario = shutil.which("dcm2niix") or shutil.which("dcm2niix", path=str(Path(sys.executable).parent))
     if not binario:
         raise MotorNoDisponible("Falta dcm2niix en el servidor del segmentador.")
     salida.mkdir(parents=True, exist_ok=True)
     try:
         proceso = subprocess.run(
             [binario, "-z", "y", "-b", "n", "-f", "serie_%s", "-o", str(salida), str(carpeta)],
-            capture_output=True, text=True, timeout=TIEMPO_DCM2NIIX,
+            capture_output=True, encoding="utf-8", errors="replace", timeout=TIEMPO_DCM2NIIX,
         )
     except subprocess.TimeoutExpired as error:
         raise FalloDelMotor("La conversión de la serie tardó demasiado.") from error
@@ -167,7 +169,10 @@ def clasificar_salida(codigo: int, salida: str) -> dict:
     # Antes que «MemoryError»: el de torch se llama «OutOfMemoryError».
     if resultado.get("error") == "sin_vram" or "CUDA out of memory" in salida:
         return {"error": "sin_vram"}
-    if "MemoryError" in salida:
+    # Windows no tiene OOM killer: la falta de RAM llega como error de asignación o,
+    # al cargar las DLL de CUDA, como «el archivo de paginación es demasiado pequeño»
+    # (WinError 1455).
+    if "MemoryError" in salida or "paging file is too small" in salida or "WinError 1455" in salida:
         return {"error": "sin_ram"}
     if resultado.get("error") == "sin_gpu":
         return {"error": "sin_gpu"}
@@ -183,6 +188,13 @@ def _matar_grupo(proceso: subprocess.Popen) -> None:
             os.killpg(proceso.pid, signal.SIGKILL)
         except (ProcessLookupError, PermissionError):
             pass
+        return
+    # Windows: no hay grupos de sesión, y el python.exe de un venv es un lanzador
+    # que corre el intérprete real como hijo. Sin matar el árbol, un tiempo límite
+    # dejaría al motor vivo con sus gigas y communicate() esperando para siempre.
+    if proceso.poll() is None:
+        subprocess.run(["taskkill", "/F", "/T", "/PID", str(proceso.pid)],
+                       capture_output=True, timeout=30)
 
 
 def correr_paso(nifti: Path, salida: Path, paso: Paso, *, rapido: bool, dispositivo: str) -> dict:
@@ -196,10 +208,14 @@ def correr_paso(nifti: Path, salida: Path, paso: Paso, *, rapido: bool, disposit
     # Sesión propia: si el kernel mata al ejecutor por memoria, sus procesos
     # auxiliares quedarían huérfanos con gigas tomados y el siguiente estudio
     # fallaría también. Al terminar, pase lo que pase, se mata el grupo entero.
+    # UTF-8 de los dos lados: en Windows la consola es cp1252 y un carácter que no
+    # cabe (lo imprime alguna tarea del motor) tumba al hilo que lee la salida;
+    # communicate() devuelve None y el servicio respondía un 500 sin motivo.
     proceso = subprocess.Popen(
         [sys.executable, "-m", "app.ejecutor", json.dumps(argumentos)],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=str(raiz),
-        start_new_session=True,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", errors="replace",
+        cwd=str(raiz), start_new_session=True,
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     try:
         stdout, stderr = proceso.communicate(timeout=tiempo_limite())
@@ -209,7 +225,7 @@ def correr_paso(nifti: Path, salida: Path, paso: Paso, *, rapido: bool, disposit
         raise FaltaRecurso("tiempo", MENSAJES["tiempo"]) from error
     finally:
         _matar_grupo(proceso)
-    resultado = clasificar_salida(proceso.returncode, stdout + "\n" + stderr)
+    resultado = clasificar_salida(proceso.returncode, (stdout or "") + "\n" + (stderr or ""))
     error = resultado.get("error")
     if error is None:
         return resultado
