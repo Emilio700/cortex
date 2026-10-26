@@ -19,9 +19,13 @@
 # pendiente: llenarlo con el «pip freeze» de esta imagen ya probada.
 FROM python:3.12.11-slim-bookworm
 
+# pypi.nvidia.com se queda callado a ratos a media descarga (visto: una rueda de
+# 56 MB tras bajar 1.2 GB) y con los 15 s de pip se pierde todo el paso de torch.
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
+    PIP_DEFAULT_TIMEOUT=120 \
+    PIP_RETRIES=10 \
     TOTALSEG_HOME_DIR=/pesos \
     TOTALSEG_WEIGHTS_PATH=/pesos/nnunet/results \
     SEGMENTADOR_DISPOSITIVO=gpu
