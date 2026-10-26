@@ -2,6 +2,16 @@
 
 Marca cada una al terminarla, en su rama. Rama sugerida entre paréntesis.
 
+## Fase 0 · Pendiente de antes: triage encimado y encabezado (`fix/modales-apilados`)
+Ya hecho y visto en el navegador (commit wip `1368b73`); falta cerrarlo.
+- [x] 0.1 Ventanas apiladas: cada nivel sube su fondo y su ventana (el triage sobre «Editar Cita»)
+- [x] 0.2 Prueba guardia `frontend/src/scss/modalesApilados.test.ts`
+- [x] 0.3 Encabezado: buscador de 560 px, más margen lateral y separación entre elementos
+- [ ] 0.4 Suite completa en verde (frontend `--maxWorkers=3`) y línea en CHANGELOG
+- [ ] 0.5 Revisar a 390 px (celular) que el encabezado no se rompa
+- [ ] 0.6 Revisar otras ventanas apiladas (alta de paciente sobre la cita, modal de compartir)
+- [ ] 0.7 Recorridos guiados de la agenda y el encabezado: revisar y subir `version` si cambian
+
 ## Fase 1 · Identidad y receta (`feat/receta-azul-ejecutivo`)
 - [ ] 1.1 Elegir el azul ejecutivo de fábrica (marino/azul de `--cx-*`) y derivar línea y campo
 - [ ] 1.2 Cambiar acento, línea y campo en `backend/app/utils/colores.py`, `ajustesReceta.ts` y `tonos()` a la vez

@@ -49,6 +49,10 @@ Lo ginecológico ya no se ofrece al crear datos nuevos.
 
 ## Fases
 
+### Fase 0 · Cerrar lo pendiente de la interfaz
+
+Triage que salía encimado sobre «Editar Cita» (los fondos de las ventanas apiladas quedaban en el mismo nivel) y encabezado muy justo (buscador cortado, sin aire). Ya está hecho y visto en el navegador en la rama `fix/modales-apilados`; falta la suite completa, revisar el celular y otras ventanas apiladas. Ver tareas 0.x.
+
 ### Fase 1 · Identidad y receta (riesgo bajo)
 
 - Acento de fábrica de `#8B2E83` (morado) a azul ejecutivo; línea y campo
